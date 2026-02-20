@@ -1,38 +1,36 @@
 const { Pool } = require("pg");
-require("dotenv").config();
 
-// Initialize the connection pool using .env variables
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT || 5432,
-  // Added: suggested pool limits for better performance
-  max: 20, 
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-});
+let pool;
 
-// Handle unexpected errors on idle clients to prevent server crashes
-pool.on('error', (err) => {
-  console.error('❌ Unexpected error on idle PostgreSQL client:', err.message);
-  process.exit(-1);
-});
+console.log("🔍 NODE_ENV:", process.env.NODE_ENV);
 
-/**
- * 🐘 Test Database Connection
- * Using an async self-invoking function to verify the connection 
- * before the server starts processing requests.
- */
-(async () => {
-  try {
-    const res = await pool.query('SELECT NOW()');
-    console.log(`🐘 PostgreSQL Connected Successfully at: ${res.rows[0].now}`);
-  } catch (err) {
-    console.error("❌ DB Connection Error:", err.message);
-    console.log("⚠️ Please check if your PostgreSQL service is running and .env credentials are correct.");
+// ✅ PRODUCTION (Render / Supabase)
+if (process.env.NODE_ENV === "production") {
+  console.log("🌍 Using Production Database (DATABASE_URL)");
+
+  if (!process.env.DATABASE_URL) {
+    console.error("❌ DATABASE_URL is not defined!");
+    process.exit(1);
   }
-})();
+
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
+
+} else {
+  // ✅ DEVELOPMENT (Local PostgreSQL)
+  console.log("💻 Using Local Database");
+
+  pool = new Pool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+  });
+}
 
 module.exports = pool;
