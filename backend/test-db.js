@@ -1,24 +1,28 @@
 const { Pool } = require("pg");
 
-// In production (Render), use DATABASE_URL
-// In local development, you can still use local .env values if needed
+console.log("🔍 Checking environment...");
+
+if (!process.env.DATABASE_URL) {
+  console.error("❌ DATABASE_URL is not defined!");
+  process.exit(1);
+}
+
+console.log("✅ DATABASE_URL found");
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production"
-    ? { rejectUnauthorized: false }
-    : false,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
-// Test connection once when server starts
 pool.connect()
-  .then(client => {
-    console.log("✅ Database connected successfully!");
-    client.release();
+  .then(() => {
+    console.log("✅ Database Connected Successfully!");
   })
-  .catch(err => {
-    console.error("❌ Database connection failed!");
-    console.error("Details:", err.message);
+  .catch((err) => {
+    console.error("❌ Database Connection Failed:");
+    console.error(err.message);
   });
 
 module.exports = pool;
