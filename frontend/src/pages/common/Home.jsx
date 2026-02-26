@@ -962,8 +962,8 @@ const Home = () => {
             India's #1 Healthcare Job Platform
           </h1>
 
-          <form onSubmit={handleSearch} className="w-full max-w-5xl bg-white rounded-full shadow-xl flex items-center">
-            <div className="flex-1 px-5 py-2 relative" ref={searchRef}>
+          <form onSubmit={handleSearch} className="w-full max-w-5xl bg-white rounded-2xl md:rounded-full shadow-xl flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-0 p-3 md:p-0">
+            <div className="flex-1 px-3 md:px-5 py-2 relative" ref={searchRef}>
               <input
                 type="text"
                 placeholder="Job title, keywords..."
@@ -991,7 +991,7 @@ const Home = () => {
               )}
             </div>
 
-            <div className="px-5 py-3 border-l border-gray-200 w-56">
+            <div className="px-3 md:px-5 py-3 md:border-l border-gray-200 md:w-56">
               <select
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
@@ -1006,7 +1006,7 @@ const Home = () => {
               </select>
             </div>
 
-            <div className="px-5 py-3 border-l border-gray-200">
+            <div className="hidden md:block px-5 py-3 border-l border-gray-200">
               <select className="outline-none bg-transparent text-gray-700">
                 <option>All Categories</option>
                 <option>Doctors</option>
@@ -1018,7 +1018,7 @@ const Home = () => {
 
             <button
               type="submit"
-              className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 font-semibold rounded-full transition"
+              className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 font-semibold rounded-full md:rounded-full transition"
             >
               Find Jobs
             </button>
@@ -1117,14 +1117,14 @@ const Home = () => {
           {categoryIndex > 0 && (
             <button
               onClick={prevCategory}
-              className="absolute left-0 z-10 bg-white shadow rounded-full p-2 hover:bg-gray-100"
+              className="absolute left-0 md:left-2 z-10 bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg rounded-full p-2 md:p-3 text-sm md:text-base transition"
             >
               ❮
             </button>
           )}
 
           {/* Tabs Container */}
-          <div className="flex gap-3 overflow-hidden px-10">
+          <div className="flex gap-2 md:gap-3 overflow-hidden px-12 md:px-16">
             {tabs.slice(categoryIndex, categoryIndex + visibleTabs).map((tab) => (
               <button
                 key={tab.id}
@@ -1133,7 +1133,7 @@ const Home = () => {
                   setFilterSpecialization('');
                   setActiveDot(0);
                 }}
-                className={`px-5 py-2 rounded-full border whitespace-nowrap transition ${
+                className={`px-3 md:px-5 py-2 rounded-full border whitespace-nowrap transition text-sm md:text-base ${
                   activeTab === tab.id
                     ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow'
                     : 'bg-white hover:bg-gray-100'
@@ -1148,14 +1148,14 @@ const Home = () => {
           {categoryIndex + visibleTabs < tabs.length && (
             <button
               onClick={nextCategory}
-              className="absolute right-0 z-10 bg-white shadow rounded-full p-2 hover:bg-gray-100"
+              className="absolute right-0 md:right-2 z-10 bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg rounded-full p-2 md:p-3 text-sm md:text-base transition"
             >
               ❯
             </button>
           )}
         </div>
 
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
+          <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-8 px-2">
             {/* Degree Dropdown */}
             <select
               value={selectedDegree}
@@ -1163,7 +1163,7 @@ const Home = () => {
                 setSelectedDegree(e.target.value);
                 setFilterSpecialization('');
               }}
-              className="border rounded-lg px-3 py-2"
+              className="w-full sm:w-auto min-w-[160px] border rounded-lg px-3 py-2 text-sm md:text-base bg-white"
             >
               <option value="">Select Degree</option>
               {degrees.map((deg) => (
@@ -1177,7 +1177,7 @@ const Home = () => {
             <select
               value={filterSpecialization}
               onChange={(e) => setFilterSpecialization(e.target.value)}
-              className="border rounded-lg px-3 py-2"
+              className="w-full sm:w-auto min-w-[180px] border rounded-lg px-3 py-2 text-sm md:text-base bg-white"
               disabled={!selectedDegree}
             >
               <option value="">Select Specialization</option>
@@ -1194,7 +1194,7 @@ const Home = () => {
                 setFilterCity(e.target.value);
                 setActiveDot(0);
               }}
-              className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+              className="w-full sm:w-auto min-w-[140px] px-3 md:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 text-sm md:text-base bg-white"
             >
               <option value="">All Cities</option>
               {jobCities.map((c) => (
@@ -1210,7 +1210,7 @@ const Home = () => {
                 setFilterSalary(e.target.value);
                 setActiveDot(0);
               }}
-              className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+              className="w-full sm:w-auto min-w-[140px] px-3 md:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 text-sm md:text-base bg-white"
             >
               {salaryRanges.map((range) => (
                 <option key={range.value || 'all'} value={range.value}>
@@ -1227,7 +1227,7 @@ const Home = () => {
               setFilterSalary('');
             }}
 
-              className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+              className="w-full sm:w-auto px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition text-sm md:text-base font-medium"
             >
               Clear Filters
             </button>
@@ -1322,19 +1322,19 @@ const Home = () => {
           <div className="relative flex items-center">
             <button
               onClick={handleLogoPrev}
-              className="absolute left-0 z-10 bg-cyan-500 hover:bg-cyan-600 text-white p-3 rounded-lg"
+              className="absolute left-0 md:left-2 z-10 bg-cyan-500 hover:bg-cyan-600 text-white p-2 md:p-3 rounded-lg shadow-lg transition text-xl"
             >
               ‹
             </button>
 
-            <div className="overflow-hidden w-full">
+            <div className="overflow-hidden w-full px-12 md:px-16">
               <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${logoIndex * 100}%)` }}>
                 {Array.from({ length: Math.ceil(hospitalLogos.length / LOGOS_PER_SLIDE) }).map((_, slideIdx) => (
-                  <div key={slideIdx} className="min-w-full flex justify-center items-center gap-12">
+                  <div key={slideIdx} className="min-w-full flex justify-center items-center gap-6 md:gap-12">
                     {hospitalLogos
                       .slice(slideIdx * LOGOS_PER_SLIDE, slideIdx * LOGOS_PER_SLIDE + LOGOS_PER_SLIDE)
                       .map((logo, i) => (
-                        <img key={i} src={logo} alt="Hospital Logo" className="h-20 object-contain grayscale hover:grayscale-0 transition" />
+                        <img key={i} src={logo} alt="Hospital Logo" className="h-12 md:h-20 object-contain grayscale hover:grayscale-0 transition" />
                       ))}
                   </div>
                 ))}
@@ -1343,7 +1343,7 @@ const Home = () => {
 
             <button
               onClick={handleLogoNext}
-              className="absolute right-0 z-10 bg-cyan-500 hover:bg-cyan-600 text-white p-3 rounded-lg"
+              className="absolute right-0 md:right-2 z-10 bg-cyan-500 hover:bg-cyan-600 text-white p-2 md:p-3 rounded-lg shadow-lg transition text-xl"
             >
               ›
             </button>
