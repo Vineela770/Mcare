@@ -264,26 +264,10 @@ FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 async function runMigration() {
   try {
-    console.log("🔄 Checking database schema...");
+    console.log("� Starting database migration...");
+    console.log("⚠️  This will drop and recreate all tables!");
 
-    // Check if tables already exist
-    const tableCheck = await pool.query(`
-      SELECT COUNT(*) 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      AND table_name = 'users'
-    `);
-
-    if (tableCheck.rows[0].count > 0) {
-      console.log("✅ Database tables already exist");
-      const result = await pool.query("SELECT COUNT(*) FROM users");
-      console.log(`👥 Users table ready (${result.rows[0].count} users)`);
-      return true;
-    }
-
-    console.log("🔄 Creating database tables...");
-
-    // Execute the SQL
+    // Execute the SQL (includes DROP TABLE IF EXISTS, so safe to always run)
     await pool.query(DATABASE_SCHEMA);
 
     console.log("✅ Database migration completed successfully!");
