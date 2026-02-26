@@ -562,3 +562,134 @@ exports.googleLogin = async (req, res) => {
     });
   }
 };
+
+/**
+ * @desc    Account Recovery - Send detailed recovery instructions via email
+ * @route   POST /api/auth/account-recovery
+ */
+exports.accountRecovery = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Email address is required for account recovery." 
+      });
+    }
+
+    // Check if user exists
+    const userResult = await pool.query(
+      'SELECT id, email, full_name, role, created_at FROM users WHERE email = $1',
+      [email.toLowerCase()]
+    );
+
+    if (userResult.rows.length === 0) {
+      // For security, don't reveal if email exists or not
+      return res.json({ 
+        success: true, 
+        message: "If an account exists with this email, recovery instructions have been sent." 
+      });
+    }
+
+    const user = userResult.rows[0];
+
+    // Generate recovery token
+    const recoveryToken = crypto.randomBytes(32).toString('hex');
+    const recoveryTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    // Store recovery token in database
+    await pool.query(
+      'UPDATE users SET reset_token = $1, reset_token_expiry = $2 WHERE id = $3',
+      [recoveryToken, recoveryTokenExpiry, user.id]
+    );
+
+    // Send recovery email
+    const recoveryLink = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${recoveryToken}`;
+    
+    const emailContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%); padding: 30px; text-align: center;">
+          <h1 style="color: white; margin: 0;">MCARE Account Recovery</h1>
+        </div>
+        
+        <div style="padding: 30px; background-color: #f9fafb;">
+          <h2 style="color: #1f2937;">Hello ${user.full_name || 'User'},</h2>
+          
+          <p style="color: #4b5563; line-height: 1.6;">
+            We received a request to help you recover your MCARE account. Here are your account details:
+          </p>
+          
+          <div style="background-color: white; border-left: 4px solid #06b6d4; padding: 20px; margin: 20px 0;">
+            <p style="margin: 5px 0;"><strong>Email:</strong> ${user.email}</p>
+            <p style="margin: 5px 0;"><strong>Account Type:</strong> ${user.role}</p>
+            <p style="margin: 5px 0;"><strong>Account Created:</strong> ${new Date(user.created_at).toLocaleDateString()}</p>
+          </div>
+          
+          <p style="color: #4b5563; line-height: 1.6;">
+            If you're having trouble accessing your account, you can reset your password using the button below:
+          </p>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${recoveryLink}" 
+               style="background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%); 
+                      color: white; 
+                      padding: 15px 40px; 
+                      text-decoration: none; 
+                      border-radius: 8px; 
+                      display: inline-block;
+                      font-weight: bold;">
+              Reset Your Password
+            </a>
+          </div>
+          
+          <p style="color: #6b7280; font-size: 14px;">
+            Or copy and paste this link into your browser:<br>
+            <a href="${recoveryLink}" style="color: #06b6d4; word-break: break-all;">${recoveryLink}</a>
+          </p>
+          
+          <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0; color: #92400e; font-size: 14px;">
+              <strong>⚠️ Security Note:</strong> This link will expire in 24 hours. If you didn't request this recovery, please ignore this email and your account will remain secure.
+            </p>
+          </div>
+          
+          <p style="color: #4b5563; line-height: 1.6;">
+            Need more help? Please contact our support team at support@mcarejobs.com
+          </p>
+          
+          <p style="color: #6b7280; margin-top: 30px;">
+            Best regards,<br>
+            <strong>MCARE Team</strong>
+          </p>
+        </div>
+        
+        <div style="background-color: #1f2937; padding: 20px; text-align: center;">
+          <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+            © 2026 MCARE Healthcare Jobs. All rights reserved.
+          </p>
+        </div>
+      </div>
+    `;
+
+    await sendEmail({
+      to: user.email,
+      subject: '🔐 MCARE Account Recovery - Your Account Information',
+      html: emailContent,
+    });
+
+    console.log(`📧 Account recovery email sent to: ${email}`);
+
+    res.json({ 
+      success: true, 
+      message: "If an account exists with this email, recovery instructions have been sent." 
+    });
+
+  } catch (error) {
+    console.error("❌ Account Recovery Error:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Failed to process account recovery request. Please try again." 
+    });
+  }
+};

@@ -18,9 +18,13 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [isAccountRecovery, setIsAccountRecovery] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
+  const [recoveryEmail, setRecoveryEmail] = useState('');
   const [resetMessage, setResetMessage] = useState('');
+  const [recoveryMessage, setRecoveryMessage] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
+  const [recoveryLoading, setRecoveryLoading] = useState(false);
 
 
   const handleChange = (e) => {
@@ -110,6 +114,25 @@ const Login = () => {
     }
   };
 
+  const handleAccountRecovery = async (e) => {
+    e.preventDefault();
+    setRecoveryMessage('');
+    setRecoveryLoading(true);
+
+    try {
+      await axios.post('http://localhost:3000/api/auth/account-recovery', {
+        email: recoveryEmail,
+      });
+
+      setRecoveryMessage('Account recovery instructions sent to your email. Please check your inbox.');
+      setRecoveryEmail('');
+    } catch (err) {
+      setRecoveryMessage(err.response?.data?.message || 'Failed to send recovery email. Please try again.');
+    } finally {
+      setRecoveryLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-white flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full">
@@ -136,11 +159,11 @@ const Login = () => {
                   Reset Password
                 </h2>
                 <p className="text-sm text-gray-600 text-center">
-                  Enter your email to receive a reset link.
+                  Enter your email to receive a password reset link.
                 </p>
 
                 {resetMessage && (
-                  <div className="bg-cyan-50 border border-cyan-200 text-cyan-700 px-4 py-3 rounded-lg text-sm">
+                  <div className={`${resetMessage.includes('sent') ? 'bg-cyan-50 border-cyan-200 text-cyan-700' : 'bg-red-50 border-red-200 text-red-700'} border px-4 py-3 rounded-lg text-sm`}>
                     {resetMessage}
                   </div>
                 )}
@@ -167,7 +190,63 @@ const Login = () => {
 
                 <button
                   type="button"
-                  onClick={() => setIsForgotPassword(false)}
+                  onClick={() => {
+                    setIsForgotPassword(false);
+                    setResetMessage('');
+                  }}
+                  className="w-full text-sm text-gray-600 hover:text-cyan-600"
+                >
+                  ← Back to Login
+                </button>
+              </form>
+            ) : isAccountRecovery ? (
+              /* 🔹 ACCOUNT RECOVERY FORM */
+              <form onSubmit={handleAccountRecovery} className="space-y-6">
+                <h2 className="text-xl font-semibold text-gray-800 text-center">
+                  Account Recovery
+                </h2>
+                <p className="text-sm text-gray-600 text-center">
+                  Can't access your account? Enter your email and we'll help you recover it.
+                </p>
+
+                {recoveryMessage && (
+                  <div className={`${recoveryMessage.includes('sent') ? 'bg-cyan-50 border-cyan-200 text-cyan-700' : 'bg-red-50 border-red-200 text-red-700'} border px-4 py-3 rounded-lg text-sm`}>
+                    {recoveryMessage}
+                  </div>
+                )}
+
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="email"
+                    required
+                    value={recoveryEmail}
+                    onChange={(e) => setRecoveryEmail(e.target.value)}
+                    placeholder="Enter your registered email"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  />
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm text-blue-800">
+                    <strong>Note:</strong> We'll send account recovery instructions to help you regain access. This includes verification steps and account details.
+                  </p>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={recoveryLoading}
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50"
+                >
+                  {recoveryLoading ? 'Sending...' : 'Send Recovery Email'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAccountRecovery(false);
+                    setRecoveryMessage('');
+                  }}
                   className="w-full text-sm text-gray-600 hover:text-cyan-600"
                 >
                   ← Back to Login
@@ -229,13 +308,28 @@ const Login = () => {
                     <input type="checkbox" className="w-4 h-4 text-cyan-600 border-gray-300 rounded" />
                     <span className="ml-2 text-sm text-gray-600">Remember me</span>
                   </label>
-                  <button
-                    type="button"
-                    onClick={() => setIsForgotPassword(true)}
-                    className="text-sm text-cyan-600 hover:text-cyan-700 font-medium"
-                  >
-                    Forgot password?
-                  </button>
+                  <div className="flex flex-col items-end space-y-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsForgotPassword(true);
+                        setIsAccountRecovery(false);
+                      }}
+                      className="text-sm text-cyan-600 hover:text-cyan-700 font-medium"
+                    >
+                      Forgot password?
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsAccountRecovery(true);
+                        setIsForgotPassword(false);
+                      }}
+                      className="text-sm text-cyan-600 hover:text-cyan-700 font-medium"
+                    >
+                      Recovery account?
+                    </button>
+                  </div>
                 </div>
 
                 {/* Submit */}

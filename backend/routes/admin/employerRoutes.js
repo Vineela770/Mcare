@@ -3,6 +3,7 @@ const router = express.Router();
 const employerController = require("../controllers/employerController");
 
 router.get("/", employerController.getEmployers);
+router.get("/:id", employerController.getEmployerById); // 🔥 IMPORTANT
 router.post("/", employerController.addEmployer);
 router.put("/:id", employerController.updateEmployer);
 router.delete("/:id", employerController.deleteEmployer);

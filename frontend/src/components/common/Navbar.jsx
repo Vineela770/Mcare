@@ -1,21 +1,106 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Briefcase, Home, Info, Phone, FileText } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Home,
+  Briefcase,
+  Info,
+  Phone,
+  LayoutDashboard,
+  Users,
+  Building2,
+  BarChart3,
+  Activity,
+  Settings,
+  User,
+  FileText,
+  File,
+  Bell,
+  Heart,
+  MessageSquare,
+  Lock,
+  Trash2,
+  Package,
+  Calendar,
+  Shield,
+} from 'lucide-react';
+import { useAuth } from '../../context/useAuth';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, isAuthenticated, logout } = useAuth();
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const userDropdownRef = useRef(null);
 
+  useEffect(() => {
+    const handler = (e) => {
+      if (!userDropdownRef.current?.contains(e.target)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
   const isActive = (path) => {
     return location.pathname === path;
   };
 
+  // Common links
   const navLinks = [
     { to: '/', label: 'Home', icon: Home },
     { to: '/jobs', label: 'Find Jobs', icon: Briefcase },
     { to: '/about', label: 'About', icon: Info },
     { to: '/contact', label: 'Contact', icon: Phone },
   ];
+
+  // Role-based links
+  let roleLinks = [];
+  let roleLabel = '';
+  if (user && user.role === 'admin') {
+    roleLabel = 'Admin';
+    roleLinks = [
+      { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { to: '/admin/users', label: 'Users Management', icon: Users },
+      { to: '/admin/jobs', label: 'Jobs Management', icon: Briefcase },
+      { to: '/admin/employers', label: 'Employers', icon: Building2 },
+      { to: '/admin/reports', label: 'Reports', icon: BarChart3 },
+      { to: '/admin/activity', label: 'Activity Log', icon: Activity },
+      { to: '/admin/settings', label: 'System Settings', icon: Settings },
+    ];
+
+  } else if (user && user.role === 'candidate') {
+    roleLabel = 'Doctor';
+    roleLinks = [
+      { to: '/candidate/dashboard', label: 'My Dashboard', icon: LayoutDashboard },
+      { to: '/candidate/profile', label: 'Profile', icon: User },
+      { to: '/candidate/applications', label: 'My Applied', icon: FileText },
+      { to: '/candidate/resume', label: 'My Resume', icon: File },
+      { to: '/candidate/alerts', label: 'Job Alerts', icon: Bell },
+      { to: '/candidate/employers', label: 'Following Employers', icon: Building2 },
+      { to: '/candidate/saved-jobs', label: 'Shortlisted Jobs', icon: Heart },
+      { to: '/candidate/messages', label: 'Messages', icon: MessageSquare },
+      { to: '/candidate/change-password', label: 'Change Password', icon: Lock },
+      { to: '/candidate/delete-profile', label: 'Delete Profile', icon: Trash2 },
+    ];
+  } else if (user && user.role === 'hr') {
+    roleLabel = 'Employer';
+    roleLinks = [
+      { to: '/hr/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { to: '/hr/settings', label: 'Profile', icon: User },
+      { to: '/hr/jobs', label: 'My Jobs', icon: Briefcase },
+      { to: '/hr/post-job', label: 'Submit Jobs', icon: Briefcase },
+      { to: '/hr/applications', label: 'Applicant Jobs', icon: FileText },
+      { to: '/hr/candidates', label: 'Shortlisted Candidates', icon: Users },
+      { to: '/hr/candidate-alerts', label: 'Candidate Alerts', icon: Bell },
+      { to: '/hr/packages', label: 'Packages', icon: Package },
+      { to: '/hr/messages', label: 'Messages', icon: MessageSquare },
+      { to: '/hr/interviews', label: 'Meetings Employer', icon: Calendar },
+      { to: '/hr/change-password', label: 'Change Password', icon: Lock },
+      { to: '/hr/delete-profile', label: 'Delete Profile', icon: Trash2 },
+    ];
+  }
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -47,22 +132,80 @@ const Navbar = () => {
                 <span>{link.label}</span>
               </Link>
             ))}
+            
           </div>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-3">
-            <Link
-              to="/login"
-              className="px-5 py-2 text-gray-700 hover:text-cyan-600 font-medium rounded-lg hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/register"
-              className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-            >
-              Get Started
-            </Link>
+            {isAuthenticated ? (
+              <div className="relative" ref={userDropdownRef}>
+                <button
+                  onClick={() => setUserDropdownOpen((open) => !open)}
+                  className="px-4 py-2 rounded-lg font-medium flex items-center space-x-2 text-gray-700 hover:text-cyan-600 hover:bg-gray-50 transition"
+                >
+                  <span>{user?.name || user?.email}</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${
+                      userDropdownOpen ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+
+                {userDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    <div className="px-4 py-2 text-xs text-gray-400 uppercase border-b">
+                      {roleLabel} Menu
+                    </div>
+
+                    {roleLinks.map((link) => (
+                      <Link
+                        key={link.to}
+                        to={link.to}
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600"
+                      >
+                        <link.icon className="w-4 h-4 mr-2" />
+                        {link.label}
+                      </Link>
+                    ))}
+
+                    <div className="border-t my-1"></div>
+
+                    <button
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        logout();
+                      }}
+                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+            
+              <>
+                <Link
+                  to="/login"
+                  className="px-5 py-2 text-gray-700 hover:text-cyan-600 font-medium rounded-lg hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -98,23 +241,52 @@ const Navbar = () => {
                   <span>{link.label}</span>
                 </Link>
               ))}
-              
+              {roleLinks.length > 0 && (
+                <div className="flex flex-col space-y-1 border-t border-gray-100 pt-2">
+                  <span className="px-4 py-2 text-xs text-gray-400 uppercase">{roleLabel} Menu</span>
+                  {roleLinks.map((link) => (
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center px-4 py-2 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 transition-colors ${isActive(link.to) ? 'bg-cyan-50 text-cyan-600' : ''}`}
+                    >
+                      <link.icon className="w-4 h-4 mr-2" />
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
               {/* Mobile Auth Buttons */}
               <div className="pt-4 space-y-2 border-t border-gray-200">
-                <Link
-                  to="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full px-4 py-3 text-center text-gray-700 hover:text-cyan-600 font-medium rounded-lg hover:bg-gray-50 transition-all duration-200 border border-gray-200"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full px-4 py-3 text-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-200 shadow-md"
-                >
-                  Get Started
-                </Link>
+                {isAuthenticated ? (
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      logout();
+                    }}
+                    className="block w-full px-4 py-3 text-left text-red-600 hover:bg-red-50 rounded-lg"
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block w-full px-4 py-3 text-center text-gray-700 hover:text-cyan-600 font-medium rounded-lg hover:bg-gray-50 border border-gray-200"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block w-full px-4 py-3 text-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-blue-700 shadow-md"
+                    >
+                      Get Started
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
