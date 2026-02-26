@@ -183,12 +183,20 @@ const emailTemplates = {
  */
 const sendEmail = async (to, subject, htmlContent, textContent = '') => {
   try {
+    // Validate email configuration
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.warn("⚠️ Email service not configured - skipping email to", to);
+      return null;
+    }
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
+      connectionTimeout: 5000, // 5 second timeout
+      greetingTimeout: 5000,
     });
 
     const mailOptions = {

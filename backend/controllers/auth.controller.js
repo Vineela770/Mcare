@@ -113,19 +113,22 @@ exports.register = async (req, res) => {
 
     await client.query('COMMIT'); 
 
-    // ✅ 5. SEND PROFESSIONAL WELCOME EMAIL
-    try {
-      const { sendEmail, emailTemplates } = require("../utils/email.service");
-      const welcomeEmail = emailTemplates.welcome(newUser.full_name, newUser.role);
-      await sendEmail(
-        newUser.email,
-        "🎉 Welcome to MCARE - Registration Successful!",
-        welcomeEmail
-      );
-      console.log(`✅ Welcome email sent to ${newUser.email}`);
-    } catch (emailErr) {
-      console.warn("⚠️ Registration successful but email failed:", emailErr.message);
-      // Don't fail registration if email fails
+    // ✅ 5. SEND PROFESSIONAL WELCOME EMAIL (only if configured)
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      try {
+        const { sendEmail, emailTemplates } = require("../utils/email.service");
+        const welcomeEmail = emailTemplates.welcome(newUser.full_name, newUser.role);
+        await sendEmail(
+          newUser.email,
+          "🎉 Welcome to MCARE - Registration Successful!",
+          welcomeEmail
+        );
+        console.log(`✅ Welcome email sent to ${newUser.email}`);
+      } catch (emailErr) {
+        console.warn("⚠️ Email sending failed:", emailErr.message);
+      }
+    } else {
+      console.log("⚠️ Email service not configured (EMAIL_USER/EMAIL_PASS missing)");
     }
 
     res.status(201).json({
