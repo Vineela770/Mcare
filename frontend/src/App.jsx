@@ -238,37 +238,37 @@ function App() {
 
         {/* ================= ADMIN ROUTES ================= */}
         <Route path="/admin/dashboard" element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
             <AdminDashboard />
           </ProtectedRoute>
         } />
         <Route path="/admin/users" element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
             <UsersManagement />
           </ProtectedRoute>
         } />
         <Route path="/admin/jobs" element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
             <JobsManagement />
           </ProtectedRoute>
         } />
         <Route path="/admin/employers" element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
             <Employers />
           </ProtectedRoute>
         } />
         <Route path="/admin/reports" element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
             <Reports />
           </ProtectedRoute>
         } />
         <Route path="/admin/activity" element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
             <ActivityLog />
           </ProtectedRoute>
         } />
         <Route path="/admin/settings" element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
             <SystemSettings />
           </ProtectedRoute>
         } />

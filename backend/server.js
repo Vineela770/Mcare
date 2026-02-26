@@ -19,6 +19,15 @@ const guestRoutes = require("./routes/HR/guest.routes");
 const statsRoutes = require("./routes/HR/stats.routes");
 const supportRoutes = require("./routes/HR/support.routes");
 
+// Admin routes
+const adminUserRoutes = require("./routes/admin/userRoutes");
+const adminJobRoutes = require("./routes/admin/jobRoutes");
+const adminEmployerRoutes = require("./routes/admin/employerRoutes");
+const adminDashboardRoutes = require("./routes/admin/dashboardRoutes");
+const adminReportsRoutes = require("./routes/admin/reportsRoutes");
+const adminActivityRoutes = require("./routes/admin/activityRoutes");
+const adminSettingsRoutes = require("./routes/admin/systemSettingsRoutes");
+
 const app = express();
 
 // 2. CORS Configuration
@@ -61,6 +70,15 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/guest", guestRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/support", supportRoutes);
+
+// Admin routes
+app.use("/api/admin/users", adminUserRoutes);
+app.use("/api/admin/jobs", adminJobRoutes);
+app.use("/api/admin/employers", adminEmployerRoutes);
+app.use("/api/admin/dashboard", adminDashboardRoutes);
+app.use("/api/admin/reports", adminReportsRoutes);
+app.use("/api/admin/activity", adminActivityRoutes);
+app.use("/api/admin/settings", adminSettingsRoutes);
 
 // Health check
 app.get("/", (req, res) => {

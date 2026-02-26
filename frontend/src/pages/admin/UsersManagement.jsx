@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { Users, Edit2, Trash2, UserPlus, X } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 const UsersManagement = () => {
   const [users, setUsers] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -18,7 +20,7 @@ const UsersManagement = () => {
 
   // FETCH USERS
   const fetchUsers = useCallback(async () => {
-    const res = await fetch("http://localhost:5000/api/users");
+    const res = await fetch(`${API_URL}/api/admin/users`);
     const data = await res.json();
     setUsers(data);
   }, []);
@@ -37,7 +39,7 @@ const UsersManagement = () => {
   const handleSubmitAdd = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5000/api/users", {
+    const res = await fetch(`${API_URL}/api/admin/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -59,7 +61,7 @@ const UsersManagement = () => {
     e.preventDefault();
 
     const res = await fetch(
-      `http://localhost:5000/api/users/${selectedUser.id}`,
+      `${API_URL}/api/admin/users/${selectedUser.id}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -84,7 +86,7 @@ const UsersManagement = () => {
 
   const confirmDelete = async () => {
     await fetch(
-      `http://localhost:5000/api/users/${selectedUser.id}`,
+      `${API_URL}/api/admin/users/${selectedUser.id}`,
       { method: "DELETE" }
     );
 
