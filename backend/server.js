@@ -71,10 +71,21 @@ app.get("/", (req, res) => {
 pool
   .query("SELECT NOW()")
   .then(async () => {
-    console.log("🐘 PostgreSQL Connected Successfully!");
+    console.log("🐘 PostgreSQL Connected Successfully at:", new Date().toLocaleString());
+    console.log("=".repeat(60));
+    console.log("STARTING AUTOMATIC DATABASE MIGRATION");
+    console.log("=".repeat(60));
     
     // Auto-run database migration
-    await runMigration();
+    const migrationSuccess = await runMigration();
+    
+    console.log("=".repeat(60));
+    if (migrationSuccess) {
+      console.log("✅ MIGRATION COMPLETED - SERVER READY");
+    } else {
+      console.log("❌ MIGRATION FAILED - CHECK ERRORS ABOVE");
+    }
+    console.log("=".repeat(60));
   })
   .catch((err) => {
     console.error("❌ Database connection failed:");
