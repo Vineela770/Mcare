@@ -222,16 +222,20 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 bg-white">
-            <div className="flex flex-col space-y-2">
+        {/* Mobile Menu with Smooth Animation */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'max-h-[80vh] opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <div className="py-4 border-t border-gray-200 bg-white">
+            <div className="flex flex-col space-y-2 max-h-[70vh] overflow-y-auto">
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-3 ${
+                  className={`px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center space-x-3 active:scale-95 ${
                     isActive(link.to)
                       ? 'text-cyan-600 bg-cyan-50'
                       : 'text-gray-700 hover:text-cyan-600 hover:bg-gray-50'
@@ -242,30 +246,32 @@ const Navbar = () => {
                 </Link>
               ))}
               {roleLinks.length > 0 && (
-                <div className="flex flex-col space-y-1 border-t border-gray-100 pt-2">
-                  <span className="px-4 py-2 text-xs text-gray-400 uppercase">{roleLabel} Menu</span>
+                <div className="flex flex-col space-y-1 border-t border-gray-100 pt-2 mt-2">
+                  <span className="px-4 py-2 text-xs text-gray-400 uppercase font-semibold">{roleLabel} Menu</span>
                   {roleLinks.map((link) => (
                     <Link
                       key={link.to}
                       to={link.to}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`flex items-center px-4 py-2 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 transition-colors ${isActive(link.to) ? 'bg-cyan-50 text-cyan-600' : ''}`}
+                      className={`flex items-center px-4 py-3 rounded-lg text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 transition-all active:scale-95 ${
+                        isActive(link.to) ? 'bg-cyan-50 text-cyan-600' : ''
+                      }`}
                     >
-                      <link.icon className="w-4 h-4 mr-2" />
-                      {link.label}
+                      <link.icon className="w-5 h-5 mr-3" />
+                      <span className="font-medium">{link.label}</span>
                     </Link>
                   ))}
                 </div>
               )}
               {/* Mobile Auth Buttons */}
-              <div className="pt-4 space-y-2 border-t border-gray-200">
+              <div className="pt-4 space-y-2 border-t border-gray-200 mt-2">
                 {isAuthenticated ? (
                   <button
                     onClick={() => {
                       setIsMobileMenuOpen(false);
                       logout();
                     }}
-                    className="block w-full px-4 py-3 text-left text-red-600 hover:bg-red-50 rounded-lg"
+                    className="block w-full px-4 py-3 text-left text-red-600 hover:bg-red-50 rounded-lg font-medium transition-all active:scale-95"
                   >
                     Logout
                   </button>
@@ -274,14 +280,14 @@ const Navbar = () => {
                     <Link
                       to="/login"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block w-full px-4 py-3 text-center text-gray-700 hover:text-cyan-600 font-medium rounded-lg hover:bg-gray-50 border border-gray-200"
+                      className="block w-full px-4 py-3 text-center text-gray-700 hover:text-cyan-600 font-medium rounded-lg hover:bg-gray-50 border border-gray-200 transition-all active:scale-95"
                     >
                       Sign In
                     </Link>
                     <Link
                       to="/register"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block w-full px-4 py-3 text-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-blue-700 shadow-md"
+                      className="block w-full px-4 py-3 text-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-blue-700 shadow-md transition-all active:scale-95"
                     >
                       Get Started
                     </Link>
@@ -290,7 +296,7 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );

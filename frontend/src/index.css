@@ -15,6 +15,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
@@ -25,11 +28,75 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;
   color: #0f172a;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
+  width: 100%;
+  /* Better text rendering on mobile */
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  /* Better tap targets on mobile */
+  -webkit-tap-highlight-color: rgba(8, 145, 178, 0.1);
+}
+
+/* Mobile-Friendly Input Fields (Prevent Safari Zoom) */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+textarea,
+select {
+  font-size: 16px !important; /* Prevents zoom on iOS Safari */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Better Touch Targets for Mobile */
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+}
+
+/* Smooth Scrolling for Mobile */
+@media (max-width: 768px) {
+  html {
+    scroll-padding-top: 80px;
+  }
+  
+  /* Larger tap targets for mobile */
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Safari-Specific Fixes */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari */
+  body {
+    min-height: -webkit-fill-available;
+  }
+  
+  html {
+    height: -webkit-fill-available;
+  }
+}
+
+/* Prevent Pull-to-Refresh */
+body {
+  overscroll-behavior-y: contain;
 }
 
 /* Notification Animation */
@@ -46,4 +113,49 @@ a {
 
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
+}
+
+/* Mobile-Optimized Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Better Modal/Dialog on Mobile */
+@media (max-width: 768px) {
+  dialog,
+  .modal {
+    max-width: 95vw;
+    max-height: 95vh;
+    overflow-y: auto;
+  }
+}
+
+/* Prevent Text Selection on Tap (for buttons/icons) */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Safe Area Insets for iPhone Notch */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
 }
