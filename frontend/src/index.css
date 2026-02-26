@@ -15,9 +15,14 @@
 
 html {
   scroll-behavior: smooth;
-  /* Prevent horizontal scroll on mobile */
-  overflow-x: hidden;
   width: 100%;
+}
+
+/* Prevent horizontal scroll on mobile */
+@media (max-width: 768px) {
+  html {
+    overflow-x: hidden;
+  }
 }
 
 body {
@@ -28,12 +33,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;
   color: #0f172a;
-  /* Prevent horizontal scroll on mobile */
-  overflow-x: hidden;
   width: 100%;
   /* Better text rendering on mobile */
   text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;
+}
+
+/* Prevent horizontal scroll on mobile */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
 }
 
 a {
@@ -88,15 +98,13 @@ textarea {
   body {
     min-height: -webkit-fill-available;
   }
-  
-  html {
-    height: -webkit-fill-available;
-  }
 }
 
-/* Prevent Pull-to-Refresh */
-body {
-  overscroll-behavior-y: contain;
+/* Prevent Pull-to-Refresh on Mobile Only */
+@media (max-width: 768px) {
+  body {
+    overscroll-behavior-y: contain;
+  }
 }
 
 /* Notification Animation */
