@@ -33,9 +33,10 @@ const DeleteProfile = () => {
             const token = localStorage.getItem("token"); // Get token for Auth middleware
 
             // ✅ REAL API CALL: Connecting to auth.controller.js deleteProfile
+            const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
             const response = await axios({
                 method: 'delete',
-                url: 'http://localhost:3000/api/auth/delete-profile',
+                url: `${API_BASE}/api/auth/delete-profile`,
                 data: { password }, // Send password in the request body
                 headers: {
                     Authorization: `Bearer ${token}`, // Verified via protect middleware
@@ -68,9 +69,10 @@ const DeleteProfile = () => {
         try {
             setEmailLoading(true);
             const token = localStorage.getItem("token");
+            const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
             
             const response = await axios.post(
-                'http://localhost:3000/api/auth/send-recovery-mail', 
+                `${API_BASE}/api/auth/send-recovery-mail`, 
                 { recoveryEmail },
                 { 
                     headers: { 

@@ -8,7 +8,8 @@ import {
 import Sidebar from "../../components/common/Sidebar";
 import Modal from "../../components/common/Modal";
 
-const API_URL = "http://localhost:3000/api/hr";
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = `${API_BASE}/api/hr`;
 
 const Applications = () => {
   const [applications, setApplications] = useState([]);

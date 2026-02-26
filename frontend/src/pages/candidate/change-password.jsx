@@ -50,8 +50,9 @@ const ChangePassword = () => {
       setIsSubmitting(true);
       const token = localStorage.getItem("token"); 
       
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const response = await axios.put(
-        "http://localhost:3000/api/auth/change-password",
+        `${API_BASE}/api/auth/change-password`,
         { oldPassword, newPassword },
         {
           headers: {

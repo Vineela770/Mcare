@@ -105,7 +105,7 @@ const Sidebar = ({ skillPercentage = 60, userName }) => {
             {user?.profile_photo_url ? (
               <img 
                 key={user.profile_photo_url} // Forces re-render when photo changes
-                src={`http://localhost:3000${user.profile_photo_url}`} 
+                src={`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${user.profile_photo_url}`} 
                 alt="Profile" 
                 className="w-full h-full object-cover"
                 onError={(e) => { 

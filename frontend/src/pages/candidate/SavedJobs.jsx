@@ -36,7 +36,8 @@ const SavedJobs = () => {
   const fetchSavedJobs = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:3000/api/candidate/saved-jobs', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${API_BASE}/api/candidate/saved-jobs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
