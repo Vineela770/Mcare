@@ -114,7 +114,7 @@ exports.register = async (req, res) => {
     await client.query('COMMIT'); 
 
     // ✅ 5. SEND PROFESSIONAL WELCOME EMAIL (only if configured)
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    if ((process.env.EMAIL_USER || process.env.MAIL_USER) && process.env.EMAIL_PASS) {
       try {
         const { sendEmail, emailTemplates } = require("../utils/email.service");
         const welcomeEmail = emailTemplates.welcome(newUser.full_name, newUser.role);

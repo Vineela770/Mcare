@@ -183,8 +183,12 @@ const emailTemplates = {
  */
 const sendEmail = async (to, subject, htmlContent, textContent = '') => {
   try {
+    // Support both EMAIL_USER and MAIL_USER
+    const emailUser = process.env.EMAIL_USER || process.env.MAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
+    
     // Validate email configuration
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    if (!emailUser || !emailPass) {
       console.warn("⚠️ Email service not configured - skipping email to", to);
       return null;
     }
@@ -192,15 +196,15 @@ const sendEmail = async (to, subject, htmlContent, textContent = '') => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: emailUser,
+        pass: emailPass,
       },
       connectionTimeout: 5000, // 5 second timeout
       greetingTimeout: 5000,
     });
 
     const mailOptions = {
-      from: `"MCARE Jobs" <${process.env.EMAIL_USER}>`,
+      from: `"MCARE Jobs" <${emailUser}>`,
       to,
       subject,
       html: htmlContent,
