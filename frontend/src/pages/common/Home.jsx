@@ -331,7 +331,26 @@ const Home = () => {
     { id: 'dental', label: 'Dental' }, // beside Nursing
   ];
 
-  const visibleTabs = 6; // number of tabs visible at once
+  // Responsive visible tabs - fewer on mobile to prevent text cutoff
+  const [visibleTabs, setVisibleTabs] = useState(6);
+
+  useEffect(() => {
+    const updateVisibleTabs = () => {
+      if (window.innerWidth < 640) {
+        setVisibleTabs(2); // Mobile: show 2 tabs
+      } else if (window.innerWidth < 768) {
+        setVisibleTabs(3); // Small tablets: show 3 tabs
+      } else if (window.innerWidth < 1024) {
+        setVisibleTabs(4); // Tablets: show 4 tabs
+      } else {
+        setVisibleTabs(6); // Desktop: show 6 tabs
+      }
+    };
+
+    updateVisibleTabs();
+    window.addEventListener('resize', updateVisibleTabs);
+    return () => window.removeEventListener('resize', updateVisibleTabs);
+  }, []);
 
   const nextCategory = () => {
     if (categoryIndex + visibleTabs < tabs.length) {
@@ -1117,14 +1136,15 @@ const Home = () => {
           {categoryIndex > 0 && (
             <button
               onClick={prevCategory}
-              className="absolute left-0 md:left-2 z-10 bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg rounded-full p-2 md:p-3 text-sm md:text-base transition"
+              className="absolute left-0 md:left-2 z-20 bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg rounded-full p-2 md:p-3 text-base md:text-lg transition"
+              aria-label="Previous categories"
             >
               ❮
             </button>
           )}
 
-          {/* Tabs Container */}
-          <div className="flex gap-2 md:gap-3 overflow-hidden px-12 md:px-16">
+          {/* Tabs Container - Properly sized for mobile */}
+          <div className="flex gap-2 md:gap-3 overflow-hidden px-10 sm:px-12 md:px-16">
             {tabs.slice(categoryIndex, categoryIndex + visibleTabs).map((tab) => (
               <button
                 key={tab.id}
@@ -1133,10 +1153,10 @@ const Home = () => {
                   setFilterSpecialization('');
                   setActiveDot(0);
                 }}
-                className={`px-3 md:px-5 py-2 rounded-full border whitespace-nowrap transition text-sm md:text-base ${
+                className={`flex-shrink-0 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-full border whitespace-nowrap transition text-xs sm:text-sm md:text-base font-medium ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow'
-                    : 'bg-white hover:bg-gray-100'
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md border-transparent'
+                    : 'bg-white hover:bg-gray-50 border-gray-300'
                 }`}
               >
                 {tab.label}
@@ -1148,7 +1168,8 @@ const Home = () => {
           {categoryIndex + visibleTabs < tabs.length && (
             <button
               onClick={nextCategory}
-              className="absolute right-0 md:right-2 z-10 bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg rounded-full p-2 md:p-3 text-sm md:text-base transition"
+              className="absolute right-0 md:right-2 z-20 bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg rounded-full p-2 md:p-3 text-base md:text-lg transition"
+              aria-label="Next categories"
             >
               ❯
             </button>
