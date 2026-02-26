@@ -8,6 +8,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const pool = require("./config/db");
+const runMigration = require("./migrate-database");
 
 // 1. Import routes
 const authRoutes = require("./routes/HR/auth.routes");
@@ -66,11 +67,14 @@ app.get("/", (req, res) => {
   res.send("MCARE API is running...");
 });
 
-// 4. Database Connection Test
+// 4. Database Connection Test and Auto-Migration
 pool
   .query("SELECT NOW()")
-  .then(() => {
+  .then(async () => {
     console.log("🐘 PostgreSQL Connected Successfully!");
+    
+    // Auto-run database migration
+    await runMigration();
   })
   .catch((err) => {
     console.error("❌ Database connection failed:");

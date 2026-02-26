@@ -4,7 +4,24 @@ const path = require("path");
 
 async function runMigration() {
   try {
-    console.log("🔄 Starting database migration...");
+    console.log("🔄 Checking database schema...");
+
+    // Check if tables already exist
+    const tableCheck = await pool.query(`
+      SELECT COUNT(*) 
+      FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_name = 'users'
+    `);
+
+    if (tableCheck.rows[0].count > 0) {
+      console.log("✅ Database tables already exist");
+      const result = await pool.query("SELECT COUNT(*) FROM users");
+      console.log(`👥 Users table ready (${result.rows[0].count} users)`);
+      return true;
+    }
+
+    console.log("🔄 Creating database tables...");
 
     // Read the SQL file
     const sqlPath = path.join(__dirname, "database-schema.sql");
@@ -20,17 +37,22 @@ async function runMigration() {
     const result = await pool.query("SELECT COUNT(*) FROM users");
     console.log(`👥 Users table ready (${result.rows[0].count} users)`);
 
-    process.exit(0);
+    return true;
   } catch (error) {
     console.error("❌ Migration failed:", error.message);
     console.error(error);
-    process.exit(1);
+    
+    // Don't exit process if running from server
+    if (require.main === module) {
+      process.exit(1);
+    }
+    return false;
   }
 }
 
 // Run migration if this file is executed directly
 if (require.main === module) {
-  runMigration();
+  runMigration().then(() => process.exit(0));
 }
 
 module.exports = runMigration;
