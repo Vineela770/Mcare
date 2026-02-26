@@ -13,12 +13,12 @@ exports.getJobs = async (req, res) => {
 
 // ADD JOB
 exports.createJob = async (req, res) => {
-  const { title, employer, location, type, status, salary, description, requirements } = req.body;
+  const { title, company_name, location, job_type, is_active, min_salary, max_salary, salary_period, description, requirements } = req.body;
 
   try {
     const result = await pool.query(
-      "INSERT INTO jobs (title, employer, location, type, status, salary, description, requirements, created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW()) RETURNING *",
-      [title, employer, location, type, status, salary, description, requirements]
+      "INSERT INTO jobs (title, company_name, location, job_type, is_active, min_salary, max_salary, salary_period, description, requirements, created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,NOW()) RETURNING *",
+      [title, company_name, location, job_type || 'Full-time', is_active !== false, min_salary, max_salary, salary_period, description, requirements]
     );
     res.json(result.rows[0]);
   } catch (error) {
@@ -30,12 +30,12 @@ exports.createJob = async (req, res) => {
 // UPDATE JOB
 exports.updateJob = async (req, res) => {
   const { id } = req.params;
-  const { title, employer, location, type, status, salary, description, requirements } = req.body;
+  const { title, company_name, location, job_type, is_active, min_salary, max_salary, salary_period, description, requirements } = req.body;
 
   try {
     const result = await pool.query(
-      "UPDATE jobs SET title=$1, employer=$2, location=$3, type=$4, status=$5, salary=$6, description=$7, requirements=$8 WHERE id=$9 RETURNING *",
-      [title, employer, location, type, status, salary, description, requirements, id]
+      "UPDATE jobs SET title=$1, company_name=$2, location=$3, job_type=$4, is_active=$5, min_salary=$6, max_salary=$7, salary_period=$8, description=$9, requirements=$10 WHERE id=$11 RETURNING *",
+      [title, company_name, location, job_type, is_active, min_salary, max_salary, salary_period, description, requirements, id]
     );
     res.json(result.rows[0]);
   } catch (error) {
