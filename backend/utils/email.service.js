@@ -1,4 +1,8 @@
 const nodemailer = require("nodemailer");
+const dns = require('dns');
+
+// Force IPv4 resolution globally for this module
+dns.setDefaultResultOrder('ipv4first');
 
 /**
  * 📧 Professional Email Templates for MCARE
@@ -193,10 +197,11 @@ const sendEmail = async (to, subject, htmlContent, textContent = '') => {
       return null;
     }
 
+    // Force IPv4 by using Google's IPv4-only SMTP server
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-      port: 587, // Use STARTTLS instead of SSL
-      secure: false, // true for 465, false for other ports
+      port: 587,
+      secure: false,
       auth: {
         user: emailUser,
         pass: emailPass,
@@ -204,10 +209,11 @@ const sendEmail = async (to, subject, htmlContent, textContent = '') => {
       tls: {
         rejectUnauthorized: false
       },
-      connectionTimeout: 10000, // 10 second timeout
+      connectionTimeout: 10000,
       greetingTimeout: 10000,
       socketTimeout: 10000,
-      family: 4, // Force IPv4, disable IPv6
+      logger: process.env.NODE_ENV === 'development',
+      debug: process.env.NODE_ENV === 'development',
     });
 
     const mailOptions = {
