@@ -67,7 +67,8 @@ const BrowseJobs = () => {
       if (location !== 'All Locations') queryParams.append('location', location);
       if (jobType !== 'all') queryParams.append('type', jobType);
 
-      const response = await fetch(`http://localhost:3000/api/candidate/jobs?${queryParams.toString()}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/jobs?${queryParams.toString()}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -98,7 +99,8 @@ const BrowseJobs = () => {
    */
   const handleSaveJob = async (jobId) => {
     try {
-      const response = await fetch('http://localhost:3000/api/candidate/saved-jobs', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/saved-jobs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +145,8 @@ const BrowseJobs = () => {
         formData.append('coverLetter', coverLetterFile);
       }
 
-      const response = await fetch('http://localhost:3000/api/candidate/apply', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/apply`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData

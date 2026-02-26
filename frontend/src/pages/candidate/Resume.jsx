@@ -61,7 +61,8 @@ const Resume = () => {
     const fetchResumeData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3000/api/candidate/dashboard-stats', {
+        const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const response = await fetch(`${API_BASE}/api/candidate/dashboard-stats`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
@@ -95,7 +96,8 @@ const Resume = () => {
       formData.append('education', JSON.stringify(education)); 
 
       // ✅ UPDATED URL: Changed from /resume to /profile to match clean routes
-      const response = await fetch('http://localhost:3000/api/candidate/profile', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/profile`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData

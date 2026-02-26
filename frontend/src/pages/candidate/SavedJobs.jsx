@@ -60,7 +60,8 @@ const SavedJobs = () => {
    */
   const handleConfirmRemove = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/candidate/saved-jobs/${selectedJob.id}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${API_BASE}/api/candidate/saved-jobs/${selectedJob.id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -92,7 +93,8 @@ const SavedJobs = () => {
         formData.append('coverLetter', coverLetterFile);
       }
 
-      const res = await fetch('http://localhost:3000/api/candidate/apply', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const res = await fetch(`${API_BASE}/api/candidate/apply`, {
         method: 'POST',
         headers: { 
           'Authorization': `Bearer ${token}` 

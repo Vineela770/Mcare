@@ -18,7 +18,8 @@ const Messages = () => {
   // 📂 1. Fetch Conversations (Sidebar) - Pulls existing chats
   const fetchConversations = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/candidate/conversations', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/conversations`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -43,7 +44,8 @@ const Messages = () => {
   // 📂 2. Fetch Chat History - Pulls messages between Manoj and selected contact
   const fetchMessages = async (chatId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/candidate/messages/${chatId}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/messages/${chatId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -59,7 +61,8 @@ const Messages = () => {
       if (searchQuery.trim().length > 0) {
         try {
           // ✅ UPDATED: Changed from /search-hospitals to /contacts/search to match routes.js
-          const response = await fetch(`http://localhost:3000/api/candidate/contacts/search?query=${searchQuery}`, {
+          const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+          const response = await fetch(`${API_BASE}/api/candidate/contacts/search?query=${searchQuery}`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           const data = await response.json();
@@ -89,7 +92,8 @@ const Messages = () => {
     if (!messageText.trim() || !selectedChat) return;
 
     try {
-      const response = await fetch('http://localhost:3000/api/candidate/messages', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -41,7 +41,8 @@ const Profile = () => {
         const fetchProfileData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('http://localhost:3000/api/candidate/dashboard-stats', {
+                const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+                const response = await fetch(`${API_BASE}/api/candidate/dashboard-stats`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -111,7 +112,8 @@ const Profile = () => {
             data.append('photo', selectedFile); 
 
             try {
-                const response = await fetch('http://localhost:3000/api/candidate/profile', {
+                const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+                const response = await fetch(`${API_BASE}/api/candidate/profile`, {
                     method: 'PUT',
                     headers: { 'Authorization': `Bearer ${token}` },
                     body: data
@@ -148,7 +150,8 @@ const Profile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:3000/api/candidate/profile', {
+            const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_BASE}/api/candidate/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -215,7 +218,7 @@ const Profile = () => {
                                     ) : formData.profilePhotoUrl ? (
                                         <img 
                                             key={`${formData.profilePhotoUrl}-${new Date().getTime()}`}
-                                            src={`http://localhost:3000${formData.profilePhotoUrl}?t=${new Date().getTime()}`} 
+                                            src={`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${formData.profilePhotoUrl}?t=${new Date().getTime()}`} 
                                             alt="Profile" 
                                             className="w-full h-full object-cover"
                                             onError={(e) => {

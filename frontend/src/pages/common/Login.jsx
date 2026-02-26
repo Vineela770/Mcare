@@ -58,7 +58,8 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await axios.post(`${API_BASE}/api/auth/login`, {
         email: formData.email,
         password: formData.password,
       });
@@ -79,7 +80,8 @@ const Login = () => {
 
     try {
       // Send Google credential to backend for verification
-      const response = await axios.post('http://localhost:3000/api/auth/google-login', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await axios.post(`${API_BASE}/api/auth/google-login`, {
         credential: credentialResponse.credential,
       });
 
@@ -120,7 +122,8 @@ const Login = () => {
     setRecoveryLoading(true);
 
     try {
-      await axios.post('http://localhost:3000/api/auth/account-recovery', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      await axios.post(`${API_BASE}/api/auth/account-recovery`, {
         email: recoveryEmail,
       });
 

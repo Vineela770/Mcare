@@ -29,7 +29,8 @@ const Alerts = () => {
   const fetchAlerts = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3000/api/candidate/alerts', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/alerts`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -50,7 +51,8 @@ const Alerts = () => {
   // ➕ 2. Create Alert (Backend Integrated)
   const handleCreateAlert = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/candidate/alerts', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/alerts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +76,8 @@ const Alerts = () => {
   // 🔘 3. Toggle Alert Status (Backend Integrated)
   const handleToggleAlert = async (alertId, currentStatus) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/candidate/alerts/toggle/${alertId}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/alerts/toggle/${alertId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +100,8 @@ const Alerts = () => {
     try {
       // ✅ UPDATED: Now points to the clean /alerts/:id endpoint instead of /toggle/:id
       // This ensures alert details like title and keywords are updated in DB
-      const response = await fetch(`http://localhost:3000/api/candidate/alerts/${selectedAlert.id}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/alerts/${selectedAlert.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +131,8 @@ const Alerts = () => {
   // 🗑️ 5. Delete Alert
   const handleConfirmDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/candidate/alerts/${selectedAlert.id}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${API_BASE}/api/candidate/alerts/${selectedAlert.id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
