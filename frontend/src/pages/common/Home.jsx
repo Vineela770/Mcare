@@ -968,7 +968,7 @@ const Home = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <div className="relative h-[35vh] md:h-[40vh] w-full overflow-hidden">
+      <div className="relative h-[40vh] sm:h-[45vh] md:h-[50vh] w-full overflow-hidden">
         <img
           src="https://static.vecteezy.com/system/resources/previews/023/740/386/large_2x/medicine-doctor-with-stethoscope-in-hand-on-hospital-background-medical-technology-healthcare-and-medical-concept-photo.jpg"
           alt="Healthcare Jobs"
@@ -976,20 +976,20 @@ const Home = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-blue-700/75 to-cyan-600/70" />
 
-        <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white text-center mb-3">
+        <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 py-6">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white text-center mb-4 sm:mb-5">
             India's #1 Healthcare Job Platform
           </h1>
 
-          <form onSubmit={handleSearch} className="w-full max-w-5xl bg-white rounded-2xl md:rounded-full shadow-xl flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-0 p-3 md:p-0">
-            <div className="flex-1 px-3 md:px-5 py-2 relative" ref={searchRef}>
+          <form onSubmit={handleSearch} className="w-full max-w-5xl bg-white rounded-2xl md:rounded-full shadow-xl flex flex-col md:flex-row items-stretch md:items-center gap-0 md:gap-0 overflow-hidden">
+            <div className="flex-1 px-4 md:px-5 py-3 md:py-2 relative border-b md:border-b-0 md:border-r border-gray-200" ref={searchRef}>
               <input
                 type="text"
                 placeholder="Job title, keywords..."
                 value={jobTitle}
                 onChange={handleJobTitleChange}
                 onFocus={() => jobTitle.length > 0 && filteredKeywords.length > 0 && setShowSuggestions(true)}
-                className="w-full outline-none text-gray-700"
+                className="w-full outline-none text-gray-700 text-sm md:text-base"
                 autoComplete="off"
               />
               
@@ -1010,11 +1010,11 @@ const Home = () => {
               )}
             </div>
 
-            <div className="px-3 md:px-5 py-3 md:border-l border-gray-200 md:w-56">
+            <div className="px-4 md:px-5 py-3 border-b md:border-b-0 md:border-r border-gray-200 md:w-48">
               <select
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="w-full outline-none bg-transparent text-gray-700 cursor-pointer"
+                className="w-full outline-none bg-transparent text-gray-700 cursor-pointer text-sm md:text-base"
               >
                 <option value="">City</option>
                 {cities.map((c) => (
@@ -1025,8 +1025,8 @@ const Home = () => {
               </select>
             </div>
 
-            <div className="hidden md:block px-5 py-3 border-l border-gray-200">
-              <select className="outline-none bg-transparent text-gray-700">
+            <div className="hidden lg:block px-5 py-3 border-r border-gray-200">
+              <select className="outline-none bg-transparent text-gray-700 text-base">
                 <option>All Categories</option>
                 <option>Doctors</option>
                 <option>Nursing</option>
@@ -1037,30 +1037,30 @@ const Home = () => {
 
             <button
               type="submit"
-              className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 font-semibold rounded-full md:rounded-full transition"
+              className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 md:py-2.5 font-semibold md:rounded-r-full transition text-sm md:text-base"
             >
               Find Jobs
             </button>
           </form>
 
-          <div className="flex gap-4 mt-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-5 sm:mt-6 w-full max-w-md sm:max-w-none justify-center">
             <button
               onClick={() => setShowQuickApplyModal(true)}
-              className="bg-white text-cyan-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition"
+              className="bg-white text-cyan-600 px-6 py-2.5 rounded-full font-semibold hover:bg-gray-100 transition shadow-lg text-sm sm:text-base"
             >
               Quick Apply
             </button>
 
             <button
               onClick={() => setShowQuickPostModal(true)}
-              className="bg-transparent border-2 border-white text-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-cyan-600 transition"
+              className="bg-transparent border-2 border-white text-white px-6 py-2.5 rounded-full font-semibold hover:bg-white hover:text-cyan-600 transition shadow-lg text-sm sm:text-base"
             >
               Quick Post Job
             </button>
           </div>
 
           {/* ✅ Browse Jobs with navigation (CLICKABLE) */}
-          <div className="text-white/90 mt-2 text-center text-xs">
+          <div className="text-white/90 mt-3 sm:mt-4 text-center text-xs sm:text-sm px-4">
             <span className="font-semibold">Browse Jobs:</span>{' '}
             {browseItems.map((item, idx) => (
               <span key={item.value}>
