@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+const pool = require("../../config/db");
 
 // @desc    Toggle whether a job is featured on the homepage
 exports.toggleFeatured = async (req, res) => {

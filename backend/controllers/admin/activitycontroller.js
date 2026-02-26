@@ -1,4 +1,4 @@
-const pool = require("../db");
+const pool = require("../../config/db");
 
 // Get all activities
 exports.getActivities = async (req, res) => {

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const employerController = require("../controllers/employerController");
+const employerController = require("../../controllers/admin/employerController");
 
 router.get("/", employerController.getEmployers);
 router.get("/:id", employerController.getEmployerById); // 🔥 IMPORTANT

@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+const pool = require("../../config/db");
 const { Parser } = require("json2csv");
 const fs = require("fs");
 const path = require("path");

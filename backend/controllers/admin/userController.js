@@ -1,3 +1,4 @@
+const pool = require("../../config/db");
 
 // GET ALL USERS
 exports.getUsers = async (req, res) => {
