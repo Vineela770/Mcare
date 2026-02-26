@@ -9,8 +9,23 @@ exports.getAllJobs = async (req, res) => {
         title, 
         company_name, 
         location,
-        salary,
-        salary_range, 
+        CASE 
+          WHEN min_salary IS NOT NULL AND max_salary IS NOT NULL THEN 
+            'Rs. ' || min_salary || ' - ' || max_salary || COALESCE(' ' || salary_period, '')
+          WHEN min_salary IS NOT NULL THEN 
+            'Rs. ' || min_salary || COALESCE(' ' || salary_period, '')
+          ELSE 'Salary not disclosed'
+        END as salary,
+        CASE 
+          WHEN min_salary IS NOT NULL AND max_salary IS NOT NULL THEN 
+            'Rs. ' || min_salary || ' - ' || max_salary || COALESCE(' ' || salary_period, '')
+          WHEN min_salary IS NOT NULL THEN 
+            'Rs. ' || min_salary || COALESCE(' ' || salary_period, '')
+          ELSE 'Salary not disclosed'
+        END as salary_range,
+        min_salary,
+        max_salary,
+        salary_period,
         job_type, 
         is_active,
         created_at,
@@ -23,8 +38,17 @@ exports.getAllJobs = async (req, res) => {
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
-    console.error("❌ Fetch Jobs Error:", err.message);
-    res.status(500).json({ message: "Error fetching jobs" });
+    console.error("❌ Fetch Jobs Error:", err);
+    console.error("Error Stack:", err.stack);
+    console.error("Error Details:", {
+      message: err.message,
+      code: err.code,
+      detail: err.detail
+    });
+    res.status(500).json({ 
+      message: "Error fetching jobs",
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 };
 

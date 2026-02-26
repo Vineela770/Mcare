@@ -140,8 +140,20 @@ exports.register = async (req, res) => {
 
   } catch (err) {
     await client.query('ROLLBACK'); 
-    console.error("❌ Register Error:", err.message);
-    res.status(500).json({ success: false, message: "Server error during registration" });
+    console.error("❌ Register Error:", err);
+    console.error("Error Stack:", err.stack);
+    console.error("Error Details:", {
+      message: err.message,
+      code: err.code,
+      detail: err.detail,
+      table: err.table,
+      column: err.column
+    });
+    res.status(500).json({ 
+      success: false, 
+      message: "Server error during registration",
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   } finally {
     client.release();
   }
