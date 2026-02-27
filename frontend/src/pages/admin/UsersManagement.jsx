@@ -9,6 +9,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import adminService from '../../api/adminService';
 
 const UsersManagement = () => {
   const [users, setUsers] = useState([]);
@@ -25,44 +26,17 @@ const UsersManagement = () => {
     status: 'Active',
   });
 
+  const fetchUsers = async () => {
+    try {
+      const data = await adminService.getUsers();
+      setUsers(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+      setUsers([]);
+    }
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      setUsers([
-        {
-          id: 1,
-          name: 'John Doe',
-          email: 'john@example.com',
-          role: 'candidate',
-          status: 'Active',
-          joined: '2023-10-15',
-        },
-        {
-          id: 2,
-          name: 'Jane Smith',
-          email: 'jane@example.com',
-          role: 'hr',
-          status: 'Active',
-          joined: '2023-11-20',
-        },
-        {
-          id: 3,
-          name: 'Bob Wilson',
-          email: 'bob@example.com',
-          role: 'employee',
-          status: 'Active',
-          joined: '2023-12-01',
-        },
-        {
-          id: 4,
-          name: 'Alice Brown',
-          email: 'alice@example.com',
-          role: 'candidate',
-          status: 'Inactive',
-          joined: '2023-09-10',
-        },
-      ]);
-    };
     fetchUsers();
   }, []);
 
@@ -102,35 +76,42 @@ const UsersManagement = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmitAdd = (e) => {
+  const handleSubmitAdd = async (e) => {
     e.preventDefault();
-    const nextId =
-      users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1;
-
-    const newUser = {
-      id: nextId,
-      ...formData,
-      joined: new Date().toISOString().split('T')[0],
-    };
-
-    setUsers((prev) => [...prev, newUser]);
-    setShowAddModal(false);
-    showNotification(`User ${formData.name} has been added successfully!`);
+    try {
+      await adminService.createUser(formData);
+      await fetchUsers(); // Refresh the list
+      setShowAddModal(false);
+      showNotification(`User ${formData.name} has been added successfully!`);
+    } catch (error) {
+      console.error('Failed to add user:', error);
+      showNotification(error.message || 'Failed to add user', 'error');
+    }
   };
 
-  const handleSubmitEdit = (e) => {
+  const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    setUsers((prev) =>
-      prev.map((u) => (u.id === selectedUser.id ? { ...u, ...formData } : u))
-    );
-    setShowEditModal(false);
-    showNotification(`User ${formData.name} has been updated successfully!`);
+    try {
+      await adminService.updateUser(selectedUser.id, formData);
+      await fetchUsers(); // Refresh the list
+      setShowEditModal(false);
+      showNotification(`User ${formData.name} has been updated successfully!`);
+    } catch (error) {
+      console.error('Failed to update user:', error);
+      showNotification(error.message || 'Failed to update user', 'error');
+    }
   };
 
-  const confirmDelete = () => {
-    setUsers((prev) => prev.filter((u) => u.id !== selectedUser.id));
-    setShowDeleteModal(false);
-    showNotification(`User ${selectedUser.name} has been deleted.`, 'info');
+  const confirmDelete = async () => {
+    try {
+      await adminService.deleteUser(selectedUser.id);
+      await fetchUsers(); // Refresh the list
+      setShowDeleteModal(false);
+      showNotification(`User ${selectedUser.name} has been deleted.`, 'info');
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+      showNotification(error.message || 'Failed to delete user', 'error');
+    }
   };
 
   const RolePill = ({ role }) => (

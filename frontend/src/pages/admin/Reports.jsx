@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, FileText, Users, Briefcase, IndianRupee, X, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import adminService from '../../api/adminService';
 
 const Reports = () => {
   const [notification, setNotification] = useState(null);
@@ -8,6 +9,30 @@ const Reports = () => {
     from: '2025-12-09',
     to: '2026-01-09'
   });
+  const [stats, setStats] = useState({
+    totalReports: 0,
+    thisMonth: 0,
+    totalDownloads: 0,
+    scheduled: 0
+  });
+
+  useEffect(() => {
+    fetchReportStats();
+  }, []);
+
+  const fetchReportStats = async () => {
+    try {
+      const data = await adminService.getReportStats();
+      setStats({
+        totalReports: data.totalReports || 0,
+        thisMonth: data.thisMonth || 0,
+        totalDownloads: data.totalDownloads || 0,
+        scheduled: data.scheduled || 0
+      });
+    } catch (error) {
+      console.error('Failed to fetch report stats:', error);
+    }
+  };
 
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });
@@ -90,10 +115,10 @@ const Reports = () => {
   ];
 
   const quickStats = [
-    { label: 'Total Reports', value: '48', change: '+12%', color: 'text-blue-600' },
-    { label: 'This Month', value: '8', change: '+3', color: 'text-green-600' },
-    { label: 'Total Downloads', value: '156', change: '+28%', color: 'text-cyan-600' },
-    { label: 'Scheduled', value: '4', change: '0', color: 'text-purple-600' }
+    { label: 'Total Reports', value: stats.totalReports.toString(), change: '+12%', color: 'text-blue-600' },
+    { label: 'This Month', value: stats.thisMonth.toString(), change: '+3', color: 'text-green-600' },
+    { label: 'Total Downloads', value: stats.totalDownloads.toString(), change: '+28%', color: 'text-cyan-600' },
+    { label: 'Scheduled', value: stats.scheduled.toString(), change: '0', color: 'text-purple-600' }
   ];
 
   return (

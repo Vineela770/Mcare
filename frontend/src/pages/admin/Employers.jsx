@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   Search,
   Plus,
@@ -17,6 +17,7 @@ import {
   Phone,
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import adminService from '../../api/adminService';
 
 const Employers = () => {
   const [filterStatus, setFilterStatus] = useState('all');
@@ -29,74 +30,21 @@ const Employers = () => {
   const [selectedEmployer, setSelectedEmployer] = useState(null);
   const [notification, setNotification] = useState(null);
 
-  const [employersList, setEmployersList] = useState([
-    {
-      id: 1,
-      name: 'MCARE Hospital',
-      contactPerson: 'Dr. Ramesh Kumar',
-      email: 'hr@mcare.com',
-      phone: '+91 98765 43210',
-      location: 'Guntur, AP',
-      activeJobs: 12,
-      totalApplications: 2,
-      joinedDate: '2023-01-15',
-      status: 'Active',
-      applicants: [
-        { id: 1, name: 'Anjali Reddy', email: 'anjali@gmail.com', resume: '/resumes/anjali_resume.pdf' },
-        { id: 2, name: 'Kiran Kumar', email: 'kiran@gmail.com', resume: '/resumes/kiran_resume.pdf' },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Apollo Hospitals',
-      contactPerson: 'Ms. Priya Sharma',
-      email: 'recruitment@apollo.com',
-      phone: '+91 98765 43211',
-      location: 'Hyderabad, TS',
-      activeJobs: 18,
-      totalApplications: 1,
-      joinedDate: '2023-02-20',
-      status: 'Active',
-      applicants: [{ id: 1, name: 'Kavya', email: 'kavya@gmail.com', resume: '/resumes/kavya_resume.pdf' }],
-    },
-    {
-      id: 3,
-      name: 'City Hospital',
-      contactPerson: 'Mr. Suresh Reddy',
-      email: 'hr@cityhospital.com',
-      phone: '+91 98765 43212',
-      location: 'Vijayawada, AP',
-      activeJobs: 8,
-      totalApplications: 1,
-      joinedDate: '2023-03-10',
-      status: 'Active',
-      applicants: [{ id: 1, name: 'Yashwanth', email: 'yashwanth@gmail.com', resume: '/resumes/yashwanth_resume.pdf' }],
-    },
-    {
-      id: 4,
-      name: 'Care Hospital',
-      contactPerson: 'Dr. Lakshmi Devi',
-      email: 'jobs@carehospital.com',
-      phone: '+91 98765 43213',
-      location: 'Guntur, AP',
-      activeJobs: 0,
-      totalApplications: 0,
-      joinedDate: '2023-05-22',
-      status: 'Inactive',
-    },
-    {
-      id: 5,
-      name: 'Max Hospital',
-      contactPerson: 'Mr. Rajesh Patel',
-      email: 'hr@maxhospital.com',
-      phone: '+91 98765 43214',
-      location: 'Vijayawada, AP',
-      activeJobs: 15,
-      totalApplications: 0,
-      joinedDate: '2023-04-18',
-      status: 'Active',
-    },
-  ]);
+  const [employersList, setEmployersList] = useState([]);
+
+  const fetchEmployers = async () => {
+    try {
+      const data = await adminService.getEmployers();
+      setEmployersList(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Failed to fetch employers:', error);
+      setEmployersList([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployers();
+  }, []);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -152,33 +100,42 @@ const Employers = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmitAdd = (e) => {
+  const handleSubmitAdd = async (e) => {
     e.preventDefault();
-    const newEmployer = {
-      id: employersList.length + 1,
-      ...formData,
-      activeJobs: 0,
-      totalApplications: 0,
-      joinedDate: new Date().toISOString().split('T')[0],
-    };
-    setEmployersList((prev) => [...prev, newEmployer]);
-    setShowAddModal(false);
-    showNotification(`${formData.name} has been added successfully!`);
+    try {
+      await adminService.createEmployer(formData);
+      await fetchEmployers(); // Refresh the list
+      setShowAddModal(false);
+      showNotification(`${formData.name} has been added successfully!`);
+    } catch (error) {
+      console.error('Failed to add employer:', error);
+      showNotification(error.message || 'Failed to add employer', 'error');
+    }
   };
 
-  const handleSubmitEdit = (e) => {
+  const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    setEmployersList((prev) =>
-      prev.map((emp) => (emp.id === selectedEmployer.id ? { ...emp, ...formData } : emp))
-    );
-    setShowEditModal(false);
-    showNotification(`${formData.name} has been updated successfully!`);
+    try {
+      await adminService.updateEmployer(selectedEmployer.id, formData);
+      await fetchEmployers(); // Refresh the list
+      setShowEditModal(false);
+      showNotification(`${formData.name} has been updated successfully!`);
+    } catch (error) {
+      console.error('Failed to update employer:', error);
+      showNotification(error.message || 'Failed to update employer', 'error');
+    }
   };
 
-  const confirmDelete = () => {
-    setEmployersList((prev) => prev.filter((emp) => emp.id !== selectedEmployer.id));
-    setShowDeleteModal(false);
-    showNotification(`${selectedEmployer.name} has been deleted.`, 'info');
+  const confirmDelete = async () => {
+    try {
+      await adminService.deleteEmployer(selectedEmployer.id);
+      await fetchEmployers(); // Refresh the list
+      setShowDeleteModal(false);
+      showNotification(`${selectedEmployer.name} has been deleted.`, 'info');
+    } catch (error) {
+      console.error('Failed to delete employer:', error);
+      showNotification(error.message || 'Failed to delete employer', 'error');
+    }
   };
 
   const stats = useMemo(

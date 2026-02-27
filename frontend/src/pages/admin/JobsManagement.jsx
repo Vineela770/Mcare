@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   Search,
   Edit2,
@@ -14,6 +14,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import adminService from '../../api/adminService';
 
 const JobsManagement = () => {
   const [filterStatus, setFilterStatus] = useState('all');
@@ -25,81 +26,21 @@ const JobsManagement = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [notification, setNotification] = useState(null);
 
-  const [jobsList, setJobsList] = useState([
-    {
-      id: 1,
-      title: 'Senior Nurse - ICU',
-      employer: 'MCARE Hospital',
-      location: 'Guntur, AP',
-      type: 'Full-time',
-      posted: '2 days ago',
-      applications: 2,
-      status: 'Active',
-      salary: '₹5,00,000 - ₹7,00,000',
-      description: 'We are looking for an experienced ICU nurse to join our team.',
-      requirements: 'Bachelor in Nursing, 3+ years ICU experience',
-      applicants: [
-        { id: 1, name: 'Anjali Reddy', email: 'anjali@gmail.com', resume: '/resumes/anjali_resume.pdf' },
-        { id: 2, name: 'Kiran Kumar', email: 'kiran@gmail.com', resume: '/resumes/kiran_resume.pdf' },
-      ],
-    },
-    {
-      id: 2,
-      title: 'Medical Officer',
-      employer: 'City Hospital',
-      location: 'Vijayawada, AP',
-      type: 'Full-time',
-      posted: '5 days ago',
-      applications: 2,
-      status: 'Active',
-      salary: '₹8,00,000 - ₹12,00,000',
-      description: 'Medical Officer position available for immediate joining.',
-      requirements: 'MBBS, 2+ years experience',
-      applicants: [
-        { id: 1, name: 'kavya', email: 'kavya@gmail.com', resume: '/resumes/kavya_resume.pdf' },
-        { id: 2, name: 'Yashwanth', email: 'yashwanth@gmail.com', resume: '/resumes/yashwanth_resume.pdf' },
-      ],
-    },
-    {
-      id: 3,
-      title: 'Lab Technician',
-      employer: 'Apollo Hospitals',
-      location: 'Hyderabad, TS',
-      type: 'Part-time',
-      posted: '1 week ago',
-      applications: 0,
-      status: 'Active',
-      salary: '₹3,00,000 - ₹4,50,000',
-      description: 'Looking for a skilled lab technician for our diagnostic center.',
-      requirements: 'Diploma in Medical Laboratory Technology',
-    },
-    {
-      id: 4,
-      title: 'Physiotherapist',
-      employer: 'Care Hospital',
-      location: 'Guntur, AP',
-      type: 'Contract',
-      posted: '2 weeks ago',
-      applications: 0,
-      status: 'Closed',
-      salary: '₹4,00,000 - ₹6,00,000',
-      description: 'Contract position for experienced physiotherapist.',
-      requirements: 'Bachelor in Physiotherapy, 2+ years experience',
-    },
-    {
-      id: 5,
-      title: 'Radiologist',
-      employer: 'Max Hospital',
-      location: 'Vijayawada, AP',
-      type: 'Full-time',
-      posted: '3 weeks ago',
-      applications: 0,
-      status: 'Closed',
-      salary: '₹15,00,000 - ₹20,00,000',
-      description: 'Senior radiologist position with attractive benefits.',
-      requirements: 'MD Radiology, 5+ years experience',
-    },
-  ]);
+  const [jobsList, setJobsList] = useState([]);
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    try {
+      const data = await adminService.getJobs();
+      setJobsList(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Failed to fetch jobs:', error);
+      setJobsList([]);
+    }
+  };
 
   const [editFormData, setEditFormData] = useState({
     title: '',
@@ -181,19 +122,29 @@ const JobsManagement = () => {
     setEditFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmitEdit = (e) => {
+  const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    setJobsList((prev) =>
-      prev.map((j) => (j.id === selectedJob.id ? { ...j, ...editFormData } : j))
-    );
-    setShowEditModal(false);
-    showNotification(`Job "${editFormData.title}" has been updated successfully!`);
+    try {
+      await adminService.updateJob(selectedJob.id, editFormData);
+      await fetchJobs(); // Refresh the list
+      setShowEditModal(false);
+      showNotification(`Job "${editFormData.title}" has been updated successfully!`);
+    } catch (error) {
+      console.error('Failed to update job:', error);
+      showNotification(error.message || 'Failed to update job', 'error');
+    }
   };
 
-  const confirmDelete = () => {
-    setJobsList((prev) => prev.filter((j) => j.id !== selectedJob.id));
-    setShowDeleteModal(false);
-    showNotification(`Job "${selectedJob.title}" has been deleted.`, 'info');
+  const confirmDelete = async () => {
+    try {
+      await adminService.deleteJob(selectedJob.id);
+      await fetchJobs(); // Refresh the list
+      setShowDeleteModal(false);
+      showNotification(`Job "${selectedJob.title}" has been deleted.`, 'info');
+    } catch (error) {
+      console.error('Failed to delete job:', error);
+      showNotification(error.message || 'Failed to delete job', 'error');
+    }
   };
 
   const filteredJobs = useMemo(() => {

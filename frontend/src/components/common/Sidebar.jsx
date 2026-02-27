@@ -79,7 +79,9 @@ const Sidebar = () => {
     ],
   };
 
-  const currentMenu = menuItems[user?.role] || [];
+  // Normalize role: backend returns 'administrator', but we use 'admin' for menu
+  const userRole = user?.role === 'administrator' ? 'admin' : user?.role;
+  const currentMenu = menuItems[userRole] || [];
 
   const getProfilePath = () =>
     user?.role === 'candidate'

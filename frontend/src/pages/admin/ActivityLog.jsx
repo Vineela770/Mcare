@@ -1,132 +1,35 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { UserCheck, UserX, Briefcase, FileText, Clock, Search, Menu, X } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import adminService from '../../api/adminService';
 
 const ActivityLog = () => {
   const [filterType, setFilterType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [activities, setActivities] = useState([]);
 
   // ✅ Mobile sidebar drawer
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  const activities = [
-    {
-      id: 1,
-      type: 'user',
-      action: 'New user registered',
-      user: 'Rajesh Kumar',
-      details: 'Candidate account created',
-      timestamp: '2 minutes ago',
-      icon: UserCheck,
-      color: 'text-green-600',
-      bg: 'bg-green-50',
-    },
-    {
-      id: 2,
-      type: 'job',
-      action: 'New job posted',
-      user: 'MCARE Hospital',
-      details: 'Senior Nurse - ICU position',
-      timestamp: '15 minutes ago',
-      icon: Briefcase,
-      color: 'text-blue-600',
-      bg: 'bg-blue-50',
-    },
-    {
-      id: 3,
-      type: 'application',
-      action: 'Application submitted',
-      user: 'Priya Sharma',
-      details: 'Applied for Medical Officer position',
-      timestamp: '32 minutes ago',
-      icon: FileText,
-      color: 'text-cyan-600',
-      bg: 'bg-cyan-50',
-    },
-    {
-      id: 4,
-      type: 'user',
-      action: 'Account deleted',
-      user: 'Test User',
-      details: 'User account permanently deleted',
-      timestamp: '1 hour ago',
-      icon: UserX,
-      color: 'text-red-600',
-      bg: 'bg-red-50',
-    },
-    {
-      id: 5,
-      type: 'job',
-      action: 'Job closed',
-      user: 'Apollo Hospitals',
-      details: 'Lab Technician position closed',
-      timestamp: '2 hours ago',
-      icon: Clock,
-      color: 'text-gray-600',
-      bg: 'bg-gray-50',
-    },
-    {
-      id: 6,
-      type: 'user',
-      action: 'Profile updated',
-      user: 'Amit Patel',
-      details: 'Updated professional information',
-      timestamp: '3 hours ago',
-      icon: UserCheck,
-      color: 'text-purple-600',
-      bg: 'bg-purple-50',
-    },
-    {
-      id: 7,
-      type: 'application',
-      action: 'Application withdrawn',
-      user: 'Sneha Reddy',
-      details: 'Withdrew application for Physiotherapist role',
-      timestamp: '4 hours ago',
-      icon: FileText,
-      color: 'text-orange-600',
-      bg: 'bg-orange-50',
-    },
-    {
-      id: 8,
-      type: 'job',
-      action: 'Job updated',
-      user: 'City Hospital',
-      details: 'Modified Medical Officer job requirements',
-      timestamp: '5 hours ago',
-      icon: Briefcase,
-      color: 'text-blue-600',
-      bg: 'bg-blue-50',
-    },
-    {
-      id: 9,
-      type: 'user',
-      action: 'Password changed',
-      user: 'Ramesh Kumar',
-      details: 'User changed account password',
-      timestamp: '6 hours ago',
-      icon: UserCheck,
-      color: 'text-green-600',
-      bg: 'bg-green-50',
-    },
-    {
-      id: 10,
-      type: 'application',
-      action: 'Application status updated',
-      user: 'HR Department',
-      details: 'Shortlisted 5 candidates for interview',
-      timestamp: '7 hours ago',
-      icon: FileText,
-      color: 'text-cyan-600',
-      bg: 'bg-cyan-50',
-    },
-  ];
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+
+  const fetchActivities = async () => {
+    try {
+      const data = await adminService.getActivities();
+      setActivities(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Failed to fetch activities:', error);
+      setActivities([]);
+    }
+  };
 
   const stats = [
-    { label: 'Total Activities', value: '1,234', icon: Clock, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Today', value: '87', icon: Clock, color: 'text-green-600', bg: 'bg-green-50' },
-    { label: 'This Week', value: '342', icon: Clock, color: 'text-cyan-600', bg: 'bg-cyan-50' },
-    { label: 'This Month', value: '1,156', icon: Clock, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { label: 'Total Activities', value: (activities.length || 0).toString(), icon: Clock, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Today', value: (activities.filter(a => a.timestamp?.includes('min') || a.timestamp?.includes('hour')).length || 0).toString(), icon: Clock, color: 'text-green-600', bg: 'bg-green-50' },
+    { label: 'This Week', value: (activities.length || 0).toString(), icon: Clock, color: 'text-cyan-600', bg: 'bg-cyan-50' },
+    { label: 'This Month', value: (activities.length || 0).toString(), icon: Clock, color: 'text-purple-600', bg: 'bg-purple-50' },
   ];
 
   const filteredActivities = useMemo(() => {

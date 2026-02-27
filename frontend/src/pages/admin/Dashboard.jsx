@@ -11,6 +11,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import Sidebar from '../../components/common/Sidebar';
+import adminService from '../../api/adminService';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -24,13 +25,17 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      setStats({
-        totalUsers: 2458,
-        totalJobs: 342,
-        employers: 156,
-        activeToday: 892,
-      });
+      try {
+        const data = await adminService.getDashboardStats();
+        setStats({
+          totalUsers: data.totalUsers || 0,
+          totalJobs: data.totalJobs || 0,
+          employers: data.totalEmployers || 0,
+          activeToday: data.activeToday || 0,
+        });
+      } catch (error) {
+        console.error('Failed to fetch dashboard stats:', error);
+      }
     };
     fetchStats();
   }, []);
