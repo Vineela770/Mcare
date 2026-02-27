@@ -13,7 +13,9 @@ const Alerts = () => {
       setLoading(true);
       try {
         const data = await alertService.getUserAlerts();
-        setAlerts(data);
+        // Ensure data is an array
+        const alertsArray = Array.isArray(data) ? data : [];
+        setAlerts(alertsArray);
       } catch (error) {
         console.error('Failed to fetch alerts:', error);
         setAlerts([]);

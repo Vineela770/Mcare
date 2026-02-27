@@ -33,8 +33,9 @@ const Resume = () => {
         const data = await resumeService.getUserResume();
         if (data) {
           setSummary(data.summary || '');
-          setExperiences(data.experiences || []);
-          setEducations(data.educations || []);
+          // Ensure experiences and educations are arrays
+          setExperiences(Array.isArray(data.experiences) ? data.experiences : []);
+          setEducations(Array.isArray(data.educations) ? data.educations : []);
           setProfileCompletion(data.profileCompletion || 0);
           if (data.resumeUrl) {
             setResumeFile({
@@ -47,6 +48,9 @@ const Resume = () => {
         }
       } catch (error) {
         console.error('Failed to fetch resume data:', error);
+        // Set empty arrays on error
+        setExperiences([]);
+        setEducations([]);
       } finally {
         setLoading(false);
       }

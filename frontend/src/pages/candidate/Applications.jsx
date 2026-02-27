@@ -14,7 +14,9 @@ const Applications = () => {
       setLoading(true);
       try {
         const data = await applicationService.getUserApplications();
-        setApplications(data);
+        // Ensure data is an array
+        const appsArray = Array.isArray(data) ? data : [];
+        setApplications(appsArray);
       } catch (error) {
         console.error('Failed to fetch applications:', error);
         setApplications([]);
@@ -26,16 +28,16 @@ const Applications = () => {
   }, []);
 
   const stats = {
-    total: applications.length,
-    pending: applications.filter(a => a.status === 'Under Review').length,
-    shortlisted: applications.filter(a => a.status === 'Shortlisted').length,
-    interview: applications.filter(a => a.status === 'Interview').length,
+    total: Array.isArray(applications) ? applications.length : 0,
+    pending: Array.isArray(applications) ? applications.filter(a => a.status === 'Under Review').length : 0,
+    shortlisted: Array.isArray(applications) ? applications.filter(a => a.status === 'Shortlisted').length : 0,
+    interview: Array.isArray(applications) ? applications.filter(a => a.status === 'Interview').length : 0,
   };
 
   const filteredApplications =
     filter === 'all'
-      ? applications
-      : applications.filter(a => a.status.toLowerCase() === filter);
+      ? (Array.isArray(applications) ? applications : [])
+      : (Array.isArray(applications) ? applications.filter(a => a.status.toLowerCase() === filter) : []);
 
   const getStatusIcon = (status) => {
     switch (status) {

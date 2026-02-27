@@ -276,6 +276,51 @@ exports.getApplicationDetails = async (req, res) => {
 };
 
 /**
+ * 📄 6.5. Get User Resume/Profile Data
+ */
+exports.getUserResumeData = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const userQuery = await pool.query(
+            `SELECT u.full_name, u.email, u.profile_photo_url, cp.* FROM users u 
+             LEFT JOIN candidate_profiles cp ON u.id = cp.user_id 
+             WHERE u.id = $1`,
+            [userId]
+        );
+
+        if (userQuery.rows.length === 0) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const user = userQuery.rows[0];
+
+        const parseJson = (data) => {
+            try {
+                if (!data) return [];
+                return typeof data === 'string' ? JSON.parse(data) : data;
+            } catch (e) { return []; }
+        };
+
+        const experiences = parseJson(user?.experience);
+        const educations = parseJson(user?.education);
+
+        res.json({
+            success: true,
+            summary: user?.professional_summary || '',
+            experiences: experiences,
+            educations: educations,
+            resumeUrl: user?.resume_url || null,
+            resumeFileName: user?.resume_url ? user.resume_url.split('/').pop() : null,
+            profileCompletion: 0 // Calculate if needed
+        });
+    } catch (err) {
+        console.error("❌ Get Resume Error:", err.message);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
+};
+
+/**
  * 📄 7. Update Detailed Profile & Resume (✅ FIX FOR STATIC PATHS)
  */
 exports.updateResumeData = async (req, res) => {

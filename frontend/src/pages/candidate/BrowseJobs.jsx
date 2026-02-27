@@ -46,8 +46,10 @@ const BrowseJobs = () => {
       setLoading(true);
       try {
         const data = await jobService.getCandidateJobs();
-        setAllJobs(data);
-        setJobs(data);
+        // Ensure data is an array
+        const jobsArray = Array.isArray(data) ? data : [];
+        setAllJobs(jobsArray);
+        setJobs(jobsArray);
       } catch (error) {
         console.error('Failed to fetch jobs:', error);
         setAllJobs([]);
@@ -61,7 +63,8 @@ const BrowseJobs = () => {
   }, []);
 
   const handleSearch = () => {
-    let filtered = allJobs;
+    // Ensure allJobs is an array before filtering
+    let filtered = Array.isArray(allJobs) ? allJobs : [];
 
     if (searchTerm) {
       filtered = filtered.filter(job =>

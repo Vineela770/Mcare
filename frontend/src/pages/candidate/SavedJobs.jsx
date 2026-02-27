@@ -14,7 +14,9 @@ const SavedJobs = () => {
       setLoading(true);
       try {
         const data = await jobService.getSavedJobs();
-        setSavedJobs(data);
+        // Ensure data is an array
+        const jobsArray = Array.isArray(data) ? data : [];
+        setSavedJobs(jobsArray);
       } catch (error) {
         console.error('Failed to fetch saved jobs:', error);
         setSavedJobs([]);
@@ -43,7 +45,9 @@ const SavedJobs = () => {
   };
 
   const handleConfirmRemove = () => {
-    setSavedJobs(savedJobs.filter((job) => job.id !== selectedJob.id));
+    // Ensure savedJobs is an array
+    const jobsArray = Array.isArray(savedJobs) ? savedJobs : [];
+    setSavedJobs(jobsArray.filter((job) => job.id !== selectedJob.id));
     setShowRemoveModal(false);
     setSelectedJob(null);
   };
