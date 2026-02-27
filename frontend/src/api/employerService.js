@@ -207,3 +207,5 @@ export const employerService = {
     }
   },
 };
+
+export default employerService;
