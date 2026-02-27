@@ -156,4 +156,54 @@ export const employerService = {
       throw error.response?.data || { message: 'Failed to update interview' };
     }
   },
+
+  // Get conversations (messages)
+  getConversations: async () => {
+    try {
+      const response = await axios.get('/api/hr/messages/conversations');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch conversations' };
+    }
+  },
+
+  // Get messages by conversation ID
+  getMessages: async (conversationId) => {
+    try {
+      const response = await axios.get(`/api/hr/messages/conversation/${conversationId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch messages' };
+    }
+  },
+
+  // Send message
+  sendMessage: async (messageData) => {
+    try {
+      const response = await axios.post('/api/hr/messages/send', messageData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to send message' };
+    }
+  },
+
+  // Get HR profile
+  getProfile: async () => {
+    try {
+      const response = await axios.get('/api/hr/profile');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch profile' };
+    }
+  },
+
+  // Save/Update HR profile
+  saveProfile: async (profileData) => {
+    try {
+      const response = await axios.post('/api/hr/profile', profileData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to save profile' };
+    }
+  },
 };

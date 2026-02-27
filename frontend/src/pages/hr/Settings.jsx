@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, Bell, User, Mail } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import employerService from '../../api/employerService';
 
 const Settings = () => {
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    companyName: 'MCARE Hospital',
-    email: 'hr@mcare.com',
+    companyName: '',
+    email: '',
 
     phoneCountryCode: '+91',
     phone: '',
@@ -13,7 +15,7 @@ const Settings = () => {
     alternatePhoneCountryCode: '+91',
     alternatePhone: '',
 
-    location: 'Guntur, Andhra Pradesh',
+    location: '',
     pan: '',
     gst: '',
     logo: null,
@@ -26,6 +28,43 @@ const Settings = () => {
       weeklyReports: false,
     },
   });
+
+  // Fetch profile on mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setLoading(true);
+      try {
+        const data = await employerService.getProfile();
+        if (data) {
+          setFormData({
+            companyName: data.company_name || '',
+            email: data.email || '',
+            phoneCountryCode: data.phone_country_code || '+91',
+            phone: data.phone || '',
+            alternatePhoneCountryCode: data.alternate_phone_country_code || '+91',
+            alternatePhone: data.alternate_phone || '',
+            location: data.location || '',
+            pan: data.pan || '',
+            gst: data.gst || '',
+            logo: null,
+            coverPhoto: null,
+            about: data.about || '',
+            notifications: {
+              emailAlerts: data.email_alerts !== false,
+              applicationUpdates: data.application_updates !== false,
+              interviewReminders: data.interview_reminders !== false,
+              weeklyReports: data.weekly_reports === true,
+            },
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const countryCodes = [
     { code: '+91', label: '🇮🇳 India (+91)' },
@@ -58,7 +97,7 @@ const Settings = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {};
@@ -78,15 +117,19 @@ const Settings = () => {
 
     if (!formData.about.trim()) newErrors.about = 'About organization is required';
 
-    if (!formData.logo) newErrors.logo = 'Logo image is required';
-
-    if (!formData.coverPhoto) newErrors.coverPhoto = 'Cover photo is required';
-
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    console.log('Settings updated:', formData);
-    alert('Settings saved successfully!');
+    try {
+      setLoading(true);
+      await employerService.saveProfile(formData);
+      alert('Settings saved successfully!');
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+      alert('Failed to save settings. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

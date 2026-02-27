@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Sidebar from '../../components/common/Sidebar';
+import employerService from '../../api/employerService';
 
 import {
   Search,
@@ -16,11 +17,68 @@ const Messages = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageText, setMessageText] = useState('');
   const [showAttachments, setShowAttachments] = useState(false);
+  const [conversations, setConversations] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const documentInputRef = useRef(null);
   const mediaInputRef = useRef(null);
   const audioInputRef = useRef(null);
   const cameraInputRef = useRef(null);
+
+  // Fetch conversations on mount
+  useEffect(() => {
+    const fetchConversations = async () => {
+      setLoading(true);
+      try {
+        const data = await employerService.getConversations();
+        const convsArray = Array.isArray(data) ? data : [];
+        // Map backend data to expected format
+        const mappedConvs = convsArray.map(conv => ({
+          id: conv.id,
+          name: conv.candidate_name || 'Unknown',
+          lastMessage: conv.last_message || 'No messages yet',
+          time: conv.last_time ? new Date(conv.last_time).toLocaleString() : '',
+          unread: 0, // Backend doesn't track unread yet
+          avatar: (conv.candidate_name || 'U').substring(0, 2).toUpperCase(),
+        }));
+        setConversations(mappedConvs);
+      } catch (error) {
+        console.error('Failed to fetch conversations:', error);
+        setConversations([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchConversations();
+  }, []);
+
+  // Fetch messages when chat is selected
+  useEffect(() => {
+    if (!selectedChat) {
+      setMessages([]);
+      return;
+    }
+
+    const fetchMessages = async () => {
+      try {
+        const data = await employerService.getMessages(selectedChat);
+        const msgsArray = Array.isArray(data) ? data : [];
+        // Map backend data to expected format
+        const mappedMsgs = msgsArray.map(msg => ({
+          id: msg.id,
+          text: msg.message,
+          time: msg.created_at ? new Date(msg.created_at).toLocaleTimeString() : '',
+          isOwn: msg.sender === 'hr', // Messages from HR are "own"
+        }));
+        setMessages(mappedMsgs);
+      } catch (error) {
+        console.error('Failed to fetch messages:', error);
+        setMessages([]);
+      }
+    };
+    fetchMessages();
+  }, [selectedChat]);
 
   const openFilePicker = (type) => {
     setShowAttachments(false);
@@ -36,62 +94,31 @@ const Messages = () => {
     console.log('Selected file:', file);
   };
 
-  const conversations = [
-    {
-      id: 1,
-      name: 'Rajesh Kumar',
-      lastMessage: 'Thank you for considering my application',
-      time: '2 hours ago',
-      unread: 2,
-      avatar: 'RK',
-    },
-    {
-      id: 2,
-      name: 'Priya Sharma',
-      lastMessage: 'I am available for the interview',
-      time: '5 hours ago',
-      unread: 0,
-      avatar: 'PS',
-    },
-    {
-      id: 3,
-      name: 'Amit Patel',
-      lastMessage: 'Could you provide more details about the role?',
-      time: '1 day ago',
-      unread: 1,
-      avatar: 'AP',
-    },
-  ];
-
   const activeChat = conversations.find(c => c.id === selectedChat);
 
-  const messages = selectedChat
-    ? [
-        {
-          id: 1,
-          text: `Hello! Thank you for applying.`,
-          time: '10:30 AM',
-          isOwn: false,
-        },
-        {
-          id: 2,
-          text: 'Thank you for reviewing my profile.',
-          time: '10:35 AM',
-          isOwn: true,
-        },
-        {
-          id: 3,
-          text: activeChat?.lastMessage,
-          time: activeChat?.time,
-          isOwn: false,
-        },
-      ]
-    : [];
-
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!messageText.trim()) return;
-    setMessageText('');
+    if (!messageText.trim() || !selectedChat) return;
+
+    try {
+      await employerService.sendMessage({
+        conversation_id: selectedChat,
+        message: messageText,
+      });
+      setMessageText('');
+      // Refresh messages after sending
+      const data = await employerService.getMessages(selectedChat);
+      const msgsArray = Array.isArray(data) ? data : [];
+      const mappedMsgs = msgsArray.map(msg => ({
+        id: msg.id,
+        text: msg.message,
+        time: msg.created_at ? new Date(msg.created_at).toLocaleTimeString() : '',
+        isOwn: msg.sender === 'hr',
+      }));
+      setMessages(mappedMsgs);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    }
   };
 
   return (

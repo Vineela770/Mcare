@@ -34,6 +34,8 @@ const hrJobsRoutes = require("./routes/HR/jobsRoutes");
 const hrApplicationsRoutes = require("./routes/HR/applicationsRoutes");
 const hrCandidatesRoutes = require("./routes/HR/candidatesRoutes");
 const hrInterviewsRoutes = require("./routes/HR/interviewsRoutes");
+const hrMessagesRoutes = require("./routes/HR/messagesRoutes");
+const hrProfileRoutes = require("./routes/HR/profileRoutes");
 
 const app = express();
 
@@ -93,6 +95,8 @@ app.use("/api/hr/jobs", hrJobsRoutes);
 app.use("/api/hr/applications", hrApplicationsRoutes);
 app.use("/api/hr/candidates", hrCandidatesRoutes);
 app.use("/api/hr/interviews", hrInterviewsRoutes);
+app.use("/api/hr/messages", hrMessagesRoutes);
+app.use("/api/hr/profile", hrProfileRoutes);
 
 // Health check
 app.get("/", (req, res) => {
