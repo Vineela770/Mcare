@@ -44,6 +44,7 @@ const UsersManagement = () => {
   const [showViewModal, setShowViewModal] = useState(false);
   const [viewUser, setViewUser] = useState(null);
   const [viewLoading, setViewLoading] = useState(false);
+  const [userApps, setUserApps] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [notification, setNotification] = useState(null);
 
@@ -105,10 +106,15 @@ const UsersManagement = () => {
   const handleViewUser = async (user) => {
     setViewLoading(true);
     setViewUser(null);
+    setUserApps([]);
     setShowViewModal(true);
     try {
-      const data = await adminService.getUserById(user.id);
+      const [data, apps] = await Promise.all([
+        adminService.getUserById(user.id),
+        adminService.getUserApplications(user.id).catch(() => []),
+      ]);
       setViewUser(data);
+      setUserApps(Array.isArray(apps) ? apps : []);
     } catch (err) {
       console.error('Failed to fetch user details:', err);
       setViewUser(user); // fallback to list data
@@ -949,6 +955,37 @@ const UsersManagement = () => {
                           </div>
                         )}
                       </div>
+                    </div>
+                  )}
+
+                  {/* ── Recent Applications ── */}
+                  {viewUser.role === 'candidate' && (
+                    <div className="bg-gray-50 rounded-xl p-4">
+                      <h4 className="font-semibold text-gray-700 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
+                        <Briefcase className="w-4 h-4 text-cyan-600" /> Job Applications ({userApps.length})
+                      </h4>
+                      {userApps.length === 0 ? (
+                        <p className="text-sm text-gray-400 italic">No applications yet.</p>
+                      ) : (
+                        <div className="space-y-2 max-h-48 overflow-y-auto">
+                          {userApps.map((app) => (
+                            <div key={app.id} className="flex items-center justify-between bg-white rounded-lg px-3 py-2 border border-gray-100 text-xs">
+                              <div>
+                                <p className="font-medium text-gray-800 truncate max-w-[180px]">{app.job_title || '—'}</p>
+                                <p className="text-gray-400">{app.employer_name || ''}{app.job_location ? ` · ${app.job_location}` : ''}</p>
+                              </div>
+                              <span className={`px-2 py-0.5 rounded-full font-medium whitespace-nowrap flex-shrink-0 ${
+                                (app.status || '').toLowerCase() === 'shortlisted' ? 'bg-cyan-100 text-cyan-700' :
+                                (app.status || '').toLowerCase() === 'rejected' ? 'bg-red-100 text-red-700' :
+                                (app.status || '').toLowerCase() === 'interview' ? 'bg-purple-100 text-purple-700' :
+                                'bg-yellow-100 text-yellow-700'
+                              }`}>
+                                {app.status || 'Pending'}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
 

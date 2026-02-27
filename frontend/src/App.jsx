@@ -49,6 +49,7 @@ import Employers from './pages/admin/Employers';
 import Reports from './pages/admin/Reports';
 import ActivityLog from './pages/admin/ActivityLog';
 import SystemSettings from './pages/admin/SystemSettings';
+import AdminApplications from './pages/admin/AdminApplications';
 
 
 
@@ -268,6 +269,11 @@ function App() {
         <Route path="/admin/settings" element={
           <ProtectedRoute allowedRoles={['admin', 'administrator']}>
             <SystemSettings />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/applications" element={
+          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
+            <AdminApplications />
           </ProtectedRoute>
         } />
       </Routes>

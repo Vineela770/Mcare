@@ -72,6 +72,7 @@ const Sidebar = () => {
       { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
       { icon: Users, label: 'Users Management', path: '/admin/users' },
       { icon: Briefcase, label: 'Jobs Management', path: '/admin/jobs' },
+      { icon: FileText, label: 'Applications', path: '/admin/applications' },
       { icon: Building2, label: 'Employers', path: '/admin/employers' },
       { icon: FileText, label: 'Reports', path: '/admin/reports' },
       { icon: List, label: 'Activity Log', path: '/admin/activity' },

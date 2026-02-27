@@ -187,6 +187,34 @@ const adminService = {
       throw error.response?.data || { message: 'Failed to update settings' };
     }
   },
+
+  // Applications Management
+  getAllApplications: async () => {
+    try {
+      const response = await axios.get('/api/admin/applications');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch applications' };
+    }
+  },
+
+  getApplicationStats: async () => {
+    try {
+      const response = await axios.get('/api/admin/applications/stats');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch application stats' };
+    }
+  },
+
+  getUserApplications: async (userId) => {
+    try {
+      const response = await axios.get(`/api/admin/applications/user/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch user applications' };
+    }
+  },
 };
 
 export default adminService;

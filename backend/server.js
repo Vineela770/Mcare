@@ -27,6 +27,7 @@ const adminDashboardRoutes = require("./routes/admin/dashboardRoutes");
 const adminReportsRoutes = require("./routes/admin/reportsRoutes");
 const adminActivityRoutes = require("./routes/admin/activityRoutes");
 const adminSettingsRoutes = require("./routes/admin/systemSettingsRoutes");
+const adminApplicationsRoutes = require("./routes/admin/applicationsRoutes");
 
 // HR/Employer routes
 const hrDashboardRoutes = require("./routes/HR/dashboardRoutes");
@@ -88,6 +89,7 @@ app.use("/api/admin/dashboard", adminDashboardRoutes);
 app.use("/api/admin/reports", adminReportsRoutes);
 app.use("/api/admin/activity", adminActivityRoutes);
 app.use("/api/admin/settings", adminSettingsRoutes);
+app.use("/api/admin/applications", adminApplicationsRoutes);
 
 // HR/Employer routes
 app.use("/api/hr/dashboard", hrDashboardRoutes);

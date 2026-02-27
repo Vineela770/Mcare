@@ -64,6 +64,7 @@ const Navbar = () => {
       { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { to: '/admin/users', label: 'Users Management', icon: Users },
       { to: '/admin/jobs', label: 'Jobs Management', icon: Briefcase },
+      { to: '/admin/applications', label: 'Applications', icon: FileText },
       { to: '/admin/employers', label: 'Employers', icon: Building2 },
       { to: '/admin/reports', label: 'Reports', icon: BarChart3 },
       { to: '/admin/activity', label: 'Activity Log', icon: Activity },
