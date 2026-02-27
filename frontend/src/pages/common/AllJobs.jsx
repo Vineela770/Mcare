@@ -9,10 +9,11 @@ import {
   Filter,
   X,
 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useLocation as useRouterLocation } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
+import { jobService } from '../../api/jobService';
 
 const AllJobs = () => {
   // ✅ URL params support (Browse Jobs -> show particular job)
@@ -47,200 +48,29 @@ const AllJobs = () => {
   const [errors, setErrors] = useState({});
 
   // ✅ jobs in state (so we can toggle saved)
-  const [jobs, setJobs] = useState([
-    {
-      id: 1,
-      title: 'Cardiologist',
-      company: 'MCARE Hospital',
-      location: 'Guntur, Andhra Pradesh',
-      type: 'Full-time',
-      salary: 'Rs. 1,50,000 - 2,50,000',
-      posted: '2 days ago',
-      saved: false,
-      description:
-        'We are hiring a Cardiologist to diagnose and treat cardiovascular conditions, interpret cardiac tests, and provide long-term patient care.',
-      requirements: [
-        'MBBS + MD/DNB (Cardiology) / DM Cardiology',
-        'Valid medical license',
-        'Experience in OPD/IPD cardiac care',
-        'Strong ECG/ECHO interpretation skills',
-      ],
-      responsibilities: [
-        'Evaluate patients with cardiac symptoms',
-        'Order and interpret diagnostic tests',
-        'Plan treatment and follow-ups',
-        'Coordinate with ICU and emergency teams',
-      ],
-    },
-    {
-      id: 2,
-      title: 'Neurologist',
-      company: 'Apollo Hospitals',
-      location: 'Hyderabad, Telangana',
-      type: 'Full-time',
-      salary: 'Rs. 1,40,000 - 2,40,000',
-      posted: '1 week ago',
-      saved: true,
-      description:
-        'Join our Neurology department to diagnose and manage neurological disorders including stroke, epilepsy, headaches, and neuropathies.',
-      requirements: [
-        'MBBS + MD/DNB (Neurology) / DM Neurology',
-        'Valid medical license',
-        'Clinical decision-making skills',
-        'Good patient communication',
-      ],
-      responsibilities: [
-        'Perform neurological examinations',
-        'Manage acute and chronic neuro cases',
-        'Recommend imaging/lab investigations',
-        'Maintain accurate clinical documentation',
-      ],
-    },
-    {
-      id: 3,
-      title: 'Gynecologist',
-      company: 'Care Hospital',
-      location: 'Vijayawada, Andhra Pradesh',
-      type: 'Full-time',
-      salary: 'Rs. 1,20,000 - 2,20,000',
-      posted: '3 days ago',
-      saved: false,
-      description:
-        'We are seeking a Gynecologist to provide women’s healthcare services including antenatal care, deliveries, and gynecological procedures.',
-      requirements: [
-        'MBBS + MS/DNB (OBG)',
-        'Valid medical license',
-        'Experience in labor & delivery (preferred)',
-        'Patient-focused approach',
-      ],
-      responsibilities: [
-        'OPD consultations and follow-ups',
-        'Manage pregnancy and childbirth cases',
-        'Perform gynecological procedures',
-        'Coordinate with nursing and OT team',
-      ],
-    },
-    {
-      id: 4,
-      title: 'Radiologist',
-      company: 'City Diagnostics',
-      location: 'Chennai, Tamil Nadu',
-      type: 'Contract',
-      salary: 'Rs. 1,00,000 - 2,00,000',
-      posted: '1 day ago',
-      saved: false,
-      description:
-        'Radiologist required to interpret imaging studies (X-ray/CT/MRI/USG), provide accurate reports, and support clinical decision making.',
-      requirements: [
-        'MBBS + MD/DNB (Radiology)',
-        'Valid medical license',
-        'Strong reporting accuracy',
-        'Knowledge of imaging protocols and safety',
-      ],
-      responsibilities: [
-        'Review and interpret imaging studies',
-        'Prepare timely diagnostic reports',
-        'Advise referring clinicians when needed',
-        'Ensure quality and safety compliance',
-      ],
-    },
-    {
-      id: 5,
-      title: 'Pediatrician',
-      company: 'Yashoda Hospitals',
-      location: 'Secunderabad, Telangana',
-      type: 'Full-time',
-      salary: 'Rs. 1,00,000 - 1,80,000',
-      posted: '5 days ago',
-      saved: true,
-      description:
-        'Pediatrician needed to provide comprehensive care for infants, children, and adolescents including immunizations and acute care.',
-      requirements: [
-        'MBBS + MD/DNB (Pediatrics)',
-        'Valid medical license',
-        'Experience in pediatric OPD/IPD',
-        'Strong communication with parents/guardians',
-      ],
-      responsibilities: [
-        'Conduct pediatric consultations',
-        'Manage acute pediatric illnesses',
-        'Monitor growth and development',
-        'Maintain vaccination and follow-up plans',
-      ],
-    },
-    {
-      id: 6,
-      title: 'Orthopedic',
-      company: 'KIMS Hospital',
-      location: 'Bangalore, Karnataka',
-      type: 'Full-time',
-      salary: 'Rs. 1,30,000 - 2,30,000',
-      posted: '1 week ago',
-      saved: false,
-      description:
-        'Orthopedic specialist required to diagnose and treat musculoskeletal conditions, manage trauma cases, and perform orthopedic procedures.',
-      requirements: [
-        'MBBS + MS/DNB (Orthopedics)',
-        'Valid medical license',
-        'Experience in trauma/orthopedic OPD',
-        'Surgical skills (preferred)',
-      ],
-      responsibilities: [
-        'Evaluate musculoskeletal complaints',
-        'Manage fractures and trauma cases',
-        'Plan surgical/non-surgical treatment',
-        'Coordinate rehab and follow-up care',
-      ],
-    },
-    {
-      id: 7,
-      title: 'Pulmonologist',
-      company: 'Fortis Healthcare',
-      location: 'Delhi, NCR',
-      type: 'Full-time',
-      salary: 'Rs. 1,20,000 - 2,10,000',
-      posted: '4 days ago',
-      saved: false,
-      description:
-        'Pulmonologist needed to manage respiratory disorders including asthma, COPD, infections, and critical pulmonary cases.',
-      requirements: [
-        'MBBS + MD (Respiratory Medicine) / DTCD',
-        'Valid medical license',
-        'Experience with ICU/critical respiratory cases (preferred)',
-        'Good clinical judgment',
-      ],
-      responsibilities: [
-        'Consult and manage respiratory patients',
-        'Interpret PFT/Imaging and labs',
-        'Provide treatment plans and follow-ups',
-        'Support emergency and ICU teams as needed',
-      ],
-    },
-    {
-      id: 8,
-      title: 'Pharmacist',
-      company: 'MedPlus Health Services',
-      location: 'Mumbai, Maharashtra',
-      type: 'Full-time',
-      salary: 'Rs. 30,000 - 45,000',
-      posted: '10 days ago',
-      saved: true,
-      description:
-        'Pharmacist required to dispense medications accurately, counsel patients, and maintain pharmacy inventory and compliance.',
-      requirements: [
-        'B.Pharm or D.Pharm',
-        'Valid pharmacy license',
-        'Good communication skills',
-        'Basic knowledge of drug interactions',
-      ],
-      responsibilities: [
-        'Dispense and label medications',
-        'Counsel patients on dosage and usage',
-        'Maintain inventory and expiry tracking',
-        'Verify prescriptions and ensure compliance',
-      ],
-    },
-  ]);
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // ✅ Fetch jobs from backend
+  useEffect(() => {
+    const fetchJobs = async () => {
+      setLoading(true);
+      try {
+        const jobsData = await jobService.getJobs();
+        // Ensure jobsData is an array
+        const jobsArray = Array.isArray(jobsData) ? jobsData : [];
+        setJobs(jobsArray);
+      } catch (error) {
+        console.error('Failed to fetch jobs:', error);
+        setJobs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
 
   const cities = [
     'All Locations',
@@ -266,23 +96,23 @@ const AllJobs = () => {
   const [visibleCount, setVisibleCount] = useState(JOBS_PER_PAGE);
 
   // ---------- helpers ----------
-  const normalize = (v = '') => String(v).toLowerCase().trim();
+  const normalize = useCallback((v = '') => String(v).toLowerCase().trim(), []);
 
-  const parseSalaryRange = (salaryStr = '') => {
+  const parseSalaryRange = useCallback((salaryStr = '') => {
     const cleaned = salaryStr.replace(/₹|Rs\.?/gi, '').replace(/\s/g, '');
     const parts = cleaned.split('-').map((p) => p.replace(/,/g, ''));
     const min = Number(parts?.[0] || 0);
     const max = Number(parts?.[1] || parts?.[0] || 0);
     return { min: isNaN(min) ? 0 : min, max: isNaN(max) ? 0 : max };
-  };
+  }, []);
 
-  const parsePostedDays = (postedStr = '') => {
-    const s = normalize(postedStr);
+  const parsePostedDays = useCallback((postedStr = '') => {
+    const s = String(postedStr).toLowerCase().trim();
     const num = Number(s.match(/\d+/)?.[0] ?? '0');
     if (s.includes('week')) return num * 7;
     if (s.includes('day')) return num;
     return 9999;
-  };
+  }, []);
 
   // ✅ IMPORTANT FIX:
   // When user clicks "Browse Jobs" from Home, your Home page usually navigates like:
@@ -338,6 +168,9 @@ const AllJobs = () => {
 
   // ✅ filtering
   const filteredJobs = useMemo(() => {
+    // Ensure jobs is an array before filtering
+    if (!Array.isArray(jobs)) return [];
+
     const term = normalize(searchTerm);
 
     const cityVal = normalize(selectedLocation);
@@ -352,39 +185,38 @@ const AllJobs = () => {
 
     return jobs.filter((job) => {
       if (term) {
-        const blob = `${job.title} ${job.company} ${job.location}`.toLowerCase();
+        const blob = `${job.title} ${job.company_name || job.company} ${job.location || job.city}`.toLowerCase();
         if (!blob.includes(term)) return false;
       }
 
       if (cityActive) {
-        if (!normalize(job.location).includes(cityVal)) return false;
+        if (!normalize(job.location || job.city || '').includes(cityVal)) return false;
       }
 
       if (typeActive) {
-        if (normalize(job.type) !== normalize(jobType)) return false;
+        if (normalize(job.type || job.job_type || '') !== normalize(jobType)) return false;
       }
 
       if (moreFilters.onlySaved && !job.saved) return false;
 
       if (postedWithinDays != null) {
-        const days = parsePostedDays(job.posted);
+        const days = parsePostedDays(job.posted || job.posted_at || '');
         if (days > postedWithinDays) return false;
       }
 
       if (minSalaryFilter != null || maxSalaryFilter != null) {
-        const { min, max } = parseSalaryRange(job.salary);
+        const { min, max } = parseSalaryRange(job.salary || job.salary_range || '');
         if (minSalaryFilter != null && max < minSalaryFilter) return false;
         if (maxSalaryFilter != null && min > maxSalaryFilter) return false;
       }
 
       return true;
     });
-  }, [jobs, searchTerm, selectedLocation, jobType, moreFilters]);
+  }, [jobs, searchTerm, selectedLocation, jobType, moreFilters, normalize, parseSalaryRange, parsePostedDays]);
 
   // ✅ Reset pagination when filters change
   useEffect(() => {
     setVisibleCount(JOBS_PER_PAGE);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     searchTerm,
     selectedLocation,
@@ -559,7 +391,12 @@ const AllJobs = () => {
             </button>
           </div>
 
-          {filteredJobs.length === 0 ? (
+          {loading ? (
+            <div className="bg-white rounded-xl border border-gray-100 p-10 text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto"></div>
+              <p className="text-gray-600 mt-4">Loading jobs...</p>
+            </div>
+          ) : filteredJobs.length === 0 ? (
             <div className="bg-white rounded-xl border border-gray-100 p-10 text-center">
               <p className="text-lg font-semibold text-gray-900">No jobs found</p>
               <p className="text-gray-600 mt-2">Try clearing filters or changing keywords.</p>

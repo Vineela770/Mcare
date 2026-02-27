@@ -43,10 +43,13 @@ const CandidateDashboard = () => {
 
         // Fetch recent applications
         const applicationsData = await applicationService.getUserApplications();
-        setRecentApplications(applicationsData.slice(0, 3)); // Show only 3 recent
+        // Ensure applicationsData is an array before using .slice()
+        const appsArray = Array.isArray(applicationsData) ? applicationsData : [];
+        setRecentApplications(appsArray.slice(0, 3)); // Show only 3 recent
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
         // Keep default empty state
+        setRecentApplications([]);
       } finally {
         setLoading(false);
       }
