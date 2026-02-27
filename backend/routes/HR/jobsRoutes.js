@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const jobsController = require("../controllers/jobsController");
+const jobsController = require("../../controllers/hr/jobsController");
 
 router.get("/", jobsController.getJobs);
 router.delete("/:id", jobsController.deleteJob);

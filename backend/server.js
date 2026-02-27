@@ -28,6 +28,13 @@ const adminReportsRoutes = require("./routes/admin/reportsRoutes");
 const adminActivityRoutes = require("./routes/admin/activityRoutes");
 const adminSettingsRoutes = require("./routes/admin/systemSettingsRoutes");
 
+// HR/Employer routes
+const hrDashboardRoutes = require("./routes/HR/dashboardRoutes");
+const hrJobsRoutes = require("./routes/HR/jobsRoutes");
+const hrApplicationsRoutes = require("./routes/HR/applicationsRoutes");
+const hrCandidatesRoutes = require("./routes/HR/candidatesRoutes");
+const hrInterviewsRoutes = require("./routes/HR/interviewsRoutes");
+
 const app = express();
 
 // 2. CORS Configuration
@@ -79,6 +86,13 @@ app.use("/api/admin/dashboard", adminDashboardRoutes);
 app.use("/api/admin/reports", adminReportsRoutes);
 app.use("/api/admin/activity", adminActivityRoutes);
 app.use("/api/admin/settings", adminSettingsRoutes);
+
+// HR/Employer routes
+app.use("/api/hr/dashboard", hrDashboardRoutes);
+app.use("/api/hr/jobs", hrJobsRoutes);
+app.use("/api/hr/applications", hrApplicationsRoutes);
+app.use("/api/hr/candidates", hrCandidatesRoutes);
+app.use("/api/hr/interviews", hrInterviewsRoutes);
 
 // Health check
 app.get("/", (req, res) => {

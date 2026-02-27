@@ -12,6 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 import Sidebar from '../../components/common/Sidebar';
+import { employerService } from '../../api/employerService';
 
 const HRDashboard = () => {
   const { user } = useAuth();
@@ -26,44 +27,31 @@ const HRDashboard = () => {
   const [recentApplications, setRecentApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      setLoading(true);
+      try {
+        // Fetch dashboard stats
+        const statsData = await employerService.getDashboardStats();
+        setStats({
+          activeJobs: statsData.activeJobs || 0,
+          totalApplications: statsData.totalApplications || 0,
+          interviewed: statsData.interviewed || 0,
+          hired: statsData.hired || 0,
+        });
 
-      setStats({
-        activeJobs: 12,
-        totalApplications: 245,
-        interviewed: 48,
-        hired: 15,
-      });
-
-      setRecentApplications([
-        {
-          id: 1,
-          candidateName: 'Sarah Johnson',
-          jobTitle: 'Senior Registered Nurse',
-          appliedDate: '2 hours ago',
-          status: 'New',
-          experience: '5 years',
-        },
-        {
-          id: 2,
-          candidateName: 'Michael Chen',
-          jobTitle: 'Physical Therapist',
-          appliedDate: '5 hours ago',
-          status: 'Reviewed',
-          experience: '3 years',
-        },
-        {
-          id: 3,
-          candidateName: 'Emily Davis',
-          jobTitle: 'Lab Technician',
-          appliedDate: '1 day ago',
-          status: 'Interview',
-          experience: '4 years',
-        },
-      ]);
+        // Fetch recent applications
+        const applicationsData = await employerService.getRecentApplications();
+        const appsArray = Array.isArray(applicationsData) ? applicationsData : [];
+        setRecentApplications(appsArray.slice(0, 3));
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+        setRecentApplications([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();

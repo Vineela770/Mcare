@@ -15,11 +15,13 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import employerService from '../../api/employerService';
 
 const Candidates = () => {
   const [candidates, setCandidates] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterSpecialization, setFilterSpecialization] = useState('all');
+  const [loading, setLoading] = useState(true);
 
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -29,57 +31,17 @@ const Candidates = () => {
 
   useEffect(() => {
     const fetchCandidates = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      setCandidates([
-        {
-          id: 1,
-          name: 'Sarah Johnson',
-          email: 'sarah.j@example.com',
-          phone: '+91 98765 43210',
-          specialization: 'Registered Nurse',
-          experience: '5 years',
-          location: 'Guntur, AP',
-          rating: 4.5,
-          applications: 3,
-          status: 'Available',
-        },
-        {
-          id: 2,
-          name: 'Michael Chen',
-          email: 'michael.c@example.com',
-          phone: '+91 98765 43211',
-          specialization: 'Physical Therapist',
-          experience: '3 years',
-          location: 'Vijayawada, AP',
-          rating: 4.8,
-          applications: 2,
-          status: 'Available',
-        },
-        {
-          id: 3,
-          name: 'Emily Davis',
-          email: 'emily.d@example.com',
-          phone: '+91 98765 43212',
-          specialization: 'Lab Technician',
-          experience: '2 years',
-          location: 'Guntur, AP',
-          rating: 4.2,
-          applications: 4,
-          status: 'Interviewing',
-        },
-        {
-          id: 4,
-          name: 'David Wilson',
-          email: 'david.w@example.com',
-          phone: '+91 98765 43213',
-          specialization: 'Pharmacist',
-          experience: '4 years',
-          location: 'Hyderabad, TS',
-          rating: 4.6,
-          applications: 1,
-          status: 'Available',
-        },
-      ]);
+      setLoading(true);
+      try {
+        const data = await employerService.getCandidates();
+        const candidatesArray = Array.isArray(data) ? data : [];
+        setCandidates(candidatesArray);
+      } catch (error) {
+        console.error('Failed to fetch candidates:', error);
+        setCandidates([]);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchCandidates();
   }, []);
@@ -95,11 +57,12 @@ const Candidates = () => {
   };
 
   const filteredCandidates = useMemo(() => {
+    const candidatesArray = Array.isArray(candidates) ? candidates : [];
     const q = searchTerm.trim().toLowerCase();
 
-    return candidates.filter((candidate) => {
+    return candidatesArray.filter((candidate) => {
       const matchesSearch =
-        candidate.name.toLowerCase().includes(q) || candidate.specialization.toLowerCase().includes(q);
+        candidate.name?.toLowerCase().includes(q) || candidate.specialization?.toLowerCase().includes(q);
 
       const matchesFilter = filterSpecialization === 'all' || candidate.specialization === filterSpecialization;
 

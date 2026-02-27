@@ -2,59 +2,33 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Briefcase, MapPin, Users, Eye, Edit2, Trash2, Clock } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import { employerService } from '../../api/employerService';
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [filter, setFilter] = useState('all');
   const [selectedJob, setSelectedJob] = useState(null);
   const [showJobDetails, setShowJobDetails] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchJobs = async () => {
-      await new Promise(resolve => setTimeout(resolve, 0));
-      setJobs([
-        {
-          id: 1,
-          title: 'Senior Registered Nurse',
-          department: 'Nursing',
-          location: 'Guntur, AP',
-          type: 'Full-time',
-          positions: 3,
-          applicants: 45,
-          status: 'active',
-          postedDate: '2024-01-15',
-          deadline: '2024-02-15'
-        },
-        {
-          id: 2,
-          title: 'Physical Therapist',
-          department: 'Physiotherapy',
-          location: 'Vijayawada, AP',
-          type: 'Full-time',
-          positions: 2,
-          applicants: 28,
-          status: 'active',
-          postedDate: '2024-01-10',
-          deadline: '2024-02-10'
-        },
-        {
-          id: 3,
-          title: 'Lab Technician',
-          department: 'Laboratory',
-          location: 'Guntur, AP',
-          type: 'Part-time',
-          positions: 1,
-          applicants: 15,
-          status: 'closed',
-          postedDate: '2023-12-20',
-          deadline: '2024-01-20'
-        }
-      ]);
+      setLoading(true);
+      try {
+        const data = await employerService.getJobs();
+        const jobsArray = Array.isArray(data) ? data : [];
+        setJobs(jobsArray);
+      } catch (error) {
+        console.error('Failed to fetch jobs:', error);
+        setJobs([]);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchJobs();
   }, []);
 
-  const filteredJobs = jobs.filter(job => filter === 'all' || job.status === filter);
+  const filteredJobs = Array.isArray(jobs) ? jobs.filter(job => filter === 'all' || job.status === filter) : [];
 
   const getStatusBadge = (status) => {
     const styles = {

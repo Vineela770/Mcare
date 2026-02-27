@@ -1,7 +1,73 @@
 import axios from './axios';
 
 export const employerService = {
-  // Create employer profile
+  // Dashboard
+  getDashboardStats: async () => {
+    try {
+      const response = await axios.get('/api/hr/dashboard/stats');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch dashboard stats' };
+    }
+  },
+
+  getRecentApplications: async () => {
+    try {
+      const response = await axios.get('/api/hr/dashboard/recent-applications');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch recent applications' };
+    }
+  },
+
+  // Jobs
+  getJobs: async () => {
+    try {
+      const response = await axios.get('/api/hr/jobs');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch jobs' };
+    }
+  },
+
+  getJobById: async (jobId) => {
+    try {
+      const response = await axios.get(`/api/hr/jobs/${jobId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch job details' };
+    }
+  },
+
+  deleteJob: async (jobId) => {
+    try {
+      const response = await axios.delete(`/api/hr/jobs/${jobId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete job' };
+    }
+  },
+
+  // Applications
+  getApplications: async () => {
+    try {
+      const response = await axios.get('/api/hr/applications');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch applications' };
+    }
+  },
+
+  updateApplicationStatus: async (applicationId, status) => {
+    try {
+      const response = await axios.put(`/api/hr/applications/${applicationId}/status`, { status });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update application status' };
+    }
+  },
+
+  // Profile
   createProfile: async (employerData) => {
     try {
       const response = await axios.post('/api/employer/profile', employerData);
@@ -38,6 +104,56 @@ export const employerService = {
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to update employer profile' };
+    }
+  },
+
+  // Get candidates
+  getCandidates: async () => {
+    try {
+      const response = await axios.get('/api/hr/candidates');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch candidates' };
+    }
+  },
+
+  // Update candidate status
+  updateCandidateStatus: async (id, status) => {
+    try {
+      const response = await axios.put(`/api/hr/candidates/${id}`, { status });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update candidate status' };
+    }
+  },
+
+  // Get interviews
+  getInterviews: async () => {
+    try {
+      const response = await axios.get('/api/hr/interviews');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch interviews' };
+    }
+  },
+
+  // Create interview
+  createInterview: async (interviewData) => {
+    try {
+      const response = await axios.post('/api/hr/interviews', interviewData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to create interview' };
+    }
+  },
+
+  // Update interview
+  updateInterview: async (id, interviewData) => {
+    try {
+      const response = await axios.put(`/api/hr/interviews/${id}`, interviewData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update interview' };
     }
   },
 };

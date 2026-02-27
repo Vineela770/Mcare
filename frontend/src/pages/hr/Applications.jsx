@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   Search,
   Filter,
@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
+import { employerService } from '../../api/employerService';
 
 const Applications = () => {
   const [filterStatus, setFilterStatus] = useState('all');
@@ -29,145 +30,71 @@ const Applications = () => {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
 
-  const [applications, setApplications] = useState([
-    {
-      id: 1,
-      candidateName: 'Rajesh Kumar',
-      candidateAvatar: 'RK',
-      jobTitle: 'Senior Nurse - ICU',
-      experience: '5 years',
-      qualification: 'B.Sc Nursing',
-      location: 'Guntur, AP',
-      appliedDate: '2 days ago',
-      status: 'Pending',
-      rating: 4.5,
-      email: 'rajesh.kumar@email.com',
-      phone: '+91 98765 43210',
-      summary:
-        'Experienced ICU nurse with expertise in critical care and patient monitoring. Proven track record of managing complex cases.',
-      skills: ['Critical Care', 'Patient Monitoring', 'Emergency Response', 'Documentation'],
-    },
-    {
-      id: 2,
-      candidateName: 'Priya Sharma',
-      candidateAvatar: 'PS',
-      jobTitle: 'Medical Officer',
-      experience: '8 years',
-      qualification: 'MBBS, MD',
-      location: 'Vijayawada, AP',
-      appliedDate: '3 days ago',
-      status: 'Shortlisted',
-      rating: 4.8,
-      email: 'priya.sharma@email.com',
-      phone: '+91 98765 43211',
-      summary: 'Highly skilled medical officer with extensive experience in patient diagnosis and treatment planning.',
-      skills: ['Diagnosis', 'Treatment Planning', 'Patient Care', 'Medical Records'],
-    },
-    {
-      id: 3,
-      candidateName: 'Amit Patel',
-      candidateAvatar: 'AP',
-      jobTitle: 'Lab Technician',
-      experience: '3 years',
-      qualification: 'B.Sc MLT',
-      location: 'Hyderabad, TS',
-      appliedDate: '5 days ago',
-      status: 'Interview Scheduled',
-      rating: 4.2,
-      email: 'amit.patel@email.com',
-      phone: '+91 98765 43212',
-      summary: 'Detail-oriented lab technician with strong analytical skills and laboratory equipment expertise.',
-      skills: ['Lab Testing', 'Quality Control', 'Equipment Maintenance', 'Sample Analysis'],
-    },
-    {
-      id: 4,
-      candidateName: 'Sneha Reddy',
-      candidateAvatar: 'SR',
-      jobTitle: 'Physiotherapist',
-      experience: '4 years',
-      qualification: 'BPT, MPT',
-      location: 'Guntur, AP',
-      appliedDate: '1 week ago',
-      status: 'Rejected',
-      rating: 3.8,
-      email: 'sneha.reddy@email.com',
-      phone: '+91 98765 43213',
-      summary: 'Certified physiotherapist specializing in rehabilitation and pain management therapies.',
-      skills: ['Physical Therapy', 'Rehabilitation', 'Pain Management', 'Patient Assessment'],
-    },
-    {
-      id: 5,
-      candidateName: 'Karthik Reddy',
-      candidateAvatar: 'KR',
-      jobTitle: 'Senior Nurse - ICU',
-      experience: '6 years',
-      qualification: 'B.Sc Nursing, MSc',
-      location: 'Vijayawada, AP',
-      appliedDate: '1 week ago',
-      status: 'Shortlisted',
-      rating: 4.6,
-      email: 'karthik.reddy@email.com',
-      phone: '+91 98765 43214',
-      summary: 'Senior ICU nurse with advanced certification and team leadership experience.',
-      skills: ['ICU Care', 'Team Leadership', 'Critical Thinking', 'Emergency Protocols'],
-    },
-    {
-      id: 6,
-      candidateName: 'Deepa Singh',
-      candidateAvatar: 'DS',
-      jobTitle: 'Medical Officer',
-      experience: '7 years',
-      qualification: 'MBBS',
-      location: 'Hyderabad, TS',
-      appliedDate: '2 weeks ago',
-      status: 'Pending',
-      rating: 4.4,
-      email: 'deepa.singh@email.com',
-      phone: '+91 98765 43215',
-      summary: 'Dedicated medical officer with comprehensive knowledge of general medicine and patient care.',
-      skills: ['General Medicine', 'Patient Consultation', 'Diagnosis', 'Treatment'],
-    },
-  ]);
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const jobs = [
-    { id: 'all', title: 'All Jobs' },
-    { id: 'icu-nurse', title: 'Senior Nurse - ICU' },
-    { id: 'medical-officer', title: 'Medical Officer' },
-    { id: 'lab-tech', title: 'Lab Technician' },
-    { id: 'physio', title: 'Physiotherapist' },
-  ];
+  useEffect(() => {
+    const fetchApplications = async () => {
+      setLoading(true);
+      try {
+        const data = await employerService.getApplications();
+        const appsArray = Array.isArray(data) ? data : [];
+        setApplications(appsArray);
+      } catch (error) {
+        console.error('Failed to fetch applications:', error);
+        setApplications([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchApplications();
+  }, []);
+
+  // Extract unique jobs from applications
+  const jobs = useMemo(() => {
+    if (!Array.isArray(applications)) return [{ id: 'all', title: 'All Jobs' }];
+    
+    const uniqueJobs = [...new Set(applications.map(app => app.jobTitle).filter(Boolean))];
+    return [
+      { id: 'all', title: 'All Jobs' },
+      ...uniqueJobs.map(title => ({ id: title.toLowerCase().replace(/\s+/g, '-'), title }))
+    ];
+  }, [applications]);
 
   const stats = useMemo(
-    () => [
-      {
-        label: 'Total Applications',
-        value: applications.length.toString(),
-        icon: Clock,
-        color: 'text-blue-600',
-        bg: 'bg-blue-50',
-      },
-      {
-        label: 'Pending Review',
-        value: applications.filter((a) => a.status === 'Pending').length.toString(),
-        icon: Clock,
-        color: 'text-yellow-600',
-        bg: 'bg-yellow-50',
-      },
-      {
-        label: 'Shortlisted',
-        value: applications.filter((a) => a.status === 'Shortlisted').length.toString(),
-        icon: CheckCircle,
-        color: 'text-green-600',
-        bg: 'bg-green-50',
-      },
-      {
-        label: 'Rejected',
-        value: applications.filter((a) => a.status === 'Rejected').length.toString(),
-        icon: XCircle,
-        color: 'text-red-600',
-        bg: 'bg-red-50',
-      },
-    ],
+    () => {
+      const appsArray = Array.isArray(applications) ? applications : [];
+      return [
+        {
+          label: 'Total Applications',
+          value: appsArray.length.toString(),
+          icon: Clock,
+          color: 'text-blue-600',
+          bg: 'bg-blue-50',
+        },
+        {
+          label: 'Pending Review',
+          value: appsArray.filter((a) => a.status === 'Pending').length.toString(),
+          icon: Clock,
+          color: 'text-yellow-600',
+          bg: 'bg-yellow-50',
+        },
+        {
+          label: 'Shortlisted',
+          value: appsArray.filter((a) => a.status === 'Shortlisted').length.toString(),
+          icon: CheckCircle,
+          color: 'text-green-600',
+          bg: 'bg-green-50',
+        },
+        {
+          label: 'Rejected',
+          value: appsArray.filter((a) => a.status === 'Rejected').length.toString(),
+          icon: XCircle,
+          color: 'text-red-600',
+          bg: 'bg-red-50',
+        },
+      ];
+    },
     [applications]
   );
 
@@ -194,8 +121,11 @@ const Applications = () => {
     String(s).toLowerCase().trim().replace(/\s+/g, '-');
 
   const filteredApplications = useMemo(() => {
-    const jobObj = jobs.find((j) => j.id === selectedJob);
-    return applications.filter((app) => {
+    const appsArray = Array.isArray(applications) ? applications : [];
+    const jobsArray = Array.isArray(jobs) ? jobs : [];
+    const jobObj = jobsArray.find((j) => j.id === selectedJob);
+    
+    return appsArray.filter((app) => {
       const statusMatch =
         filterStatus === 'all' || normalizeStatus(app.status) === filterStatus;
 
@@ -204,14 +134,14 @@ const Applications = () => {
       const q = searchTerm.trim().toLowerCase();
       const searchMatch =
         !q ||
-        app.candidateName.toLowerCase().includes(q) ||
-        app.email.toLowerCase().includes(q) ||
-        app.location.toLowerCase().includes(q) ||
-        app.jobTitle.toLowerCase().includes(q);
+        app.candidateName?.toLowerCase().includes(q) ||
+        app.email?.toLowerCase().includes(q) ||
+        app.location?.toLowerCase().includes(q) ||
+        app.jobTitle?.toLowerCase().includes(q);
 
       return statusMatch && jobMatch && searchMatch;
     });
-  }, [applications, filterStatus, selectedJob, searchTerm]);
+  }, [applications, jobs, filterStatus, selectedJob, searchTerm]);
 
   const getStatusBadge = (status) => {
     const statusConfig = {

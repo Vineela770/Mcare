@@ -1,10 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Calendar, Clock, MapPin, User, Video, Phone, X, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import employerService from '../../api/employerService';
 
 const Interviews = () => {
   const [interviews, setInterviews] = useState([]);
   const [filter, setFilter] = useState('upcoming');
+  const [loading, setLoading] = useState(true);
 
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
@@ -24,48 +26,24 @@ const Interviews = () => {
 
   useEffect(() => {
     const fetchInterviews = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      setInterviews([
-        {
-          id: 1,
-          candidateName: 'Sarah Johnson',
-          position: 'Senior Registered Nurse',
-          date: '2024-01-25',
-          time: '10:00 AM',
-          type: 'Video Call',
-          interviewer: 'Dr. Patel',
-          location: 'Zoom',
-          status: 'upcoming',
-        },
-        {
-          id: 2,
-          candidateName: 'Michael Chen',
-          position: 'Physical Therapist',
-          date: '2024-01-26',
-          time: '2:00 PM',
-          type: 'In-Person',
-          interviewer: 'HR Manager',
-          location: 'Main Office',
-          status: 'upcoming',
-        },
-        {
-          id: 3,
-          candidateName: 'Emily Davis',
-          position: 'Lab Technician',
-          date: '2024-01-20',
-          time: '11:00 AM',
-          type: 'Phone',
-          interviewer: 'Lab Supervisor',
-          location: 'Phone Interview',
-          status: 'completed',
-        },
-      ]);
+      setLoading(true);
+      try {
+        const data = await employerService.getInterviews();
+        const interviewsArray = Array.isArray(data) ? data : [];
+        setInterviews(interviewsArray);
+      } catch (error) {
+        console.error('Failed to fetch interviews:', error);
+        setInterviews([]);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchInterviews();
   }, []);
 
   const filteredInterviews = useMemo(() => {
-    return interviews.filter((interview) => filter === 'all' || interview.status === filter);
+    const interviewsArray = Array.isArray(interviews) ? interviews : [];
+    return interviewsArray.filter((interview) => filter === 'all' || interview.status === filter);
   }, [interviews, filter]);
 
   const getStatusBadge = (status) => {
