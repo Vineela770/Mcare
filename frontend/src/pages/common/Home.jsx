@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
 import { CheckCircle } from 'lucide-react';
-import jobService from '../../services/jobService';
+import jobService from '../../api/jobService';
 
 const Home = () => {
   const navigate = useNavigate();
