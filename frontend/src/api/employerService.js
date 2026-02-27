@@ -187,6 +187,16 @@ export const employerService = {
     }
   },
 
+  // Search candidates to start a conversation
+  searchCandidates: async (q = '') => {
+    try {
+      const response = await axios.get('/api/hr/messages/search', { params: { q } });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to search candidates' };
+    }
+  },
+
   // Get HR profile
   getProfile: async () => {
     try {

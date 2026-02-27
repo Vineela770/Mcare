@@ -38,6 +38,9 @@ const hrInterviewsRoutes = require("./routes/HR/interviewsRoutes");
 const hrMessagesRoutes = require("./routes/HR/messagesRoutes");
 const hrProfileRoutes = require("./routes/HR/profileRoutes");
 
+// Candidate routes
+const candidateMessagesRoutes = require("./routes/candidate/messagesRoutes");
+
 const app = express();
 
 // 2. CORS Configuration
@@ -99,6 +102,9 @@ app.use("/api/hr/candidates", hrCandidatesRoutes);
 app.use("/api/hr/interviews", hrInterviewsRoutes);
 app.use("/api/hr/messages", hrMessagesRoutes);
 app.use("/api/hr/profile", hrProfileRoutes);
+
+// Candidate message routes
+app.use("/api/candidate/messages", candidateMessagesRoutes);
 
 // Health check
 app.get("/", (req, res) => {

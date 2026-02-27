@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Sidebar from '../../components/common/Sidebar';
+import { messageService } from '../../api/messageService';
 
 import {
   Search,
@@ -13,13 +14,80 @@ import {
 } from 'lucide-react';
 
 const Messages = () => {
-  const [selectedChat, setSelectedChat] = useState(null);
+  const [conversations, setConversations] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [selectedChat, setSelectedChat] = useState(null); // { other_id, candidate_name, photo, ... }
   const [messageText, setMessageText] = useState('');
   const [showAttachments, setShowAttachments] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [loadingConvs, setLoadingConvs] = useState(true);
+
+  const messagesEndRef = useRef(null);
   const documentInputRef = useRef(null);
   const mediaInputRef = useRef(null);
   const audioInputRef = useRef(null);
   const cameraInputRef = useRef(null);
+
+  // Fetch conversations on mount
+  useEffect(() => {
+    fetchConversations();
+  }, []);
+
+  const fetchConversations = async () => {
+    try {
+      setLoadingConvs(true);
+      const data = await messageService.getConversations();
+      setConversations(data.conversations || []);
+    } catch (err) {
+      console.error('Failed to load conversations:', err);
+    } finally {
+      setLoadingConvs(false);
+    }
+  };
+
+  // Fetch chat history when selected chat changes
+  useEffect(() => {
+    if (!selectedChat) return;
+    fetchChatHistory(selectedChat.other_id);
+  }, [selectedChat?.other_id]);
+
+  const fetchChatHistory = async (otherUserId) => {
+    try {
+      const data = await messageService.getChatHistory(otherUserId);
+      setMessages(data.messages || []);
+      // Update unread count in conversations
+      setConversations(prev =>
+        prev.map(c => c.other_id === otherUserId ? { ...c, unread_count: 0 } : c)
+      );
+    } catch (err) {
+      console.error('Failed to load chat history:', err);
+    }
+  };
+
+  // Auto-scroll on new messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Search contacts
+  const handleSearch = useCallback(async (q) => {
+    setSearchQuery(q);
+    if (!q.trim()) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+    setIsSearching(true);
+    try {
+      const data = await messageService.searchContacts(q);
+      setSearchResults(data.contacts || []);
+    } catch (err) {
+      console.error('Search error:', err);
+    }
+  }, []);
 
   const openFilePicker = (type) => {
     setShowAttachments(false);
@@ -35,48 +103,77 @@ const Messages = () => {
     console.log('Selected file:', file);
   };
 
-  const conversations = [
-    {
-      id: 1,
-      name: 'Manhattan Hospital HR',
-      lastMessage: 'We would like to schedule an interview...',
-      time: '2 hours ago',
-      unread: 2,
-      avatar: '🏥',
-    },
-    {
-      id: 2,
-      name: 'Wellness Rehab Center',
-      lastMessage: 'Thank you for your application',
-      time: '1 day ago',
-      unread: 0,
-      avatar: '🏢',
-    },
-    {
-      id: 3,
-      name: 'HealthCare Labs',
-      lastMessage: 'Your profile matches our requirements',
-      time: '2 days ago',
-      unread: 1,
-      avatar: '🔬',
-    },
-  ];
-
-  const activeChat = conversations.find(c => c.id === selectedChat);
-
-  const messages = selectedChat
-    ? [
-        { id: 1, text: `Hello! Thank you for applying to ${activeChat?.name}`, time: '10:30 AM', isOwn: false },
-        { id: 2, text: 'Thank you for considering my application.', time: '10:35 AM', isOwn: true },
-        { id: 3, text: activeChat?.lastMessage, time: '2 hours ago', isOwn: false },
-      ]
-    : [];
-
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!messageText.trim()) return;
-    setMessageText('');
+  const selectConversation = (conv) => {
+    setSelectedChat(conv);
+    setIsSearching(false);
+    setSearchQuery('');
+    setSearchResults([]);
   };
+
+  // Start a new conversation from search results
+  const startConversationWith = (contact) => {
+    // Check if conversation already exists
+    const existing = conversations.find(c => c.other_id === contact.id);
+    if (existing) {
+      selectConversation(existing);
+    } else {
+      // Create a virtual conversation entry
+      const newConv = {
+        other_id: contact.id,
+        candidate_name: contact.name,
+        photo: contact.photo,
+        organization_name: contact.organization_name,
+        last_message: '',
+        last_time: '',
+        unread_count: 0,
+      };
+      selectConversation(newConv);
+    }
+  };
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!messageText.trim() || !selectedChat || sending) return;
+
+    const text = messageText.trim();
+    setMessageText('');
+    setSending(true);
+
+    // Optimistic UI
+    const optimistic = {
+      id: `tmp-${Date.now()}`,
+      sender_id: 'me',
+      message_text: text,
+      sent_at: new Date().toISOString(),
+      isOwn: true,
+    };
+    setMessages(prev => [...prev, optimistic]);
+
+    try {
+      await messageService.sendMessage(selectedChat.other_id, text);
+      // Refresh both history and conversations list
+      await fetchChatHistory(selectedChat.other_id);
+      await fetchConversations();
+    } catch (err) {
+      console.error('Failed to send message:', err);
+      // Remove optimistic message on failure
+      setMessages(prev => prev.filter(m => m.id !== optimistic.id));
+      setMessageText(text);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const formatTime = (ts) => {
+    if (!ts) return '';
+    const d = new Date(ts);
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const currentUserId = (() => {
+    try { return JSON.parse(atob(localStorage.getItem('token')?.split('.')[1] || '')).id; }
+    catch { return null; }
+  })();
 
   return (
     <div>
@@ -88,7 +185,6 @@ const Messages = () => {
       <input type="file" accept="audio/*" ref={audioInputRef} onChange={handleFileSelect} className="hidden" />
       <input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={handleFileSelect} className="hidden" />
 
-      {/* ✅ Responsive Wrapper */}
       <div className="md:ml-64 min-h-screen bg-gray-50 p-4 pt-20 md:pt-6 md:p-6">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">Messages</h1>
 
@@ -106,43 +202,93 @@ const Messages = () => {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Search messages..."
+                    placeholder="Search HR contacts..."
+                    value={searchQuery}
+                    onChange={(e) => handleSearch(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm md:text-base"
                   />
                 </div>
               </div>
 
               <div className="flex-1 overflow-y-auto">
-                {conversations.map(chat => (
-                  <div
-                    key={chat.id}
-                    onClick={() => setSelectedChat(chat.id)}
-                    className={`p-3 md:p-4 cursor-pointer border-b hover:bg-gray-50 ${
-                      selectedChat === chat.id ? 'bg-cyan-50' : ''
-                    }`}
-                  >
-                    <div className="flex justify-between">
-                      <div className="flex gap-3">
-                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white">
-                          {chat.avatar}
+                {/* Search Results */}
+                {isSearching && searchResults.length > 0 && (
+                  <div className="border-b">
+                    <p className="text-xs text-gray-400 px-4 py-2 bg-gray-50">Search Results</p>
+                    {searchResults.map(contact => (
+                      <div
+                        key={contact.id}
+                        onClick={() => startConversationWith(contact)}
+                        className="p-3 md:p-4 cursor-pointer border-b hover:bg-gray-50 flex items-center gap-3"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white text-sm font-semibold overflow-hidden">
+                          {contact.photo
+                            ? <img src={contact.photo} alt={contact.name} className="w-full h-full object-cover" />
+                            : contact.name?.charAt(0)?.toUpperCase()}
                         </div>
                         <div>
-                          <h3 className="font-semibold text-sm md:text-base">{chat.name}</h3>
-                          <p className="text-xs md:text-sm text-gray-600 truncate">
-                            {chat.lastMessage}
-                          </p>
-                          <p className="text-xs text-gray-400">{chat.time}</p>
+                          <p className="font-semibold text-sm">{contact.name}</p>
+                          <p className="text-xs text-gray-500">{contact.organization_name || 'HR'}</p>
                         </div>
                       </div>
-
-                      {chat.unread > 0 && (
-                        <span className="bg-cyan-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                          {chat.unread}
-                        </span>
-                      )}
-                    </div>
+                    ))}
                   </div>
-                ))}
+                )}
+
+                {isSearching && searchResults.length === 0 && (
+                  <p className="text-center text-gray-400 text-sm py-6">No contacts found</p>
+                )}
+
+                {/* Conversations */}
+                {!isSearching && (
+                  <>
+                    {loadingConvs && (
+                      <p className="text-center text-gray-400 text-sm py-6">Loading...</p>
+                    )}
+                    {!loadingConvs && conversations.length === 0 && (
+                      <p className="text-center text-gray-400 text-sm py-6">
+                        No conversations yet. Search above to message an HR contact.
+                      </p>
+                    )}
+                    {conversations.map(conv => (
+                      <div
+                        key={conv.other_id}
+                        onClick={() => selectConversation(conv)}
+                        className={`p-3 md:p-4 cursor-pointer border-b hover:bg-gray-50 ${
+                          selectedChat?.other_id === conv.other_id ? 'bg-cyan-50' : ''
+                        }`}
+                      >
+                        <div className="flex justify-between">
+                          <div className="flex gap-3">
+                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold overflow-hidden flex-shrink-0">
+                              {conv.photo
+                                ? <img src={conv.photo} alt={conv.candidate_name} className="w-full h-full object-cover" />
+                                : conv.candidate_name?.charAt(0)?.toUpperCase()}
+                            </div>
+                            <div className="min-w-0">
+                              <h3 className="font-semibold text-sm md:text-base truncate">
+                                {conv.candidate_name}
+                              </h3>
+                              {conv.organization_name && (
+                                <p className="text-xs text-gray-400">{conv.organization_name}</p>
+                              )}
+                              <p className="text-xs md:text-sm text-gray-600 truncate">
+                                {conv.last_message || '—'}
+                              </p>
+                              <p className="text-xs text-gray-400">{conv.last_time || conv.last_at}</p>
+                            </div>
+                          </div>
+
+                          {conv.unread_count > 0 && (
+                            <span className="bg-cyan-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 self-start mt-1">
+                              {conv.unread_count}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
             </div>
 
@@ -152,14 +298,13 @@ const Messages = () => {
               {!selectedChat ? (
                 <div className="flex-1 flex flex-col items-center justify-center text-center">
                   <Send className="w-8 h-8 text-gray-400 mb-2" />
-                  <p className="text-gray-500">Select a conversation</p>
+                  <p className="text-gray-500">Select a conversation or search for an HR contact</p>
                 </div>
               ) : (
                 <>
                   {/* Header */}
                   <div className="p-3 md:p-4 border-b flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                      {/* Back button for mobile */}
                       <button
                         onClick={() => setSelectedChat(null)}
                         className="md:hidden text-gray-600"
@@ -167,12 +312,16 @@ const Messages = () => {
                         ←
                       </button>
 
-                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white">
-                        {activeChat?.avatar}
+                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold overflow-hidden">
+                        {selectedChat.photo
+                          ? <img src={selectedChat.photo} alt={selectedChat.candidate_name} className="w-full h-full object-cover" />
+                          : selectedChat.candidate_name?.charAt(0)?.toUpperCase()}
                       </div>
                       <div>
-                        <h3 className="font-semibold text-sm md:text-base">{activeChat?.name}</h3>
-                        <p className="text-xs text-gray-500">Active now</p>
+                        <h3 className="font-semibold text-sm md:text-base">{selectedChat.candidate_name}</h3>
+                        {selectedChat.organization_name && (
+                          <p className="text-xs text-gray-500">{selectedChat.organization_name}</p>
+                        )}
                       </div>
                     </div>
                     <MoreVertical className="w-5 h-5 text-gray-600" />
@@ -180,20 +329,31 @@ const Messages = () => {
 
                   {/* Messages */}
                   <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-3 md:space-y-4">
-                    {messages.map(msg => (
-                      <div key={msg.id} className={`flex ${msg.isOwn ? 'justify-end' : 'justify-start'}`}>
-                        <div
-                          className={`max-w-[80%] md:max-w-md px-3 md:px-4 py-2 rounded-lg text-sm ${
-                            msg.isOwn
-                              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
-                              : 'bg-gray-100'
-                          }`}
-                        >
-                          <p>{msg.text}</p>
-                          <p className="text-xs text-gray-500 mt-1">{msg.time}</p>
+                    {messages.length === 0 && (
+                      <p className="text-center text-gray-400 text-sm py-6">
+                        No messages yet. Say hello!
+                      </p>
+                    )}
+                    {messages.map(msg => {
+                      const isOwn = msg.isOwn || msg.sender_id === currentUserId;
+                      return (
+                        <div key={msg.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+                          <div
+                            className={`max-w-[80%] md:max-w-md px-3 md:px-4 py-2 rounded-lg text-sm ${
+                              isOwn
+                                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                                : 'bg-gray-100'
+                            }`}
+                          >
+                            <p>{msg.message_text}</p>
+                            <p className={`text-xs mt-1 ${isOwn ? 'text-cyan-100' : 'text-gray-400'}`}>
+                              {formatTime(msg.sent_at)}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
+                    <div ref={messagesEndRef} />
                   </div>
 
                   {/* Input */}
@@ -206,7 +366,6 @@ const Messages = () => {
                       <Paperclip className="w-5 h-5 text-gray-600" />
                     </button>
 
-                    {/* Attachment Menu */}
                     {showAttachments && (
                       <div className="absolute bottom-16 left-3 md:left-4 bg-white border rounded-xl shadow-lg w-52 z-50">
                         {[
@@ -235,7 +394,11 @@ const Messages = () => {
                       className="flex-1 px-3 md:px-4 py-2 border rounded-lg text-sm md:text-base"
                     />
 
-                    <button className="p-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg">
+                    <button
+                      type="submit"
+                      disabled={sending || !messageText.trim()}
+                      className="p-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg disabled:opacity-50"
+                    >
                       <Send className="w-5 h-5" />
                     </button>
                   </form>
