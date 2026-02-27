@@ -1,5 +1,68 @@
 const pool = require("../../config/db");
 
+// GET SINGLE USER – full profile details for admin view
+exports.getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(`
+      SELECT 
+        u.id,
+        u.title,
+        u.full_name AS name,
+        u.email,
+        u.role,
+        u.phone_number,
+        u.location,
+        u.is_verified,
+        u.profile_photo_url,
+        u.created_at AS joined,
+        CASE WHEN u.is_verified THEN 'Active' ELSE 'Inactive' END AS status,
+        -- Candidate profile fields
+        cp.qualification,
+        cp.resume_url,
+        cp.professional_summary,
+        cp.dob,
+        cp.gender,
+        cp.highest_qualification,
+        cp.current_experience,
+        cp.current_position,
+        cp.preferred_job_type,
+        cp.preferred_location,
+        cp.expected_salary,
+        cp.willing_to_relocate,
+        cp.interested_in_teaching,
+        cp.experience,
+        cp.work_experience,
+        cp.education,
+        cp.skills,
+        cp.certifications,
+        -- Employer profile fields
+        ep.designation,
+        ep.organization_name,
+        ep.organization_category,
+        ep.number_of_beds,
+        ep.organization_city,
+        ep.organization_address,
+        ep.website_url,
+        ep.description AS organization_description,
+        -- Application stats
+        (SELECT COUNT(*) FROM applications WHERE user_id = u.id) AS total_applications
+      FROM users u
+      LEFT JOIN candidate_profiles cp ON cp.user_id = u.id
+      LEFT JOIN employer_profiles ep ON ep.user_id = u.id
+      WHERE u.id = $1
+    `, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Get User By ID Error:", error);
+    res.status(500).json({ error: "Failed to fetch user details" });
+  }
+};
+
 // GET ALL USERS (with candidate/employer profile info)
 exports.getUsers = async (req, res) => {
   try {

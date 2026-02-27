@@ -3,7 +3,8 @@ const router = express.Router();
 const userController = require("../../controllers/admin/userController");
 
 router.get("/", userController.getUsers);
-router.get("/role/:role", userController.getUsersByRole);
+router.get("/role/:role", userController.getUsersByRole);  // must be before /:id
+router.get("/:id", userController.getUserById);
 router.post("/", userController.createUser);
 router.put("/:id", userController.updateUser);
 router.delete("/:id", userController.deleteUser);

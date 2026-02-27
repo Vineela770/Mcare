@@ -7,6 +7,14 @@ import {
   X,
   CheckCircle,
   AlertCircle,
+  Eye,
+  Download,
+  Phone,
+  MapPin,
+  Calendar,
+  Briefcase,
+  GraduationCap,
+  Building2,
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import adminService from '../../api/adminService';
@@ -33,6 +41,9 @@ const UsersManagement = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [viewUser, setViewUser] = useState(null);
+  const [viewLoading, setViewLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [notification, setNotification] = useState(null);
 
@@ -89,6 +100,21 @@ const UsersManagement = () => {
   const handleDeleteUser = (user) => {
     setSelectedUser(user);
     setShowDeleteModal(true);
+  };
+
+  const handleViewUser = async (user) => {
+    setViewLoading(true);
+    setViewUser(null);
+    setShowViewModal(true);
+    try {
+      const data = await adminService.getUserById(user.id);
+      setViewUser(data);
+    } catch (err) {
+      console.error('Failed to fetch user details:', err);
+      setViewUser(user); // fallback to list data
+    } finally {
+      setViewLoading(false);
+    }
   };
 
   const handleFormChange = (e) => {
@@ -286,6 +312,13 @@ const UsersManagement = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-3">
                     <button
+                      onClick={() => handleViewUser(user)}
+                      className="text-emerald-600 hover:text-emerald-900"
+                      title="View Full Profile"
+                    >
+                      <Eye className="w-5 h-5" />
+                    </button>
+                    <button
                       onClick={() => handleEditUser(user)}
                       className="text-blue-600 hover:text-blue-900"
                       title="Edit User"
@@ -329,6 +362,13 @@ const UsersManagement = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleViewUser(user)}
+                    className="p-2 rounded-lg border border-gray-200 text-emerald-600 active:scale-95"
+                    title="View Profile"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </button>
                   <button
                     onClick={() => handleEditUser(user)}
                     className="p-2 rounded-lg border border-gray-200 text-blue-600 active:scale-95"
@@ -638,6 +678,297 @@ const UsersManagement = () => {
                   className="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 sm:mt-0 sm:w-auto sm:text-sm"
                 >
                   Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Full Profile View Modal ────────────────────────────────────────── */}
+      {showViewModal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex items-start justify-center min-h-screen px-4 pt-6 pb-20">
+            <div
+              className="fixed inset-0 bg-gray-700 bg-opacity-60"
+              onClick={() => setShowViewModal(false)}
+            />
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl z-10">
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-cyan-500 to-blue-600 rounded-t-2xl">
+                <h2 className="text-xl font-bold text-white">Full Profile Details</h2>
+                <button
+                  onClick={() => setShowViewModal(false)}
+                  className="text-white/80 hover:text-white"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {viewLoading ? (
+                <div className="p-12 text-center text-gray-500">Loading profile…</div>
+              ) : viewUser ? (
+                <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+
+                  {/* ── Basic Info ── */}
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                      {viewUser.name?.charAt(0) || '?'}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">{viewUser.title ? `${viewUser.title} ` : ''}{viewUser.name}</h3>
+                      <p className="text-gray-500 text-sm">{viewUser.email}</p>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          viewUser.role === 'candidate' ? 'bg-cyan-100 text-cyan-700' : 'bg-blue-100 text-blue-700'
+                        }`}>
+                          {ROLE_LABELS[viewUser.role] || viewUser.role}
+                        </span>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          viewUser.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                        }`}>
+                          {viewUser.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ── Contact Details ── */}
+                  <div className="bg-gray-50 rounded-xl p-4">
+                    <h4 className="font-semibold text-gray-700 mb-3 text-sm uppercase tracking-wide">Contact & Location</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <span>{viewUser.phone_number || '—'}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <span>{viewUser.location || '—'}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <span>Joined: {formatDate(viewUser.joined)}</span>
+                      </div>
+                      {viewUser.dob && (
+                        <div className="flex items-center gap-2 text-gray-700">
+                          <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span>DOB: {formatDate(viewUser.dob)}</span>
+                        </div>
+                      )}
+                      {viewUser.gender && (
+                        <div className="flex items-center gap-2 text-gray-700">
+                          <Users className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span>{viewUser.gender}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* ── Doctor / Candidate Profile ── */}
+                  {viewUser.role === 'candidate' && (
+                    <div className="space-y-4">
+                      <div className="bg-cyan-50 rounded-xl p-4">
+                        <h4 className="font-semibold text-cyan-800 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
+                          <GraduationCap className="w-4 h-4" /> Medical Professional Details
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <span className="text-gray-500 text-xs">Qualification</span>
+                            <p className="font-medium text-gray-800">{viewUser.qualification || '—'}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 text-xs">Highest Qualification</span>
+                            <p className="font-medium text-gray-800">{viewUser.highest_qualification || '—'}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 text-xs">Current Position</span>
+                            <p className="font-medium text-gray-800">{viewUser.current_position || '—'}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 text-xs">Experience</span>
+                            <p className="font-medium text-gray-800">{viewUser.current_experience || '—'}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 text-xs">Expected Salary</span>
+                            <p className="font-medium text-gray-800">{viewUser.expected_salary || '—'}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 text-xs">Preferred Job Type</span>
+                            <p className="font-medium text-gray-800">{viewUser.preferred_job_type || '—'}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 text-xs">Preferred Location</span>
+                            <p className="font-medium text-gray-800">{viewUser.preferred_location || '—'}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 text-xs">Willing to Relocate</span>
+                            <p className="font-medium text-gray-800">{viewUser.willing_to_relocate ? 'Yes' : 'No'}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 text-xs">Interested in Teaching</span>
+                            <p className="font-medium text-gray-800">{viewUser.interested_in_teaching ? 'Yes' : 'No'}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 text-xs">Total Applications</span>
+                            <p className="font-medium text-gray-800">{viewUser.total_applications || 0}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Skills */}
+                      {viewUser.skills && (
+                        <div className="bg-gray-50 rounded-xl p-4">
+                          <h4 className="font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wide">Skills</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {(() => {
+                              let arr = [];
+                              try {
+                                const s = typeof viewUser.skills === 'string' ? JSON.parse(viewUser.skills) : viewUser.skills;
+                                arr = Array.isArray(s) ? s : [String(viewUser.skills)];
+                              } catch (parseErr) {
+                                void parseErr;
+                                arr = [String(viewUser.skills)];
+                              }
+                              return arr.map((sk, i) => (
+                                <span key={i} className="px-2 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs">{sk}</span>
+                              ));
+                            })()}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Professional Summary */}
+                      {viewUser.professional_summary && (
+                        <div className="bg-gray-50 rounded-xl p-4">
+                          <h4 className="font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wide">Professional Summary</h4>
+                          <p className="text-sm text-gray-700 leading-relaxed">{viewUser.professional_summary}</p>
+                        </div>
+                      )}
+
+                      {/* Resume */}
+                      <div className="bg-blue-50 rounded-xl p-4">
+                        <h4 className="font-semibold text-blue-800 mb-3 text-sm uppercase tracking-wide">Resume / CV</h4>
+                        {viewUser.resume_url ? (
+                          <a
+                            href={`${import.meta.env.VITE_API_URL || 'https://mcare-backend-61sy.onrender.com'}${viewUser.resume_url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                          >
+                            <Download className="w-4 h-4" />
+                            View / Download Resume
+                          </a>
+                        ) : (
+                          <p className="text-sm text-gray-500 italic">No resume uploaded</p>
+                        )}
+                      </div>
+
+                      {/* Education */}
+                      {viewUser.education && (
+                        <div className="bg-gray-50 rounded-xl p-4">
+                          <h4 className="font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wide">Education</h4>
+                          {(() => {
+                            const raw = viewUser.education;
+                            let edu = null;
+                            try { edu = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch (parseErr) { void parseErr; }
+                            if (Array.isArray(edu)) {
+                              return edu.map((e, i) => (
+                                <div key={i} className="mb-2 text-sm border-l-2 border-cyan-300 pl-3">
+                                  <p className="font-medium text-gray-800">{e.degree || e.title || '—'}</p>
+                                  <p className="text-gray-500">{e.institution || e.school || ''} {e.year ? `· ${e.year}` : ''}</p>
+                                </div>
+                              ));
+                            }
+                            return <p className="text-sm text-gray-700">{raw}</p>;
+                          })()}
+                        </div>
+                      )}
+
+                      {/* Certifications */}
+                      {viewUser.certifications && (
+                        <div className="bg-gray-50 rounded-xl p-4">
+                          <h4 className="font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wide">Certifications</h4>
+                          <p className="text-sm text-gray-700">{viewUser.certifications}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* ── Employer / HR Profile ── */}
+                  {viewUser.role === 'hr' && (
+                    <div className="bg-blue-50 rounded-xl p-4">
+                      <h4 className="font-semibold text-blue-800 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
+                        <Building2 className="w-4 h-4" /> Organization Details
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <span className="text-gray-500 text-xs">Designation</span>
+                          <p className="font-medium text-gray-800">{viewUser.designation || '—'}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 text-xs">Organization</span>
+                          <p className="font-medium text-gray-800">{viewUser.organization_name || '—'}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 text-xs">Category</span>
+                          <p className="font-medium text-gray-800">{viewUser.organization_category || '—'}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 text-xs">Number of Beds</span>
+                          <p className="font-medium text-gray-800">{viewUser.number_of_beds || '—'}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 text-xs">City</span>
+                          <p className="font-medium text-gray-800">{viewUser.organization_city || '—'}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 text-xs">Address</span>
+                          <p className="font-medium text-gray-800">{viewUser.organization_address || '—'}</p>
+                        </div>
+                        {viewUser.website_url && (
+                          <div className="sm:col-span-2">
+                            <span className="text-gray-500 text-xs">Website</span>
+                            <a
+                              href={viewUser.website_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block font-medium text-blue-600 hover:underline"
+                            >
+                              {viewUser.website_url}
+                            </a>
+                          </div>
+                        )}
+                        <div>
+                          <span className="text-gray-500 text-xs">Jobs Posted</span>
+                          <p className="font-medium text-gray-800">{viewUser.total_applications || 0}</p>
+                        </div>
+                        {viewUser.organization_description && (
+                          <div className="sm:col-span-2">
+                            <span className="text-gray-500 text-xs">Description</span>
+                            <p className="text-sm text-gray-700 mt-1">{viewUser.organization_description}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                </div>
+              ) : null}
+
+              <div className="px-6 py-4 border-t flex justify-end gap-3">
+                {viewUser && (
+                  <button
+                    onClick={() => { setShowViewModal(false); handleEditUser(viewUser); }}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 flex items-center gap-2"
+                  >
+                    <Edit2 className="w-4 h-4" /> Edit User
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowViewModal(false)}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200"
+                >
+                  Close
                 </button>
               </div>
             </div>

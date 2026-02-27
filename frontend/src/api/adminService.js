@@ -21,6 +21,15 @@ const adminService = {
     }
   },
 
+  getUserById: async (id) => {
+    try {
+      const response = await axios.get(`/api/admin/users/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch user details' };
+    }
+  },
+
   createUser: async (userData) => {
     try {
       const response = await axios.post('/api/admin/users', userData);
