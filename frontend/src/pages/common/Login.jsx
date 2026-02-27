@@ -115,11 +115,11 @@ const Login = () => {
     setResetLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setResetMessage('Password reset link sent to your email.');
+      const response = await authService.forgotPassword(resetEmail);
+      setResetMessage(response.message || 'Password reset link sent to your email.');
       setResetEmail('');
-    } catch {
-      setResetMessage('Failed to send reset link. Try again.');
+    } catch (err) {
+      setResetMessage(err.message || 'Failed to send reset link. Try again.');
     } finally {
       setResetLoading(false);
     }

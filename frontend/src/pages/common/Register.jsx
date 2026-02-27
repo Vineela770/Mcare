@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, UserPlus } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
+import { authService } from '../../api/authService';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -110,8 +111,15 @@ const Register = () => {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
+
+    // ✅ Password strength validation (matches backend requirements)
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+    if (!passwordRegex.test(formData.password)) {
+      setError('Password must contain uppercase, lowercase, number, and special character (@$!%*?&)');
       return;
     }
 
@@ -129,19 +137,45 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // ✅ Prepare FormData for multipart/form-data (for resume upload)
+      const submitData = new FormData();
+      
+      // Add all text fields
+      submitData.append('title', formData.title);
+      submitData.append('fullName', formData.fullName);
+      submitData.append('email', formData.email);
+      submitData.append('password', formData.password);
+      submitData.append('phone', `${countryCode}${formData.phone}`);
+      submitData.append('location', formData.location);
+      submitData.append('role', formData.role);
+      
+      // Role-specific fields
+      if (formData.role === 'candidate') {
+        submitData.append('qualification', formData.qualification);
+        submitData.append('designation', formData.designation);
+        if (formData.resume) {
+          submitData.append('resume', formData.resume);
+        }
+      } else if (formData.role === 'hr') {
+        submitData.append('organizationName', formData.organizationName);
+        submitData.append('organizationCategory', formData.organizationCategory);
+        submitData.append('numberOfBeds', formData.numberOfBeds);
+        submitData.append('organizationCity', formData.organizationCity);
+        submitData.append('organizationAddress', formData.organizationAddress);
+      }
 
-      // ✅ Final phone number example: +91XXXXXXXXXX
-      const payload = {
-        ...formData,
-        phone: `${countryCode}${formData.phone}`,
-      };
-
-      console.log('REGISTER PAYLOAD:', payload);
-
-      navigate('/login');
-    } catch {
-      setError('Registration failed. Please try again.');
+      // ✅ Call backend registration API
+      const response = await authService.register(submitData);
+      
+      if (response.success) {
+        // Registration successful - redirect to login
+        navigate('/login');
+      } else {
+        setError(response.message || 'Registration failed. Please try again.');
+      }
+    } catch (err) {
+      console.error('Registration error:', err);
+      setError(err.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
