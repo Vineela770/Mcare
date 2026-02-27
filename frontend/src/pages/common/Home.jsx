@@ -1,11 +1,8 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
 import { CheckCircle } from 'lucide-react';
-import { jobService } from '../../api/jobService';
-import { statsService } from '../../api/statsService';
-import { guestService } from '../../api/guestService';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -32,23 +29,6 @@ const Home = () => {
   const [showQuickPostModal, setShowQuickPostModal] = useState(false);
   const [quickApplyErrors, setQuickApplyErrors] = useState({});
   const [quickPostErrors, setQuickPostErrors] = useState({});
-  const [quickApplySubmitting, setQuickApplySubmitting] = useState(false);
-  const [quickPostSubmitting, setQuickPostSubmitting] = useState(false);
-  
-  // Autocomplete search states
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [filteredKeywords, setFilteredKeywords] = useState([]);
-  const searchRef = useRef(null);
-
-  // Backend integration states
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
-    activeJobs: 0,
-    facilities: 0,
-    placements: 0,
-    cities: 0
-  });
 
   const popularJobsRef = useRef(null);
 
@@ -79,140 +59,6 @@ const Home = () => {
     { code: '+61', label: '🇦🇺 +61 (Australia)' },
     { code: '+971', label: '🇦🇪 +971 (UAE)' },
   ];
-
-  // Job title keywords for autocomplete
-  const jobKeywords = [
-    'Nurse', 'Doctor', 'Pharmacist', 'Lab Technician', 'Physiotherapist',
-    'Radiologist', 'Surgeon', 'Cardiologist', 'Neurologist', 'Gynecologist',
-    'Pediatrician', 'Orthopedic', 'Pulmonologist', 'Dentist', 'Medical Assistant',
-    'Healthcare Administrator', 'Anesthesiologist', 'Dermatologist', 'Pathologist',
-    'Oncologist', 'Psychiatrist', 'Urologist', 'Ophthalmologist', 'ENT Specialist',
-    'General Physician', 'Medical Officer', 'Staff Nurse', 'ICU Nurse', 'OT Nurse',
-    'Emergency Medical Technician', 'Paramedic', 'X-Ray Technician', 'Dental Hygienist',
-    'Medical Receptionist', 'Hospital Manager', 'Clinical Research Coordinator'
-  ];
-
-  // Handle job title input change with autocomplete
-  const handleJobTitleChange = (e) => {
-    const value = e.target.value;
-    setJobTitle(value);
-
-    if (value.length > 0) {
-      const filtered = jobKeywords.filter(keyword =>
-        keyword.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredKeywords(filtered);
-      setShowSuggestions(true);
-    } else {
-      setFilteredKeywords([]);
-      setShowSuggestions(false);
-    }
-  };
-
-  // Handle suggestion click
-  const handleSuggestionClick = (keyword) => {
-    setJobTitle(keyword);
-    setShowSuggestions(false);
-    setFilteredKeywords([]);
-  };
-
-  // Close suggestions when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setShowSuggestions(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Fetch jobs and stats from backend
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        
-        // Fetch jobs
-        const jobsData = await jobService.getJobs();
-        
-        // Transform backend data to match frontend expectations
-        const transformedJobs = jobsData.map(job => ({
-          id: job.id,
-          title: job.title,
-          company: job.company_name || 'Not specified',
-          category: 'Hospital Jobs Doctors', // Default category since DB doesn't have it yet
-          categoryKey: 'doctors', // Default categoryKey
-          specialization: 'General', // Default since DB doesn't have it yet
-          location: job.location || 'Not specified',
-          salary: job.salary || job.salary_range || 'Salary not disclosed',
-          type: job.job_type || 'Full Time',
-          featured: false, // Default since DB doesn't have is_featured
-        }));
-        
-        setJobs(transformedJobs);
-        
-        // Calculate category counts based on job titles
-        const counts = {
-          doctors: 0,
-          management: 0,
-          colleges: 0,
-          allied: 0,
-          nursing: 0,
-          alternative: 0,
-          dental: 0,
-        };
-        
-        jobsData.forEach(job => {
-          const title = (job.title || '').toLowerCase();
-          if (title.match(/doctor|md|mbbs|physician|surgeon/i)) counts.doctors++;
-          else if (title.match(/management|manager|administrator|director|ceo|coo/i)) counts.management++;
-          else if (title.match(/college|professor|lecturer|faculty|teaching/i)) counts.colleges++;
-          else if (title.match(/technician|therapist|allied|lab|radiology|pathology/i)) counts.allied++;
-          else if (title.match(/nurse|nursing|rn|staff nurse/i)) counts.nursing++;
-          else if (title.match(/ayurveda|homeopathy|alternative|naturopathy|ayurvedic/i)) counts.alternative++;
-          else if (title.match(/dental|dentist|orthodontist/i)) counts.dental++;
-        });
-        
-        setCategoryCounts(counts);
-        
-        // Fetch stats
-        const statsData = await statsService.getImpactStats();
-        setStats(statsData);
-        
-      } catch (error) {
-        console.error('Error fetching homepage data:', error);
-        // Set empty array on error so page still renders
-        setJobs([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchData();
-  }, []);
-
-  // Helper function to get category key from category name
-  const getCategoryKey = (category) => {
-    const mapping = {
-      'Hospital Jobs Doctors': 'doctors',
-      'Hospital Management': 'management',
-      'Medical Colleges': 'colleges',
-      'Allied Health': 'allied',
-      'Nursing': 'nursing',
-      'Alternative Medicine': 'alternative',
-      'Dental': 'dental',
-    };
-    return mapping[category] || 'doctors';
-  };
-
-  // Helper function to format salary
-  const formatSalary = (salary, salaryRange) => {
-    if (salary) return salary;
-    if (salaryRange) return salaryRange;
-    return 'Salary not disclosed';
-  };
 
   const hospitalLogos = [
     '/hospitals/archana.png',
@@ -300,24 +146,14 @@ const Home = () => {
     navigate(`/jobs?${params.toString()}`);
   };
 
-  const [categoryCounts, setCategoryCounts] = useState({
-    doctors: 0,
-    management: 0,
-    colleges: 0,
-    allied: 0,
-    nursing: 0,
-    alternative: 0,
-    dental: 0,
-  });
-
   const categories = [
-    { id: 1, title: 'Hospital Jobs – Doctors', icon: '🏥', positions: categoryCounts.doctors, key: 'doctors' },
-    { id: 2, title: 'Hospital Management', icon: '📊', positions: categoryCounts.management, key: 'management' },
-    { id: 3, title: 'Medical Colleges', icon: '🎓', positions: categoryCounts.colleges, key: 'colleges' },
-    { id: 4, title: 'Allied Health', icon: '🩺', positions: categoryCounts.allied, key: 'allied' },
-    { id: 5, title: 'Nursing', icon: '👩‍⚕️', positions: categoryCounts.nursing, key: 'nursing' },
-    { id: 6, title: 'Alternative Medicine', icon: '🌿', positions: categoryCounts.alternative, key: 'alternative' },
-    { id: 7, title: 'Dental', icon: '🦷', positions: categoryCounts.dental, key: 'dental' },
+    { id: 1, title: 'Hospital Jobs – Doctors', icon: '🏥', positions: 4, key: 'doctors' },
+    { id: 2, title: 'Hospital Management', icon: '📊', positions: 1, key: 'management' },
+    { id: 3, title: 'Medical Colleges', icon: '🎓', positions: 1, key: 'colleges' },
+    { id: 4, title: 'Allied Health', icon: '🩺', positions: 2, key: 'allied' },
+    { id: 5, title: 'Nursing', icon: '👩‍⚕️', positions: 2, key: 'nursing' },
+    { id: 6, title: 'Alternative Medicine', icon: '🌿', positions: 2, key: 'alternative' },
+    { id: 7, title: 'Dental', icon: '🦷', positions: 2, key: 'dental' },
   ];
 
   const tabs = [
@@ -331,26 +167,7 @@ const Home = () => {
     { id: 'dental', label: 'Dental' }, // beside Nursing
   ];
 
-  // Responsive visible tabs - fewer on mobile to prevent text cutoff
-  const [visibleTabs, setVisibleTabs] = useState(6);
-
-  useEffect(() => {
-    const updateVisibleTabs = () => {
-      if (window.innerWidth < 640) {
-        setVisibleTabs(2); // Mobile: show 2 tabs
-      } else if (window.innerWidth < 768) {
-        setVisibleTabs(3); // Small tablets: show 3 tabs
-      } else if (window.innerWidth < 1024) {
-        setVisibleTabs(4); // Tablets: show 4 tabs
-      } else {
-        setVisibleTabs(6); // Desktop: show 6 tabs
-      }
-    };
-
-    updateVisibleTabs();
-    window.addEventListener('resize', updateVisibleTabs);
-    return () => window.removeEventListener('resize', updateVisibleTabs);
-  }, []);
+  const visibleTabs = 6; // number of tabs visible at once
 
   const nextCategory = () => {
     if (categoryIndex + visibleTabs < tabs.length) {
@@ -642,7 +459,7 @@ const Home = () => {
 
 
     // 🎓 MEDICAL COLLEGES
-    medicalColleges: {
+    colleges: {
       Administration: [
         'Principal',
         'Academic Coordinator',
@@ -667,7 +484,7 @@ const Home = () => {
     },
 
     // 🩺 ALLIED HEALTH
-    alliedHealth: {
+    allied: {
       Physiotherapy: [
         'BPT – Bachelor of Physiotherapy',
         'MPT – Master of Physiotherapy',
@@ -701,7 +518,7 @@ const Home = () => {
     },
 
     // 🌿 ALTERNATIVE MEDICINE
-    alternativeMedicine: {
+    alternative: {
       Undergraduate: [
         'BAMS – Ayurveda',
         'BHMS – Homeopathy',
@@ -827,6 +644,177 @@ const Home = () => {
     },
   };
 
+  const jobs = [
+    {
+      id: 1,
+      title: 'Wanted MCh Neurosurgeon for Guntur',
+      company: 'Hospital Jobs Doctors',
+      category: 'Hospital Jobs Doctors',
+      categoryKey: 'doctors',
+      specialization: 'MCh – Neurosurgery',
+      location: 'Guntur',
+      salary: 'Rs. 400,000 - Rs. 600,000 / month',
+      type: 'Full Time',
+      featured: true,
+    },
+    {
+      id: 2,
+      title: 'Urgent Requirement: Radiologist - Vijayawada',
+      company: 'Hospital Jobs Doctors',
+      category: 'Hospital Jobs Doctors',
+      categoryKey: 'doctors',
+      specialization: 'MD – Radio-diagnosis',
+      location: 'Vijayawada',
+      salary: 'Rs. 500,000 - Rs. 600,000 / year',
+      type: 'Full Time',
+      featured: true,
+    },
+    {
+      id: 3,
+      title: 'Senior Cardiologist - Delhi',
+      company: 'Apollo Hospitals',
+      category: 'Hospital Jobs Doctors',
+      categoryKey: 'doctors',
+      specialization: 'DM – Cardiology',
+      location: 'Delhi',
+      salary: 'Rs. 800,000 - Rs. 1,200,000 / month',
+      type: 'Full Time',
+      featured: false,
+    },
+    {
+      id: 4,
+      title: 'Pediatrician - Mumbai',
+      company: 'Max Healthcare',
+      category: 'Hospital Jobs Doctors',
+      categoryKey: 'doctors',
+      specialization: 'MD – Paediatrics',
+      location: 'Mumbai',
+      salary: 'Rs. 600,000 - Rs. 900,000 / month',
+      type: 'Full Time',
+      featured: false,
+    },
+    {
+      id: 5,
+      title: 'Hospital Operations Manager',
+      company: 'Fortis Healthcare',
+      category: 'Hospital Management',
+      categoryKey: 'management',
+      specialization: 'Hospital Administration',
+      location: 'Bangalore',
+      salary: 'Rs. 250,000 - Rs. 400,000 / month',
+      type: 'Full Time',
+      featured: false,
+    },
+    {
+      id: 6,
+      title: 'Medical College Lecturer – Anatomy',
+      company: 'AIIMS',
+      category: 'Medical Colleges',
+      categoryKey: 'colleges',
+      specialization: 'MD – Anatomy',
+      location: 'New Delhi',
+      salary: 'Rs. 180,000 - Rs. 300,000 / month',
+      type: 'Full Time',
+      featured: true,
+    },
+    {
+      id: 7,
+      title: 'Physiotherapist',
+      company: 'Manipal Hospitals',
+      category: 'Allied Health',
+      categoryKey: 'allied',
+      specialization: 'BPT – Bachelor of Physiotherapy',
+      location: 'Chennai',
+      salary: 'Rs. 40,000 - Rs. 70,000 / month',
+      type: 'Full Time',
+      featured: false,
+    },
+    {
+      id: 8,
+      title: 'Dialysis Technician',
+      company: 'Narayana Health',
+      category: 'Allied Health',
+      categoryKey: 'allied',
+      specialization: 'Dialysis Technology',
+      location: 'Hyderabad',
+      salary: 'Rs. 35,000 - Rs. 55,000 / month',
+      type: 'Full Time',
+      featured: false,
+    },
+    {
+      id: 9,
+      title: 'Staff Nurse – ICU',
+      company: 'Apollo Hospitals',
+      category: 'Nursing',
+      categoryKey: 'nursing',
+      specialization: 'GNM – General Nursing and Midwifery',
+      location: 'Coimbatore',
+      salary: 'Rs. 30,000 - Rs. 50,000 / month',
+      type: 'Full Time',
+      featured: true,
+    },
+    {
+      id: 10,
+      title: 'Nursing Tutor',
+      company: 'CMC Vellore',
+      category: 'Nursing',
+      categoryKey: 'nursing',
+      specialization: 'B.Sc Nursing',
+      location: 'Vellore',
+      salary: 'Rs. 45,000 - Rs. 65,000 / month',
+      type: 'Full Time',
+      featured: false,
+    },
+    {
+      id: 11,
+      title: 'Ayurvedic Medical Officer',
+      company: 'Kerala Ayurveda Ltd',
+      category: 'Alternative Medicine',
+      categoryKey: 'alternative',
+      specialization: 'BAMS – Ayurveda',
+      location: 'Kurnool',
+      salary: 'Rs. 60,000 - Rs. 90,000 / month',
+      type: 'Full Time',
+      featured: false,
+    },
+    {
+      id: 12,
+      title: 'Homeopathy Consultant',
+      company: 'Dr. Batra’s',
+      category: 'Alternative Medicine',
+      categoryKey: 'alternative',
+      specialization: 'BHMS – Homeopathy',
+      location: 'Mumbai',
+      salary: 'Rs. 50,000 - Rs. 80,000 / month',
+      type: 'Full Time',
+      featured: true,
+    },
+    {
+      id: 13,
+      title: 'Dental Hygienist',
+      company: 'Smile Dental Clinic',
+      category: 'Dental',
+      categoryKey: 'dental',
+      specialization: 'BDS – Dental Hygiene',
+      location: 'Hyderabad',
+      salary: 'Rs. 25,000 - Rs. 40,000 / month',
+      type: 'Full Time',
+      featured: false,
+    },
+    {
+      id: 14,
+      title: 'Dental Assistant',
+      company: 'Care Dental Hospital',
+      category: 'Dental',
+      categoryKey: 'dental',
+      specialization: 'Dental Assisting',
+      location: 'Vijayawada',
+      salary: 'Rs. 18,000 - Rs. 28,000 / month',
+      type: 'Full Time',
+      featured: true,
+    },
+  ];
+
   const steps = [
     { id: 1, icon: '👤', title: 'Register an account', description: 'Create your professional profile in minutes.' },
     { id: 2, icon: '🔍', title: 'Search jobs', description: 'Explore thousands of verified healthcare jobs.' },
@@ -948,19 +936,15 @@ const Home = () => {
   };
 
   const handleCategoryClick = (categoryKey) => {
-    // Map category to search terms for filtering
-    const categorySearchMap = {
-      doctors: 'Doctor',
-      management: 'Management',
-      colleges: 'College',
-      allied: 'Allied Health',
-      nursing: 'Nurse',
-      alternative: 'Alternative Medicine',
-      dental: 'Dental'
-    };
+    setActiveTab(categoryKey);
+    setActiveDot(0);
+    setFilterSpecialization('');
+    setFilterCity('');
+    setFilterSalary('');
 
-    const searchTerm = categorySearchMap[categoryKey] || '';
-    navigate(`/jobs?category=${categoryKey}&search=${encodeURIComponent(searchTerm)}`);
+    setTimeout(() => {
+      popularJobsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   };
 
   return (
@@ -968,99 +952,102 @@ const Home = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <div className="relative min-h-[50vh] md:h-[40vh] w-full overflow-hidden">
+      <div className="relative min-h-[70vh] md:min-h-[75vh] lg:min-h-[50vh] w-full flex items-center justify-center overflow-hidden">
+
+        {/* Background Image */}
         <img
           src="https://static.vecteezy.com/system/resources/previews/023/740/386/large_2x/medicine-doctor-with-stethoscope-in-hand-on-hospital-background-medical-technology-healthcare-and-medical-concept-photo.jpg"
           alt="Healthcare Jobs"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-blue-700/75 to-cyan-600/70" />
 
-        <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 py-8 md:py-0">
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white text-center mb-6 md:mb-3">
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-blue-800/75 to-cyan-600/70" />
+
+        {/* Content */}
+        <div className="relative z-10 w-full max-w-6xl px-4 py-12 md:py-20 text-center">
+
+          {/* Heading */}
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6">
             India's #1 Healthcare Job Platform
           </h1>
 
-          <form onSubmit={handleSearch} className="w-full max-w-5xl bg-white rounded-2xl md:rounded-full shadow-xl flex flex-col md:flex-row items-stretch md:items-center overflow-hidden mb-6 md:mb-0">
-            <div className="flex-1 px-4 md:px-5 py-3.5 md:py-2 relative border-b md:border-b-0 border-gray-200" ref={searchRef}>
-              <input
-                type="text"
-                placeholder="Job title, keywords..."
-                value={jobTitle}
-                onChange={handleJobTitleChange}
-                onFocus={() => jobTitle.length > 0 && filteredKeywords.length > 0 && setShowSuggestions(true)}
-                className="w-full outline-none text-gray-700 text-sm md:text-base"
-                autoComplete="off"
-              />
-              
-              {/* Autocomplete Suggestions Dropdown */}
-              {showSuggestions && filteredKeywords.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-2xl border border-gray-200 max-h-64 overflow-y-auto z-50">
-                  {filteredKeywords.map((keyword, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => handleSuggestionClick(keyword)}
-                      className="w-full text-left px-4 py-2.5 hover:bg-cyan-50 transition-colors border-b border-gray-100 last:border-b-0 text-gray-700 hover:text-cyan-600 font-medium"
-                    >
-                      {keyword}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+          {/* Search Form */}
+<form
+  onSubmit={handleSearch}
+  className="w-full bg-white rounded-2xl md:rounded-full shadow-2xl p-4 md:p-1.5"
+>
+  <div className="flex flex-col md:flex-row items-stretch md:items-center">
 
-            <div className="px-4 md:px-5 py-3.5 md:py-3 border-b md:border-b-0 md:border-l border-gray-200 md:w-56">
-              <select
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full outline-none bg-transparent text-gray-700 cursor-pointer text-sm md:text-base"
-              >
-                <option value="">City</option>
-                {cities.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </div>
+    {/* Job Title */}
+    <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
+      <input
+        type="text"
+        placeholder="Job title, keywords..."
+        value={jobTitle}
+        onChange={(e) => setJobTitle(e.target.value)}
+        className="w-full outline-none text-gray-700 text-sm md:text-base"
+      />
+    </div>
 
-            <div className="hidden md:block px-5 py-3 border-l border-gray-200">
-              <select className="outline-none bg-transparent text-gray-700">
-                <option>All Categories</option>
-                <option>Doctors</option>
-                <option>Nursing</option>
-                <option>Hospital Management</option>
-                <option>Dental</option>
-              </select>
-            </div>
+    {/* City */}
+    <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
+      <select
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
+        className="w-full outline-none bg-transparent text-gray-700 text-sm md:text-base"
+      >
+        <option value="">City</option>
+        {cities.map((c) => (
+          <option key={c} value={c}>
+            {c}
+          </option>
+        ))}
+      </select>
+    </div>
 
-            <button
-              type="submit"
-              className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 md:px-6 py-3.5 md:py-2 font-semibold rounded-b-2xl md:rounded-b-none md:rounded-r-full transition text-sm md:text-base"
-            >
-              Find Jobs
-            </button>
-          </form>
+    {/* Category */}
+    <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
+      <select className="w-full outline-none bg-transparent text-gray-700 text-sm md:text-base">
+        <option>All Categories</option>
+        <option>Doctors</option>
+        <option>Nursing</option>
+        <option>Hospital Management</option>
+        <option>Dental</option>
+      </select>
+    </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 mt-6 w-full max-w-md sm:max-w-none justify-center">
+    {/* Button */}
+    <div className="px-3 py-2 md:px-3 md:py-1.5">
+      <button
+        type="submit"
+        className="w-full md:w-auto bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 md:py-1.5 font-semibold rounded-full transition text-sm md:text-base"
+      >
+        Find Jobs
+      </button>
+    </div>
+  </div>
+</form>
+
+          {/* Quick Buttons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-3 mt-6">
             <button
               onClick={() => setShowQuickApplyModal(true)}
-              className="bg-white text-cyan-600 px-6 py-2.5 md:py-2 rounded-full font-semibold hover:bg-gray-100 transition text-sm md:text-base"
+              className="bg-white text-cyan-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition"
             >
               Quick Apply
             </button>
 
             <button
               onClick={() => setShowQuickPostModal(true)}
-              className="bg-transparent border-2 border-white text-white px-6 py-2.5 md:py-2 rounded-full font-semibold hover:bg-white hover:text-cyan-600 transition text-sm md:text-base"
+              className="border-2 border-white text-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-cyan-600 transition"
             >
               Quick Post Job
             </button>
           </div>
 
-          {/* ✅ Browse Jobs with navigation (CLICKABLE) */}
-          <div className="text-white/90 mt-3 md:mt-2 text-center text-xs px-4">
+          {/* Browse Jobs */}
+          <div className="text-white/90 mt-4 text-xs md:text-sm">
             <span className="font-semibold">Browse Jobs:</span>{' '}
             {browseItems.map((item, idx) => (
               <span key={item.value}>
@@ -1075,6 +1062,7 @@ const Home = () => {
               </span>
             ))}
           </div>
+
         </div>
       </div>
 
@@ -1082,8 +1070,10 @@ const Home = () => {
       <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-extrabold text-gray-900 mb-3">Popular Job Categories</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
+              Popular Job Categories
+            </h2>
+            <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
               Explore the most in-demand medical job categories on Mcare Jobs. Whether you're a doctor, nurse, lab
               technician, or medical assistant, find roles that match your skills and career goals in just a few clicks.
             </p>
@@ -1119,93 +1109,121 @@ const Home = () => {
       </section>
 
       {/* Most Popular Jobs */}
-      <section ref={popularJobsRef} className="py-2">
+      <section ref={popularJobsRef} className="py-4 md:py-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-4xl font-extrabold text-gray-900 mb-3">Most Popular Jobs</h2>
-            <p className="text-lg text-gray-600">Discover the most in-demand medical job openings across India.</p>
-            <p className="text-gray-500 mt-2 max-w-3xl mx-auto">
-              From top hospitals to specialized clinics, these roles are trending among healthcare professionals. Apply now
-              to land your next opportunity with ease.
+
+          {/* Header */}
+          <div className="text-center mb-8 md:mb-10">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-2 md:mb-3">
+              Most Popular Jobs
+            </h2>
+
+            <p className="text-sm sm:text-base md:text-lg text-gray-600">
+              Discover the most in-demand medical job openings across India.
+            </p>
+
+            <p className="text-xs sm:text-sm md:text-base text-gray-500 mt-2 max-w-3xl mx-auto px-2 md:px-0">
+              From top hospitals to specialized clinics, these roles are trending among healthcare professionals.
+              Apply now to land your next opportunity with ease.
             </p>
           </div>
 
+          {/* Categories */}
           <div className="relative flex items-center justify-center mb-6">
 
-          {/* Left Arrow */}
-          {categoryIndex > 0 && (
-            <button
-              onClick={prevCategory}
-              className="absolute left-0 md:left-2 z-20 bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg rounded-full p-2 md:p-3 text-base md:text-lg transition"
-              aria-label="Previous categories"
-            >
-              ❮
-            </button>
-          )}
-
-          {/* Tabs Container - Properly sized for mobile */}
-          <div className="flex gap-2 md:gap-3 overflow-hidden px-10 sm:px-12 md:px-16">
-            {tabs.slice(categoryIndex, categoryIndex + visibleTabs).map((tab) => (
+            {/* Left Arrow - Desktop Only */}
+            {categoryIndex > 0 && (
               <button
-                key={tab.id}
-                onClick={() => {
-                  setActiveTab(tab.id);
-                  setFilterSpecialization('');
-                  setActiveDot(0);
-                }}
-                className={`flex-shrink-0 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-full border whitespace-nowrap transition text-xs sm:text-sm md:text-base font-medium ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md border-transparent'
-                    : 'bg-white hover:bg-gray-50 border-gray-300'
-                }`}
+                onClick={prevCategory}
+                className="hidden md:block absolute left-0 z-10 bg-white shadow rounded-full p-2 hover:bg-gray-100"
               >
-                {tab.label}
+                ❮
               </button>
-            ))}
+            )}
+
+            {/* Tabs Container */}
+            <div className="flex gap-3 overflow-x-auto md:overflow-hidden px-2 md:px-10 scroll-smooth no-scrollbar">
+
+              {/* Mobile → show all tabs scrollable */}
+              <div className="flex gap-3 md:hidden">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setActiveTab(tab.id);
+                      setFilterSpecialization('');
+                      setActiveDot(0);
+                    }}
+                    className={`flex-shrink-0 px-4 py-2 rounded-full border whitespace-nowrap transition ${
+                      activeTab === tab.id
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow'
+                        : 'bg-white hover:bg-gray-100'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Desktop → sliced tabs with arrows */}
+              <div className="hidden md:flex gap-3">
+                {tabs.slice(categoryIndex, categoryIndex + visibleTabs).map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setActiveTab(tab.id);
+                      setFilterSpecialization('');
+                      setActiveDot(0);
+                    }}
+                    className={`px-5 py-2 rounded-full border whitespace-nowrap transition ${
+                      activeTab === tab.id
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow'
+                        : 'bg-white hover:bg-gray-100'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Arrow - Desktop Only */}
+            {categoryIndex + visibleTabs < tabs.length && (
+              <button
+                onClick={nextCategory}
+                className="hidden md:block absolute right-0 z-10 bg-white shadow rounded-full p-2 hover:bg-gray-100"
+              >
+                ❯
+              </button>
+            )}
           </div>
 
-          {/* Right Arrow */}
-          {categoryIndex + visibleTabs < tabs.length && (
-            <button
-              onClick={nextCategory}
-              className="absolute right-0 md:right-2 z-20 bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg rounded-full p-2 md:p-3 text-base md:text-lg transition"
-              aria-label="Next categories"
-            >
-              ❯
-            </button>
-          )}
-        </div>
+          {/* Filters */}
+          <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-8">
 
-          <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-8 px-2">
-            {/* Degree Dropdown */}
             <select
               value={selectedDegree}
               onChange={(e) => {
                 setSelectedDegree(e.target.value);
                 setFilterSpecialization('');
               }}
-              className="w-full sm:w-auto min-w-[160px] border rounded-lg px-3 py-2 text-sm md:text-base bg-white"
+              className="border rounded-lg px-3 py-2 text-sm md:text-base"
             >
               <option value="">Select Degree</option>
               {degrees.map((deg) => (
-                <option key={deg} value={deg}>
-                  {deg}
-                </option>
+                <option key={deg} value={deg}>{deg}</option>
               ))}
             </select>
 
-            {/* ✅ Specialization Dropdown */}
             <select
               value={filterSpecialization}
               onChange={(e) => setFilterSpecialization(e.target.value)}
-              className="w-full sm:w-auto min-w-[180px] border rounded-lg px-3 py-2 text-sm md:text-base bg-white"
               disabled={!selectedDegree}
+              className="border rounded-lg px-3 py-2 text-sm md:text-base"
             >
               <option value="">Select Specialization</option>
               {specializations.map((spec) => (
-                <option key={spec} value={spec}>
-                  {spec}
-                </option>
+                <option key={spec} value={spec}>{spec}</option>
               ))}
             </select>
 
@@ -1215,13 +1233,11 @@ const Home = () => {
                 setFilterCity(e.target.value);
                 setActiveDot(0);
               }}
-              className="w-full sm:w-auto min-w-[140px] px-3 md:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 text-sm md:text-base bg-white"
+              className="border rounded-lg px-3 py-2 text-sm md:text-base"
             >
               <option value="">All Cities</option>
               {jobCities.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
+                <option key={c} value={c}>{c}</option>
               ))}
             </select>
 
@@ -1231,7 +1247,7 @@ const Home = () => {
                 setFilterSalary(e.target.value);
                 setActiveDot(0);
               }}
-              className="w-full sm:w-auto min-w-[140px] px-3 md:px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 text-sm md:text-base bg-white"
+              className="border rounded-lg px-3 py-2 text-sm md:text-base"
             >
               {salaryRanges.map((range) => (
                 <option key={range.value || 'all'} value={range.value}>
@@ -1241,204 +1257,353 @@ const Home = () => {
             </select>
 
             <button
-              onClick={() => {
-              setSelectedDegree('');
-              setFilterSpecialization('');
-              setFilterCity('');
-              setFilterSalary('');
-            }}
-
-              className="w-full sm:w-auto px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition text-sm md:text-base font-medium"
-            >
-              Clear Filters
-            </button>
+  onClick={() => {
+    setSelectedDegree('');
+    setFilterSpecialization('');
+    setFilterCity('');
+    setFilterSalary('');
+  }}
+  className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition text-sm md:text-base"
+>
+  Clear Filters
+</button>
           </div>
 
-          {filteredJobs.length === 0 ? (
-            <div className="text-center py-10 text-gray-500">No jobs found for selected filters.</div>
-          ) : (
-            <div className="relative overflow-hidden">
-              <button
-                onClick={handlePrev}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-100 transition"
-              >
-                ‹
-              </button>
+          {/* Jobs Section */}
+{filteredJobs.length === 0 ? (
+  <div className="text-center py-10 text-gray-500">
+    No jobs found for selected filters.
+  </div>
+) : (
+  <div className="relative">
 
-              <button
-                onClick={handleNext}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-100 transition"
-              >
-                ›
-              </button>
+    {/* ===== MOBILE VIEW (Swipe Cards) ===== */}
+    <div className="flex md:hidden overflow-x-auto gap-4 px-1 no-scrollbar scroll-smooth">
 
-              <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${activeDot * 100}%)` }}>
-                {Array.from({ length: totalDots }).map((_, slideIndex) => (
-                  <div key={slideIndex} className="min-w-full grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
-                    {filteredJobs
-                      .slice(slideIndex * 2, slideIndex * 2 + 2)
-                      .map((job) => (
-                        <div key={job.id} className="bg-white rounded-2xl shadow-lg border p-6">
-                          <h3 className="font-bold text-lg">{job.title}</h3>
-                          <p className="text-sm text-gray-600">{job.company}</p>
-                          <p className="text-sm">{job.location}</p>
-                          <p className="font-semibold mt-2">{job.salary}</p>
+      {filteredJobs.map((job) => (
+        <div
+          key={job.id}
+          className="min-w-[85%] bg-white rounded-2xl shadow-lg border p-4 flex-shrink-0"
+        >
+          <h3 className="font-bold text-base">
+            {job.title}
+          </h3>
+          <p className="text-sm text-gray-600">{job.company}</p>
+          <p className="text-sm">{job.location}</p>
+          <p className="font-semibold mt-2">{job.salary}</p>
 
-                          <button onClick={() => handleApply(job)} className="mt-4 bg-cyan-500 text-white px-4 py-2 rounded">
-                            Apply Now
-                          </button>
-                        </div>
-                      ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <button
+            onClick={() => handleApply(job)}
+            className="mt-4 bg-cyan-500 text-white px-4 py-2 rounded text-sm"
+          >
+            Apply Now
+          </button>
+        </div>
+      ))}
 
+    </div>
+
+    {/* ===== DESKTOP VIEW (Slider with Arrows) ===== */}
+    <div className="hidden md:block overflow-hidden relative">
+
+      {/* Desktop Arrows Only */}
+      <button
+        onClick={handlePrev}
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-100 transition"
+      >
+        ‹
+      </button>
+
+      <button
+        onClick={handleNext}
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-100 transition"
+      >
+        ›
+      </button>
+
+      <div
+        className="flex transition-transform duration-500"
+        style={{ transform: `translateX(-${activeDot * 100}%)` }}
+      >
+        {Array.from({ length: totalDots }).map((_, slideIndex) => (
+          <div
+            key={slideIndex}
+            className="min-w-full grid grid-cols-2 gap-6 px-1"
+          >
+            {filteredJobs
+              .slice(slideIndex * 2, slideIndex * 2 + 2)
+              .map((job) => (
+                <div
+                  key={job.id}
+                  className="bg-white rounded-2xl shadow-lg border p-6"
+                >
+                  <h3 className="font-bold text-lg">
+                    {job.title}
+                  </h3>
+                  <p className="text-sm text-gray-600">{job.company}</p>
+                  <p className="text-sm">{job.location}</p>
+                  <p className="font-semibold mt-2">{job.salary}</p>
+
+                  <button
+                    onClick={() => handleApply(job)}
+                    className="mt-4 bg-cyan-500 text-white px-4 py-2 rounded"
+                  >
+                    Apply Now
+                  </button>
+                </div>
+              ))}
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </div>
+)}
+
+          {/* Dots */}
           <div className="flex justify-center gap-3 mt-8">
             {Array.from({ length: totalDots }).map((_, dot) => (
               <button
                 key={dot}
                 onClick={() => setActiveDot(dot)}
-                className={`w-3 h-3 rounded-full ${activeDot === dot ? 'bg-cyan-500' : 'bg-gray-300'}`}
+                className={`w-3 h-3 rounded-full ${
+                  activeDot === dot ? 'bg-cyan-500' : 'bg-gray-300'
+                }`}
               />
             ))}
           </div>
+
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">How It Works?</h2>
-            <p className="text-lg text-gray-600 mb-4 max-w-3xl mx-auto">
-              Mcare Jobs makes it simple for medical professionals to find the right job and for hospitals to hire the right
-              talent. Whether you're a doctor, nurse, technician, or recruiter – getting started is easy.
-            </p>
+<section className="py-12 md:py-16 bg-gray-50">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    {/* Header */}
+    <div className="text-center mb-8 md:mb-12">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 md:mb-4">
+        How It Works?
+      </h2>
+
+      <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-3 md:mb-4 max-w-3xl mx-auto px-2 md:px-0">
+        Mcare Jobs makes it simple for medical professionals to find the right job and for hospitals to hire the right
+        talent. Whether you're a doctor, nurse, technician, or recruiter – getting started is easy.
+      </p>
+    </div>
+
+    {/* Steps */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+      {steps.map((step) => (
+        <div key={step.id} className="text-center px-2 md:px-0">
+          <div className="mb-3 md:mb-4 flex justify-center">
+            <div className="text-4xl md:text-6xl">
+              {step.icon}
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((step) => (
-              <div key={step.id} className="text-center">
-                <div className="mb-4 flex justify-center">
-                  <div className="text-6xl">{step.icon}</div>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{step.description}</p>
-              </div>
-            ))}
-          </div>
+          <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">
+            {step.title}
+          </h3>
+
+          <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+            {step.description}
+          </p>
         </div>
-      </section>
+      ))}
+    </div>
+
+  </div>
+</section>
 
       {/* Trusted Hospitals */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900">Trusted by Leading Hospitals</h2>
-            <p className="text-gray-600 mt-2">We work with India’s top healthcare institutions</p>
-          </div>
+<section className="py-12 md:py-16 bg-white">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          <div className="relative flex items-center">
-            <button
-              onClick={handleLogoPrev}
-              className="absolute left-0 md:left-2 z-10 bg-cyan-500 hover:bg-cyan-600 text-white p-2 md:p-3 rounded-lg shadow-lg transition text-xl"
+    {/* Header */}
+    <div className="text-center mb-8 md:mb-10">
+      <h2 className="text-2xl sm:text-3xl md:text-3xl font-bold text-gray-900">
+        Trusted by Leading Hospitals
+      </h2>
+
+      <p className="text-sm sm:text-base md:text-base text-gray-600 mt-2">
+        We work with India’s top healthcare institutions
+      </p>
+    </div>
+
+    <div className="relative flex items-center">
+
+      {/* LEFT ARROW – Desktop Only */}
+      <button
+        onClick={handleLogoPrev}
+        className="hidden md:block absolute left-0 z-10 bg-cyan-500 hover:bg-cyan-600 text-white p-3 rounded-lg"
+      >
+        ‹
+      </button>
+
+      {/* ===== MOBILE VIEW (Swipe) ===== */}
+      <div className="flex md:hidden overflow-x-auto gap-8 no-scrollbar scroll-smooth px-2">
+        {hospitalLogos.map((logo, i) => (
+          <img
+            key={i}
+            src={logo}
+            alt="Hospital Logo"
+            className="h-14 flex-shrink-0 object-contain grayscale hover:grayscale-0 transition"
+          />
+        ))}
+      </div>
+
+      {/* ===== DESKTOP VIEW (Slider with Arrows) ===== */}
+      <div className="hidden md:block overflow-hidden w-full">
+        <div
+          className="flex transition-transform duration-500"
+          style={{ transform: `translateX(-${logoIndex * 100}%)` }}
+        >
+          {Array.from({
+            length: Math.ceil(hospitalLogos.length / LOGOS_PER_SLIDE),
+          }).map((_, slideIdx) => (
+            <div
+              key={slideIdx}
+              className="min-w-full flex justify-center items-center gap-12"
             >
-              ‹
-            </button>
-
-            <div className="overflow-hidden w-full px-12 md:px-16">
-              <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${logoIndex * 100}%)` }}>
-                {Array.from({ length: Math.ceil(hospitalLogos.length / LOGOS_PER_SLIDE) }).map((_, slideIdx) => (
-                  <div key={slideIdx} className="min-w-full flex justify-center items-center gap-6 md:gap-12">
-                    {hospitalLogos
-                      .slice(slideIdx * LOGOS_PER_SLIDE, slideIdx * LOGOS_PER_SLIDE + LOGOS_PER_SLIDE)
-                      .map((logo, i) => (
-                        <img key={i} src={logo} alt="Hospital Logo" className="h-12 md:h-20 object-contain grayscale hover:grayscale-0 transition" />
-                      ))}
-                  </div>
+              {hospitalLogos
+                .slice(
+                  slideIdx * LOGOS_PER_SLIDE,
+                  slideIdx * LOGOS_PER_SLIDE + LOGOS_PER_SLIDE
+                )
+                .map((logo, i) => (
+                  <img
+                    key={i}
+                    src={logo}
+                    alt="Hospital Logo"
+                    className="h-20 object-contain grayscale hover:grayscale-0 transition"
+                  />
                 ))}
-              </div>
             </div>
-
-            <button
-              onClick={handleLogoNext}
-              className="absolute right-0 md:right-2 z-10 bg-cyan-500 hover:bg-cyan-600 text-white p-2 md:p-3 rounded-lg shadow-lg transition text-xl"
-            >
-              ›
-            </button>
-          </div>
+          ))}
         </div>
-      </section>
+      </div>
+
+      {/* RIGHT ARROW – Desktop Only */}
+      <button
+        onClick={handleLogoNext}
+        className="hidden md:block absolute right-0 z-10 bg-cyan-500 hover:bg-cyan-600 text-white p-3 rounded-lg"
+      >
+        ›
+      </button>
+
+    </div>
+
+  </div>
+</section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-cyan-500 to-blue-600">
-        <div className="max-w-4xl mx-auto text-center px-4">
-          <h2 className="text-4xl font-bold text-white mb-4">Ready to Start Your Healthcare Career?</h2>
-          <p className="text-cyan-100 text-lg mb-8">Join thousands of healthcare professionals finding their perfect job match</p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              to="/register"
-              className="bg-white text-cyan-600 px-8 py-3 rounded-lg hover:bg-gray-100 font-medium inline-flex items-center justify-center transition shadow-lg"
-            >
-              <span>Create Free Account</span>
-            </Link>
-            <Link
-              to="/jobs"
-              className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-cyan-600 font-medium transition shadow-lg"
-            >
-              Browse Jobs
-            </Link>
-          </div>
-        </div>
-      </section>
+<section className="py-12 md:py-16 bg-gradient-to-r from-cyan-500 to-blue-600">
+  <div className="max-w-4xl mx-auto text-center px-4">
+
+    {/* Heading */}
+    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 md:mb-4">
+      Ready to Start Your Healthcare Career?
+    </h2>
+
+    {/* Description */}
+    <p className="text-sm sm:text-base md:text-lg text-cyan-100 mb-6 md:mb-8">
+      Join thousands of healthcare professionals finding their perfect job match
+    </p>
+
+    {/* Buttons */}
+    <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
+
+      <Link
+        to="/register"
+        className="bg-white text-cyan-600 px-6 md:px-8 py-2.5 md:py-3 rounded-lg hover:bg-gray-100 font-medium text-sm md:text-base inline-flex items-center justify-center transition shadow-lg"
+      >
+        <span>Create Free Account</span>
+      </Link>
+
+      <Link
+        to="/jobs"
+        className="bg-transparent border-2 border-white text-white px-6 md:px-8 py-2.5 md:py-3 rounded-lg hover:bg-white hover:text-cyan-600 font-medium text-sm md:text-base transition shadow-lg"
+      >
+        Browse Jobs
+      </Link>
+
+    </div>
+
+  </div>
+</section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">M</span>
-                </div>
-                <span className="text-2xl font-bold text-white">MCARE</span>
-              </div>
-              <p className="text-gray-400">Your trusted partner in healthcare recruitment</p>
-            </div>
+<footer className="bg-gray-900 text-gray-300 py-8 md:py-12 px-4">
+  <div className="max-w-7xl mx-auto">
 
-            <div>
-              <h3 className="text-white font-semibold mb-4">For Candidates</h3>
-              <ul className="space-y-2">
-                <li><Link to="/jobs" className="hover:text-cyan-400 transition">Browse Jobs</Link></li>
-                <li><Link to="/register" className="hover:text-cyan-400 transition">Create Account</Link></li>
-                <li><Link to="/login" className="hover:text-cyan-400 transition">Sign In</Link></li>
-              </ul>
-            </div>
+    {/* Main Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 mb-8">
 
-            <div>
-              <h3 className="text-white font-semibold mb-4">For Employers</h3>
-              <ul className="space-y-2">
-                <li><Link to="/register" className="hover:text-cyan-400 transition">Post a Job</Link></li>
-                <li><Link to="/login" className="hover:text-cyan-400 transition">Employer Login</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-white font-semibold mb-4">Company</h3>
-              <ul className="space-y-2">
-                <li><Link to="/about" className="hover:text-cyan-400 transition">About Us</Link></li>
-                <li><Link to="/contact" className="hover:text-cyan-400 transition">Contact</Link></li>
-              </ul>
-            </div>
+      {/* Logo Section */}
+      <div>
+        <div className="flex items-center space-x-2 mb-3 md:mb-4">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-lg md:text-xl">M</span>
           </div>
-
-          <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 MCARE. All rights reserved.</p>
-          </div>
+          <span className="text-lg md:text-2xl font-bold text-white">MCARE</span>
         </div>
-      </footer>
+        <p className="text-gray-400 text-sm md:text-base">
+          Your trusted partner in healthcare recruitment
+        </p>
+      </div>
+
+      {/* Categories Wrapper */}
+      <div className="md:col-span-3">
+
+        <div className="grid grid-cols-3 md:grid-cols-3 gap-6 md:gap-8 text-center md:text-left">
+
+          {/* For Candidates */}
+          <div>
+            <h3 className="text-white font-semibold mb-2 md:mb-4 text-sm md:text-base">
+              For Candidates
+            </h3>
+            <ul className="space-y-1 md:space-y-2 text-xs md:text-sm">
+              <li><Link to="/jobs" className="hover:text-cyan-400 transition">Browse Jobs</Link></li>
+              <li><Link to="/register" className="hover:text-cyan-400 transition">Create Account</Link></li>
+              <li><Link to="/login" className="hover:text-cyan-400 transition">Sign In</Link></li>
+            </ul>
+          </div>
+
+          {/* For Employers */}
+          <div>
+            <h3 className="text-white font-semibold mb-2 md:mb-4 text-sm md:text-base">
+              For Employers
+            </h3>
+            <ul className="space-y-1 md:space-y-2 text-xs md:text-sm">
+              <li><Link to="/register" className="hover:text-cyan-400 transition">Post a Job</Link></li>
+              <li><Link to="/login" className="hover:text-cyan-400 transition">Employer Login</Link></li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h3 className="text-white font-semibold mb-2 md:mb-4 text-sm md:text-base">
+              Company
+            </h3>
+            <ul className="space-y-1 md:space-y-2 text-xs md:text-sm">
+              <li><Link to="/about" className="hover:text-cyan-400 transition">About Us</Link></li>
+              <li><Link to="/contact" className="hover:text-cyan-400 transition">Contact</Link></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    {/* Bottom */}
+    <div className="border-t border-gray-800 pt-6 md:pt-8 text-center text-gray-400 text-xs md:text-sm">
+      <p>&copy; 2025 MCARE. All rights reserved.</p>
+    </div>
+
+  </div>
+</footer>
 
       {/* Apply Modal */}
       {showApplyModal && selectedJob && (
@@ -1608,32 +1773,12 @@ const Home = () => {
               </button>
 
               <button
-                onClick={async () => {
-                  if (!validateQuickApply()) return;
-                  
-                  setQuickApplySubmitting(true);
-                  try {
-                    // Create FormData for file upload
-                    const formData = new FormData();
-                    formData.append('name', quickApplyData.name);
-                    formData.append('email', quickApplyData.email);
-                    formData.append('phone', quickApplyData.phone);
-                    formData.append('countryCode', quickApplyData.countryCode);
-                    formData.append('coverLetter', quickApplyData.coverLetter);
-                    
-                    if (quickApplyData.resume) {
-                      formData.append('resume', quickApplyData.resume);
-                    }
-
-                    // Call backend API
-                    const response = await guestService.submitQuickApply(formData);
-                    
-                    // Show success message
+                onClick={() => {
+                  if (validateQuickApply()) {
                     setShowQuickApplyModal(false);
-                    setSuccessMessage(response.message || 'Quick application submitted successfully!');
+                    setSuccessMessage('Quick application submitted successfully!');
                     setShowSuccessModal(true);
 
-                    // Reset form
                     setQuickApplyData({
                       name: '',
                       email: '',
@@ -1642,19 +1787,13 @@ const Home = () => {
                       coverLetter: '',
                       resume: null,
                     });
+
                     setQuickApplyErrors({});
-                  } catch (error) {
-                    console.error('Quick Apply error:', error);
-                    setSuccessMessage(error.message || 'Failed to submit application. Please try again.');
-                    setShowSuccessModal(true);
-                  } finally {
-                    setQuickApplySubmitting(false);
                   }
                 }}
-                disabled={quickApplySubmitting}
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
               >
-                {quickApplySubmitting ? 'Submitting...' : 'Submit'}
+                Submit
               </button>
             </div>
           </div>
@@ -1778,31 +1917,12 @@ const Home = () => {
               </button>
 
               <button
-                onClick={async () => {
-                  if (!validateQuickPost()) return;
-                  
-                  setQuickPostSubmitting(true);
-                  try {
-                    // Prepare job data
-                    const jobData = {
-                      companyName: quickPostData.companyName,
-                      email: quickPostData.email,
-                      phone: quickPostData.phone,
-                      countryCode: quickPostData.countryCode,
-                      jobTitle: quickPostData.jobTitle,
-                      location: quickPostData.location,
-                      jobDescription: quickPostData.jobDescription,
-                    };
-
-                    // Call backend API
-                    const response = await guestService.submitQuickPostJob(jobData);
-                    
-                    // Show success message
+                onClick={() => {
+                  if (validateQuickPost()) {
                     setShowQuickPostModal(false);
-                    setSuccessMessage(response.message || 'Job posted successfully!');
+                    setSuccessMessage('Job posted successfully!');
                     setShowSuccessModal(true);
 
-                    // Reset form
                     setQuickPostData({
                       companyName: '',
                       contactPerson: '',
@@ -1813,19 +1933,13 @@ const Home = () => {
                       location: '',
                       jobDescription: '',
                     });
+
                     setQuickPostErrors({});
-                  } catch (error) {
-                    console.error('Quick Post error:', error);
-                    setSuccessMessage(error.message || 'Failed to post job. Please try again.');
-                    setShowSuccessModal(true);
-                  } finally {
-                    setQuickPostSubmitting(false);
                   }
                 }}
-                disabled={quickPostSubmitting}
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
               >
-                {quickPostSubmitting ? 'Submitting...' : 'Submit Job'}
+                Submit Job
               </button>
             </div>
           </div>

@@ -1,263 +1,248 @@
-import { useState, useEffect } from 'react';
-import { Search, Send, MoreVertical, Loader2 } from 'lucide-react';
-import { useAuth } from '../../context/useAuth';
+import { useState, useRef } from 'react';
 import Sidebar from '../../components/common/Sidebar';
 
+import {
+  Search,
+  Send,
+  MoreVertical,
+  Paperclip,
+  FileText,
+  Image,
+  Camera,
+  Headphones,
+} from 'lucide-react';
+
 const Messages = () => {
-  const { token, user } = useAuth();
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageText, setMessageText] = useState('');
-  const [conversations, setConversations] = useState([]);
-  const [chatMessages, setChatMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [showAttachments, setShowAttachments] = useState(false);
+  const documentInputRef = useRef(null);
+  const mediaInputRef = useRef(null);
+  const audioInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
 
-  // 🔍 Search State
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-
-  // 📂 1. Fetch Conversations (Sidebar) - Pulls existing chats
-  const fetchConversations = async () => {
-    try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/conversations`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await response.json();
-      if (data.success) {
-        const mappedConversations = data.conversations.map(c => ({
-            ...c,
-            hospital_name: c.hospital_name || c.full_name 
-        }));
-        setConversations(mappedConversations);
-        // Auto-select first chat if none selected
-        if (mappedConversations.length > 0 && !selectedChat) {
-          setSelectedChat(mappedConversations[0].other_user_id);
-        }
-      }
-    } catch (error) {
-      console.error("❌ Chat List Error:", error);
-    } finally {
-      setLoading(false);
-    }
+  const openFilePicker = (type) => {
+    setShowAttachments(false);
+    if (type === 'document') documentInputRef.current.click();
+    if (type === 'media') mediaInputRef.current.click();
+    if (type === 'audio') audioInputRef.current.click();
+    if (type === 'camera') cameraInputRef.current.click();
   };
 
-  // 📂 2. Fetch Chat History - Pulls messages between Manoj and selected contact
-  const fetchMessages = async (chatId) => {
-    try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/messages/${chatId}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await response.json();
-      if (data.success) setChatMessages(data.messages);
-    } catch (error) {
-      console.error("❌ Message Load Error:", error);
-    }
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    console.log('Selected file:', file);
   };
 
-  // 🔍 3. Hospital Search Logic - Syncs with /contacts/search backend
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(async () => {
-      if (searchQuery.trim().length > 0) {
-        try {
-          // ✅ UPDATED: Changed from /search-hospitals to /contacts/search to match routes.js
-          const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-          const response = await fetch(`${API_BASE}/api/candidate/contacts/search?query=${searchQuery}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          const data = await response.json();
-          if (data.success) setSearchResults(data.contacts); // data.contacts matches controller
-        } catch (error) {
-          console.error("❌ Search Error:", error);
-        }
-      } else {
-        setSearchResults([]);
-      }
-    }, 300);
+  const conversations = [
+    {
+      id: 1,
+      name: 'Manhattan Hospital HR',
+      lastMessage: 'We would like to schedule an interview...',
+      time: '2 hours ago',
+      unread: 2,
+      avatar: '🏥',
+    },
+    {
+      id: 2,
+      name: 'Wellness Rehab Center',
+      lastMessage: 'Thank you for your application',
+      time: '1 day ago',
+      unread: 0,
+      avatar: '🏢',
+    },
+    {
+      id: 3,
+      name: 'HealthCare Labs',
+      lastMessage: 'Your profile matches our requirements',
+      time: '2 days ago',
+      unread: 1,
+      avatar: '🔬',
+    },
+  ];
 
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery, token]);
+  const activeChat = conversations.find(c => c.id === selectedChat);
 
-  useEffect(() => {
-    if (token) fetchConversations();
-  }, [token]);
+  const messages = selectedChat
+    ? [
+        { id: 1, text: `Hello! Thank you for applying to ${activeChat?.name}`, time: '10:30 AM', isOwn: false },
+        { id: 2, text: 'Thank you for considering my application.', time: '10:35 AM', isOwn: true },
+        { id: 3, text: activeChat?.lastMessage, time: '2 hours ago', isOwn: false },
+      ]
+    : [];
 
-  useEffect(() => {
-    if (selectedChat) fetchMessages(selectedChat);
-  }, [selectedChat]);
-
-  // ➕ 4. Handle Send Message - Syncs with /messages POST backend
-  const handleSendMessage = async (e) => {
+  const handleSendMessage = (e) => {
     e.preventDefault();
-    if (!messageText.trim() || !selectedChat) return;
-
-    try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          receiver_id: selectedChat, // Matches backend destructuring
-          message_text: messageText
-        })
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        // Optimistically add message to UI
-        setChatMessages((prev) => [...prev, data.message]);
-        setMessageText('');
-        // Refresh sidebar to update "last message" text
-        fetchConversations();
-      }
-    } catch (error) {
-      console.error("❌ Send Error:", error);
-    }
+    if (!messageText.trim()) return;
+    setMessageText('');
   };
 
   return (
     <div>
       <Sidebar />
-      <div className="ml-64 min-h-screen bg-gray-50 p-6 text-left">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6 tracking-tight">Messages</h1>
-        
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" style={{ height: 'calc(100vh - 200px)' }}>
+
+      {/* Hidden File Inputs */}
+      <input type="file" ref={documentInputRef} onChange={handleFileSelect} className="hidden" />
+      <input type="file" accept="image/*,video/*" ref={mediaInputRef} onChange={handleFileSelect} className="hidden" />
+      <input type="file" accept="audio/*" ref={audioInputRef} onChange={handleFileSelect} className="hidden" />
+      <input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={handleFileSelect} className="hidden" />
+
+      {/* ✅ Responsive Wrapper */}
+      <div className="md:ml-64 min-h-screen bg-gray-50 p-4 pt-20 md:pt-6 md:p-6">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">Messages</h1>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-[calc(100vh-160px)] md:h-[calc(100vh-200px)]">
           <div className="flex h-full">
-            
-            {/* LEFT: Conversations List & Search */}
-            <div className="w-1/3 border-r border-gray-200 flex flex-col relative">
-              <div className="p-4 border-b border-gray-200">
+
+            {/* ================= LEFT PANEL ================= */}
+            <div
+              className={`${
+                selectedChat ? 'hidden md:flex' : 'flex'
+              } w-full md:w-1/3 border-r flex-col`}
+            >
+              <div className="p-3 md:p-4 border-b">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input 
-                    type="text" 
-                    placeholder="Search hospitals (e.g. 'ap')..." 
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg outline-none focus:border-cyan-500 transition-all"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                  <input
+                    type="text"
+                    placeholder="Search messages..."
+                    className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm md:text-base"
                   />
-                  
-                  {/* Search Results Dropdown */}
-                  {searchResults.length > 0 && (
-                    <div className="absolute z-[999] w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-2xl max-h-64 overflow-y-auto left-0 top-full">
-                      {searchResults.map((hospital) => (
-                        <div 
-                          key={hospital.id}
-                          className="p-3 hover:bg-cyan-50 cursor-pointer flex items-center space-x-3 transition-colors border-b last:border-0"
-                          onClick={() => {
-                            setSelectedChat(hospital.id);
-                            setChatMessages([]); 
-                            setSearchQuery('');
-                            setSearchResults([]);
-                            
-                            const exists = conversations.some(c => c.other_user_id === hospital.id);
-                            if (!exists) {
-                              setConversations(prev => [
-                                {
-                                  other_user_id: hospital.id,
-                                  hospital_name: hospital.full_name,
-                                  message_text: 'Start chatting...'
-                                },
-                                ...prev
-                              ]);
-                            }
-                          }}
-                        >
-                          <div className="w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-xs font-bold text-cyan-700">🏥</div>
-                          <span className="font-medium text-gray-700">{hospital.full_name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
 
               <div className="flex-1 overflow-y-auto">
-                {loading ? <div className="flex justify-center mt-10"><Loader2 className="animate-spin text-cyan-500" /></div> : 
-                 conversations.length > 0 ? (
-                  conversations.map((chat) => (
-                    <div key={chat.other_user_id} onClick={() => setSelectedChat(chat.other_user_id)} className={`p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors ${selectedChat === chat.other_user_id ? 'bg-cyan-50' : ''}`}>
-                      <div className="flex items-start space-x-3">
-                        <div className="w-12 h-12 rounded-full bg-cyan-100 flex items-center justify-center text-xl shadow-inner">🏥</div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-gray-900 truncate">{chat.hospital_name || 'Hospital HR'}</h3>
-                          <p className="text-sm text-gray-500 truncate">{chat.message_text || 'No messages yet'}</p>
+                {conversations.map(chat => (
+                  <div
+                    key={chat.id}
+                    onClick={() => setSelectedChat(chat.id)}
+                    className={`p-3 md:p-4 cursor-pointer border-b hover:bg-gray-50 ${
+                      selectedChat === chat.id ? 'bg-cyan-50' : ''
+                    }`}
+                  >
+                    <div className="flex justify-between">
+                      <div className="flex gap-3">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white">
+                          {chat.avatar}
                         </div>
+                        <div>
+                          <h3 className="font-semibold text-sm md:text-base">{chat.name}</h3>
+                          <p className="text-xs md:text-sm text-gray-600 truncate">
+                            {chat.lastMessage}
+                          </p>
+                          <p className="text-xs text-gray-400">{chat.time}</p>
+                        </div>
+                      </div>
+
+                      {chat.unread > 0 && (
+                        <span className="bg-cyan-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                          {chat.unread}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ================= RIGHT PANEL ================= */}
+            <div className={`${selectedChat ? 'flex' : 'hidden md:flex'} flex-1 flex-col`}>
+
+              {!selectedChat ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-center">
+                  <Send className="w-8 h-8 text-gray-400 mb-2" />
+                  <p className="text-gray-500">Select a conversation</p>
+                </div>
+              ) : (
+                <>
+                  {/* Header */}
+                  <div className="p-3 md:p-4 border-b flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      {/* Back button for mobile */}
+                      <button
+                        onClick={() => setSelectedChat(null)}
+                        className="md:hidden text-gray-600"
+                      >
+                        ←
+                      </button>
+
+                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white">
+                        {activeChat?.avatar}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-sm md:text-base">{activeChat?.name}</h3>
+                        <p className="text-xs text-gray-500">Active now</p>
                       </div>
                     </div>
-                  ))
-                 ) : (
-                   <div className="p-8 text-center text-gray-400 text-sm italic">Search for a hospital above to start a chat</div>
-                 )}
-              </div>
-            </div>
+                    <MoreVertical className="w-5 h-5 text-gray-600" />
+                  </div>
 
-            {/* RIGHT: Chat Area */}
-            <div className="flex-1 flex flex-col bg-gray-50">
-              <div className="p-4 border-b flex justify-between items-center bg-white shadow-sm">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                    {conversations.find(c => c.other_user_id === selectedChat)?.hospital_name?.[0] || 'H'}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">
-                      {conversations.find(c => c.other_user_id === selectedChat)?.hospital_name || 'Select a chat'}
-                    </h3>
-                    <p className="text-[10px] text-green-500 font-black uppercase tracking-wider">Online</p>
-                  </div>
-                </div>
-                < MoreVertical className="w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600" />
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-6 space-y-4 flex flex-col">
-                {!selectedChat ? (
-                  <div className="flex-1 flex flex-col items-center justify-center text-gray-400">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">💬</div>
-                    <p className="font-medium">Select a hospital from the list to start chatting</p>
-                  </div>
-                ) : chatMessages.length === 0 ? (
-                  <div className="flex-1 flex items-center justify-center text-gray-400 italic">No messages yet. Say hello!</div>
-                ) : (
-                  chatMessages.map((msg) => {
-                    const isOwnMessage = msg.sender_id === user?.id;
-                    return (
-                      <div key={msg.id} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[75%] px-4 py-2 rounded-2xl shadow-sm ${
-                          isOwnMessage 
-                            ? 'bg-cyan-600 text-white rounded-tr-none' 
-                            : 'bg-white text-gray-800 rounded-tl-none border border-gray-100'
-                        }`}>
-                          <p className="text-sm leading-relaxed">{msg.message_text}</p>
+                  {/* Messages */}
+                  <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-3 md:space-y-4">
+                    {messages.map(msg => (
+                      <div key={msg.id} className={`flex ${msg.isOwn ? 'justify-end' : 'justify-start'}`}>
+                        <div
+                          className={`max-w-[80%] md:max-w-md px-3 md:px-4 py-2 rounded-lg text-sm ${
+                            msg.isOwn
+                              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                              : 'bg-gray-100'
+                          }`}
+                        >
+                          <p>{msg.text}</p>
+                          <p className="text-xs text-gray-500 mt-1">{msg.time}</p>
                         </div>
                       </div>
-                    );
-                  })
-                )}
-              </div>
+                    ))}
+                  </div>
 
-              <div className="p-4 bg-white border-t border-gray-200">
-                <form onSubmit={handleSendMessage} className="flex items-center space-x-2">
-                  <input
-                    type="text"
-                    value={messageText}
-                    onChange={(e) => setMessageText(e.target.value)}
-                    disabled={!selectedChat}
-                    placeholder={selectedChat ? "Type your message..." : "Select a contact first"}
-                    className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500 outline-none transition-all disabled:bg-gray-50 disabled:cursor-not-allowed"
-                  />
-                  <button 
-                    type="submit" 
-                    disabled={!selectedChat || !messageText.trim()}
-                    className="p-3 bg-cyan-600 text-white rounded-xl hover:bg-cyan-700 transition-all shadow-md active:scale-95 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                  >
-                    <Send className="w-5 h-5" />
-                  </button>
-                </form>
-              </div>
+                  {/* Input */}
+                  <form onSubmit={handleSendMessage} className="relative p-3 md:p-4 border-t flex gap-2 items-center">
+                    <button
+                      type="button"
+                      onClick={() => setShowAttachments(prev => !prev)}
+                      className="p-2 hover:bg-gray-100 rounded-lg"
+                    >
+                      <Paperclip className="w-5 h-5 text-gray-600" />
+                    </button>
+
+                    {/* Attachment Menu */}
+                    {showAttachments && (
+                      <div className="absolute bottom-16 left-3 md:left-4 bg-white border rounded-xl shadow-lg w-52 z-50">
+                        {[
+                          { label: 'Document', icon: FileText, type: 'document' },
+                          { label: 'Photos & videos', icon: Image, type: 'media' },
+                          { label: 'Camera', icon: Camera, type: 'camera' },
+                          { label: 'Audio', icon: Headphones, type: 'audio' },
+                        ].map(item => (
+                          <button
+                            key={item.label}
+                            type="button"
+                            onClick={() => openFilePicker(item.type)}
+                            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100"
+                          >
+                            <item.icon className="w-5 h-5" />
+                            <span>{item.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    <input
+                      value={messageText}
+                      onChange={(e) => setMessageText(e.target.value)}
+                      placeholder="Type your message..."
+                      className="flex-1 px-3 md:px-4 py-2 border rounded-lg text-sm md:text-base"
+                    />
+
+                    <button className="p-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg">
+                      <Send className="w-5 h-5" />
+                    </button>
+                  </form>
+                </>
+              )}
             </div>
+
           </div>
         </div>
       </div>

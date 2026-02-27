@@ -1,126 +1,155 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Briefcase, Clock, Heart, Upload as UploadIcon, CheckCircle } from 'lucide-react';
-import { useAuth } from '../../context/useAuth';
+import { Search, MapPin, Briefcase, DollarSign, Clock, Star, X, FileText, Building2, Calendar, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
 
+
 const BrowseJobs = () => {
-  const { token } = useAuth(); 
-  
-  // State Management
-  const [jobs, setJobs] = useState([]);        
-  const [loading, setLoading] = useState(true);
+  const [jobs, setJobs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('All Locations');
   const [jobType, setJobType] = useState('all');
-  
-  // Modal States
   const [selectedJob, setSelectedJob] = useState(null);
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  
-  // Form State
-  const [coverLetterFile, setCoverLetterFile] = useState(null);
-  const [availability, setAvailability] = useState('');
+  const [applicationData, setApplicationData] = useState({
+    coverLetter: '',
+    expectedSalary: '',
+    availability: ''
+  });
+  const [errors, setErrors] = useState({});
 
-  const locations = [
-    'All Locations', 'Hyderabad', 'Bangalore', 'Delhi', 'Mumbai',
-    'Kolkata', 'Pune', 'Chennai', 'Vizag', 'Guntur'
+  const allJobs = [
+    {
+      id: 1,
+      title: 'Senior Registered Nurse - ICU',
+      company: 'MCARE Hospital',
+      location: 'Guntur, Andhra Pradesh',
+      type: 'Full-time',
+      salary: 'Rs. 50,000 - 70,000',
+      posted: '2 days ago',
+      saved: false,
+      description: 'We are seeking an experienced ICU nurse to join our critical care team. The ideal candidate will have strong clinical skills and excellent patient care abilities.',
+      requirements: ['B.Sc Nursing degree', 'Minimum 3 years ICU experience', 'Valid nursing license', 'BLS and ACLS certification'],
+      responsibilities: ['Monitor ICU patients', 'Administer medications', 'Coordinate with doctors', 'Maintain patient records']
+    },
+    {
+      id: 2,
+      title: 'Physical Therapist',
+      company: 'Apollo Hospitals',
+      location: 'Hyderabad, Telangana',
+      type: 'Full-time',
+      salary: 'Rs. 40,000 - 60,000',
+      posted: '1 week ago',
+      saved: true,
+      description: 'Join our rehabilitation team to help patients recover and improve their mobility through physical therapy treatments.',
+      requirements: ['BPT or MPT degree', '2+ years experience', 'Valid license', 'Strong communication skills'],
+      responsibilities: ['Assess patient conditions', 'Develop treatment plans', 'Perform therapy sessions', 'Track patient progress']
+    },
+    {
+      id: 3,
+      title: 'Lab Technician',
+      company: 'City Diagnostics',
+      location: 'Vijayawada, Andhra Pradesh',
+      type: 'Part-time',
+      salary: 'Rs. 25,000 - 35,000',
+      posted: '3 days ago',
+      saved: false,
+      description: 'Seeking skilled lab technician to perform diagnostic tests and maintain laboratory equipment.',
+      requirements: ['B.Sc MLT or equivalent', '1+ year experience', 'Knowledge of lab equipment', 'Attention to detail'],
+      responsibilities: ['Conduct laboratory tests', 'Maintain equipment', 'Record test results', 'Ensure quality control']
+    },
+    {
+      id: 4,
+      title: 'Medical Officer',
+      company: 'Care Hospital',
+      location: 'Guntur, Andhra Pradesh',
+      type: 'Full-time',
+      salary: 'Rs. 80,000 - 1,20,000',
+      posted: '1 day ago',
+      saved: false,
+      description: 'Experienced medical officer needed for our emergency department. Must be able to handle critical cases.',
+      requirements: ['MBBS degree', 'Valid medical license', '3+ years experience', 'Emergency care expertise'],
+      responsibilities: ['Diagnose and treat patients', 'Handle emergency cases', 'Prescribe medications', 'Maintain medical records']
+    },
+    {
+      id: 5,
+      title: 'Pharmacist',
+      company: 'MedPlus Health Services',
+      location: 'Hyderabad, Telangana',
+      type: 'Full-time',
+      salary: 'Rs. 30,000 - 45,000',
+      posted: '5 days ago',
+      saved: true,
+      description: 'Join our pharmacy team to provide medication counseling and ensure accurate dispensing of prescriptions.',
+      requirements: ['B.Pharm or D.Pharm', 'Valid pharmacy license', '2+ years experience', 'Good communication skills'],
+      responsibilities: ['Dispense medications', 'Counsel patients', 'Manage inventory', 'Verify prescriptions']
+    },
+    {
+      id: 6,
+      title: 'Dental Hygienist',
+      company: 'Smile Dental Clinic',
+      location: 'Vijayawada, Andhra Pradesh',
+      type: 'Part-time',
+      salary: 'Rs. 20,000 - 30,000',
+      posted: '1 week ago',
+      saved: false,
+      description: 'Looking for a skilled dental hygienist to provide preventive dental care and patient education.',
+      requirements: ['Dental hygiene certification', '1+ year experience', 'Patient care skills', 'Hygiene knowledge'],
+      responsibilities: ['Clean teeth', 'Take X-rays', 'Educate patients', 'Assist dentist']
+    }
   ];
 
-  /**
-   * 📅 Helper: Formats "2 days ago" style dates
-   */
-  const getTimeAgo = (dateString) => {
-    const now = new Date();
-    const past = new Date(dateString);
-    const diffTime = Math.abs(now - past);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays <= 1) return "Today";
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffDays >= 7 && diffDays < 30) return `${Math.floor(diffDays/7)} week ago`;
-    return past.toLocaleDateString();
-  };
-
-  /**
-   * 📅 Helper: Tomorrow's Date for Start Restrictions
-   */
-  const getTomorrowDate = () => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow.toISOString().split('T')[0];
-  };
-
-  /**
-   * 🚀 Fetch live jobs with active filters from backend
-   */
-  const fetchJobs = async () => {
-    try {
-      setLoading(true);
-      
-      // ✅ Build Dynamic URL with Search Parameters
-      const queryParams = new URLSearchParams();
-      if (searchTerm) queryParams.append('keyword', searchTerm);
-      if (location !== 'All Locations') queryParams.append('location', location);
-      if (jobType !== 'all') queryParams.append('type', jobType);
-
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/jobs?${queryParams.toString()}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      const data = await response.json();
-      if (data.success) {
-        setJobs(data.jobs);
-      }
-    } catch (error) {
-      console.error("❌ Error fetching jobs:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const cities = [
+    'All Locations',
+    'Bangalore',
+    'Delhi',
+    'Mumbai',
+    'Hyderabad',
+    'Pune',
+    'Kolkata',
+    'Chennai',
+    'Ahmedabad',
+    'Jaipur',
+    'Vizag',
+    'Kurnool',
+    'Coimbatore',
+  ];
 
   useEffect(() => {
-    if (token) fetchJobs();
-  }, [token]);
+    setJobs(allJobs);
+  }, []);
 
-  /**
-   * 🔍 Trigger fetch when Search button is clicked
-   */
   const handleSearch = () => {
-    fetchJobs();
+    let filtered = allJobs;
+
+    if (searchTerm) {
+      filtered = filtered.filter(job =>
+        job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.company.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (location && location !== 'All Locations') {
+      filtered = filtered.filter(job => job.location === location);
+    }
+
+
+    if (jobType !== 'all') {
+      filtered = filtered.filter(job =>
+        job.type.toLowerCase() === jobType.toLowerCase()
+      );
+    }
+
+    setJobs(filtered);
   };
 
-  /**
-   * 💖 Save Job to DB and update UI locally
-   */
-  const handleSaveJob = async (jobId) => {
-    try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/saved-jobs`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ job_id: jobId })
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setJobs(prev => prev.map(job => 
-          job.id === jobId ? { ...job, saved: true } : job
-        ));
-        setSuccessMessage("Job added to your saved list!");
-        setShowSuccessModal(true);
-      }
-    } catch (error) {
-      console.error("❌ Error saving job:", error);
-    }
+  const handleSaveJob = (jobId) => {
+    setJobs(jobs.map(job =>
+      job.id === jobId ? { ...job, saved: !job.saved } : job
+    ));
   };
 
   const handleApply = (job) => {
@@ -128,44 +157,64 @@ const BrowseJobs = () => {
     setShowApplyModal(true);
   };
 
-  /**
-   * 📝 Submit application with PDF upload logic
-   */
-  const handleSubmitApplication = async () => {
-    if (!availability) {
-      alert("Please select your availability date.");
-      return;
+  const handleViewDetails = (job) => {
+    setSelectedJob(job);
+    setShowDetailsModal(true);
+  };
+
+  const validateApplication = () => {
+    const newErrors = {};
+
+    // Cover Letter
+    if (!applicationData.coverLetter.trim()) {
+      newErrors.coverLetter = 'Cover letter is required';
+    } else if (applicationData.coverLetter.trim().length < 50) {
+      newErrors.coverLetter = 'Cover letter must be at least 50 characters';
     }
 
-    try {
-      const formData = new FormData();
-      formData.append('job_id', selectedJob.id);
-      formData.append('availability', availability);
-      if (coverLetterFile) {
-        formData.append('coverLetter', coverLetterFile);
-      }
-
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/apply`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
-        body: formData
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setSuccessMessage(`Application submitted for ${selectedJob.title}!`);
-        setShowSuccessModal(true);
-        setShowApplyModal(false);
-        setCoverLetterFile(null);
-        setAvailability('');
-        fetchJobs(); // Refresh status to show "Applied"
-      } else {
-        alert(data.message || "Failed to submit application");
-      }
-    } catch (error) {
-      console.error("❌ Application error:", error);
+    // Expected Salary
+    if (!applicationData.expectedSalary.trim()) {
+      newErrors.expectedSalary = 'Expected salary is required';
+    } else if (!/^\d+(\.\d+)?$/.test(applicationData.expectedSalary.replace(/,/g, ''))) {
+      newErrors.expectedSalary = 'Enter a valid salary amount';
     }
+
+    // Availability Date
+    if (!applicationData.availability) {
+      newErrors.availability = 'Please select your availability date';
+    } else {
+      const selectedDate = new Date(applicationData.availability);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate < today) {
+        newErrors.availability = 'Date cannot be in the past';
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmitApplication = () => {
+    if (!validateApplication()) return;
+
+    console.log('Application submitted:', {
+      job: selectedJob,
+      application: applicationData
+    });
+
+    setSuccessMessage(`Application submitted for ${selectedJob.title}!`);
+    setShowSuccessModal(true);
+    setShowApplyModal(false);
+
+    setApplicationData({
+      coverLetter: '',
+      expectedSalary: '',
+      availability: ''
+    });
+
+    setErrors({});
   };
 
   return (
@@ -177,17 +226,16 @@ const BrowseJobs = () => {
           <p className="text-gray-600 mt-2">Find your perfect healthcare opportunity</p>
         </div>
 
-        {/* Search & Filter UI */}
+        {/* Search & Filters */}
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-lg border border-transparent focus-within:border-cyan-500">
+            <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-lg">
               <Search className="w-5 h-5 text-gray-400" />
               <input
                 type="text"
                 placeholder="Job title or keyword"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 className="bg-transparent border-none outline-none w-full text-gray-700"
               />
             </div>
@@ -196,26 +244,29 @@ const BrowseJobs = () => {
               <select
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="bg-transparent border-none outline-none w-full text-gray-700 focus:ring-0 cursor-pointer"
+                className="bg-transparent border-none outline-none w-full text-gray-700"
               >
-                {locations.map((loc, index) => (
-                  <option key={index} value={loc}>{loc}</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
                 ))}
               </select>
             </div>
+
             <select
               value={jobType}
               onChange={(e) => setJobType(e.target.value)}
-              className="px-4 py-3 bg-gray-50 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-cyan-500 cursor-pointer"
+              className="px-4 py-3 bg-gray-50 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-cyan-500"
             >
               <option value="all">All Types</option>
-              <option value="Full-time">Full-time</option>
-              <option value="Part-time">Part-time</option>
-              <option value="Contract">Contract</option>
+              <option value="full-time">Full-time</option>
+              <option value="part-time">Part-time</option>
+              <option value="contract">Contract</option>
             </select>
             <button
               onClick={handleSearch}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium flex items-center justify-center space-x-2 shadow-sm transition-all"
+              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium flex items-center justify-center space-x-2"
             >
               <Search className="w-5 h-5" />
               <span>Search</span>
@@ -223,143 +274,257 @@ const BrowseJobs = () => {
           </div>
         </div>
 
+        {/* Results Header */}
+        <div className="flex items-center justify-between mb-6">
+          <p className="text-gray-600">
+            Showing <span className="font-semibold text-gray-900">{jobs.length}</span> jobs
+          </p>
+        </div>
+
         {/* Jobs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {!loading && jobs.length > 0 ? (
-            jobs.map((job) => (
-              <div key={job.id} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all border border-gray-100 relative group animate-in fade-in duration-500">
-                
+          {jobs.map((job) => (
+            <div key={job.id} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-lg flex items-center justify-center">
+                  <Briefcase className="w-6 h-6 text-cyan-600" />
+                </div>
                 <button
                   onClick={() => handleSaveJob(job.id)}
-                  className="absolute top-5 right-5 p-2 rounded-full hover:bg-red-50 transition-colors z-10"
-                  title="Save for later"
+                  className={`${job.saved ? 'text-yellow-400' : 'text-gray-300'} hover:text-yellow-400`}
                 >
-                  <Heart className={`w-6 h-6 transition-all duration-300 ${job.saved ? 'text-red-500 fill-red-500 scale-110' : 'text-gray-300 hover:text-red-400'}`} />
+                  <Star className={`w-5 h-5 ${job.saved ? 'fill-current' : ''}`} />
                 </button>
-
-                <div className="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center mb-4">
-                  <Briefcase className="text-cyan-600 w-6 h-6" />
-                </div>
-                
-                <h3 className="text-xl font-bold text-gray-900 mb-1 leading-tight">{job.title}</h3>
-                <p className="text-gray-500 font-medium mb-4">{job.company_name}</p>
-                
-                <div className="flex items-center space-x-2 text-gray-600 mb-4">
-                  <MapPin className="w-4 h-4 text-cyan-500" />
-                  <span className="text-sm">{job.location}</span>
-                </div>
-                
-                <div className="flex items-center justify-between mb-6">
-                  <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-bold uppercase">
-                    {job.job_type}
-                  </span>
-                  {/* ✅ Dynamic Salary from salary_range column */}
-                  <span className="text-gray-900 font-bold text-sm">
-                    {job.salary_range}
-                  </span>
-                </div>
-                
-                <div className="flex items-center justify-between border-t pt-4">
-                  <div className="flex items-center text-gray-400 text-xs">
-                    <Clock className="w-3.5 h-3.5 mr-1" />
-                    <span>{getTimeAgo(job.created_at)}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => { setSelectedJob(job); setShowDetailsModal(true); }}
-                      className="px-4 py-2 border border-gray-200 rounded-lg text-xs font-bold text-cyan-600 hover:bg-gray-50 transition-colors"
-                    >
-                      Details
-                    </button>
-
-                    {job.already_applied ? (
-                      <button
-                        disabled
-                        className="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg text-xs font-bold cursor-not-allowed flex items-center justify-center gap-1"
-                      >
-                         Applied
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleApply(job)}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-colors shadow-sm"
-                      >
-                        Apply
-                      </button>
-                    )}
-                  </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{job.title}</h3>
+              <p className="text-gray-600 mb-4">{job.company}</p>
+              <div className="flex items-center space-x-2 text-gray-600 mb-2">
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm">{job.location}</span>
+              </div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">
+                  {job.type}
+                </span>
+                <div className="flex items-center space-x-1 text-gray-900 font-semibold text-sm">
+                  <DollarSign className="w-4 h-4" />
+                  <span>{job.salary.split(' - ')[0]}</span>
                 </div>
               </div>
-            ))
-          ) : !loading && (
-            <div className="col-span-full py-20 text-center bg-white rounded-2xl border border-dashed border-gray-200">
-              <p className="text-gray-500 text-lg font-medium">No jobs found matching your criteria.</p>
-              <button onClick={() => { setSearchTerm(''); setLocation('All Locations'); setJobType('all'); fetchJobs(); }} className="mt-4 text-blue-600 font-bold hover:underline">Clear all filters</button>
+              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                  <Clock className="w-4 h-4" />
+                  <span>{job.posted}</span>
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => handleViewDetails(job)}
+                    className="text-cyan-600 hover:text-cyan-700 font-medium text-sm px-3 py-1 border border-cyan-600 rounded-lg"
+                  >
+                    Details
+                  </button>
+                  <button
+                    onClick={() => handleApply(job)}
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium text-sm"
+                  >
+                    Apply
+                  </button>
+                </div>
+              </div>
             </div>
-          )}
+          ))}
         </div>
 
         {/* Apply Modal */}
         {showApplyModal && selectedJob && (
-          <Modal isOpen={showApplyModal} onClose={() => setShowApplyModal(false)} title={`Apply for ${selectedJob.title}`}>
-            <div className="space-y-6 p-2">
-              <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
-                <p className="text-xs text-blue-600 font-bold uppercase mb-1">Offered Salary</p>
-                <p className="text-lg font-bold text-gray-900">{selectedJob.salary_range}</p>
+          <Modal
+            isOpen={showApplyModal}
+            onClose={() => setShowApplyModal(false)}
+            title={`Apply for ${selectedJob.title}`}
+          >
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Cover Letter
+                </label>
+                <textarea
+                  value={applicationData.coverLetter}
+                  onChange={(e) =>
+                    setApplicationData({ ...applicationData, coverLetter: e.target.value })
+                  }
+                  placeholder="Tell us why you're a great fit for this role..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  rows="6"
+                />
+
+                {errors.coverLetter && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.coverLetter}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Upload Cover Letter (PDF)</label>
-                <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50 hover:border-blue-500 transition-colors">
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    id="cover-upload"
-                    className="hidden"
-                    onChange={(e) => setCoverLetterFile(e.target.files[0])}
-                  />
-                  <label htmlFor="cover-upload" className="cursor-pointer">
-                    <UploadIcon className="w-10 h-10 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm font-bold text-blue-600">
-                      {coverLetterFile ? coverLetterFile.name : "Select Cover Letter File"}
-                    </p>
-                  </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Expected Salary
+                </label>
+                <input
+                  type="text"
+                  value={applicationData.expectedSalary}
+                  onChange={(e) =>
+                    setApplicationData({
+                      ...applicationData,
+                      expectedSalary: e.target.value
+                    })
+                  }
+                  placeholder="Rs. 50,000"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                />
+
+                {errors.expectedSalary && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.expectedSalary}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Available to Join
+                </label>
+                <input
+                  type="date"
+                  value={applicationData.availability}
+                  onChange={(e) =>
+                    setApplicationData({
+                      ...applicationData,
+                      availability: e.target.value
+                    })
+                  }
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                />
+
+                {errors.availability && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.availability}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-4">
+                <button
+                  onClick={() => setShowApplyModal(false)}
+                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSubmitApplication}
+                  className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                >
+                  Submit Application
+                </button>
+
+              </div>
+            </div>
+          </Modal>
+        )}
+
+        {/* Details Modal */}
+        {showDetailsModal && selectedJob && (
+          <Modal
+            isOpen={showDetailsModal}
+            onClose={() => setShowDetailsModal(false)}
+            title={selectedJob.title}
+          >
+            <div className="space-y-6">
+              <div className="flex items-center justify-between pb-4 border-b">
+                <div className="flex items-center space-x-3">
+                  <Building2 className="w-8 h-8 text-cyan-600" />
+                  <div>
+                    <p className="font-semibold text-gray-900">{selectedJob.company}</p>
+                    <p className="text-sm text-gray-600">{selectedJob.location}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-lg font-semibold text-gray-900">{selectedJob.salary}</p>
+                  <p className="text-sm text-gray-600">{selectedJob.type}</p>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Earliest Availability</label>
-                <input
-                  required
-                  type="date"
-                  min={getTomorrowDate()} 
-                  value={availability}
-                  onChange={(e) => setAvailability(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <h3 className="font-semibold text-gray-900 mb-2">Job Description</h3>
+                <p className="text-gray-600">{selectedJob.description}</p>
               </div>
 
-              <button
-                onClick={handleSubmitApplication}
-                className="w-full py-4 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-all active:scale-95"
-              >
-                Confirm Application
-              </button>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Requirements</h3>
+                <ul className="list-disc list-inside space-y-1">
+                  {selectedJob.requirements.map((req, index) => (
+                    <li key={index} className="text-gray-600">{req}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Responsibilities</h3>
+                <ul className="list-disc list-inside space-y-1">
+                  {selectedJob.responsibilities.map((resp, index) => (
+                    <li key={index} className="text-gray-600">{resp}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-4 border-t">
+                <button
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    handleSaveJob(selectedJob.id);
+                  }}
+                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center space-x-2"
+                >
+                  <Star className="w-4 h-4" />
+                  <span>{selectedJob.saved ? 'Unsave' : 'Save Job'}</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    handleApply(selectedJob);
+                  }}
+                  className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                >
+                  Apply Now
+                </button>
+              </div>
             </div>
           </Modal>
         )}
 
         {/* Success Modal */}
         {showSuccessModal && (
-          <Modal isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)} title="Success">
+          <Modal
+            isOpen={showSuccessModal}
+            onClose={() => setShowSuccessModal(false)}
+            title="Success"
+          >
             <div className="text-center py-6">
-              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <p className="text-lg font-bold text-gray-900">{successMessage}</p>
-              <button onClick={() => setShowSuccessModal(false)} className="mt-6 px-10 py-3 bg-blue-600 text-white rounded-xl font-bold">Great</button>
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-10 h-10 text-green-600" />
+              </div>
+              <p className="text-lg text-gray-900">{successMessage}</p>
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                className="mt-6 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+              >
+                Close
+              </button>
             </div>
           </Modal>
         )}
       </div>
+
+      
     </div>
   );
 };

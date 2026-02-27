@@ -9,11 +9,10 @@ import {
   Filter,
   X,
 } from 'lucide-react';
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation as useRouterLocation } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
-import { jobService } from '../../api/jobService';
 
 const AllJobs = () => {
   // ✅ URL params support (Browse Jobs -> show particular job)
@@ -47,40 +46,201 @@ const AllJobs = () => {
 
   const [errors, setErrors] = useState({});
 
-  // ✅ Backend integration states
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [savedJobIds, setSavedJobIds] = useState(new Set());
-
-  // ✅ Fetch jobs from backend
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        setLoading(true);
-        const jobsData = await jobService.getJobs();
-        
-        // Try to fetch saved jobs if user is logged in
-        try {
-          const savedData = await jobService.getSavedJobs();
-          const savedIds = new Set(savedData.map(job => job.id));
-          setSavedJobIds(savedIds);
-        } catch {
-          // User not logged in or error fetching saved jobs - ignore
-          console.log('No saved jobs (user may not be logged in)');
-        }
-        
-        setJobs(jobsData);
-      } catch (error) {
-        console.error('Error fetching jobs:', error);
-        setJobs([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchJobs();
-  }, []);
-
+  // ✅ jobs in state (so we can toggle saved)
+  const [jobs, setJobs] = useState([
+    {
+      id: 1,
+      title: 'Cardiologist',
+      company: 'MCARE Hospital',
+      location: 'Guntur, Andhra Pradesh',
+      type: 'Full-time',
+      salary: 'Rs. 1,50,000 - 2,50,000',
+      posted: '2 days ago',
+      saved: false,
+      description:
+        'We are hiring a Cardiologist to diagnose and treat cardiovascular conditions, interpret cardiac tests, and provide long-term patient care.',
+      requirements: [
+        'MBBS + MD/DNB (Cardiology) / DM Cardiology',
+        'Valid medical license',
+        'Experience in OPD/IPD cardiac care',
+        'Strong ECG/ECHO interpretation skills',
+      ],
+      responsibilities: [
+        'Evaluate patients with cardiac symptoms',
+        'Order and interpret diagnostic tests',
+        'Plan treatment and follow-ups',
+        'Coordinate with ICU and emergency teams',
+      ],
+    },
+    {
+      id: 2,
+      title: 'Neurologist',
+      company: 'Apollo Hospitals',
+      location: 'Hyderabad, Telangana',
+      type: 'Full-time',
+      salary: 'Rs. 1,40,000 - 2,40,000',
+      posted: '1 week ago',
+      saved: true,
+      description:
+        'Join our Neurology department to diagnose and manage neurological disorders including stroke, epilepsy, headaches, and neuropathies.',
+      requirements: [
+        'MBBS + MD/DNB (Neurology) / DM Neurology',
+        'Valid medical license',
+        'Clinical decision-making skills',
+        'Good patient communication',
+      ],
+      responsibilities: [
+        'Perform neurological examinations',
+        'Manage acute and chronic neuro cases',
+        'Recommend imaging/lab investigations',
+        'Maintain accurate clinical documentation',
+      ],
+    },
+    {
+      id: 3,
+      title: 'Gynecologist',
+      company: 'Care Hospital',
+      location: 'Vijayawada, Andhra Pradesh',
+      type: 'Full-time',
+      salary: 'Rs. 1,20,000 - 2,20,000',
+      posted: '3 days ago',
+      saved: false,
+      description:
+        'We are seeking a Gynecologist to provide women’s healthcare services including antenatal care, deliveries, and gynecological procedures.',
+      requirements: [
+        'MBBS + MS/DNB (OBG)',
+        'Valid medical license',
+        'Experience in labor & delivery (preferred)',
+        'Patient-focused approach',
+      ],
+      responsibilities: [
+        'OPD consultations and follow-ups',
+        'Manage pregnancy and childbirth cases',
+        'Perform gynecological procedures',
+        'Coordinate with nursing and OT team',
+      ],
+    },
+    {
+      id: 4,
+      title: 'Radiologist',
+      company: 'City Diagnostics',
+      location: 'Chennai, Tamil Nadu',
+      type: 'Contract',
+      salary: 'Rs. 1,00,000 - 2,00,000',
+      posted: '1 day ago',
+      saved: false,
+      description:
+        'Radiologist required to interpret imaging studies (X-ray/CT/MRI/USG), provide accurate reports, and support clinical decision making.',
+      requirements: [
+        'MBBS + MD/DNB (Radiology)',
+        'Valid medical license',
+        'Strong reporting accuracy',
+        'Knowledge of imaging protocols and safety',
+      ],
+      responsibilities: [
+        'Review and interpret imaging studies',
+        'Prepare timely diagnostic reports',
+        'Advise referring clinicians when needed',
+        'Ensure quality and safety compliance',
+      ],
+    },
+    {
+      id: 5,
+      title: 'Pediatrician',
+      company: 'Yashoda Hospitals',
+      location: 'Secunderabad, Telangana',
+      type: 'Full-time',
+      salary: 'Rs. 1,00,000 - 1,80,000',
+      posted: '5 days ago',
+      saved: true,
+      description:
+        'Pediatrician needed to provide comprehensive care for infants, children, and adolescents including immunizations and acute care.',
+      requirements: [
+        'MBBS + MD/DNB (Pediatrics)',
+        'Valid medical license',
+        'Experience in pediatric OPD/IPD',
+        'Strong communication with parents/guardians',
+      ],
+      responsibilities: [
+        'Conduct pediatric consultations',
+        'Manage acute pediatric illnesses',
+        'Monitor growth and development',
+        'Maintain vaccination and follow-up plans',
+      ],
+    },
+    {
+      id: 6,
+      title: 'Orthopedic',
+      company: 'KIMS Hospital',
+      location: 'Bangalore, Karnataka',
+      type: 'Full-time',
+      salary: 'Rs. 1,30,000 - 2,30,000',
+      posted: '1 week ago',
+      saved: false,
+      description:
+        'Orthopedic specialist required to diagnose and treat musculoskeletal conditions, manage trauma cases, and perform orthopedic procedures.',
+      requirements: [
+        'MBBS + MS/DNB (Orthopedics)',
+        'Valid medical license',
+        'Experience in trauma/orthopedic OPD',
+        'Surgical skills (preferred)',
+      ],
+      responsibilities: [
+        'Evaluate musculoskeletal complaints',
+        'Manage fractures and trauma cases',
+        'Plan surgical/non-surgical treatment',
+        'Coordinate rehab and follow-up care',
+      ],
+    },
+    {
+      id: 7,
+      title: 'Pulmonologist',
+      company: 'Fortis Healthcare',
+      location: 'Delhi, NCR',
+      type: 'Full-time',
+      salary: 'Rs. 1,20,000 - 2,10,000',
+      posted: '4 days ago',
+      saved: false,
+      description:
+        'Pulmonologist needed to manage respiratory disorders including asthma, COPD, infections, and critical pulmonary cases.',
+      requirements: [
+        'MBBS + MD (Respiratory Medicine) / DTCD',
+        'Valid medical license',
+        'Experience with ICU/critical respiratory cases (preferred)',
+        'Good clinical judgment',
+      ],
+      responsibilities: [
+        'Consult and manage respiratory patients',
+        'Interpret PFT/Imaging and labs',
+        'Provide treatment plans and follow-ups',
+        'Support emergency and ICU teams as needed',
+      ],
+    },
+    {
+      id: 8,
+      title: 'Pharmacist',
+      company: 'MedPlus Health Services',
+      location: 'Mumbai, Maharashtra',
+      type: 'Full-time',
+      salary: 'Rs. 30,000 - 45,000',
+      posted: '10 days ago',
+      saved: true,
+      description:
+        'Pharmacist required to dispense medications accurately, counsel patients, and maintain pharmacy inventory and compliance.',
+      requirements: [
+        'B.Pharm or D.Pharm',
+        'Valid pharmacy license',
+        'Good communication skills',
+        'Basic knowledge of drug interactions',
+      ],
+      responsibilities: [
+        'Dispense and label medications',
+        'Counsel patients on dosage and usage',
+        'Maintain inventory and expiry tracking',
+        'Verify prescriptions and ensure compliance',
+      ],
+    },
+  ]);
 
   const cities = [
     'All Locations',
@@ -108,25 +268,21 @@ const AllJobs = () => {
   // ---------- helpers ----------
   const normalize = (v = '') => String(v).toLowerCase().trim();
 
-  const parseSalaryRange = useCallback((salaryStr = '') => {
+  const parseSalaryRange = (salaryStr = '') => {
     const cleaned = salaryStr.replace(/₹|Rs\.?/gi, '').replace(/\s/g, '');
     const parts = cleaned.split('-').map((p) => p.replace(/,/g, ''));
     const min = Number(parts?.[0] || 0);
     const max = Number(parts?.[1] || parts?.[0] || 0);
     return { min: isNaN(min) ? 0 : min, max: isNaN(max) ? 0 : max };
-  }, []);
+  };
 
-  // Calculate "X days ago" from timestamp
-  const getTimeAgo = useCallback((timestamp) => {
-    if (!timestamp) return 'Recently';
-    const days = Math.floor((Date.now() - new Date(timestamp).getTime()) / (1000 * 60 * 60 * 24));
-    if (days === 0) return 'Today';
-    if (days === 1) return '1 day ago';
-    if (days < 7) return `${days} days ago`;
-    if (days < 14) return '1 week ago';
-    if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
-    return `${Math.floor(days / 30)} month${days >= 60 ? 's' : ''} ago`;
-  }, []);
+  const parsePostedDays = (postedStr = '') => {
+    const s = normalize(postedStr);
+    const num = Number(s.match(/\d+/)?.[0] ?? '0');
+    if (s.includes('week')) return num * 7;
+    if (s.includes('day')) return num;
+    return 9999;
+  };
 
   // ✅ IMPORTANT FIX:
   // When user clicks "Browse Jobs" from Home, your Home page usually navigates like:
@@ -136,7 +292,6 @@ const AllJobs = () => {
     const params = new URLSearchParams(routerLocation.search);
 
     const qSearch = params.get('search') || params.get('q') || '';
-    const qCategory = params.get('category') || '';
     const qLocation = params.get('location') || params.get('city') || '';
     const qType = params.get('type') || params.get('jobType') || '';
     const qSaved = params.get('saved'); // "1" or "true"
@@ -146,12 +301,7 @@ const AllJobs = () => {
     const qJobId = params.get('jobId'); // optional: open details directly
 
     // ✅ Apply only if param exists (so manual typing in filters won't be overwritten)
-    if (qSearch) {
-      setSearchTerm(qSearch);
-    } else if (qCategory) {
-      // If no search but category is provided, use category as search term
-      setSearchTerm(qCategory);
-    }
+    if (qSearch) setSearchTerm(qSearch);
     if (qLocation) setSelectedLocation(qLocation);
     if (qType) setJobType(qType);
 
@@ -181,27 +331,9 @@ const AllJobs = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routerLocation.search]);
 
-  // ✅ STAR FIX: toggle saved for a job with backend integration
-  const toggleSaveJob = async (jobId) => {
-    const isSaved = savedJobIds.has(jobId);
-    
-    try {
-      if (isSaved) {
-        await jobService.unsaveJob(jobId);
-        setSavedJobIds(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(jobId);
-          return newSet;
-        });
-      } else {
-        await jobService.saveJob(jobId);
-        setSavedJobIds(prev => new Set([...prev, jobId]));
-      }
-    } catch (error) {
-      console.error('Error toggling save job:', error);
-      // If error (like not logged in), show message or redirect to login
-      alert('Please login to save jobs');
-    }
+  // ✅ STAR FIX: toggle saved for a job
+  const toggleSaveJob = (jobId) => {
+    setJobs((prev) => prev.map((j) => (j.id === jobId ? { ...j, saved: !j.saved } : j)));
   };
 
   // ✅ filtering
@@ -220,7 +352,7 @@ const AllJobs = () => {
 
     return jobs.filter((job) => {
       if (term) {
-        const blob = `${job.title} ${job.company_name || ''} ${job.location}`.toLowerCase();
+        const blob = `${job.title} ${job.company} ${job.location}`.toLowerCase();
         if (!blob.includes(term)) return false;
       }
 
@@ -229,30 +361,30 @@ const AllJobs = () => {
       }
 
       if (typeActive) {
-        if (normalize(job.job_type || 'full-time') !== normalize(jobType)) return false;
+        if (normalize(job.type) !== normalize(jobType)) return false;
       }
 
-      if (moreFilters.onlySaved && !savedJobIds.has(job.id)) return false;
+      if (moreFilters.onlySaved && !job.saved) return false;
 
       if (postedWithinDays != null) {
-        const daysAgo = Math.floor((Date.now() - new Date(job.created_at).getTime()) / (1000 * 60 * 60 * 24));
-        if (daysAgo > postedWithinDays) return false;
+        const days = parsePostedDays(job.posted);
+        if (days > postedWithinDays) return false;
       }
 
       if (minSalaryFilter != null || maxSalaryFilter != null) {
-        const salaryStr = job.salary || job.salary_range || '';
-        const { min, max } = parseSalaryRange(salaryStr);
+        const { min, max } = parseSalaryRange(job.salary);
         if (minSalaryFilter != null && max < minSalaryFilter) return false;
         if (maxSalaryFilter != null && min > maxSalaryFilter) return false;
       }
 
       return true;
     });
-  }, [jobs, searchTerm, selectedLocation, jobType, moreFilters, savedJobIds, parseSalaryRange]);
+  }, [jobs, searchTerm, selectedLocation, jobType, moreFilters]);
 
-  //\u2705 Reset pagination when filters change
+  // ✅ Reset pagination when filters change
   useEffect(() => {
     setVisibleCount(JOBS_PER_PAGE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     searchTerm,
     selectedLocation,
@@ -338,14 +470,17 @@ const AllJobs = () => {
       <Navbar />
 
       {/* Search Section */}
-      <section className="bg-gradient-to-r from-cyan-500 to-blue-600 py-16 px-4">
+      <section className="bg-gradient-to-r from-cyan-500 to-blue-600 py-12 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold text-white mb-6">Find Your Perfect Healthcare Job</h1>
-          <p className="text-cyan-100 text-lg mb-8">
+          {/* ✅ Mobile-only smaller heading + description (desktop unchanged) */}
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-6">
+            Find Your Perfect Healthcare Job
+          </h1>
+          <p className="text-sm md:text-lg text-cyan-100 mb-6 md:mb-8">
             Browse {jobs.length} open positions from top healthcare facilities
           </p>
 
-          <div className="bg-white rounded-xl shadow-xl p-6">
+          <div className="bg-white rounded-xl shadow-xl p-4 md:p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-lg">
                 <Search className="w-5 h-5 text-gray-400" />
@@ -424,14 +559,7 @@ const AllJobs = () => {
             </button>
           </div>
 
-          {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading jobs...</p>
-              </div>
-            </div>
-          ) : filteredJobs.length === 0 ? (
+          {filteredJobs.length === 0 ? (
             <div className="bg-white rounded-xl border border-gray-100 p-10 text-center">
               <p className="text-lg font-semibold text-gray-900">No jobs found</p>
               <p className="text-gray-600 mt-2">Try clearing filters or changing keywords.</p>
@@ -472,11 +600,13 @@ const AllJobs = () => {
                     <button
                       type="button"
                       onClick={() => toggleSaveJob(job.id)}
-                      className={`${savedJobIds.has(job.id) ? 'text-yellow-400' : 'text-gray-300'} hover:text-yellow-400`}
-                      title={savedJobIds.has(job.id) ? 'Saved' : 'Save job'}
-                      aria-label={savedJobIds.has(job.id) ? 'Unsave job' : 'Save job'}
+                      className={`${
+                        job.saved ? 'text-yellow-400' : 'text-gray-300'
+                      } hover:text-yellow-400`}
+                      title={job.saved ? 'Saved' : 'Save job'}
+                      aria-label={job.saved ? 'Unsave job' : 'Save job'}
                     >
-                      <Star className="w-5 h-5" fill={savedJobIds.has(job.id) ? 'currentColor' : 'none'} />
+                      <Star className="w-5 h-5" fill={job.saved ? 'currentColor' : 'none'} />
                     </button>
                   </div>
 
@@ -484,7 +614,7 @@ const AllJobs = () => {
 
                   <div className="flex items-center space-x-2 text-gray-600 mb-2">
                     <Building2 className="w-4 h-4" />
-                    <span className="text-sm">{job.company_name}</span>
+                    <span className="text-sm">{job.company}</span>
                   </div>
 
                   <div className="flex items-center space-x-2 text-gray-600 mb-4">
@@ -494,18 +624,18 @@ const AllJobs = () => {
 
                   <div className="flex items-center justify-between mb-4">
                     <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">
-                      {job.job_type || 'Full-time'}
+                      {job.type}
                     </span>
                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
                       <DollarSign className="w-4 h-4" />
-                      <span>{(job.salary || job.salary_range || 'Not disclosed').split(' - ')[0]}</span>
+                      <span>{job.salary.split(' - ')[0]}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
                       <Clock className="w-4 h-4" />
-                      <span>{getTimeAgo(job.created_at)}</span>
+                      <span>{job.posted}</span>
                     </div>
 
                     <button
@@ -528,7 +658,9 @@ const AllJobs = () => {
             <div className="text-center mt-12">
               <button
                 type="button"
-                onClick={() => setVisibleCount((v) => Math.min(v + JOBS_PER_PAGE, filteredJobs.length))}
+                onClick={() =>
+                  setVisibleCount((v) => Math.min(v + JOBS_PER_PAGE, filteredJobs.length))
+                }
                 disabled={!canLoadMore}
                 className={`bg-white border-2 px-8 py-3 rounded-lg font-medium transition ${
                   canLoadMore
@@ -549,7 +681,11 @@ const AllJobs = () => {
 
       {/* ✅ More Filters Modal */}
       {showFiltersModal && (
-        <Modal isOpen={showFiltersModal} onClose={() => setShowFiltersModal(false)} title="More Filters">
+        <Modal
+          isOpen={showFiltersModal}
+          onClose={() => setShowFiltersModal(false)}
+          title="More Filters"
+        >
           <div className="space-y-6">
             <div>
               <label className="block font-medium text-gray-700 mb-2">Posted within</label>
@@ -586,7 +722,9 @@ const AllJobs = () => {
                   className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-cyan-500 outline-none"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-2">Tip: Salary is matched against the job’s salary range.</p>
+              <p className="text-xs text-gray-500 mt-2">
+                Tip: Salary is matched against the job’s salary range.
+              </p>
             </div>
 
             <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg p-4">
@@ -643,19 +781,23 @@ const AllJobs = () => {
 
       {/* Details Modal */}
       {showDetailsModal && selectedJob && (
-        <Modal isOpen={showDetailsModal} onClose={() => setShowDetailsModal(false)} title={selectedJob.title}>
+        <Modal
+          isOpen={showDetailsModal}
+          onClose={() => setShowDetailsModal(false)}
+          title={selectedJob.title}
+        >
           <div className="space-y-6">
             <div className="flex items-center justify-between pb-4 border-b">
               <div className="flex items-center space-x-3">
                 <Building2 className="w-8 h-8 text-cyan-600" />
                 <div>
-                  <p className="font-semibold text-gray-900">{selectedJob.company_name}</p>
+                  <p className="font-semibold text-gray-900">{selectedJob.company}</p>
                   <p className="text-sm text-gray-600">{selectedJob.location}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-lg font-semibold text-gray-900">{selectedJob.salary || selectedJob.salary_range || 'Not disclosed'}</p>
-                <p className="text-sm text-gray-600">{selectedJob.job_type || 'Full-time'}</p>
+                <p className="text-lg font-semibold text-gray-900">{selectedJob.salary}</p>
+                <p className="text-sm text-gray-600">{selectedJob.type}</p>
               </div>
             </div>
 
@@ -666,20 +808,24 @@ const AllJobs = () => {
 
             <div>
               <h3 className="font-semibold text-gray-900 mb-2">Requirements</h3>
-              {selectedJob.requirements ? (
-                <div className="text-gray-600 whitespace-pre-line">{selectedJob.requirements}</div>
-              ) : (
-                <p className="text-gray-500 italic">No requirements specified</p>
-              )}
+              <ul className="list-disc list-inside space-y-1">
+                {selectedJob.requirements?.map((req, i) => (
+                  <li key={i} className="text-gray-600">
+                    {req}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div>
               <h3 className="font-semibold text-gray-900 mb-2">Responsibilities</h3>
-              {selectedJob.responsibilities ? (
-                <div className="text-gray-600 whitespace-pre-line">{selectedJob.responsibilities}</div>
-              ) : (
-                <p className="text-gray-500 italic">No responsibilities specified</p>
-              )}
+              <ul className="list-disc list-inside space-y-1">
+                {selectedJob.responsibilities?.map((resp, i) => (
+                  <li key={i} className="text-gray-600">
+                    {resp}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div className="flex justify-end space-x-3 pt-4 border-t">
@@ -705,20 +851,28 @@ const AllJobs = () => {
 
       {/* Apply Modal */}
       {showApplyModal && selectedJob && (
-        <Modal isOpen={showApplyModal} onClose={() => setShowApplyModal(false)} title={`Apply for ${selectedJob.title}`}>
+        <Modal
+          isOpen={showApplyModal}
+          onClose={() => setShowApplyModal(false)}
+          title={`Apply for ${selectedJob.title}`}
+        >
           <div className="space-y-6">
             <div>
               <label className="block font-medium text-gray-700 mb-2">Cover Letter</label>
               <textarea
                 rows="5"
                 value={applicationData.coverLetter}
-                onChange={(e) => setApplicationData({ ...applicationData, coverLetter: e.target.value })}
+                onChange={(e) =>
+                  setApplicationData({ ...applicationData, coverLetter: e.target.value })
+                }
                 placeholder="Tell us why you're a great fit for this role..."
                 className={`w-full border rounded-lg p-3 focus:ring-2 outline-none ${
                   errors.coverLetter ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
-              {errors.coverLetter && <p className="text-red-500 text-sm mt-1">{errors.coverLetter}</p>}
+              {errors.coverLetter && (
+                <p className="text-red-500 text-sm mt-1">{errors.coverLetter}</p>
+              )}
             </div>
 
             <div>
@@ -726,13 +880,17 @@ const AllJobs = () => {
               <input
                 type="text"
                 value={applicationData.expectedSalary}
-                onChange={(e) => setApplicationData({ ...applicationData, expectedSalary: e.target.value })}
+                onChange={(e) =>
+                  setApplicationData({ ...applicationData, expectedSalary: e.target.value })
+                }
                 placeholder="Rs. 50,000"
                 className={`w-full border rounded-lg p-3 focus:ring-2 outline-none ${
                   errors.expectedSalary ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
-              {errors.expectedSalary && <p className="text-red-500 text-sm mt-1">{errors.expectedSalary}</p>}
+              {errors.expectedSalary && (
+                <p className="text-red-500 text-sm mt-1">{errors.expectedSalary}</p>
+              )}
             </div>
 
             <div>
@@ -740,12 +898,16 @@ const AllJobs = () => {
               <input
                 type="date"
                 value={applicationData.availability}
-                onChange={(e) => setApplicationData({ ...applicationData, availability: e.target.value })}
+                onChange={(e) =>
+                  setApplicationData({ ...applicationData, availability: e.target.value })
+                }
                 className={`w-full border rounded-lg p-3 focus:ring-2 outline-none ${
                   errors.availability ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
-              {errors.availability && <p className="text-red-500 text-sm mt-1">{errors.availability}</p>}
+              {errors.availability && (
+                <p className="text-red-500 text-sm mt-1">{errors.availability}</p>
+              )}
             </div>
 
             <div className="flex justify-end space-x-3 pt-4 border-t">

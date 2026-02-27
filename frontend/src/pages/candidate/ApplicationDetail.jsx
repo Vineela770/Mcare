@@ -15,85 +15,185 @@ const ApplicationDetail = () => {
       setLoading(true);
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Mock data - in real app, fetch from API
-      const mockApplication = {
-        id: parseInt(id),
-        title: 'Senior Registered Nurse',
-        company: 'Manhattan Hospital',
-        location: 'New York, NY',
-        appliedDate: '2024-01-05',
-        status: 'Under Review',
-        salary: '$75,000 - $95,000',
-        jobType: 'Full-time',
-        experience: '5+ years',
-        deadline: '2024-02-15',
-        
-        // Job details
-        description: 'We are seeking an experienced Senior Registered Nurse to join our dynamic healthcare team. The ideal candidate will have extensive experience in patient care, strong leadership skills, and a commitment to providing high-quality healthcare services.',
-        
-        responsibilities: [
-          'Provide direct patient care and coordinate nursing activities',
-          'Mentor and supervise junior nursing staff',
-          'Maintain accurate patient records and documentation',
-          'Collaborate with physicians and other healthcare professionals',
-          'Ensure compliance with hospital policies and healthcare regulations',
-          'Participate in quality improvement initiatives'
-        ],
-        
-        requirements: [
-          'Valid RN license in good standing',
-          'Bachelor of Science in Nursing (BSN) required',
-          '5+ years of clinical nursing experience',
-          'BLS and ACLS certification',
-          'Strong clinical assessment and critical thinking skills',
-          'Excellent communication and interpersonal abilities'
-        ],
-        
-        benefits: [
-          'Competitive salary with performance bonuses',
-          'Comprehensive health, dental, and vision insurance',
-          '401(k) retirement plan with employer matching',
-          'Paid time off and holidays',
-          'Continuing education opportunities',
-          'Career advancement programs'
-        ],
-        
-        // Application details
-        applicationSubmitted: '2024-01-05',
-        coverLetter: `Dear Hiring Manager,
-
-I am writing to express my strong interest in the Senior Registered Nurse position at Manhattan Hospital. With over 7 years of experience in emergency and critical care nursing, I am confident in my ability to provide exceptional patient care and contribute to your team's success.
-
-Throughout my career, I have developed expertise in managing complex patient cases, leading nursing teams, and implementing best practices in patient care. My commitment to continuous learning and professional development aligns perfectly with Manhattan Hospital's reputation for excellence.
-
-I look forward to the opportunity to discuss how my experience and skills can benefit your organization.
-
-Best regards,
-John Doe`,
-        
-        expectedSalary: '$85,000',
-        availability: 'Immediate',
-        resumeUrl: '/resumes/john-doe-resume.pdf',
-        
-        // Timeline
-        timeline: [
-          { date: '2024-01-05', status: 'Application Submitted', description: 'Your application was successfully submitted', icon: 'sent', completed: true },
-          { date: '2024-01-06', status: 'Application Under Review', description: 'HR team is reviewing your application', icon: 'review', completed: true },
-          { date: '', status: 'Interview Scheduled', description: 'Waiting for interview invitation', icon: 'interview', completed: false },
-          { date: '', status: 'Final Decision', description: 'Awaiting final hiring decision', icon: 'decision', completed: false }
-        ],
-        
-        // HR Contact
-        hrContact: {
-          name: 'Sarah Johnson',
-          title: 'HR Manager',
-          email: 'sarah.johnson@manhattanhospital.com',
-          phone: '+1 (212) 555-0123'
-        }
-      };
       
-      setApplication(mockApplication);
-      setLoading(false);
+      const mockApplications = {
+  1: {
+    id: 1,
+    title: 'Senior Registered Nurse',
+    company: 'Manhattan Hospital',
+    location: 'New York, NY',
+    appliedDate: '2024-01-05',
+    status: 'Under Review',
+    salary: '$75,000 - $95,000',
+    jobType: 'Full-time',
+    experience: '5+ years',
+    deadline: '2024-02-15',
+    description:
+      'We are seeking an experienced Senior Registered Nurse to join our dynamic healthcare team...',
+    responsibilities: [
+      'Provide direct patient care',
+      'Mentor junior nurses',
+      'Maintain patient records',
+    ],
+    requirements: [
+      'Valid RN License',
+      'BSN required',
+      '5+ years experience',
+    ],
+    benefits: [
+      'Health insurance',
+      '401(k)',
+      'Paid leave',
+    ],
+    coverLetter: 'Dear Hiring Manager,\n\nI am excited to apply...',
+    expectedSalary: '$85,000',
+    availability: 'Immediate',
+    resumeUrl: '/resumes/john-doe-resume.pdf',
+    timeline: [
+      { date: '2024-01-05', status: 'Application Submitted', icon: 'sent', completed: true },
+      { date: '2024-01-06', status: 'Under Review', icon: 'review', completed: true },
+      { date: '', status: 'Interview Scheduled', icon: 'interview', completed: false },
+      { date: '', status: 'Final Decision', icon: 'decision', completed: false },
+    ],
+    hrContact: {
+      name: 'Sarah Johnson',
+      title: 'HR Manager',
+      email: 'sarah.johnson@manhattanhospital.com',
+      phone: '+1 (212) 555-0123',
+    },
+  },
+
+  2: {
+    id: 2,
+    title: 'Physical Therapist',
+    company: 'Wellness Rehab',
+    location: 'Los Angeles, CA',
+    appliedDate: '2024-01-03',
+    status: 'Shortlisted',
+    salary: '$65,000 - $85,000',
+    jobType: 'Full-time',
+    experience: '3+ years',
+    deadline: '2024-02-10',
+    description:
+      'We are looking for a licensed Physical Therapist to help patients recover mobility.',
+    responsibilities: [
+      'Evaluate patient conditions',
+      'Design therapy programs',
+      'Monitor progress',
+    ],
+    requirements: [
+      'PT License',
+      'DPT Degree',
+      'Rehab experience',
+    ],
+    benefits: [
+      'Flexible hours',
+      'Insurance',
+      'Paid holidays',
+    ],
+    coverLetter: 'Dear Team,\n\nI am applying for the Physical Therapist role...',
+    expectedSalary: '$75,000',
+    availability: '2 Weeks',
+    resumeUrl: '/resumes/john-doe-resume.pdf',
+    timeline: [
+      { date: '2024-01-03', status: 'Application Submitted', icon: 'sent', completed: true },
+      { date: '2024-01-05', status: 'Shortlisted', icon: 'review', completed: true },
+      { date: '', status: 'Interview Scheduled', icon: 'interview', completed: false },
+    ],
+    hrContact: {
+      name: 'Emily Carter',
+      title: 'Recruiter',
+      email: 'emily@wellnessrehab.com',
+      phone: '+1 (310) 555-8899',
+    },
+  },
+
+  3: {
+    id: 3,
+    title: 'Lab Technician',
+    company: 'HealthCare Labs',
+    location: 'Chicago, IL',
+    appliedDate: '2023-12-28',
+    status: 'Interview',
+    salary: '$45,000 - $55,000',
+    jobType: 'Full-time',
+    experience: '2+ years',
+    deadline: '2024-01-30',
+    description:
+      'Seeking a Lab Technician to perform diagnostic tests and maintain lab equipment.',
+    responsibilities: [
+      'Conduct lab tests',
+      'Maintain equipment',
+      'Record results',
+    ],
+    requirements: [
+      'Lab certification',
+      'Attention to detail',
+    ],
+    benefits: [
+      'Bonuses',
+      'Medical insurance',
+    ],
+    coverLetter: 'Dear Hiring Team,\n\nI am excited to interview...',
+    expectedSalary: '$50,000',
+    availability: 'Immediate',
+    resumeUrl: '/resumes/john-doe-resume.pdf',
+    timeline: [
+      { date: '2023-12-28', status: 'Application Submitted', icon: 'sent', completed: true },
+      { date: '2024-01-02', status: 'Interview Scheduled', icon: 'interview', completed: true },
+    ],
+    hrContact: {
+      name: 'Robert Mills',
+      title: 'Lab Manager',
+      email: 'robert@healthlabs.com',
+      phone: '+1 (312) 555-6677',
+    },
+  },
+
+  4: {
+    id: 4,
+    title: 'Medical Assistant',
+    company: 'City Medical',
+    location: 'Houston, TX',
+    appliedDate: '2023-12-20',
+    status: 'Rejected',
+    salary: '$40,000 - $50,000',
+    jobType: 'Full-time',
+    experience: '1+ years',
+    deadline: '2024-01-10',
+    description:
+      'Medical Assistant role supporting physicians and patient care.',
+    responsibilities: [
+      'Patient intake',
+      'Maintain records',
+      'Assist doctors',
+    ],
+    requirements: [
+      'Medical Assistant certification',
+    ],
+    benefits: [
+      'Paid leave',
+    ],
+    coverLetter: 'Thank you for considering my application...',
+    expectedSalary: '$45,000',
+    availability: 'Immediate',
+    resumeUrl: '/resumes/john-doe-resume.pdf',
+    timeline: [
+      { date: '2023-12-20', status: 'Application Submitted', icon: 'sent', completed: true },
+      { date: '2023-12-28', status: 'Rejected', icon: 'decision', completed: true },
+    ],
+    hrContact: {
+      name: 'Linda Brown',
+      title: 'HR Lead',
+      email: 'linda@citymedical.com',
+      phone: '+1 (713) 555-9988',
+    },
+  },
+};
+
+setApplication(mockApplications[id] || null);
+setLoading(false);
+
     };
 
     fetchApplicationDetail();

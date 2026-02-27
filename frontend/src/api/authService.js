@@ -1,63 +1,54 @@
-import axios from 'axios';
+// Backend integration removed - returning mock data
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-
-/**
- * 🛰️ AXIOS INSTANCE
- * Creates a reusable instance for all API calls.
- */
-const api = axios.create({
-    baseURL: `${API_URL}/api`,
-});
-
-/**
- * 🛡️ REQUEST INTERCEPTOR
- * Automatically attaches the Bearer token to every request if it exists.
- */
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
-
-/**
- * Handles communication between the React frontend and the Node.js backend
- */
 export const authService = {
-    // 📝 REGISTER
-    register: async (formData) => {
-        const response = await api.post('/auth/register', formData);
-        return response.data;
-    },
+  // REGISTER
+  register: async (userData) => {
+    console.log('[MOCK] register called with:', userData);
+    return { message: 'Registration successful' };
+  },
 
-    // 🔑 LOGIN
-    login: async (loginData) => {
-        const response = await api.post('/auth/login', loginData);
-        if (response.data.token) {
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
-        }
-        return response.data;
-    },
+  // LOGIN
+  login: async (email, password) => {
+    console.log('[MOCK] login called with:', { email, password });
+    
+    const mockToken = 'mock-jwt-token-' + Date.now();
+    const mockUser = {
+      id: 1,
+      email: email,
+      name: 'Mock User',
+      role: 'candidate'
+    };
 
-    // 📊 DASHBOARD STATS
-    getDashboardStats: async () => {
-        // No need to manually add headers now! Interceptor handles it.
-        const response = await api.get('/candidate/dashboard-stats');
-        return response.data;
-    },
+    localStorage.setItem("token", mockToken);
+    localStorage.setItem("user", JSON.stringify(mockUser));
 
-    // 🛠️ AUTH HELPERS
-    getToken: () => localStorage.getItem("token"),
-    getUser: () => {
-        const user = localStorage.getItem("user");
-        return user ? JSON.parse(user) : null;
-    },
-    isAuthenticated: () => !!localStorage.getItem("token"),
-    logout: () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-    },
+    return { token: mockToken, user: mockUser };
+  },
+
+  // FORGOT PASSWORD
+  forgotPassword: async (email) => {
+    console.log('[MOCK] forgotPassword called with:', email);
+    return { message: 'Password reset link sent' };
+  },
+
+  // RESET PASSWORD
+  resetPassword: async (token, newPassword) => {
+    console.log('[MOCK] resetPassword called with:', { token, newPassword });
+    return { message: 'Password reset successful' };
+  },
+
+  // AUTH HELPERS
+  getToken: () => localStorage.getItem("token"),
+
+  getUser: () => {
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
+  },
+
+  isAuthenticated: () => !!localStorage.getItem("token"),
+
+  logout: () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  },
 };

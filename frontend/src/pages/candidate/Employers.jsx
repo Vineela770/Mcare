@@ -3,41 +3,41 @@ import Sidebar from "../../components/common/Sidebar";
 
 const Employers = () => {
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Right Content Area */}
-      <div className="flex-1 ml-64 flex flex-col items-center">
+      <div className="flex-1 md:ml-64 flex flex-col items-center w-full">
         {/* Main Content */}
-        <main className="w-full max-w-6xl px-6 py-8 flex-1">
+        <main className="w-full max-w-6xl px-4 sm:px-6 py-6 sm:py-8 flex-1">
           {/* Page Title */}
-          <h1 className="text-3xl font-semibold text-gray-900 mb-6">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-6 text-center md:text-left">
             Following Employers
           </h1>
 
           {/* Card */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 px-10 py-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 px-4 sm:px-10 py-6 sm:py-8 w-full">
             {/* Top Controls */}
-            <div className="flex items-center justify-between mb-10">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-10 gap-4 sm:gap-0">
               {/* Search */}
-              <div className="relative w-96">
+              <div className="relative w-full sm:w-96">
                 <input
                   type="text"
                   placeholder="Search ..."
-                  className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 text-gray-600 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                  className="w-full pl-10 pr-4 py-2 sm:py-3 rounded-lg bg-gray-100 text-gray-600 focus:outline-none focus:ring-2 focus:ring-sky-400"
                 />
-                <span className="absolute left-4 top-3.5 text-gray-400">
+                <span className="absolute left-3 top-2 sm:top-3 text-gray-400">
                   🔍
                 </span>
               </div>
 
               {/* Sort */}
-              <div className="flex items-center gap-3">
-                <span className="text-gray-700 font-medium">
+              <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                <span className="text-gray-700 font-medium text-sm sm:text-base">
                   Sort by:
                 </span>
-                <select className="px-5 py-3 border border-sky-400 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-sky-400">
+                <select className="w-full sm:w-auto px-3 sm:px-5 py-2 sm:py-3 border border-sky-400 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-sky-400 text-sm sm:text-base">
                   <option>Default</option>
                   <option selected>Newest</option>
                   <option>Oldest</option>
@@ -46,23 +46,19 @@ const Employers = () => {
             </div>
 
             {/* Empty State */}
-            <div className="py-10 text-gray-500 text-base">
+            <div className="py-10 text-gray-500 text-sm sm:text-base text-center">
               No following employer found.
             </div>
           </div>
         </main>
 
         {/* Footer */}
-        <footer className="w-full bg-sky-500 text-white text-center py-6">
-          <p className="text-sm">
-            ©️ 2025 Mcare Jobs. All Right Reserved.
-          </p>
-          <p className="text-sm mt-1">
-            Privacy policy, Terms & Conditions.
-          </p>
-          <p className="text-sm mt-2">
-            Developed By – MerQ Digisol
-          </p>
+        <footer className="w-full bg-sky-500 text-white text-center py-6 mt-6 sm:mt-10">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-6 text-sm">
+            <p>© 2025 Mcare Jobs. All Rights Reserved.</p>
+            <p>Privacy Policy, Terms & Conditions.</p>
+            <p>Developed By – MerQ Digisol</p>
+          </div>
         </footer>
       </div>
     </div>

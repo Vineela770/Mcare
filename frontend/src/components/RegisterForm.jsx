@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Phone, MapPin, Upload } from 'lucide-react';
+import { Mail, Lock, User, Phone, MapPin } from 'lucide-react';
 import { authService } from '../api/authService';
 
 export function RegisterForm() {
@@ -17,8 +17,6 @@ export function RegisterForm() {
     qualification: '',
     designation: '',
     role: '',
-    // Added for file upload
-    resume: null, 
 
     // Employer Organization Info
     organizationName: '',
@@ -28,20 +26,12 @@ export function RegisterForm() {
     organizationAddress: '',
   });
 
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-
-    // Handle file input specifically
-    if (name === 'resume') {
-      setFormData((prev) => ({
-        ...prev,
-        resume: files[0],
-      }));
-      return;
-    }
+    const { name, value } = e.target;
 
     setFormData((prev) => ({
       ...prev,
@@ -65,21 +55,7 @@ export function RegisterForm() {
     setLoading(true);
 
     try {
-      /**
-       * 🚀 Construct FormData object
-       * Required for multipart/form-data requests (file uploads)
-       */
-      const data = new FormData();
-      
-      // Append all text and file fields to the FormData object
-      Object.keys(formData).forEach((key) => {
-        // Skip confirmEmail as it's only for frontend validation
-        if (key !== 'confirmEmail' && formData[key] !== null) {
-          data.append(key, formData[key]);
-        }
-      });
-
-      await authService.register(data);
+      await authService.register(formData);
       navigate('/login');
     } catch (err) {
       setError(err.message || 'Registration failed');
@@ -90,6 +66,7 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-w-md mx-auto">
+
       {error && (
         <div className="bg-red-100 text-red-700 px-4 py-2 rounded">
           {error}
@@ -107,6 +84,7 @@ export function RegisterForm() {
           required
         >
           <option value="">Select</option>
+          <option value="Dr">Dr</option>
           <option value="Mr">Mr</option>
           <option value="Miss">Miss</option>
           <option value="Others">Others</option>
@@ -206,6 +184,17 @@ export function RegisterForm() {
           />
         </div>
       </div>
+      {/* Dynamic Role Heading */}
+      {formData.role && (
+        <div className="mb-5">
+          <h3 className="text-xl font-medium text-gray-900 border-b border-gray-200 pb-2">
+            {formData.role === 'candidate'
+              ? 'Doctor Registration'
+              : 'Employer Registration'}
+          </h3>
+        </div>
+      )}
+
 
       {/* Role */}
       <div>
@@ -222,46 +211,31 @@ export function RegisterForm() {
           <option value="hr">Employee</option>
         </select>
       </div>
+      
 
-      {/* Doctor Qualification & Resume Upload */}
+
+      {/* Doctor Qualification */}
       {formData.role === 'candidate' && (
-        <div className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium mb-1">Qualification</label>
-            <select
-              name="qualification"
-              value={formData.qualification}
-              onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
-              required
-            >
-              <option value="" disabled>Select Qualification</option>
-              <option value="MBBS">MBBS</option>
-              <option value="MD">MD</option>
-              <option value="MS">MS</option>
-              <option value="BDS">BDS</option>
-              <option value="MDS">MDS</option>
-              <option value="BHMS">BHMS</option>
-              <option value="BAMS">BAMS</option>
-              <option value="DM">DM</option>
-              <option value="MCh">MCh</option>
-            </select>
-          </div>
-
-          {/* Added Resume Upload Field */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Upload Resume</label>
-            <div className="relative">
-              <input
-                type="file"
-                name="resume"
-                onChange={handleChange}
-                accept=".pdf,.doc,.docx"
-                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100"
-                required
-              />
-            </div>
-          </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Qualification</label>
+          <select
+            name="qualification"
+            value={formData.qualification}
+            onChange={handleChange}
+            className="w-full border rounded px-3 py-2"
+            required
+          >
+            <option value="" disabled>Select Qualification</option>
+            <option value="MBBS">MBBS</option>
+            <option value="MD">MD</option>
+            <option value="MS">MS</option>
+            <option value="BDS">BDS</option>
+            <option value="MDS">MDS</option>
+            <option value="BHMS">BHMS</option>
+            <option value="BAMS">BAMS</option>
+            <option value="DM">DM</option>
+            <option value="MCh">MCh</option>
+          </select>
         </div>
       )}
 
@@ -284,13 +258,15 @@ export function RegisterForm() {
           </select>
         </div>
       )}
-
       {/* Employer – Organization Information */}
       {formData.role === 'hr' && (
-        <div className="space-y-4 border rounded-lg p-4 bg-cyan-50">
-          <h3 className="font-semibold text-cyan-700">
-            Organization Information
-          </h3>
+        <div className="space-y-6">
+
+        {/* Section Heading */}
+        <h2 className="text-xl font-semibold text-gray-900 border-b pb-2">
+          Organization Information
+        </h2>
+
 
           <input
             type="text"
@@ -349,8 +325,10 @@ export function RegisterForm() {
             rows="3"
             required
           />
+
         </div>
       )}
+
 
       {/* Submit */}
       <button
@@ -360,6 +338,7 @@ export function RegisterForm() {
       >
         {loading ? 'Registering...' : 'Register'}
       </button>
+
     </form>
   );
 }

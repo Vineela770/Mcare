@@ -1,79 +1,75 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Briefcase, FileText, Eye, TrendingUp, Clock, MapPin, Building2, Send } from 'lucide-react';
+import {
+  Briefcase,
+  FileText,
+  Eye,
+  TrendingUp,
+  Clock,
+  MapPin,
+  Building2,
+  Send,
+} from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
 import Sidebar from '../../components/common/Sidebar';
 
 const CandidateDashboard = () => {
-  // ✅ Data synchronization remains intact for global consistency
-  const { user, token, setUser } = useAuth(); 
-  const [userName, setUserName] = useState(''); 
+  const { user } = useAuth();
+
   const [stats, setStats] = useState({
     applied: 0,
     shortlisted: 0,
     interviews: 0,
     profileViews: 0,
-    skillPercentage: 0, // ✅ Updated by backend logic
   });
+
   const [recentApplications, setRecentApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-        const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const response = await fetch(`${API_BASE}/api/candidate/dashboard-stats`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        const data = await response.json();
+    setStats({
+      applied: 15,
+      shortlisted: 8,
+      interviews: 3,
+      profileViews: 234,
+    });
 
-        if (response.ok && data.success) {
-          setUserName(data.userName); 
+    setRecentApplications([
+      {
+        id: 1,
+        title: 'Senior Registered Nurse',
+        company: 'Manhattan Hospital',
+        location: 'New York, NY',
+        appliedDate: '2 days ago',
+        status: 'Under Review',
+        logo: '🏥',
+      },
+      {
+        id: 2,
+        title: 'Physical Therapist',
+        company: 'Wellness Rehab',
+        location: 'Los Angeles, CA',
+        appliedDate: '5 days ago',
+        status: 'Shortlisted',
+        logo: '🏋️',
+      },
+      {
+        id: 3,
+        title: 'Lab Technician',
+        company: 'HealthCare Labs',
+        location: 'Chicago, IL',
+        appliedDate: '1 week ago',
+        status: 'Interview',
+        logo: '🔬',
+      },
+    ]);
+  }, []);
 
-          // ✅ Keep global Auth state synced so Sidebar stays updated
-          if (setUser) {
-            setUser(prev => ({ 
-              ...prev, 
-              full_name: data.userName,
-              profile_photo_url: data.profileData?.profile_photo_url 
-            }));
-          }
-
-          setStats({
-            applied: data.stats.jobsApplied,
-            shortlisted: data.stats.shortlisted,
-            interviews: data.stats.interviews,
-            profileViews: data.stats.profileViews,
-            skillPercentage: data.stats.skillPercentage, 
-          });
-
-          const formattedApps = data.recentApplications.map(app => ({
-            id: app.id,
-            title: app.title,
-            company: app.company_name,
-            location: app.location || 'Remote/Office', 
-            appliedDate: new Date(app.applied_at).toLocaleDateString(),
-            status: app.status,
-            logo: '🏥'
-          }));
-
-          setRecentApplications(formattedApps);
-        }
-      } catch (error) {
-        console.error("❌ Error fetching dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (token) {
-      fetchDashboardData();
-    }
-  }, [token, setUser]);
+  const statStyles = {
+    cyan: 'bg-cyan-100 text-cyan-600',
+    blue: 'bg-blue-100 text-blue-600',
+    green: 'bg-green-100 text-green-600',
+    purple: 'bg-purple-100 text-purple-600',
+  };
 
   const statCards = [
     { label: 'Jobs Applied', value: stats.applied, icon: Send, color: 'cyan', link: '/candidate/applications' },
@@ -83,152 +79,202 @@ const CandidateDashboard = () => {
   ];
 
   const getStatusColor = (status) => {
-    const s = status?.toLowerCase();
-    if (s?.includes('review')) return 'bg-yellow-100 text-yellow-700';
-    if (s?.includes('shortlisted')) return 'bg-blue-100 text-blue-700';
-    if (s?.includes('interview')) return 'bg-green-100 text-green-700';
-    if (s?.includes('rejected')) return 'bg-red-100 text-red-700';
-    return 'bg-gray-100 text-gray-700';
+    switch (status) {
+      case 'Under Review': return 'bg-yellow-100 text-yellow-700';
+      case 'Shortlisted': return 'bg-blue-100 text-blue-700';
+      case 'Interview': return 'bg-green-100 text-green-700';
+      case 'Rejected': return 'bg-red-100 text-red-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
   };
 
-  if (loading) {
-    return (
-      <div className="flex min-h-screen bg-gray-50">
-        <Sidebar className="fixed h-full" skillPercentage={stats.skillPercentage || 0} userName={userName || "Manoj"} />
-        <div className="ml-64 w-full flex items-center justify-center">
-          <div className="text-cyan-600 font-medium animate-pulse">Syncing with MCARE Database...</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Sidebar 
-        className="fixed h-full" 
-        skillPercentage={stats.skillPercentage} 
-        userName={userName} 
-      />
-      
-      <div className="flex-1 ml-64 p-8">
-        <div className="mb-8 flex justify-between items-end">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Welcome back, {userName || user?.full_name || 'Manoj'}!
+    <div>
+      <Sidebar />
+
+      {/* ✅ FIXED CONTENT WRAPPER */}
+      <div className="min-h-screen bg-gray-50 p-4 md:p-6 md:ml-64">
+        {/* ✅ MOBILE HEADER SPACING FIX (push down under hamburger) */}
+        <div className="pt-14 md:pt-0">
+          {/* Welcome */}
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              Welcome back, {user?.name}!
             </h1>
-            <p className="text-gray-600 mt-2">Track your job applications and manage your healthcare career</p>
+            <p className="text-gray-600 mt-2 text-sm md:text-base">
+              Track your job applications and manage your healthcare career
+            </p>
           </div>
-          
-          {/* ✅ FIXED: Removed the profile completion bar div from the top right */}
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {statCards.map((stat, index) => (
-            <Link
-              key={index}
-              to={stat.link}
-              className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div className={`w-12 h-12 bg-${stat.color}-50 rounded-lg flex items-center justify-center`}>
-                  <stat.icon className={`w-6 h-6 text-${stat.color}-500`} />
-                </div>
-                <div className="text-xs font-medium text-green-500 flex items-center">
-                  <TrendingUp className="w-3 h-3 mr-1" /> +12%
-                </div>
+          {/* Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+            {statCards.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <Link
+                  key={index}
+                  to={stat.link}
+                  className="bg-white rounded-xl p-5 md:p-6 shadow-sm hover:shadow-md transition border border-gray-100"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${statStyles[stat.color]}`}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <TrendingUp className="w-5 h-5 text-green-500" />
+                  </div>
+                  <div className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-gray-600 text-sm">{stat.label}</div>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* CTA Section */}
+          <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl p-5 md:p-6 mb-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div className="text-white mb-4 md:mb-0">
+                <h3 className="text-xl md:text-2xl font-bold mb-2">
+                  Ready to Find Your Next Role?
+                </h3>
+                <p className="text-cyan-100 text-sm md:text-base">
+                  Browse thousands of healthcare jobs matched to your skills
+                </p>
               </div>
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
-              <div className="text-gray-500 text-sm font-medium">{stat.label}</div>
-            </Link>
-          ))}
-        </div>
 
-        <div className="bg-gradient-to-r from-cyan-600 to-blue-700 rounded-2xl p-8 mb-8 shadow-lg relative overflow-hidden">
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
-            <div className="text-white mb-6 md:mb-0">
-              <h3 className="text-2xl font-bold mb-2">Ready to Find Your Next Role?</h3>
-              <p className="text-cyan-50 opacity-90">Browse thousands of healthcare jobs matched to your skills</p>
-            </div>
-            <div className="flex space-x-4">
-              <Link
-                to="/candidate/browse-jobs"
-                className="bg-white text-cyan-700 px-8 py-3 rounded-xl hover:bg-gray-50 font-bold transition-colors shadow-sm"
-              >
-                Browse Jobs
-              </Link>
-              <Link
-                to="/candidate/resume"
-                className="bg-cyan-500 bg-opacity-30 backdrop-blur-md text-white border border-white border-opacity-30 px-8 py-3 rounded-xl hover:bg-opacity-40 font-bold transition-all"
-              >
-                Update Resume
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link
+                  to="/candidate/browse-jobs"
+                  className="bg-white text-cyan-600 px-6 py-3 rounded-lg font-medium text-center"
+                >
+                  Browse Jobs
+                </Link>
+                <Link
+                  to="/candidate/resume"
+                  className="bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium text-center"
+                >
+                  Update Resume
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Recent Applications</h2>
-              <Link to="/candidate/applications" className="text-cyan-600 hover:text-cyan-700 font-bold text-sm">
-                View All →
-              </Link>
-            </div>
-            
-            <div className="space-y-4">
-              {recentApplications.length > 0 ? (
-                recentApplications.map((app) => (
-                  <div key={app.id} className="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:border-cyan-200 hover:bg-cyan-50 transition-all">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-14 h-14 bg-white shadow-sm border border-gray-100 rounded-xl flex items-center justify-center text-2xl">
+          {/* Main Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Recent Applications */}
+            <div className="lg:col-span-2 bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900">
+                  Recent Applications
+                </h2>
+                <Link to="/candidate/applications" className="text-cyan-600 text-sm font-medium">
+                  View All →
+                </Link>
+              </div>
+
+              <div className="space-y-4">
+                {recentApplications.map((app) => (
+                  <div
+                    key={app.id}
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-gray-200 rounded-lg hover:border-cyan-300 transition"
+                  >
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-lg flex items-center justify-center text-2xl">
                         {app.logo}
                       </div>
+
                       <div>
-                        <h3 className="font-bold text-gray-900">{app.title}</h3>
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mt-1">
-                          <span className="flex items-center"><Building2 className="w-4 h-4 mr-1 text-gray-400" />{app.company}</span>
-                          <span className="flex items-center"><MapPin className="w-4 h-4 mr-1 text-gray-400" />{app.location}</span>
-                          <span className="flex items-center"><Clock className="w-4 h-4 mr-1 text-gray-400" />{app.appliedDate}</span>
+                        <h3 className="font-semibold text-gray-900 text-sm md:text-base">
+                          {app.title}
+                        </h3>
+
+                        <div className="flex flex-wrap gap-3 text-xs md:text-sm text-gray-600 mt-1">
+                          <div className="flex items-center space-x-1">
+                            <Building2 className="w-4 h-4" />
+                            <span>{app.company}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <MapPin className="w-4 h-4" />
+                            <span>{app.location}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Clock className="w-4 h-4" />
+                            <span>{app.appliedDate}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <span className={`px-4 py-1.5 rounded-full text-xs font-bold ${getStatusColor(app.status)}`}>
+
+                    <span className={`mt-3 sm:mt-0 px-3 py-1 rounded-full text-xs md:text-sm font-medium ${getStatusColor(app.status)}`}>
                       {app.status}
                     </span>
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-12">
-                  <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Briefcase className="w-10 h-10 text-gray-300" />
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Links */}
+            <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100">
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-6">
+                Quick Actions
+              </h2>
+
+              <div className="space-y-3">
+                <Link
+                  to="/candidate/browse-jobs"
+                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50"
+                >
+                  <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                    <Briefcase className="w-5 h-5 text-cyan-600" />
                   </div>
-                  <p className="text-gray-500 font-medium">You haven't applied for any jobs yet.</p>
-                  <Link to="/candidate/browse-jobs" className="text-cyan-600 font-bold text-sm mt-2 inline-block">Start applying now</Link>
-                </div>
-              )}
+                  <div>
+                    <div className="font-medium text-gray-900 text-sm md:text-base">
+                      Browse Jobs
+                    </div>
+                    <div className="text-xs md:text-sm text-gray-500">
+                      Find new opportunities
+                    </div>
+                  </div>
+                </Link>
+
+                <Link
+                  to="/candidate/resume"
+                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50"
+                >
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900 text-sm md:text-base">
+                      My Resume
+                    </div>
+                    <div className="text-xs md:text-sm text-gray-500">
+                      Update your profile
+                    </div>
+                  </div>
+                </Link>
+
+                <Link
+                  to="/candidate/saved-jobs"
+                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50"
+                >
+                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900 text-sm md:text-base">
+                      Saved Jobs
+                    </div>
+                    <div className="text-xs md:text-sm text-gray-500">
+                      View bookmarked jobs
+                    </div>
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 h-fit">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h2>
-            <div className="space-y-4">
-              {[
-                { to: "/candidate/browse-jobs", label: "Browse Jobs", sub: "Find new opportunities", icon: Briefcase, color: "cyan" },
-                { to: "/candidate/resume", label: "My Resume", sub: "Update your profile", icon: FileText, color: "blue" },
-                { to: "/candidate/saved-jobs", label: "Saved Jobs", sub: "View bookmarked jobs", icon: FileText, color: "purple" }
-              ].map((item, i) => (
-                <Link key={i} to={item.to} className="group flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                  <div className={`w-12 h-12 bg-${item.color}-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                    <item.icon className={`w-6 h-6 text-${item.color}-500`} />
-                  </div>
-                  <div>
-                    <div className="font-bold text-gray-900">{item.label}</div>
-                    <div className="text-xs text-gray-500">{item.sub}</div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>

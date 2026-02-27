@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { authService } from '../api/authService';
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -10,24 +9,15 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const init = async () => {
-      try {
-        const savedToken = localStorage.getItem('token');
-        const savedUser = localStorage.getItem('user');
-        
-        if (savedToken && savedUser) {
-          setToken(savedToken);
-          setUser(JSON.parse(savedUser));
-        }
-      } catch (error) {
-        console.error("❌ Auth Initialization Error:", error);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-      } finally {
-        setLoading(false);
-      }
-    };
-    init();
+    const savedToken = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('user');
+
+    if (savedToken && savedUser) {
+      setUser(JSON.parse(savedUser));
+      setToken(savedToken);
+    }
+
+    setLoading(false);
   }, []);
 
   const login = (userData, token) => {
@@ -42,8 +32,6 @@ export function AuthProvider({ children }) {
     setToken(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    // Optional: Force redirect to home/login
-    window.location.href = '/';
   };
 
   const register = async (userData) => {
@@ -52,26 +40,20 @@ export function AuthProvider({ children }) {
     return result;
   };
 
-  // ✅ UPDATED: Added setUser to the context value
-  const value = {
-    user,
-    setUser, // Allowed Profile.jsx to update global user data
-    token,
-    loading,
-    login,
-    logout,
-    register,
-    isAuthenticated: !!token,
-  };
-
   return (
-    <AuthContext.Provider value={value}>
-      {/* ✅ CRITICAL: Don't render children until loading is false */}
-      {!loading ? children : (
-        <div className="flex h-screen items-center justify-center bg-gray-50">
-           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-600"></div>
-        </div>
-      )}
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        loading,
+        login,
+        logout,
+        register,
+        isAuthenticated: !loading && !!token,
+      }}
+    >
+      {children}
     </AuthContext.Provider>
+
   );
 }

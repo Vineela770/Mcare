@@ -1,351 +1,599 @@
-import { useState, useEffect } from 'react';
-import { Bell, Plus, Briefcase, Trash2, Edit2, CheckCircle, Loader2 } from 'lucide-react';
-import { useAuth } from '../../context/useAuth';
+import { useEffect, useRef, useState } from 'react';
+import { Bell, Plus, Briefcase, Trash2, Edit2, CheckCircle, X, AlertCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
-import Modal from '../../components/common/Modal';
 
 const Alerts = () => {
-  const { token } = useAuth();
-  
-  // 🛠️ State Management
-  const [alerts, setAlerts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [alerts, setAlerts] = useState([
+    {
+      id: 1,
+      title: 'Senior Nurse Jobs in New York',
+      keywords: 'Senior Nurse',
+      location: 'New York',
+      jobType: 'Full-time',
+      criteria: 'Senior Nurse • New York • Full-time',
+      frequency: 'Daily',
+      active: true,
+      matchingJobs: 12,
+    },
+    {
+      id: 2,
+      title: 'Physical Therapist Jobs',
+      keywords: 'Physical Therapist',
+      location: 'Any Location',
+      jobType: 'Full-time',
+      criteria: 'Physical Therapist • Any Location • Full-time',
+      frequency: 'Weekly',
+      active: true,
+      matchingJobs: 8,
+    },
+    {
+      id: 3,
+      title: 'Part-time Medical Jobs',
+      keywords: 'Medical',
+      location: 'Chicago',
+      jobType: 'Part-time',
+      criteria: 'Medical • Chicago • Part-time',
+      frequency: 'Daily',
+      active: false,
+      matchingJobs: 5,
+    },
+  ]);
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+
   const [selectedAlert, setSelectedAlert] = useState(null);
-  
+
   const [formData, setFormData] = useState({
     title: '',
     keywords: '',
     location: '',
     jobType: 'Full-time',
-    frequency: 'Daily'
+    frequency: 'Daily',
   });
 
-  // 📂 1. Fetch real alerts from the database
-  const fetchAlerts = async () => {
-    try {
-      setLoading(true);
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/alerts`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await response.json();
-      if (data.success) {
-        setAlerts(data.alerts);
-      }
-    } catch (error) {
-      console.error("❌ Fetch Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const firstInputRef = useRef(null);
 
+  // Auto focus input when create/edit modal opens
   useEffect(() => {
-    if (token) fetchAlerts();
-  }, [token]);
-
-  // ➕ 2. Create Alert (Backend Integrated)
-  const handleCreateAlert = async () => {
-    try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/alerts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
-      });
-      const data = await response.json();
-      if (data.success) {
-        setShowCreateModal(false);
-        setFormData({ title: '', keywords: '', location: '', jobType: 'Full-time', frequency: 'Daily' });
-        setSuccessMessage('Job alert created successfully!');
-        setShowSuccessModal(true);
-        fetchAlerts(); 
-      }
-    } catch (error) {
-      console.error("❌ Create Error:", error);
+    if (showCreateModal || showEditModal) {
+      setTimeout(() => firstInputRef.current?.focus(), 50);
     }
+  }, [showCreateModal, showEditModal]);
+
+  // ESC close for modals
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key !== 'Escape') return;
+      setShowCreateModal(false);
+      setShowEditModal(false);
+      setShowDeleteModal(false);
+      setShowSuccessModal(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  const buildCriteria = (keywords, location, jobType) => `${keywords} • ${location} • ${jobType}`;
+
+  const handleToggleAlert = (alertId) => {
+    setAlerts((prev) =>
+      prev.map((alert) => (alert.id === alertId ? { ...alert, active: !alert.active } : alert))
+    );
   };
 
-  // 🔘 3. Toggle Alert Status (Backend Integrated)
-  const handleToggleAlert = async (alertId, currentStatus) => {
-    try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/alerts/toggle/${alertId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ is_active: !currentStatus })
-      });
-      if (response.ok) {
-        setAlerts(alerts.map(alert =>
-          alert.id === alertId ? { ...alert, is_active: !currentStatus } : alert
-        ));
-      }
-    } catch (error) {
-      console.error("❌ Toggle Error:", error);
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 🔄 4. Update Alert (Connecting to dedicated PUT route)
-  const handleUpdateAlert = async () => {
-    try {
-      // ✅ UPDATED: Now points to the clean /alerts/:id endpoint instead of /toggle/:id
-      // This ensures alert details like title and keywords are updated in DB
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/alerts/${selectedAlert.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-           ...formData, // ✅ Sends updated title, keywords, location, jobType, frequency
-           is_active: selectedAlert.is_active // Retain existing status
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setShowEditModal(false);
-        setSuccessMessage('Job alert updated successfully!');
-        setShowSuccessModal(true);
-        fetchAlerts(); // ✅ Refresh the list to show new data immediately
-      } else {
-        alert("Failed to update alert: " + (data.message || "Unknown error"));
-      }
-    } catch (error) {
-      console.error("❌ Update Error:", error);
-    }
-  };
-
-  // 🗑️ 5. Delete Alert
-  const handleConfirmDelete = async () => {
-    try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/alerts/${selectedAlert.id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setShowDeleteModal(false);
-        setSuccessMessage('Job alert deleted successfully!');
-        setShowSuccessModal(true);
-        fetchAlerts();
-      }
-    } catch (error) {
-      console.error("❌ Delete Error:", error);
-    }
-  };
-
-  const handleEditClick = (alert) => {
-    setSelectedAlert(alert);
-    // ✅ Pre-fill formData with current alert details so inputs aren't empty
+  // --------------------------
+  // CREATE
+  // --------------------------
+  const openCreate = () => {
     setFormData({
-      title: alert.title,
-      keywords: alert.keyword,
-      location: alert.location,
-      jobType: alert.job_type,
-      frequency: alert.frequency
+      title: '',
+      keywords: '',
+      location: '',
+      jobType: 'Full-time',
+      frequency: 'Daily',
+    });
+    setSelectedAlert(null);
+    setShowCreateModal(true);
+  };
+
+  const handleCreateAlert = (e) => {
+    e.preventDefault();
+
+    const title = formData.title.trim();
+    const keywords = formData.keywords.trim();
+    const location = formData.location.trim();
+
+    if (!title || !keywords || !location) return;
+
+    const newAlert = {
+      id: Date.now(),
+      title,
+      keywords,
+      location,
+      jobType: formData.jobType,
+      criteria: buildCriteria(keywords, location, formData.jobType),
+      frequency: formData.frequency,
+      active: true,
+      matchingJobs: Math.floor(Math.random() * 20) + 1,
+    };
+
+    setAlerts((prev) => [newAlert, ...prev]);
+    setShowCreateModal(false);
+
+    setSuccessMessage('Job alert created successfully!');
+    setShowSuccessModal(true);
+  };
+
+  // --------------------------
+  // EDIT
+  // --------------------------
+  const openEdit = (alert) => {
+    setSelectedAlert(alert);
+    setFormData({
+      title: alert.title || '',
+      keywords: alert.keywords || '',
+      location: alert.location || '',
+      jobType: alert.jobType || 'Full-time',
+      frequency: alert.frequency || 'Daily',
     });
     setShowEditModal(true);
   };
 
-  const renderAlertForm = () => (
-    <div className="space-y-4 text-left">
-      <div>
-        <label className="block text-sm font-bold text-gray-700 mb-2">Alert Title</label>
-        <input
-          type="text"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          placeholder="e.g., Senior Nurse Jobs"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-bold text-gray-700 mb-2">Job Title/Keywords</label>
-        <input
-          type="text"
-          value={formData.keywords}
-          onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
-          placeholder="e.g., Nurse, Doctor"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-bold text-gray-700 mb-2">Location</label>
-        <input
-          type="text"
-          value={formData.location}
-          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-          placeholder="e.g., Hyderabad"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Job Type</label>
-          <select
-            value={formData.jobType}
-            onChange={(e) => setFormData({ ...formData, jobType: e.target.value })}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
-          >
-            <option value="Full-time">Full-time</option>
-            <option value="Part-time">Part-time</option>
-            <option value="Contract">Contract</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Frequency</label>
-          <select
-            value={formData.frequency}
-            onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
-          >
-            <option value="Daily">Daily</option>
-            <option value="Weekly">Weekly</option>
-            <option value="Instant">Instant</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  );
+  const handleUpdateAlert = (e) => {
+    e.preventDefault();
+    if (!selectedAlert) return;
+
+    const title = formData.title.trim();
+    const keywords = formData.keywords.trim();
+    const location = formData.location.trim();
+
+    if (!title || !keywords || !location) return;
+
+    setAlerts((prev) =>
+      prev.map((a) =>
+        a.id === selectedAlert.id
+          ? {
+              ...a,
+              title,
+              keywords,
+              location,
+              jobType: formData.jobType,
+              frequency: formData.frequency,
+              criteria: buildCriteria(keywords, location, formData.jobType),
+            }
+          : a
+      )
+    );
+
+    setShowEditModal(false);
+    setSelectedAlert(null);
+
+    setSuccessMessage('Job alert updated successfully!');
+    setShowSuccessModal(true);
+  };
+
+  // --------------------------
+  // DELETE
+  // --------------------------
+  const openDelete = (alert) => {
+    setSelectedAlert(alert);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (!selectedAlert) return;
+    const title = selectedAlert.title;
+
+    setAlerts((prev) => prev.filter((a) => a.id !== selectedAlert.id));
+    setShowDeleteModal(false);
+    setSelectedAlert(null);
+
+    setSuccessMessage(`Deleted: "${title}"`);
+    setShowSuccessModal(true);
+  };
 
   return (
     <div>
       <Sidebar />
-      <div className="ml-64 min-h-screen bg-gray-50 p-6 text-left">
-        <div className="mb-8 flex items-center justify-between">
+
+      <div className="md:ml-64 min-h-screen bg-gray-50 pt-16 md:pt-6 p-4 md:p-6">
+        {/* Header */}
+        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Job Alerts</h1>
-            <p className="text-gray-500 mt-1">Get notified when new jobs match your preferences</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Job Alerts</h1>
+            <p className="text-gray-600 mt-1">Get notified when new jobs match your preferences</p>
           </div>
+
           <button
-            onClick={() => {
-              setFormData({ title: '', keywords: '', location: '', jobType: 'Full-time', frequency: 'Daily' });
-              setShowCreateModal(true);
-            }}
-            className="flex items-center space-x-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition-all active:scale-95"
+            onClick={openCreate}
+            className="flex items-center justify-center space-x-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium w-full md:w-auto"
           >
             <Plus className="w-5 h-5" />
             <span>Create Alert</span>
           </button>
         </div>
 
+        {/* Alerts List */}
         <div className="space-y-4">
-          {loading ? (
-            <div className="flex justify-center p-20"><Loader2 className="animate-spin text-cyan-600 w-10 h-10" /></div>
-          ) : alerts.length > 0 ? (
-            alerts.map((alert) => (
-              <div key={alert.id} className={`bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex justify-between items-center transition-all ${!alert.is_active ? 'bg-gray-50' : 'hover:border-cyan-200'}`}>
+          {alerts.map((alert) => (
+            <div key={alert.id} className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-1">
-                    <h3 className={`text-xl font-bold ${alert.is_active ? 'text-gray-900' : 'text-gray-500'}`}>{alert.title}</h3>
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${alert.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>
-                      {alert.is_active ? 'Active' : 'Inactive'}
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <h3 className="text-lg md:text-xl font-bold text-gray-900">{alert.title}</h3>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        alert.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {alert.active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 font-medium">{alert.keyword} • {alert.location} • {alert.job_type}</p>
-                  <div className="flex items-center space-x-4 mt-3 text-xs text-gray-400 font-bold uppercase tracking-tight">
-                    <span className="flex items-center space-x-1.5"><Bell className="w-4 h-4 text-cyan-500" /><span>{alert.frequency}</span></span>
-                    <span className="flex items-center space-x-1.5"><Briefcase className="w-4 h-4 text-blue-500" /><span>12 matching jobs</span></span>
+
+                  <p className="text-gray-600 mb-3 text-sm md:text-base">{alert.criteria}</p>
+
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <Bell className="w-4 h-4" />
+                      {alert.frequency}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Briefcase className="w-4 h-4" />
+                      {alert.matchingJobs} jobs
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <button onClick={() => handleEditClick(alert)} className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors"><Edit2 className="w-5 h-5" /></button>
-                  <button onClick={() => { setSelectedAlert(alert); setShowDeleteModal(true); }} className="p-2 hover:bg-red-50 rounded-lg text-red-400 transition-colors"><Trash2 className="w-5 h-5" /></button>
-                  <button 
-                    onClick={() => handleToggleAlert(alert.id, alert.is_active)}
-                    className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none ${alert.is_active ? 'bg-cyan-500' : 'bg-gray-300'}`}
+
+                <div className="flex items-center gap-2 self-end md:self-auto">
+                  <button
+                    onClick={() => openEdit(alert)}
+                    className="p-2 hover:bg-gray-100 rounded-lg text-gray-600"
+                    title="Edit"
                   >
-                    <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform ${alert.is_active ? 'translate-x-6' : 'translate-x-1'}`} />
+                    <Edit2 className="w-5 h-5" />
+                  </button>
+
+                  <button
+                    onClick={() => openDelete(alert)}
+                    className="p-2 hover:bg-red-50 rounded-lg text-red-600"
+                    title="Delete"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+
+                  {/* Toggle */}
+                  <label className="relative inline-flex items-center cursor-pointer ml-1">
+                    <input
+                      type="checkbox"
+                      checked={alert.active}
+                      onChange={() => handleToggleAlert(alert.id)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-cyan-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {alerts.length === 0 && (
+          <div className="bg-white rounded-xl p-10 text-center shadow-sm border border-gray-100">
+            <Bell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">No Job Alerts</h2>
+            <p className="text-gray-600 mb-6">Create alerts to get notified about new job opportunities</p>
+            <button
+              onClick={openCreate}
+              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium"
+            >
+              Create Your First Alert
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* ---------------------------
+          CREATE MODAL
+         --------------------------- */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-[9999]">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowCreateModal(false)} />
+          <div className="relative min-h-screen flex items-center justify-center p-4">
+            <div
+              className="w-full max-w-lg bg-white rounded-xl shadow-xl border border-gray-100"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="px-6 py-4 border-b flex items-center justify-between">
+                <h3 className="text-lg font-bold text-gray-900">Create Job Alert</h3>
+                <button onClick={() => setShowCreateModal(false)} className="p-2 rounded-lg hover:bg-gray-100">
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+
+              <form onSubmit={handleCreateAlert} className="px-6 py-5 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Alert Title</label>
+                  <input
+                    ref={firstInputRef}
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    placeholder="e.g., ICU Nurse Jobs"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Keywords</label>
+                  <input
+                    type="text"
+                    name="keywords"
+                    value={formData.keywords}
+                    onChange={handleChange}
+                    placeholder="e.g., Senior Nurse"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    placeholder="e.g., Hyderabad"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
+                    <select
+                      name="jobType"
+                      value={formData.jobType}
+                      onChange={handleChange}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    >
+                      <option value="Full-time">Full-time</option>
+                      <option value="Part-time">Part-time</option>
+                      <option value="Remote">Remote</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
+                    <select
+                      name="frequency"
+                      value={formData.frequency}
+                      onChange={handleChange}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    >
+                      <option value="Daily">Daily</option>
+                      <option value="Weekly">Weekly</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setShowCreateModal(false)}
+                    className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="w-full sm:w-auto px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700"
+                  >
+                    Create Alert
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---------------------------
+          EDIT MODAL
+         --------------------------- */}
+      {showEditModal && (
+        <div className="fixed inset-0 z-[9999]">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowEditModal(false)} />
+          <div className="relative min-h-screen flex items-center justify-center p-4">
+            <div
+              className="w-full max-w-lg bg-white rounded-xl shadow-xl border border-gray-100"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="px-6 py-4 border-b flex items-center justify-between">
+                <h3 className="text-lg font-bold text-gray-900">Edit Job Alert</h3>
+                <button onClick={() => setShowEditModal(false)} className="p-2 rounded-lg hover:bg-gray-100">
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+
+              <form onSubmit={handleUpdateAlert} className="px-6 py-5 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Alert Title</label>
+                  <input
+                    ref={firstInputRef}
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Keywords</label>
+                  <input
+                    type="text"
+                    name="keywords"
+                    value={formData.keywords}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
+                    <select
+                      name="jobType"
+                      value={formData.jobType}
+                      onChange={handleChange}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    >
+                      <option value="Full-time">Full-time</option>
+                      <option value="Part-time">Part-time</option>
+                      <option value="Remote">Remote</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
+                    <select
+                      name="frequency"
+                      value={formData.frequency}
+                      onChange={handleChange}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    >
+                      <option value="Daily">Daily</option>
+                      <option value="Weekly">Weekly</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setShowEditModal(false)}
+                    className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="w-full sm:w-auto px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700"
+                  >
+                    Update Alert
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---------------------------
+          DELETE MODAL
+         --------------------------- */}
+      {showDeleteModal && selectedAlert && (
+        <div className="fixed inset-0 z-[9999]">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowDeleteModal(false)} />
+          <div className="relative min-h-screen flex items-center justify-center p-4">
+            <div
+              className="w-full max-w-md bg-white rounded-xl shadow-xl border border-gray-100"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="px-6 py-5">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                    <AlertCircle className="w-5 h-5 text-red-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-gray-900">Delete Alert</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Are you sure you want to delete{' '}
+                      <span className="font-semibold text-gray-900">"{selectedAlert.title}"</span>? This cannot be undone.
+                    </p>
+                  </div>
+                  <button onClick={() => setShowDeleteModal(false)} className="p-2 rounded-lg hover:bg-gray-100">
+                    <X className="w-5 h-5 text-gray-600" />
+                  </button>
+                </div>
+
+                <div className="mt-5 flex flex-col sm:flex-row gap-3 justify-end">
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    className="w-full sm:w-auto px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                  >
+                    Delete
                   </button>
                 </div>
               </div>
-            ))
-          ) : (
-            <div className="bg-white rounded-2xl p-20 text-center border-2 border-dashed border-gray-200">
-              <Bell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">No Job Alerts</h2>
-              <p className="text-gray-600 mb-6">Create alerts to get notified about new job opportunities</p>
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all"
-              >
-                Create Your First Alert
-              </button>
             </div>
-          )}
+          </div>
         </div>
+      )}
 
-        {/* Create Alert Modal */}
-        {showCreateModal && (
-          <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} title="Create New Job Alert">
-            {renderAlertForm()}
-            <div className="flex justify-end space-x-3 pt-6">
-              <button onClick={() => setShowCreateModal(false)} className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-bold">Cancel</button>
-              <button onClick={handleCreateAlert} className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-bold shadow-md">Create Alert</button>
-            </div>
-          </Modal>
-        )}
+      {/* ✅ Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-[9999]">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowSuccessModal(false)} />
+          <div className="relative min-h-screen flex items-center justify-center p-4">
+            <div
+              className="w-full max-w-md bg-white rounded-xl shadow-xl border border-gray-100"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="px-6 py-6 text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-10 h-10 text-green-600" />
+                </div>
+                <p className="text-lg font-semibold text-gray-900">{successMessage}</p>
 
-        {/* Edit Alert Modal */}
-        {showEditModal && selectedAlert && (
-          <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)} title="Edit Job Alert">
-            {renderAlertForm()}
-            <div className="flex justify-end space-x-3 pt-6">
-              <button onClick={() => setShowEditModal(false)} className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-bold">Cancel</button>
-              <button 
-                onClick={handleUpdateAlert} // ✅ TRIGGERS Correct PUT route logic
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-bold shadow-md active:scale-95"
-              >
-                Update Alert
-              </button>
-            </div>
-          </Modal>
-        )}
-
-        {/* Delete Confirmation Modal */}
-        {showDeleteModal && selectedAlert && (
-          <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} title="Delete Job Alert">
-            <div className="space-y-4">
-              <p className="text-gray-600">
-                Are you sure you want to delete <span className="font-bold text-gray-900">{selectedAlert.title}</span>? This action cannot be undone.
-              </p>
-              <div className="flex justify-end space-x-3 pt-4">
-                <button onClick={() => setShowDeleteModal(false)} className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg font-bold">Cancel</button>
-                <button onClick={handleConfirmDelete} className="px-6 py-2 bg-red-600 text-white rounded-lg font-bold shadow-md hover:bg-red-700">Delete Permanently</button>
+                <button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="mt-6 w-full px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700"
+                >
+                  Close
+                </button>
               </div>
             </div>
-          </Modal>
-        )}
-
-        {/* Success Modal */}
-        {showSuccessModal && (
-          <Modal isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)} title="Success">
-            <div className="text-center py-6">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-10 h-10 text-green-600" />
-              </div>
-              <p className="text-lg text-gray-900 font-bold">{successMessage}</p>
-              <button onClick={() => setShowSuccessModal(false)} className="mt-6 px-10 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-bold">Got it</button>
-            </div>
-          </Modal>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

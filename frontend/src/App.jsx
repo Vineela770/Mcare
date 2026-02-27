@@ -9,8 +9,6 @@ import Home from './pages/common/Home';
 import AllJobs from './pages/common/AllJobs';
 import Login from './pages/common/Login';
 import Register from './pages/common/Register';
-import ForgotPassword from './pages/common/ForgotPassword';
-import ResetPassword from './pages/common/ResetPassword';
 import About from './pages/common/About';
 import Contact from './pages/common/Contact';
 
@@ -25,7 +23,7 @@ import SavedJobs from './pages/candidate/SavedJobs';
 import Messages from './pages/candidate/Messages';
 import Alerts from './pages/candidate/Alerts';
 import Profile from './pages/candidate/Profile';
-import CandidateEmployers from './pages/candidate/Employers';
+import CandidateEmployers from './pages/candidate/employers';
 import ChangePassword from './pages/candidate/change-password';
 import DeleteProfile from "./pages/candidate/delete-profile";
 
@@ -51,6 +49,8 @@ import Employers from './pages/admin/Employers';
 import Reports from './pages/admin/Reports';
 import ActivityLog from './pages/admin/ActivityLog';
 import SystemSettings from './pages/admin/SystemSettings';
+
+
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { user, isAuthenticated, loading } = useAuth();
@@ -78,6 +78,7 @@ function ProtectedRoute({ children, allowedRoles }) {
 }
 
 
+
 function App() {
   return (
     
@@ -89,8 +90,6 @@ function App() {
         <Route path="/jobs" element={<AllJobs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
 
@@ -235,40 +234,39 @@ function App() {
           </ProtectedRoute>
         } />
 
-
         {/* ================= ADMIN ROUTES ================= */}
         <Route path="/admin/dashboard" element={
-          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
+          <ProtectedRoute allowedRoles={['admin']}>
             <AdminDashboard />
           </ProtectedRoute>
         } />
         <Route path="/admin/users" element={
-          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
+          <ProtectedRoute allowedRoles={['admin']}>
             <UsersManagement />
           </ProtectedRoute>
         } />
         <Route path="/admin/jobs" element={
-          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
+          <ProtectedRoute allowedRoles={['admin']}>
             <JobsManagement />
           </ProtectedRoute>
         } />
         <Route path="/admin/employers" element={
-          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
+          <ProtectedRoute allowedRoles={['admin']}>
             <Employers />
           </ProtectedRoute>
         } />
         <Route path="/admin/reports" element={
-          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
+          <ProtectedRoute allowedRoles={['admin']}>
             <Reports />
           </ProtectedRoute>
         } />
         <Route path="/admin/activity" element={
-          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
+          <ProtectedRoute allowedRoles={['admin']}>
             <ActivityLog />
           </ProtectedRoute>
         } />
         <Route path="/admin/settings" element={
-          <ProtectedRoute allowedRoles={['admin', 'administrator']}>
+          <ProtectedRoute allowedRoles={['admin']}>
             <SystemSettings />
           </ProtectedRoute>
         } />

@@ -1,29 +1,25 @@
-import axios from 'axios';
+// Backend integration removed
+// This file is no longer needed but kept for compatibility
 
-// Use environment variable for API URL, fallback to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-
-const instance = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
-  headers: {
-    'Content-Type': 'application/json'
+export default {
+  get: async () => { 
+    console.log('[MOCK] axios.get called'); 
+    return { data: null }; 
   },
-  withCredentials: false
-});
-
-// Add token to requests if available
-instance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+  post: async () => { 
+    console.log('[MOCK] axios.post called'); 
+    return { data: null }; 
   },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-export default instance;
-
+  put: async () => { 
+    console.log('[MOCK] axios.put called'); 
+    return { data: null }; 
+  },
+  patch: async () => { 
+    console.log('[MOCK] axios.patch called'); 
+    return { data: null }; 
+  },
+  delete: async () => { 
+    console.log('[MOCK] axios.delete called'); 
+    return { data: null }; 
+  },
+};

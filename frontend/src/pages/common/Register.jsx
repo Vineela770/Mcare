@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, UserPlus, CheckCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, UserPlus } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
-import axios from 'axios';
 
 const Register = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
-  // ✅ State for professional success modal
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -39,22 +36,70 @@ const Register = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
-  const [policyType, setPolicyType] = useState('terms');
+  const [policyType, setPolicyType] = useState('terms'); // 'terms' | 'privacy'
 
+  // ✅ Country code dropdown (ONLY codes)
+  const [countryCode, setCountryCode] = useState('+91');
+  const countryCodes = ['+91', '+1', '+44'];
+
+  // ✅ FIX: handles text/select, checkbox, file, phone digits
+  // ✅ FIX: confirmPassword disable + auto-clear when password changes/clears
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: files ? files[0] : value,
-      ...(name === 'role' && { qualification: '' })
-    }));
+    const { name, type, value, checked, files } = e.target;
+
+    // checkbox
+    if (type === 'checkbox') {
+      setFormData((prev) => ({ ...prev, [name]: checked }));
+      return;
+    }
+
+    // file input
+    if (type === 'file') {
+      setFormData((prev) => ({ ...prev, [name]: files?.[0] || null }));
+      return;
+    }
+
+    // phone: only digits (allow up to 15 digits for intl)
+    const cleanedValue =
+      name === 'phone' ? value.replace(/\D/g, '').slice(0, 15) : value;
+
+    setFormData((prev) => {
+      // ✅ If Email changes, clear Confirm Email
+      if (name === 'email') {
+        return {
+          ...prev,
+          email: cleanedValue,
+          confirmEmail: '',
+        };
+      }
+
+      // ✅ If Password changes/clears, clear Confirm Password automatically
+      if (name === 'password') {
+        // also hide confirm password view if password changes
+        setShowConfirmPassword(false);
+
+        return {
+          ...prev,
+          password: cleanedValue,
+          confirmPassword: '', // ✅ auto clear
+        };
+      }
+
+      return {
+        ...prev,
+        [name]: cleanedValue,
+        ...(name === 'role' && { qualification: '', designation: '' }),
+      };
+    });
+
+    // optional: clear error as user types
+    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // --- Enhanced Validation Logic ---
     if (formData.email !== formData.confirmEmail) {
       setError('Email addresses do not match');
       return;
@@ -65,22 +110,8 @@ const Register = () => {
       return;
     }
 
-    // ✅ PASSWORD STRENGTH VALIDATION - Match backend requirements
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters long');
-      return;
-    }
-
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
-    if (!passwordRegex.test(formData.password)) {
-      setError('Password must contain: uppercase, lowercase, number, and special character (@$!%*?&)');
-      return;
-    }
-
-    // ✅ PHONE VALIDATION
-    const phoneDigits = formData.phone.replace(/\D/g, '');
-    if (phoneDigits.length < 10) {
-      setError('Phone number must be at least 10 digits');
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
       return;
     }
 
@@ -89,42 +120,40 @@ const Register = () => {
       return;
     }
 
+    // ✅ phone basic validation (international)
+    if (!formData.phone || formData.phone.length < 7) {
+      setError('Please enter a valid phone number');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const data = new FormData();
-      
-      Object.keys(formData).forEach((key) => {
-        if (key === 'resume') {
-          if (formData.resume) data.append('resume', formData.resume);
-        } else {
-          data.append(key, formData[key]);
-        }
-      });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await axios.post(`${API_BASE}/api/auth/register`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      // ✅ Final phone number example: +91XXXXXXXXXX
+      const payload = {
+        ...formData,
+        phone: `${countryCode}${formData.phone}`,
+      };
 
-      if (response.data.success) {
-        // ✅ SUCCESS: Show professional Modal
-        setShowSuccessModal(true);
-      }
+      console.log('REGISTER PAYLOAD:', payload);
 
-    } catch (err) {
-      console.error("❌ Register Error:", err);
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      navigate('/login');
+    } catch {
+      setError('Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
+  const isEmailTyped = formData.email.trim().length > 0;
+  const isPasswordTyped = formData.password.trim().length > 0; // ✅ for confirm password enable/disable
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-white flex items-center justify-center px-4 py-12">
       <div className="max-w-2xl w-full">
+        {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
             <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
@@ -136,6 +165,7 @@ const Register = () => {
           <p className="text-gray-600">Start your healthcare career journey today</p>
         </div>
 
+        {/* Register Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
@@ -143,7 +173,8 @@ const Register = () => {
                 {error}
               </div>
             )}
-            
+
+            {/* Dynamic Role Heading */}
             {formData.role && (
               <div className="col-span-full flex justify-center mt-2 mb-6">
                 <h2 className="text-2xl font-semibold text-gray-900 tracking-wide">
@@ -152,6 +183,7 @@ const Register = () => {
               </div>
             )}
 
+            {/* Role Selection */}
             <select
               name="role"
               value={formData.role}
@@ -159,19 +191,23 @@ const Register = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
               required
             >
-              <option value="" disabled>Select Role</option>
-              <option value="candidate">JobSeeker</option>
-              <option value="hr">Recruiter</option>
+              <option value="" disabled>
+                Select
+              </option>
+              <option value="candidate">Doctor</option>
+              <option value="hr">Employer</option>
             </select>
 
+            {/* Two Column Layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Title */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
                 <select
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-3 border rounded-lg"
                   required
                 >
                   <option value="">Select</option>
@@ -181,6 +217,8 @@ const Register = () => {
                   <option value="Others">Others</option>
                 </select>
               </div>
+
+              {/* Full Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                 <div className="relative">
@@ -191,26 +229,48 @@ const Register = () => {
                     value={formData.fullName}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     required
                   />
                 </div>
               </div>
+
+              {/* ✅ Phone Number */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number
+                </label>
+
+                <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-cyan-500">
+                  <div className="flex items-center gap-2 px-3 py-3 bg-gray-50 border-r border-gray-300">
+                    <Phone className="text-gray-400 w-5 h-5" />
+                    <select
+                      value={countryCode}
+                      onChange={(e) => setCountryCode(e.target.value)}
+                      className="bg-transparent outline-none text-gray-700 font-medium cursor-pointer"
+                    >
+                      {countryCodes.map((code) => (
+                        <option key={code} value={code}>
+                          {code}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   <input
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="10-digit number"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                    placeholder="Enter phone number"
+                    inputMode="numeric"
+                    className="w-full px-4 py-3 outline-none"
                     required
                   />
                 </div>
               </div>
+
+              {/* Location */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
                 <div className="relative">
@@ -221,12 +281,13 @@ const Register = () => {
                     value={formData.location}
                     onChange={handleChange}
                     placeholder="City, State"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     required
                   />
                 </div>
               </div>
 
+              {/* Doctor Only */}
               {formData.role === 'candidate' && (
                 <>
                   <div>
@@ -235,10 +296,12 @@ const Register = () => {
                       name="qualification"
                       value={formData.qualification}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                       required
                     >
-                      <option value="" disabled>Select Qualification</option>
+                      <option value="" disabled>
+                        Select Qualification
+                      </option>
                       <option value="MBBS">MBBS</option>
                       <option value="MD">MD</option>
                       <option value="MS">MS</option>
@@ -250,6 +313,7 @@ const Register = () => {
                       <option value="MCh">MCh</option>
                     </select>
                   </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Upload Resume</label>
                     <input
@@ -257,13 +321,14 @@ const Register = () => {
                       name="resume"
                       onChange={handleChange}
                       accept=".pdf,.doc,.docx"
-                      className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100"
+                      className="w-full"
                       required
                     />
                   </div>
                 </>
               )}
 
+              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                 <div className="relative">
@@ -274,13 +339,15 @@ const Register = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     required
                   />
                 </div>
               </div>
+
+              {/* ✅ Confirm Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Email</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Email Address</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
@@ -288,13 +355,16 @@ const Register = () => {
                     name="confirmEmail"
                     value={formData.confirmEmail}
                     onChange={handleChange}
-                    placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
-                    required
+                    placeholder={isEmailTyped ? 're-enter your email' : 'Enter email first'}
+                    disabled={!isEmailTyped}
+                    className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent
+                      ${!isEmailTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                    required={isEmailTyped}
                   />
                 </div>
               </div>
 
+              {/* Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
                 <div className="relative">
@@ -305,34 +375,20 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     required
                   />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-                <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-xs font-semibold text-blue-900 mb-1">Password Requirements:</p>
-                  <ul className="text-xs text-blue-700 space-y-1">
-                    <li className={formData.password.length >= 8 ? 'text-green-600 font-semibold' : ''}>
-                      {formData.password.length >= 8 ? '✓' : '○'} At least 8 characters
-                    </li>
-                    <li className={/[A-Z]/.test(formData.password) ? 'text-green-600 font-semibold' : ''}>
-                      {/[A-Z]/.test(formData.password) ? '✓' : '○'} One uppercase letter
-                    </li>
-                    <li className={/[a-z]/.test(formData.password) ? 'text-green-600 font-semibold' : ''}>
-                      {/[a-z]/.test(formData.password) ? '✓' : '○'} One lowercase letter
-                    </li>
-                    <li className={/\d/.test(formData.password) ? 'text-green-600 font-semibold' : ''}>
-                      {/\d/.test(formData.password) ? '✓' : '○'} One number
-                    </li>
-                    <li className={/[@$!%*?&]/.test(formData.password) ? 'text-green-600 font-semibold' : ''}>
-                      {/[@$!%*?&]/.test(formData.password) ? '✓' : '○'} One special character (@$!%*?&)
-                    </li>
-                  </ul>
-                </div>
               </div>
+
+              {/* ✅ Confirm Password (DISABLED until Password typed + auto-clears when password changes) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
                 <div className="relative">
@@ -342,119 +398,165 @@ const Register = () => {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    placeholder="••••••••"
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
-                    required
+                    placeholder={isPasswordTyped ? 'Re-enter password' : 'Enter password first'}
+                    disabled={!isPasswordTyped}
+                    className={`w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent
+                      ${!isPasswordTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                    required={isPasswordTyped}
                   />
-                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye size={20} />}
+                  <button
+                    type="button"
+                    disabled={!isPasswordTyped}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600
+                      ${!isPasswordTyped ? 'opacity-50 cursor-not-allowed hover:text-gray-400' : ''}`}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
             </div>
 
-            {formData.role === 'hr' && (
-              <div className="space-y-6 pt-4">
-                <h2 className="text-xl font-bold text-gray-900 border-b pb-2">Organization Details</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="col-span-full">
-                    <label className="block text-sm font-medium mb-1">Organization Name</label>
-                    <input type="text" name="organizationName" value={formData.organizationName} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg" required />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Category</label>
-                    <select name="organizationCategory" value={formData.organizationCategory} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg" required>
-                      <option value="" disabled>Select</option>
-                      <option value="Hospital">Hospital</option>
-                      <option value="Clinic">Clinic</option>
-                      <option value="Diagnostic Center">Diagnostic Center</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Beds</label>
-                    <select name="numberOfBeds" value={formData.numberOfBeds} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg" required>
-                      <option value="" disabled>Select</option>
-                      <option value="1-10">1–10</option>
-                      <option value="11-50">11–50</option>
-                      <option value="51-100">51–100</option>
-                      <option value="100+">100+</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">City</label>
-                    <input type="text" name="organizationCity" value={formData.organizationCity} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg" required />
-                  </div>
-                  <div className="col-span-full">
-                    <label className="block text-sm font-medium mb-1">Full Address</label>
-                    <textarea name="organizationAddress" value={formData.organizationAddress} onChange={handleChange} rows="3" className="w-full px-4 py-3 border rounded-lg" required />
-                  </div>
-                </div>
-              </div>
-            )}
-
+            {/* Terms & Conditions */}
             <div className="flex items-start">
-              <input type="checkbox" name="agreeTerms" checked={formData.agreeTerms} onChange={(e) => setFormData({ ...formData, agreeTerms: e.target.checked })} className="w-4 h-4 mt-1 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500" />
-              <label className="ml-2 text-sm text-gray-600">
-                I agree to the <button type="button" onClick={() => { setPolicyType('terms'); setShowPolicy(true); }} className="text-cyan-600 hover:text-cyan-700 font-medium underline">Terms of Service</button> and <button type="button" onClick={() => { setPolicyType('privacy'); setShowPolicy(true); }} className="text-cyan-600 hover:text-cyan-700 font-medium underline">Privacy Policy</button>
-              </label>
+              <input
+                type="checkbox"
+                name="agreeTerms"
+                checked={formData.agreeTerms}
+                onChange={handleChange}
+                className="w-4 h-4 mt-1 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
+              />
+              <div className="ml-2 text-sm text-gray-600">
+                I agree to the{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPolicyType('terms');
+                    setShowPolicy(true);
+                  }}
+                  className="text-cyan-600 hover:text-cyan-700 font-medium underline"
+                >
+                  Terms of Service
+                </button>{' '}
+                and{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPolicyType('privacy');
+                    setShowPolicy(true);
+                  }}
+                  className="text-cyan-600 hover:text-cyan-700 font-medium underline"
+                >
+                  Privacy Policy
+                </button>
+              </div>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-4 rounded-xl hover:from-cyan-600 hover:to-blue-700 font-bold flex items-center justify-center space-x-2 disabled:opacity-50 shadow-lg transition-all active:scale-95"
+              className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? <span>Creating Account...</span> : <><UserPlus className="w-5 h-5" /><span>Register</span></>}
+              {loading ? (
+                <span>Creating Account...</span>
+              ) : (
+                <>
+                  <UserPlus className="w-5 h-5" />
+                  <span>Register</span>
+                </>
+              )}
             </button>
           </form>
 
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-300"></div></div>
-            <div className="relative flex justify-center text-sm"><span className="px-2 bg-white text-gray-500">Already have an account?</span></div>
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">Already have an account?</span>
+            </div>
           </div>
 
-          <Link to="/login" className="block w-full text-center border-2 border-cyan-500 text-cyan-600 py-3 rounded-lg hover:bg-cyan-50 font-bold transition-all">Sign In</Link>
+          {/* Login Link */}
+          <Link
+            to="/login"
+            className="block w-full text-center border-2 border-cyan-500 text-cyan-600 py-3 rounded-lg hover:bg-cyan-50 font-medium"
+          >
+            Sign In
+          </Link>
+        </div>
+
+        {/* Back to Home */}
+        <div className="text-center mt-6">
+          <Link to="/" className="text-gray-600 hover:text-cyan-600 font-medium">
+            ← Back to Home
+          </Link>
         </div>
       </div>
 
-      {/* ✅ SUCCESS MODAL: Professional registration success with email confirmation notice */}
-      {showSuccessModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white max-w-md w-full rounded-2xl shadow-2xl p-8 text-center mx-4 transform animate-in zoom-in duration-300">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-12 h-12 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">🎉 Registration Successful!</h2>
-            <p className="text-gray-600 mb-4">Welcome to MCARE! Your account has been created successfully.</p>
-            
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
-              <p className="text-sm text-blue-900 font-semibold mb-2">📧 Check Your Email</p>
-              <p className="text-xs text-blue-700">
-                We've sent a welcome email to <strong>{formData.email}</strong> with next steps and login instructions.
-              </p>
-            </div>
-            
-            <button 
-              onClick={() => navigate('/login')} 
-              className="w-full py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all active:scale-95"
-            >
-              Sign In Now
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Policy Modal */}
       {showPolicy && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white max-w-2xl w-full rounded-2xl shadow-2xl p-8 relative mx-4">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">{policyType === 'terms' ? 'Terms of Service' : 'Privacy Policy'}</h2>
-            <div className="max-h-[50vh] overflow-y-auto text-sm text-gray-700 space-y-4 pr-4">
-              <p>By using MCARE, you agree to our policies regarding data security and professional conduct.</p>
-              <p>We ensure that your credentials and medical qualifications are kept secure and shared only with verified employers.</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white max-w-3xl w-full rounded-xl shadow-xl p-6 relative">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              {policyType === 'terms' ? 'Terms of Service' : 'Privacy Policy'}
+            </h2>
+
+            <div className="max-h-[60vh] overflow-y-auto text-sm text-gray-700 space-y-4 pr-2">
+              {policyType === 'terms' ? (
+                <>
+                  <p>
+                    By creating an account on MCARE, you agree to comply with our platform rules,
+                    usage policies, and applicable laws.
+                  </p>
+                  <p>
+                    You are responsible for maintaining the confidentiality of your account
+                    credentials and for all activities under your account.
+                  </p>
+                  <p>
+                    MCARE reserves the right to suspend or terminate accounts that violate our
+                    policies or misuse the platform.
+                  </p>
+                  <p>
+                    These terms may be updated from time to time. Continued use of the platform
+                    implies acceptance of the revised terms.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p>
+                    We value your privacy. MCARE collects only the information necessary to provide
+                    recruitment and healthcare career services.
+                  </p>
+                  <p>
+                    Your personal data will never be sold and is shared only with authorized
+                    recruiters or partners as required.
+                  </p>
+                  <p>
+                    We implement industry-standard security measures to protect your data from
+                    unauthorized access.
+                  </p>
+                  <p>
+                    You may request data access, updates, or deletion by contacting our support
+                    team.
+                  </p>
+                </>
+              )}
             </div>
-            <div className="mt-8 text-right">
-              <button onClick={() => setShowPolicy(false)} className="px-8 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-colors">Close</button>
+
+            <div className="mt-6 text-right">
+              <button
+                onClick={() => setShowPolicy(false)}
+                className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>

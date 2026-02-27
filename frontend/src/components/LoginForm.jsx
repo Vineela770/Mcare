@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/useAuth'; // Ensure this context doesn't have mock data
+import { useAuth } from '../context/useAuth';
 import { authService } from '../api/authService';
 
 export function LoginForm() {
@@ -18,35 +18,11 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      /**
-       * 🛠️ FIX 1: Wrap arguments into a single object { email, password, role }
-       * to match your authService.login(loginData) definition.
-       */
-      const result = await authService.login({ email, password, role });
-
-      /**
-       * 🛠️ FIX 2: Ensure the Context login isn't using mock data internally.
-       * This updates the global state with the REAL user/token from PostgreSQL.
-       */
+      const result = await authService.login(email, password, role);
       login(result.user, result.token);
-
-      /**
-       * 🛠️ FIX 3: Update paths to match your actual routing 
-       * (e.g., /candidate/dashboard or /dashboard).
-       */
-      if (result.user.role === 'candidate') {
-        navigate('/candidate/dashboard');
-      } else if (result.user.role === 'hr') {
-        navigate('/employer-dashboard');
-      } else if (result.user.role === 'admin' || result.user.role === 'administrator') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/dashboard');
-      }
-      
+      navigate(result.user.role === 'candidate' ? '/dashboard' : '/employer-dashboard');
     } catch (err) {
-      // Catch backend errors like "Invalid credentials"
-      setError(err.response?.data?.message || 'Login failed');
+      setError(err.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -54,8 +30,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-      {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm">{error}</div>}
-      
+      {error && <div className="text-red-500 text-sm">{error}</div>}
       <div>
         <label className="block text-sm font-medium mb-1">Login As</label>
         <select
@@ -64,7 +39,9 @@ export function LoginForm() {
           className="w-full border rounded px-3 py-2"
           required
         >
-          <option value="" disabled>Select Role</option>
+          <option value="" disabled>
+            Select Role
+          </option>
           <option value="candidate">Doctor</option>
           <option value="hr">Employer</option>
           <option value="admin">Administrator</option>
@@ -76,7 +53,6 @@ export function LoginForm() {
         <input
           type="email"
           value={email}
-          placeholder="raju@gmail.com"
           onChange={(e) => setEmail(e.target.value)}
           className="w-full border rounded px-3 py-2"
           required

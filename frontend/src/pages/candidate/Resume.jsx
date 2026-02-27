@@ -1,399 +1,811 @@
-import { useState, useEffect } from 'react';
-import { 
-  Upload, Save, FileText, Briefcase, Plus, Trash2, 
-  UserCircle, MapPin, CheckCircle, GraduationCap, 
-  Eye, Download, Edit3, Loader2 
+import { useState } from 'react';
+import {
+  Upload,
+  Download,
+  Eye,
+  Edit2,
+  FileText,
+  Briefcase,
+  GraduationCap,
+  Award,
+  Plus,
+  Trash2,
+  CheckCircle,
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
-import { useAuth } from '../../context/useAuth';
 
 const Resume = () => {
-  const { token } = useAuth();
-  
-  // Data States
-  const [resumeFile, setResumeFile] = useState(null);
-  const [profileCompletion, setProfileCompletion] = useState(0);
-  const [summary, setSummary] = useState(''); 
-  const [experiences, setExperiences] = useState([]);
-  const [education, setEducation] = useState([]);
+  const [resumeFile, setResumeFile] = useState({
+    name: 'John_Doe_Resume.pdf',
+    size: '245 KB',
+    uploadedDate: '2024-01-01',
+  });
 
-  // UI States
-  const [loading, setLoading] = useState(true);
-  const [isEditingSummary, setIsEditingSummary] = useState(false); // ✅ Added state for edit button
+  const [profileCompletion] = useState(75);
+
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showExperienceModal, setShowExperienceModal] = useState(false);
   const [showEducationModal, setShowEducationModal] = useState(false);
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+
   const [successMessage, setSuccessMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
 
-  // Form States
-  const [isCurrentJob, setIsCurrentJob] = useState(false);
-  const [experienceForm, setExperienceForm] = useState({ 
-    title: '', company: '', location: '', startDate: '', endDate: '', description: '' 
-  });
-  
-  const [educationForm, setEducationForm] = useState({
-    degree: '', school: '', location: '', endDate: ''
-  });
-
-  // 📊 Calculate Score Automatically
-  useEffect(() => {
-    let score = 0;
-    // 1. Resume (30%)
-    if (resumeFile || selectedFile) score += 30;
-    
-    // 2. Summary (20%) - ✅ FIX: Synchronized with backend >= 3 chars threshold
-    if (summary && summary.trim().length >= 3) score += 20;
-    
-    // 3. Experience (25%)
-    if (experiences.length > 0) score += 25;
-    
-    // 4. Education (25%)
-    if (education.length > 0) score += 25;
-    
-    setProfileCompletion(score);
-  }, [resumeFile, selectedFile, summary, experiences, education]);
-
-  // 📂 Fetch profile data from backend
-  useEffect(() => {
-    const fetchResumeData = async () => {
-      try {
-        setLoading(true);
-        const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const response = await fetch(`${API_BASE}/api/candidate/dashboard-stats`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await response.json();
-        
-        if (data.success && data.profileData) {
-          const p = data.profileData;
-          setSummary(p.professional_summary || '');
-          setExperiences(typeof p.experience === 'string' ? JSON.parse(p.experience) : p.experience || []);
-          setEducation(typeof p.education === 'string' ? JSON.parse(p.education) : p.education || []);
-          
-          if (p.resume_url) {
-            setResumeFile({ name: p.resume_url.split('/').pop(), url: p.resume_url });
-          }
-        }
-      } catch (err) {
-        console.error("❌ Fetch Error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (token) fetchResumeData();
-  }, [token]);
-
-  // 🛠️ Sync all changes to Database
-  const syncWithBackend = async (file = null) => {
-    try {
-      const formData = new FormData();
-      if (file) formData.append('resume', file);
-      formData.append('summary', summary);
-      formData.append('experience', JSON.stringify(experiences));
-      formData.append('education', JSON.stringify(education)); 
-
-      // ✅ UPDATED URL: Changed from /resume to /profile to match clean routes
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${API_BASE}/api/candidate/profile`, {
-        method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}` },
-        body: formData
-      });
-      
-      const data = await response.json();
-      if (data.success) setIsEditingSummary(false); // ✅ Auto-lock summary on save
-      return data.success;
-    } catch (error) {
-      console.error("❌ Sync Error:", error);
-      return false;
-    }
-  };
-
-  const handleUploadResume = async () => {
-    if (!selectedFile) return;
-    const success = await syncWithBackend(selectedFile);
-    if (success) {
-      setResumeFile({ name: selectedFile.name });
-      setShowUploadModal(false);
-      setSelectedFile(null); 
-      setSuccessMessage('Resume updated successfully!');
-      setShowSuccessModal(true);
-    }
-  };
-
-  const handleAddExperience = (e) => {
-    e.preventDefault();
-    const finalExperience = { 
-      ...experienceForm, 
-      id: Date.now(), 
-      endDate: isCurrentJob ? 'Present' : experienceForm.endDate 
-    };
-    setExperiences([...experiences, finalExperience]);
-    setExperienceForm({ title: '', company: '', location: '', startDate: '', endDate: '', description: '' });
-    setIsCurrentJob(false);
-    setShowExperienceModal(false);
-  };
-
-  const handleAddEducation = (e) => {
-    e.preventDefault();
-    const finalEducation = { ...educationForm, id: Date.now() };
-    setEducation([...education, finalEducation]);
-    setEducationForm({ degree: '', school: '', location: '', endDate: '' });
-    setShowEducationModal(false);
-  };
-
-  const showSuccess = (msg) => { 
-    setSuccessMessage(msg); 
-    setShowSuccessModal(true); 
-  };
-
-  if (loading) return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 italic font-bold text-cyan-600">
-      Syncing with MCARE...
-    </div>
+  const [summary, setSummary] = useState(
+    'Experienced healthcare professional with 5+ years in patient care. Specialized in emergency medicine with proven track record of delivering high-quality care in fast-paced environments.'
   );
 
+  const [experiences, setExperiences] = useState([
+    {
+      id: 1,
+      title: 'Senior Registered Nurse',
+      company: 'Manhattan Hospital',
+      location: 'New York, NY',
+      startDate: '2020',
+      endDate: 'Present',
+      description:
+        'Provided comprehensive patient care in emergency department, managed critical cases, and mentored junior staff.',
+    },
+  ]);
+
+  const [educations, setEducations] = useState([
+    {
+      id: 1,
+      degree: 'Bachelor of Science in Nursing',
+      institution: 'Columbia University',
+      location: 'New York, NY',
+      startYear: '2016',
+      endYear: '2020',
+    },
+  ]);
+
+  const [experienceForm, setExperienceForm] = useState({
+    title: '',
+    company: '',
+    location: '',
+    startDate: '',
+    endDate: '',
+    description: '',
+  });
+
+  const [educationForm, setEducationForm] = useState({
+    degree: '',
+    institution: '',
+    location: '',
+    startYear: '',
+    endYear: '',
+  });
+
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setShowSuccessModal(true);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) setSelectedFile(file);
+  };
+
+  const handleUploadResume = () => {
+    if (!selectedFile) return;
+
+    setResumeFile({
+      name: selectedFile.name,
+      size: `${(selectedFile.size / 1024).toFixed(0)} KB`,
+      uploadedDate: new Date().toISOString().split('T')[0],
+    });
+
+    setShowUploadModal(false);
+    setSelectedFile(null);
+    showSuccess('Resume uploaded successfully!');
+  };
+
+  const handleSaveSummary = () => {
+    setShowSummaryModal(false);
+    showSuccess('Professional summary updated!');
+  };
+
+  const handleAddExperience = () => {
+    const newExperience = { id: experiences.length + 1, ...experienceForm };
+    setExperiences([...experiences, newExperience]);
+    setExperienceForm({
+      title: '',
+      company: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      description: '',
+    });
+    setShowExperienceModal(false);
+    showSuccess('Work experience added successfully!');
+  };
+
+  const handleDeleteExperience = (id) => {
+    setExperiences(experiences.filter((exp) => exp.id !== id));
+    showSuccess('Work experience removed!');
+  };
+
+  const handleAddEducation = () => {
+    const newEducation = { id: educations.length + 1, ...educationForm };
+    setEducations([...educations, newEducation]);
+    setEducationForm({
+      degree: '',
+      institution: '',
+      location: '',
+      startYear: '',
+      endYear: '',
+    });
+    setShowEducationModal(false);
+    showSuccess('Education added successfully!');
+  };
+
+  const handleDeleteEducation = (id) => {
+    setEducations(educations.filter((edu) => edu.id !== id));
+    showSuccess('Education removed!');
+  };
+
+  const handleDownloadResume = () => {
+    showSuccess(`Downloading ${resumeFile.name}...`);
+  };
+
+  const handleViewResume = () => setShowViewModal(true);
+
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Sidebar skillPercentage={profileCompletion} />
-      
-      <div className="ml-64 flex-1 p-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Resume</h1>
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar />
 
-        {/* 📊 Profile Completion Bar - FULL WIDTH */}
-        <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl p-8 mb-8 shadow-lg">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-white text-2xl font-bold">Profile Completion</h3>
-              <p className="text-cyan-50 opacity-90">Complete all sections to reach 100%</p>
+      {/* ✅ CONTENT WRAPPER: mobile safe + desktop unchanged */}
+      <div className="w-full md:ml-64 p-4 md:p-6">
+        {/* ✅ Push down on mobile because hamburger is fixed */}
+        <div className="pt-14 md:pt-0">
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              My Resume
+            </h1>
+            <p className="text-sm md:text-base text-gray-600 mt-2">
+              Manage your resume and professional profile
+            </p>
+          </div>
+
+          {/* Profile Completion */}
+          <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl p-5 md:p-6 mb-6 md:mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-white text-lg md:text-xl font-bold mb-1 md:mb-2">
+                  Profile Completion
+                </h3>
+                <p className="text-cyan-100 text-sm md:text-base">
+                  Complete your profile to increase visibility
+                </p>
+              </div>
+              <div className="text-3xl md:text-4xl font-bold text-white">
+                {profileCompletion}%
+              </div>
             </div>
-            <div className="text-6xl font-black text-white">{profileCompletion}%</div>
+            <div className="w-full bg-cyan-700 rounded-full h-3">
+              <div
+                className="bg-white h-3 rounded-full transition-all duration-300"
+                style={{ width: `${profileCompletion}%` }}
+              />
+            </div>
           </div>
-          <div className="w-full bg-white/20 rounded-full h-4 overflow-hidden backdrop-blur-sm border border-white/10">
-            <div className="bg-white h-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(255,255,255,0.5)]" style={{ width: `${profileCompletion}%` }}></div>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-3 space-y-8">
-            
-            {/* 1. Resume Document */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Resume Document</h2>
-              <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center space-x-5">
-                  <div className="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center">
-                    <FileText className="text-red-500 w-8 h-8" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Resume + sections */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Resume Document */}
+              <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-5 md:mb-6">
+                  Resume Document
+                </h2>
+
+                {resumeFile ? (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-5 md:p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                          <FileText className="w-6 h-6 text-red-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900 text-sm md:text-base">
+                            {resumeFile.name}
+                          </h3>
+                          <p className="text-xs md:text-sm text-gray-600">
+                            {resumeFile.size} • Uploaded {resumeFile.uploadedDate}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={handleViewResume}
+                          className="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg"
+                          aria-label="View resume"
+                        >
+                          <Eye className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={handleDownloadResume}
+                          className="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg"
+                          aria-label="Download resume"
+                        >
+                          <Download className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => setShowUploadModal(true)}
+                      className="w-full py-2 text-cyan-600 hover:bg-cyan-50 rounded-lg font-medium flex items-center justify-center space-x-2"
+                    >
+                      <Upload className="w-5 h-5" />
+                      <span>Replace Resume</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-10 md:p-12 text-center">
+                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">
+                      Upload Your Resume
+                    </h3>
+                    <p className="text-sm md:text-base text-gray-600 mb-4">
+                      PDF, DOC, or DOCX (Max 5MB)
+                    </p>
+                    <button
+                      onClick={() => setShowUploadModal(true)}
+                      className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium"
+                    >
+                      Choose File
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Professional Summary */}
+              <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-900">
+                    Professional Summary
+                  </h2>
+                  <button
+                    onClick={() => setShowSummaryModal(true)}
+                    className="text-cyan-600 hover:text-cyan-700"
+                    aria-label="Edit summary"
+                  >
+                    <Edit2 className="w-5 h-5" />
+                  </button>
+                </div>
+                <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+                  {summary}
+                </p>
+              </div>
+
+              {/* Experience */}
+              <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-900">
+                    Work Experience
+                  </h2>
+                  <button
+                    onClick={() => setShowExperienceModal(true)}
+                    className="text-cyan-600 hover:text-cyan-700 font-medium flex items-center space-x-1"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Experience</span>
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  {experiences.map((exp) => (
+                    <div key={exp.id} className="border-l-2 border-cyan-500 pl-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h3 className="font-bold text-gray-900 text-sm md:text-base">
+                            {exp.title}
+                          </h3>
+                          <p className="text-gray-600 text-sm">{exp.company}</p>
+                        </div>
+                        <button
+                          onClick={() => handleDeleteExperience(exp.id)}
+                          className="text-red-600 hover:text-red-700"
+                          aria-label="Delete experience"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <p className="text-xs md:text-sm text-gray-500 mb-2">
+                        {exp.startDate} - {exp.endDate} • {exp.location}
+                      </p>
+                      <p className="text-gray-700 text-xs md:text-sm">
+                        {exp.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Education */}
+              <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                  <h2 className="text-lg md:text-xl font-bold text-gray-900">
+                    Education
+                  </h2>
+                  <button
+                    onClick={() => setShowEducationModal(true)}
+                    className="text-cyan-600 hover:text-cyan-700 font-medium flex items-center space-x-1"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Education</span>
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  {educations.map((edu) => (
+                    <div key={edu.id} className="border-l-2 border-blue-500 pl-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h3 className="font-bold text-gray-900 text-sm md:text-base">
+                            {edu.degree}
+                          </h3>
+                          <p className="text-gray-600 text-sm">{edu.institution}</p>
+                        </div>
+                        <button
+                          onClick={() => handleDeleteEducation(edu.id)}
+                          className="text-red-600 hover:text-red-700"
+                          aria-label="Delete education"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <p className="text-xs md:text-sm text-gray-500">
+                        {edu.startYear} - {edu.endYear} • {edu.location}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="space-y-6">
+              <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100">
+                <h2 className="text-base md:text-lg font-bold text-gray-900 mb-4">
+                  Quick Actions
+                </h2>
+                <div className="space-y-3">
+                  <button
+                    onClick={() => setShowExperienceModal(true)}
+                    className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                      <Briefcase className="w-5 h-5 text-cyan-600" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-medium text-gray-900 text-sm md:text-base">
+                        Work Experience
+                      </div>
+                      <div className="text-xs md:text-sm text-gray-500">
+                        Add or edit
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setShowEducationModal(true)}
+                    className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <GraduationCap className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-medium text-gray-900 text-sm md:text-base">
+                        Education
+                      </div>
+                      <div className="text-xs md:text-sm text-gray-500">
+                        Add or edit
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setShowSummaryModal(true)}
+                    className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <Award className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-medium text-gray-900 text-sm md:text-base">
+                        Summary
+                      </div>
+                      <div className="text-xs md:text-sm text-gray-500">
+                        Edit profile
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Success Modal */}
+          {showSuccessModal && (
+            <Modal
+              isOpen={showSuccessModal}
+              onClose={() => setShowSuccessModal(false)}
+              title="Success"
+            >
+              <div className="text-center py-6">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-10 h-10 text-green-600" />
+                </div>
+                <p className="text-lg text-gray-900">{successMessage}</p>
+                <button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="mt-6 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                >
+                  Close
+                </button>
+              </div>
+            </Modal>
+          )}
+
+          {/* View Resume Modal */}
+          {showViewModal && (
+            <Modal
+              isOpen={showViewModal}
+              onClose={() => setShowViewModal(false)}
+              title="Resume Preview"
+            >
+              <div className="space-y-4">
+                <div className="bg-gray-50 rounded-lg p-6 md:p-8 text-center">
+                  <FileText className="w-16 h-16 text-red-600 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {resumeFile.name}
+                  </h3>
+                  <p className="text-gray-600 mb-4">Preview your resume document</p>
+                  <div className="bg-white border-2 border-gray-200 rounded-lg p-8 md:p-12 mb-4">
+                    <p className="text-gray-500 italic">
+                      Resume content would be displayed here
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+                  <button
+                    onClick={() => setShowViewModal(false)}
+                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  >
+                    Close
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleDownloadResume();
+                      setShowViewModal(false);
+                    }}
+                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 flex items-center justify-center space-x-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Download</span>
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          )}
+
+          {/* Upload Modal */}
+          {showUploadModal && (
+            <Modal
+              isOpen={showUploadModal}
+              onClose={() => setShowUploadModal(false)}
+              title="Upload Resume"
+            >
+              <div className="space-y-4">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 md:p-8 text-center">
+                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-2">Choose a file to upload</p>
+                  <p className="text-sm text-gray-500 mb-4">
+                    PDF, DOC, or DOCX (Max 5MB)
+                  </p>
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    id="resume-upload"
+                  />
+                  <label
+                    htmlFor="resume-upload"
+                    className="inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 cursor-pointer"
+                  >
+                    Choose File
+                  </label>
+                  {selectedFile && (
+                    <p className="mt-3 text-sm text-green-600">
+                      Selected: {selectedFile.name}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+                  <button
+                    onClick={() => setShowUploadModal(false)}
+                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUploadResume}
+                    disabled={!selectedFile}
+                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Upload
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          )}
+
+          {/* Summary Edit Modal */}
+          {showSummaryModal && (
+            <Modal
+              isOpen={showSummaryModal}
+              onClose={() => setShowSummaryModal(false)}
+              title="Edit Professional Summary"
+            >
+              <div className="space-y-4">
+                <textarea
+                  value={summary}
+                  onChange={(e) => setSummary(e.target.value)}
+                  rows="6"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  placeholder="Describe your professional background and expertise..."
+                />
+                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+                  <button
+                    onClick={() => setShowSummaryModal(false)}
+                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveSummary}
+                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          )}
+
+          {/* Experience Modal */}
+          {showExperienceModal && (
+            <Modal
+              isOpen={showExperienceModal}
+              onClose={() => setShowExperienceModal(false)}
+              title="Add Work Experience"
+            >
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Job Title
+                  </label>
+                  <input
+                    type="text"
+                    value={experienceForm.title}
+                    onChange={(e) =>
+                      setExperienceForm({ ...experienceForm, title: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    placeholder="e.g., Senior Registered Nurse"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Company
+                  </label>
+                  <input
+                    type="text"
+                    value={experienceForm.company}
+                    onChange={(e) =>
+                      setExperienceForm({ ...experienceForm, company: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    placeholder="e.g., Manhattan Hospital"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    value={experienceForm.location}
+                    onChange={(e) =>
+                      setExperienceForm({ ...experienceForm, location: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    placeholder="e.g., New York, NY"
+                  />
+                </div>
+
+                {/* ✅ Mobile safe dates: 1 col on mobile, 2 col on sm+ */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Start Date
+                    </label>
+                    <input
+                      type="text"
+                      value={experienceForm.startDate}
+                      onChange={(e) =>
+                        setExperienceForm({ ...experienceForm, startDate: e.target.value })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      placeholder="e.g., 2020"
+                    />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 text-lg">{resumeFile ? resumeFile.name : "No Resume Uploaded"}</h3>
-                    <p className="text-xs text-gray-500 mt-1 font-medium uppercase tracking-wider">PDF DOCUMENT</p>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      End Date
+                    </label>
+                    <input
+                      type="text"
+                      value={experienceForm.endDate}
+                      onChange={(e) =>
+                        setExperienceForm({ ...experienceForm, endDate: e.target.value })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      placeholder="e.g., Present"
+                    />
                   </div>
                 </div>
-                <button onClick={() => setShowUploadModal(true)} className="flex items-center space-x-2 text-cyan-600 font-bold text-sm bg-white px-5 py-2.5 rounded-xl border border-cyan-100 hover:bg-cyan-50 transition-all shadow-sm">
-                  <Upload size={16} />
-                  <span>Replace Resume</span>
-                </button>
-              </div>
-            </div>
 
-            {/* 2. Professional Summary Section */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Professional Summary</h2>
-                {/* ✅ Edit button logic */}
-                <button 
-                  onClick={() => setIsEditingSummary(!isEditingSummary)}
-                  className={`p-2 rounded-lg transition-colors ${isEditingSummary ? 'bg-cyan-600 text-white shadow-md' : 'text-cyan-600 hover:bg-cyan-50'}`}
-                >
-                  <Edit3 size={18} />
-                </button>
-              </div>
-              <textarea 
-                value={summary} 
-                onChange={(e) => setSummary(e.target.value)} 
-                readOnly={!isEditingSummary}
-                rows="4" 
-                placeholder="Click the pencil icon to edit your professional summary..."
-                className={`w-full p-4 border rounded-xl outline-none transition-all font-medium ${
-                  isEditingSummary 
-                  ? 'bg-white border-cyan-500 ring-2 ring-cyan-100 text-gray-900' 
-                  : 'bg-gray-50 border-gray-100 text-gray-600 cursor-not-allowed'
-                }`}
-              />
-              {isEditingSummary && <p className="text-[10px] text-cyan-600 mt-2 font-bold animate-pulse">● Editing Mode Active</p>}
-            </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description
+                  </label>
+                  <textarea
+                    value={experienceForm.description}
+                    onChange={(e) =>
+                      setExperienceForm({ ...experienceForm, description: e.target.value })
+                    }
+                    rows="4"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    placeholder="Describe your responsibilities and achievements..."
+                  />
+                </div>
 
-            {/* 3. Work Experience Section */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-xl font-bold text-gray-900">Work Experience</h2>
-                <button onClick={() => setShowExperienceModal(true)} className="text-cyan-600 font-bold flex items-center text-sm hover:underline">
-                  <Plus className="w-4 h-4 mr-1.5" /> Add Experience
-                </button>
+                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+                  <button
+                    onClick={() => setShowExperienceModal(false)}
+                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddExperience}
+                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                  >
+                    Add Experience
+                  </button>
+                </div>
               </div>
-              <div className="space-y-8">
-                {experiences.map((exp) => (
-                  <div key={exp.id} className="relative pl-8 border-l-2 border-cyan-500">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-bold text-gray-900 text-lg">{exp.title}</h3>
-                        <p className="text-cyan-600 font-bold text-sm mt-0.5">{exp.company}</p>
-                        <p className="text-xs text-gray-400 font-bold uppercase mt-2 tracking-wide">
-                          {exp.startDate} - {exp.endDate} • {exp.location}
-                        </p>
-                      </div>
-                      <button onClick={() => setExperiences(experiences.filter(e => e.id !== exp.id))} className="text-red-300 hover:text-red-500 transition-colors"><Trash2 size={18} /></button>
-                    </div>
-                    {exp.description && <p className="text-sm text-gray-500 mt-4 leading-relaxed font-medium">{exp.description}</p>}
-                  </div>
-                ))}
-              </div>
-            </div>
+            </Modal>
+          )}
 
-            {/* 4. Education Section */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-xl font-bold text-gray-900">Education</h2>
-                <button onClick={() => setShowEducationModal(true)} className="text-cyan-600 font-bold flex items-center text-sm hover:underline">
-                  <Plus className="w-4 h-4 mr-1.5" /> Add Education
-                </button>
-              </div>
-              <div className="space-y-8">
-                {education.map((edu) => (
-                  <div key={edu.id} className="relative pl-8 border-l-2 border-cyan-500">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-bold text-gray-900 text-lg">{edu.degree}</h3>
-                        <p className="text-cyan-600 font-bold text-sm mt-0.5">{edu.school}</p>
-                        <p className="text-xs text-gray-400 font-bold uppercase mt-2 tracking-wide">
-                          {edu.endDate} • {edu.location}
-                        </p>
-                      </div>
-                      <button onClick={() => setEducation(education.filter(e => e.id !== edu.id))} className="text-red-300 hover:text-red-500 transition-colors"><Trash2 size={18} /></button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Actions Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 sticky top-8">
-              <h2 className="text-lg font-bold text-gray-900 mb-6">Quick Actions</h2>
+          {/* Education Modal */}
+          {showEducationModal && (
+            <Modal
+              isOpen={showEducationModal}
+              onClose={() => setShowEducationModal(false)}
+              title="Add Education"
+            >
               <div className="space-y-4">
-                <button onClick={() => setShowExperienceModal(true)} className="w-full flex items-center p-4 bg-cyan-50/50 rounded-xl hover:bg-cyan-50 transition-all group border border-cyan-50">
-                  <Briefcase className="mr-4 text-cyan-600" />
-                  <div className="text-left">
-                    <p className="text-sm font-bold text-gray-900">Experience</p>
-                    <p className="text-[11px] text-gray-500">Add or edit</p>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Degree
+                  </label>
+                  <input
+                    type="text"
+                    value={educationForm.degree}
+                    onChange={(e) =>
+                      setEducationForm({ ...educationForm, degree: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    placeholder="e.g., Bachelor of Science in Nursing"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Institution
+                  </label>
+                  <input
+                    type="text"
+                    value={educationForm.institution}
+                    onChange={(e) =>
+                      setEducationForm({
+                        ...educationForm,
+                        institution: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    placeholder="e.g., Columbia University"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    value={educationForm.location}
+                    onChange={(e) =>
+                      setEducationForm({ ...educationForm, location: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    placeholder="e.g., New York, NY"
+                  />
+                </div>
+
+                {/* ✅ Mobile safe years */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Start Year
+                    </label>
+                    <input
+                      type="text"
+                      value={educationForm.startYear}
+                      onChange={(e) =>
+                        setEducationForm({ ...educationForm, startYear: e.target.value })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      placeholder="e.g., 2016"
+                    />
                   </div>
-                </button>
-                <button onClick={() => setShowEducationModal(true)} className="w-full flex items-center p-4 bg-blue-50/50 rounded-xl hover:bg-blue-50 transition-all group border border-blue-50">
-                  <GraduationCap className="mr-4 text-blue-600" />
-                  <div className="text-left">
-                    <p className="text-sm font-bold text-gray-900">Education</p>
-                    <p className="text-[11px] text-gray-500">Add or edit</p>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      End Year
+                    </label>
+                    <input
+                      type="text"
+                      value={educationForm.endYear}
+                      onChange={(e) =>
+                        setEducationForm({ ...educationForm, endYear: e.target.value })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      placeholder="e.g., 2020"
+                    />
                   </div>
-                </button>
-                {/* Trigger summary edit */}
-                <button onClick={() => setIsEditingSummary(true)} className="w-full flex items-center p-4 bg-purple-50/50 rounded-xl hover:bg-purple-50 transition-all group border border-purple-50">
-                  <UserCircle className="mr-4 text-purple-600" />
-                  <div className="text-left">
-                    <p className="text-sm font-bold text-gray-900">Edit Summary</p>
-                    <p className="text-[11px] text-gray-500">Update bio</p>
-                  </div>
-                </button>
+                </div>
+
+                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+                  <button
+                    onClick={() => setShowEducationModal(false)}
+                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddEducation}
+                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                  >
+                    Add Education
+                  </button>
+                </div>
               </div>
-              <div className="mt-8 pt-6 border-t border-gray-100">
-                <button onClick={async () => { const s = await syncWithBackend(); if(s) { setSuccessMessage('Profile synced with database!'); setShowSuccessModal(true); } }} className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold flex items-center justify-center hover:bg-black transition-all shadow-lg active:scale-95">
-                  <Save className="w-5 h-5 mr-2" /> Save All Changes
-                </button>
-              </div>
-            </div>
-          </div>
+            </Modal>
+          )}
         </div>
-
-        {/* EXPERIENCE MODAL */}
-        {showExperienceModal && (
-          <Modal isOpen={showExperienceModal} onClose={() => setShowExperienceModal(false)} title="Add Work Experience">
-            <form onSubmit={handleAddExperience} className="space-y-4">
-              <input required placeholder="Job Title *" className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" value={experienceForm.title} onChange={e => setExperienceForm({...experienceForm, title: e.target.value})} />
-              <input required placeholder="Hospital/Clinic *" className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" value={experienceForm.company} onChange={e => setExperienceForm({...experienceForm, company: e.target.value})} />
-              <input required placeholder="Location (City, State) *" className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" value={experienceForm.location} onChange={e => setExperienceForm({...experienceForm, location: e.target.value})} />
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-[10px] font-bold text-gray-400 uppercase ml-1 block mb-1">Start Date *</label>
-                  <input required type="date" className="p-3 border w-full rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" value={experienceForm.startDate} onChange={e => setExperienceForm({...experienceForm, startDate: e.target.value})} />
-                </div>
-                <div>
-                  <label className="text-[10px] font-bold text-gray-400 uppercase ml-1 block mb-1">End Date</label>
-                  <input disabled={isCurrentJob} type="date" className="p-3 border w-full rounded-xl disabled:bg-gray-100 outline-none focus:ring-2 focus:ring-cyan-500" value={experienceForm.endDate} onChange={e => setExperienceForm({...experienceForm, endDate: e.target.value})} />
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-2 ml-1">
-                <input type="checkbox" id="curr" checked={isCurrentJob} onChange={(e) => setIsCurrentJob(e.target.checked)} className="w-4 h-4 text-cyan-600 rounded focus:ring-cyan-500" />
-                <label htmlFor="curr" className="text-sm text-gray-600 font-bold">I currently work here</label>
-              </div>
-
-              <textarea placeholder="Briefly describe your responsibilities..." rows="3" className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" value={experienceForm.description} onChange={e => setExperienceForm({...experienceForm, description: e.target.value})} />
-              <button type="submit" className="w-full py-4 bg-cyan-600 text-white font-bold rounded-xl shadow-md hover:bg-cyan-700 transition-all">Add Experience</button>
-            </form>
-          </Modal>
-        )}
-
-        {/* EDUCATION MODAL */}
-        {showEducationModal && (
-          <Modal isOpen={showEducationModal} onClose={() => setShowEducationModal(false)} title="Add Education">
-            <form onSubmit={handleAddEducation} className="space-y-4">
-              <input required placeholder="Degree (e.g. MBBS, MD) *" className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" value={educationForm.degree} onChange={e => setEducationForm({...educationForm, degree: e.target.value})} />
-              <input required placeholder="University/College *" className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" value={educationForm.school} onChange={e => setEducationForm({...educationForm, school: e.target.value})} />
-              <div className="grid grid-cols-2 gap-4">
-                <input required placeholder="Location (City) *" className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" value={educationForm.location} onChange={e => setEducationForm({...educationForm, location: e.target.value})} />
-                <input required placeholder="Year of Completion *" className="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-cyan-500" value={educationForm.endDate} onChange={e => setEducationForm({...educationForm, endDate: e.target.value})} />
-              </div>
-              <button type="submit" className="w-full py-4 bg-cyan-600 text-white font-bold rounded-xl shadow-md hover:bg-cyan-700 transition-all">Add Education</button>
-            </form>
-          </Modal>
-        )}
-
-        {/* SUCCESS MODAL */}
-        {showSuccessModal && (
-          <Modal isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)} title="Success">
-            <div className="text-center py-6">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="w-12 h-12 text-green-600" />
-              </div>
-              <p className="font-bold text-gray-900 text-xl">{successMessage}</p>
-              <button onClick={() => setShowSuccessModal(false)} className="w-full mt-8 py-4 bg-cyan-600 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95">Done</button>
-            </div>
-          </Modal>
-        )}
-
-        {/* UPLOAD MODAL */}
-        {showUploadModal && (
-          <Modal isOpen={showUploadModal} onClose={() => setShowUploadModal(false)} title="Replace Resume">
-            <div className="space-y-6 text-center">
-              <div className="border-2 border-dashed border-gray-200 p-12 rounded-2xl bg-gray-50 hover:border-cyan-400 transition-colors cursor-pointer">
-                <input type="file" accept=".pdf" id="up-file" className="hidden" onChange={e => setSelectedFile(e.target.files[0])} />
-                <label htmlFor="up-file" className="cursor-pointer font-bold text-cyan-600 flex flex-col items-center">
-                    <Upload className="w-12 h-12 mb-3" /> 
-                    <span className="text-lg">Click to select PDF</span>
-                </label>
-                {selectedFile && <p className="mt-4 text-green-600 font-bold">{selectedFile.name}</p>}
-              </div>
-              <button onClick={handleUploadResume} disabled={!selectedFile} className="w-full py-4 bg-cyan-600 text-white font-bold rounded-xl shadow-lg disabled:opacity-50 transition-all active:scale-95">Confirm Upload</button>
-            </div>
-          </Modal>
-        )}
       </div>
     </div>
   );

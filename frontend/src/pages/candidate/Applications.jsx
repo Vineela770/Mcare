@@ -2,71 +2,56 @@ import { useState, useEffect } from 'react';
 import { Send, Clock, CheckCircle, XCircle, Eye, FileText, Building2, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../../components/common/Sidebar';
-import { useAuth } from '../../context/useAuth';
 
 const Applications = () => {
-  const { token } = useAuth();
   const [filter, setFilter] = useState('all');
   const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  /**
-   * 📅 Helper: Formats "2 days ago" style dates
-   */
-  const getTimeAgo = (dateString) => {
-    const now = new Date();
-    const past = new Date(dateString);
-    const diffTime = Math.abs(now - past);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays <= 1) return "Today";
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffDays >= 7 && diffDays < 30) return `${Math.floor(diffDays/7)} week ago`;
-    return past.toLocaleDateString();
-  };
 
   useEffect(() => {
-    /**
-     * 🚀 Fetch live application history from MCARE Backend
-     */
     const fetchApplications = async () => {
-      try {
-        setLoading(true);
-        const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const response = await fetch(`${API_BASE}/api/candidate/my-applications`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-          // Mapping backend fields to match your structure
-          const formattedApps = data.applications.map(app => ({
-            id: app.id,
-            title: app.title,
-            company: app.company_name,
-            location: app.location || 'India',
-            appliedDate: app.applied_at, // Keep raw date for helper
-            status: app.status || 'Under Review',
-            // 🛠️ Pulled from the new database column
-            salary: app.salary || 'Competitive' 
-          }));
-          setApplications(formattedApps);
-        }
-      } catch (error) {
-        console.error("❌ Error fetching applications:", error);
-      } finally {
-        setLoading(false);
-      }
+      await new Promise(resolve => setTimeout(resolve, 0));
+      setApplications([
+        {
+          id: 1,
+          title: 'Senior Registered Nurse',
+          company: 'Manhattan Hospital',
+          location: 'New York, NY',
+          appliedDate: '2024-01-05',
+          status: 'Under Review',
+          salary: 'Rs. 75,000 - Rs. 95,000',
+        },
+        {
+          id: 2,
+          title: 'Physical Therapist',
+          company: 'Wellness Rehab',
+          location: 'Los Angeles, CA',
+          appliedDate: '2024-01-03',
+          status: 'Shortlisted',
+          salary: 'Rs. 65,000 - Rs. 85,000',
+        },
+        {
+          id: 3,
+          title: 'Lab Technician',
+          company: 'HealthCare Labs',
+          location: 'Chicago, IL',
+          appliedDate: '2023-12-28',
+          status: 'Interview',
+          salary: 'Rs. 45,000 - Rs. 55,000',
+        },
+        {
+          id: 4,
+          title: 'Medical Assistant',
+          company: 'City Medical',
+          location: 'Houston, TX',
+          appliedDate: '2023-12-20',
+          status: 'Rejected',
+          salary: 'Rs. 40,000 - Rs. 50,000',
+        },
+      ]);
     };
+    fetchApplications();
+  }, []);
 
-    if (token) {
-      fetchApplications();
-    }
-  }, [token]);
-
-  // Derived Stats based on live data from database
   const stats = {
     total: applications.length,
     pending: applications.filter(a => a.status === 'Under Review').length,
@@ -74,9 +59,10 @@ const Applications = () => {
     interview: applications.filter(a => a.status === 'Interview').length,
   };
 
-  const filteredApplications = filter === 'all' 
-    ? applications 
-    : applications.filter(a => a.status.toLowerCase() === filter.toLowerCase());
+  const filteredApplications =
+    filter === 'all'
+      ? applications
+      : applications.filter(a => a.status.toLowerCase() === filter);
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -101,128 +87,134 @@ const Applications = () => {
   return (
     <div>
       <Sidebar />
-      <div className="ml-64 min-h-screen bg-gray-50 p-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Applications</h1>
-          <p className="text-gray-600 mt-2">Track all your job applications in one place</p>
+
+      {/* ✅ Responsive wrapper with mobile header spacing fix */}
+      <div className="md:ml-64 min-h-screen bg-gray-50 p-4 pt-20 md:pt-6 md:p-6">
+
+        {/* Header */}
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">My Applications</h1>
+          <p className="text-gray-600 mt-1 md:mt-2 text-sm md:text-base">
+            Track all your job applications in one place
+          </p>
         </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center text-cyan-600 font-bold">Σ</div>
-          </div>
-          <div className="text-3xl font-bold text-gray-900 mb-1">{stats.total}</div>
-          <div className="text-gray-600 text-sm">Total Applied</div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+          <StatCard icon={<Send />} color="cyan" label="Total Applied" value={stats.total} />
+          <StatCard icon={<Clock />} color="yellow" label="Under Review" value={stats.pending} />
+          <StatCard icon={<FileText />} color="blue" label="Shortlisted" value={stats.shortlisted} />
+          <StatCard icon={<CheckCircle />} color="green" label="Interviews" value={stats.interview} />
         </div>
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-600 font-bold">⌚</div>
-          </div>
-          <div className="text-3xl font-bold text-gray-900 mb-1">{stats.pending}</div>
-          <div className="text-gray-600 text-sm">Under Review</div>
-        </div>
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 font-bold">📄</div>
-          </div>
-          <div className="text-3xl font-bold text-gray-900 mb-1">{stats.shortlisted}</div>
-          <div className="text-gray-600 text-sm">Shortlisted</div>
-        </div>
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-600 font-bold">✓</div>
-          </div>
-          <div className="text-3xl font-bold text-gray-900 mb-1">{stats.interview}</div>
-          <div className="text-gray-600 text-sm">Interviews</div>
-        </div>
-      </div>
 
-      {/* Filter Tabs */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6">
-        <div className="flex space-x-4">
-          {['all', 'under review', 'shortlisted', 'interview'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setFilter(tab)}
-              className={`px-4 py-2 rounded-lg font-medium capitalize transition-colors ${
-                filter === tab 
-                  ? 'bg-cyan-100 text-cyan-700' 
-                  : 'text-gray-600 hover:bg-gray-50'
-              }`}
+        {/* Filter Tabs */}
+        <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-100 mb-6">
+          <div className="flex space-x-2 md:space-x-4 overflow-x-auto pb-2">
+            {['all', 'under review', 'shortlisted', 'interview'].map(tab => (
+              <button
+                key={tab}
+                onClick={() => setFilter(tab)}
+                className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap ${
+                  filter === tab
+                    ? 'bg-cyan-100 text-cyan-700'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                {tab === 'all' ? 'All Applications' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Applications List */}
+        <div className="space-y-4">
+          {filteredApplications.map((app) => (
+            <div
+              key={app.id}
+              className="bg-white rounded-xl p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100"
             >
-              {tab === 'all' ? 'All Applications' : tab}
-            </button>
-          ))}
-        </div>
-      </div>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-      {/* Applications List */}
-      <div className="space-y-4">
-        {loading ? (
-          <div className="text-center py-10 text-gray-500">Retrieving application history...</div>
-        ) : filteredApplications.map((app) => (
-          <div key={app.id} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{app.title}</h3>
-                    <div className="flex items-center space-x-4 text-gray-600 text-sm">
-                      <div className="flex items-center space-x-1">
-                        <Building2 className="w-4 h-4" />
-                        <span>{app.company}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <MapPin className="w-4 h-4 text-cyan-500" />
-                        <span>{app.location}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-4 h-4" />
-                        {/* 🛠️ Improved date formatting */}
-                        <span>Applied {getTimeAgo(app.appliedDate)}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={`flex items-center space-x-2 px-4 py-2 rounded-full ${getStatusColor(app.status)}`}>
-                    {getStatusIcon(app.status)}
-                    <span className="font-medium">{app.status}</span>
+                {/* Left Section */}
+                <div className="flex-1">
+                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">{app.title}</h3>
+
+                  <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 text-gray-600 text-sm">
+                    <InfoItem icon={<Building2 />} text={app.company} />
+                    <InfoItem icon={<MapPin />} text={app.location} />
+                    <InfoItem icon={<Clock />} text={`Applied ${app.appliedDate}`} />
                   </div>
                 </div>
-                <div className="flex items-center justify-between mt-4">
-                  {/* 🛠️ Dynamic salary from database */}
-                  <span className="text-gray-900 font-bold">{app.salary}</span>
-                  <Link
-                    to={`/candidate/application/${app.id}`}
-                    className="flex items-center space-x-2 text-cyan-600 hover:text-cyan-700 font-medium"
-                  >
-                    <Eye className="w-4 h-4" />
-                    <span>View Details</span>
-                  </Link>
+
+                {/* Status Badge */}
+                <div className={`flex items-center space-x-2 px-4 py-2 rounded-full ${getStatusColor(app.status)}`}>
+                  {getStatusIcon(app.status)}
+                  <span className="font-medium text-sm">{app.status}</span>
                 </div>
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
 
-      {!loading && filteredApplications.length === 0 && (
-        <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
-          <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No Applications Found</h3>
-          <p className="text-gray-600 mb-6">Start applying to jobs to track your progress here</p>
-          <Link
-            to="/candidate/browse-jobs"
-            className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium"
-          >
-            Browse Available Jobs
-          </Link>
+              {/* Bottom Section */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 gap-2">
+                <span className="text-gray-900 font-semibold">{app.salary}</span>
+                <Link
+                  to={`/candidate/application/${app.id}`}
+                  className="flex items-center space-x-2 text-cyan-600 hover:text-cyan-700 font-medium text-sm"
+                >
+                  <Eye className="w-4 h-4" />
+                  <span>View Details</span>
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+
+        {/* Empty State */}
+        {filteredApplications.length === 0 && (
+          <div className="bg-white rounded-xl p-8 md:p-12 text-center shadow-sm border border-gray-100">
+            <FileText className="w-12 h-12 md:w-16 md:h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">No Applications Found</h3>
+            <p className="text-gray-600 mb-6 text-sm md:text-base">Start applying to jobs to see them here</p>
+            <Link
+              to="/candidate/browse-jobs"
+              className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium text-sm md:text-base"
+            >
+              Browse Jobs
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
 };
+
+/* Reusable Components */
+
+const StatCard = ({ icon, label, value, color }) => {
+  const colors = {
+    cyan: 'bg-cyan-100 text-cyan-600',
+    yellow: 'bg-yellow-100 text-yellow-600',
+    blue: 'bg-blue-100 text-blue-600',
+    green: 'bg-green-100 text-green-600',
+  };
+
+  return (
+    <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-100">
+      <div className="flex items-center justify-between mb-4">
+        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${colors[color]}`}>
+          {icon}
+        </div>
+      </div>
+      <div className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">{value}</div>
+      <div className="text-gray-600 text-sm">{label}</div>
+    </div>
+  );
+};
+
+const InfoItem = ({ icon, text }) => (
+  <div className="flex items-center space-x-1">
+    <span className="w-4 h-4">{icon}</span>
+    <span>{text}</span>
+  </div>
+);
 
 export default Applications;

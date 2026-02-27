@@ -2,8 +2,27 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
-import axios from 'axios';
-import { GoogleLogin } from '@react-oauth/google';
+
+const GoogleIcon = ({ className = 'w-5 h-5' }) => (
+  <svg className={className} viewBox="0 0 48 48" aria-hidden="true">
+    <path
+      fill="#FFC107"
+      d="M43.611 20.083H42V20H24v8h11.303C33.732 32.657 29.25 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.048 6.053 29.272 4 24 4 12.954 4 4 12.954 4 24s8.954 20 20 20 20-8.954 20-20c0-1.341-.138-2.65-.389-3.917z"
+    />
+    <path
+      fill="#FF3D00"
+      d="M6.306 14.691l6.571 4.819C14.657 16.108 19.01 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.048 6.053 29.272 4 24 4c-7.682 0-14.36 4.326-17.694 10.691z"
+    />
+    <path
+      fill="#4CAF50"
+      d="M24 44c5.149 0 9.86-1.977 13.409-5.196l-6.199-5.247C29.16 35.091 26.715 36 24 36c-5.229 0-9.692-3.323-11.266-7.946l-6.52 5.023C9.505 39.556 16.227 44 24 44z"
+    />
+    <path
+      fill="#1976D2"
+      d="M43.611 20.083H42V20H24v8h11.303c-.75 2.232-2.262 4.142-4.093 5.557l.003-.002 6.199 5.247C36.97 39.202 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"
+    />
+  </svg>
+);
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,19 +32,24 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    role: '',
   });
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
+  // ✅ Forgot password toggle
   const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const [isAccountRecovery, setIsAccountRecovery] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
-  const [recoveryEmail, setRecoveryEmail] = useState('');
   const [resetMessage, setResetMessage] = useState('');
-  const [recoveryMessage, setRecoveryMessage] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
-  const [recoveryLoading, setRecoveryLoading] = useState(false);
 
+  // ✅ Recovery account toggle
+  const [isRecoveryAccount, setIsRecoveryAccount] = useState(false);
+  const [recoveryEmail, setRecoveryEmail] = useState('');
+  const [recoveryMessage, setRecoveryMessage] = useState('');
+  const [recoveryLoading, setRecoveryLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData((p) => ({
@@ -44,7 +68,6 @@ const Login = () => {
         navigate('/hr/dashboard');
         break;
       case 'admin':
-      case 'administrator':
         navigate('/admin/dashboard');
         break;
       default:
@@ -56,46 +79,57 @@ const Login = () => {
     e.preventDefault();
     setError('');
 
+    if (!formData.role) {
+      setError('Please select a role.');
+      return;
+    }
+
     setLoading(true);
     try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await axios.post(`${API_BASE}/api/auth/login`, {
-        email: formData.email,
-        password: formData.password,
-      });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const { user, token } = response.data;
-      
-      login(user, token);
-      redirectByRole(user.role);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
+      const mockUser = {
+        id: 1,
+        name: 'John Doe',
+        email: formData.email,
+        role: formData.role,
+      };
+
+      login(mockUser, 'mock-token-' + Date.now());
+      redirectByRole(formData.role);
+    } catch {
+      setError('Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
+  const handleGoogleSignIn = async () => {
     setError('');
 
-    try {
-      // Send Google credential to backend for verification
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await axios.post(`${API_BASE}/api/auth/google-login`, {
-        credential: credentialResponse.credential,
-      });
-
-      const { user, token } = response.data;
-      
-      login(user, token);
-      redirectByRole(user.role);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Google sign-in failed. Please try again.');
+    if (!formData.role) {
+      setError('Please select a role before continuing with Google.');
+      return;
     }
-  };
 
-  const handleGoogleError = () => {
-    setError('Google sign-in was cancelled or failed.');
+    setGoogleLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 900));
+
+      const mockGoogleUser = {
+        id: 2,
+        name: 'Google User',
+        email: 'googleuser@example.com',
+        role: formData.role,
+      };
+
+      login(mockGoogleUser, 'google-token-' + Date.now());
+      redirectByRole(formData.role);
+    } catch {
+      setError('Google sign-in failed. Please try again.');
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
   const handleForgotPassword = async (e) => {
@@ -104,9 +138,7 @@ const Login = () => {
     setResetLoading(true);
 
     try {
-      // 🔹 Replace with real API
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
       setResetMessage('Password reset link sent to your email.');
       setResetEmail('');
     } catch {
@@ -116,24 +148,30 @@ const Login = () => {
     }
   };
 
-  const handleAccountRecovery = async (e) => {
+  const handleRecoveryAccount = async (e) => {
     e.preventDefault();
     setRecoveryMessage('');
     setRecoveryLoading(true);
 
     try {
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      await axios.post(`${API_BASE}/api/auth/account-recovery`, {
-        email: recoveryEmail,
-      });
-
-      setRecoveryMessage('Account recovery instructions sent to your email. Please check your inbox.');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setRecoveryMessage('Please check your email for further details.');
       setRecoveryEmail('');
-    } catch (err) {
-      setRecoveryMessage(err.response?.data?.message || 'Failed to send recovery email. Please try again.');
+    } catch {
+      setRecoveryMessage('Failed to send recovery email. Try again.');
     } finally {
       setRecoveryLoading(false);
     }
+  };
+
+  const goBackToLogin = () => {
+    setIsForgotPassword(false);
+    setIsRecoveryAccount(false);
+    setResetMessage('');
+    setRecoveryMessage('');
+    setResetEmail('');
+    setRecoveryEmail('');
+    setError('');
   };
 
   return (
@@ -151,214 +189,217 @@ const Login = () => {
           <p className="text-gray-600">Sign in to access your account</p>
         </div>
 
-        {/* Login Form */}
+        {/* Single card */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          {/* Login Form */}
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            {isForgotPassword ? (
-              /* 🔹 FORGOT PASSWORD FORM */
-              <form onSubmit={handleForgotPassword} className="space-y-6">
-                <h2 className="text-xl font-semibold text-gray-800 text-center">
-                  Reset Password
-                </h2>
-                <p className="text-sm text-gray-600 text-center">
-                  Enter your email to receive a password reset link.
-                </p>
+          {isForgotPassword ? (
+            <form onSubmit={handleForgotPassword} className="space-y-6">
+              <h2 className="text-xl font-semibold text-gray-800 text-center">Reset Password</h2>
+              <p className="text-sm text-gray-600 text-center">
+                Enter your email to receive a reset link.
+              </p>
 
-                {resetMessage && (
-                  <div className={`${resetMessage.includes('sent') ? 'bg-cyan-50 border-cyan-200 text-cyan-700' : 'bg-red-50 border-red-200 text-red-700'} border px-4 py-3 rounded-lg text-sm`}>
-                    {resetMessage}
-                  </div>
-                )}
+              {resetMessage && (
+                <div className="bg-cyan-50 border border-cyan-200 text-cyan-700 px-4 py-3 rounded-lg text-sm">
+                  {resetMessage}
+                </div>
+              )}
 
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="email"
+                  required
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={resetLoading}
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50"
+              >
+                {resetLoading ? 'Sending...' : 'Send Reset Link'}
+              </button>
+
+              <button
+                type="button"
+                onClick={goBackToLogin}
+                className="w-full text-sm text-gray-600 hover:text-cyan-600"
+              >
+                ← Back to Login
+              </button>
+            </form>
+          ) : isRecoveryAccount ? (
+            <form onSubmit={handleRecoveryAccount} className="space-y-6">
+              <h2 className="text-xl font-semibold text-gray-800 text-center">Recovery Account</h2>
+              <p className="text-sm text-gray-600 text-center">
+                Add a recovery email to help you recover your account.
+              </p>
+
+              {recoveryMessage && (
+                <div className="bg-cyan-50 border border-cyan-200 text-cyan-700 px-4 py-3 rounded-lg text-sm">
+                  {recoveryMessage}
+                </div>
+              )}
+
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="email"
+                  required
+                  value={recoveryEmail}
+                  onChange={(e) => setRecoveryEmail(e.target.value)}
+                  placeholder="Enter recovery email"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={recoveryLoading}
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50"
+              >
+                {recoveryLoading ? 'Sending...' : 'Next'}
+              </button>
+
+              <button
+                type="button"
+                onClick={goBackToLogin}
+                className="w-full text-sm text-gray-600 hover:text-cyan-600"
+              >
+                ← Back to Login
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                  {error}
+                </div>
+              )}
+
+              {/* Role Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Login As</label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  required
+                >
+                  <option value="" disabled>
+                    Select Role
+                  </option>
+                  <option value="candidate">Doctor</option>
+                  <option value="hr">Employer</option>
+                  <option value="admin">Administrator</option>
+                </select>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     type="email"
-                    required
-                    value={resetEmail}
-                    onChange={(e) => setResetEmail(e.target.value)}
-                    placeholder="Enter your email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="you@example.com"
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                    required
                   />
                 </div>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={resetLoading}
-                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50"
-                >
-                  {resetLoading ? 'Sending...' : 'Send Reset Link'}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsForgotPassword(false);
-                    setResetMessage('');
-                  }}
-                  className="w-full text-sm text-gray-600 hover:text-cyan-600"
-                >
-                  ← Back to Login
-                </button>
-              </form>
-            ) : isAccountRecovery ? (
-              /* 🔹 ACCOUNT RECOVERY FORM */
-              <form onSubmit={handleAccountRecovery} className="space-y-6">
-                <h2 className="text-xl font-semibold text-gray-800 text-center">
-                  Account Recovery
-                </h2>
-                <p className="text-sm text-gray-600 text-center">
-                  Can't access your account? Enter your email and we'll help you recover it.
-                </p>
-
-                {recoveryMessage && (
-                  <div className={`${recoveryMessage.includes('sent') ? 'bg-cyan-50 border-cyan-200 text-cyan-700' : 'bg-red-50 border-red-200 text-red-700'} border px-4 py-3 rounded-lg text-sm`}>
-                    {recoveryMessage}
-                  </div>
-                )}
-
+              {/* Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
-                    type="email"
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
                     required
-                    value={recoveryEmail}
-                    onChange={(e) => setRecoveryEmail(e.target.value)}
-                    placeholder="Enter your registered email"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((s) => !s)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
                 </div>
+              </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-sm text-blue-800">
-                    <strong>Note:</strong> We'll send account recovery instructions to help you regain access. This includes verification steps and account details.
-                  </p>
+              {/* Remember & links (✅ Recovery below Forgot) */}
+              <div className="flex items-start justify-between">
+                {/* Left: Remember */}
+                <label className="flex items-center">
+                  <input type="checkbox" className="w-4 h-4 text-cyan-600 border-gray-300 rounded" />
+                  <span className="ml-2 text-sm text-gray-600">Remember me</span>
+                </label>
+
+                {/* Right: Forgot + Recovery below */}
+                <div className="flex flex-col items-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsForgotPassword(true);
+                      setIsRecoveryAccount(false);
+                      setResetMessage('');
+                      setResetEmail('');
+                    }}
+                    className="text-sm text-cyan-600 hover:text-cyan-700 font-medium"
+                  >
+                    Forgot password?
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsRecoveryAccount(true);
+                      setIsForgotPassword(false);
+                      setRecoveryMessage('');
+                      setRecoveryEmail('');
+                    }}
+                    className="mt-1 text-sm text-cyan-600 hover:text-cyan-700 font-medium"
+                  >
+                    Recovery account?
+                  </button>
                 </div>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={recoveryLoading}
-                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50"
-                >
-                  {recoveryLoading ? 'Sending...' : 'Send Recovery Email'}
-                </button>
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium disabled:opacity-50"
+              >
+                {loading ? 'Signing in...' : 'Sign In'}
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsAccountRecovery(false);
-                    setRecoveryMessage('');
-                  }}
-                  className="w-full text-sm text-gray-600 hover:text-cyan-600"
-                >
-                  ← Back to Login
-                </button>
-              </form>
-            ) : (
-              /* 🔹 LOGIN FORM */
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                    {error}
-                  </div>
-                )}
-
-                {/* Email */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="you@example.com"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Password */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="••••••••"
-                      className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((s) => !s)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
-                    >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Remember & Forgot */}
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center">
-                    <input type="checkbox" className="w-4 h-4 text-cyan-600 border-gray-300 rounded" />
-                    <span className="ml-2 text-sm text-gray-600">Remember me</span>
-                  </label>
-                  <div className="flex flex-col items-end space-y-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsForgotPassword(true);
-                        setIsAccountRecovery(false);
-                      }}
-                      className="text-sm text-cyan-600 hover:text-cyan-700 font-medium"
-                    >
-                      Forgot password?
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsAccountRecovery(true);
-                        setIsForgotPassword(false);
-                      }}
-                      className="text-sm text-cyan-600 hover:text-cyan-700 font-medium"
-                    >
-                      Recovery account?
-                    </button>
-                  </div>
-                </div>
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium"
-                >
-                  {loading ? 'Signing in...' : 'Sign In'}
-                </button>
-
-                {/* Google OAuth */}
-                <div className="w-full flex justify-center">
-                  <GoogleLogin
-                    onSuccess={handleGoogleSuccess}
-                    onError={handleGoogleError}
-                    size="large"
-                    width="100%"
-                    text="continue_with"
-                    shape="rectangular"
-                  />
-                </div>
-              </form>
-            )}
-          </div>
-
+              {/* Google */}
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={googleLoading}
+                className="w-full border border-gray-300 py-3 rounded-lg font-medium flex justify-center items-center space-x-3 disabled:opacity-50"
+              >
+                <GoogleIcon />
+                <span>{googleLoading ? 'Connecting...' : 'Continue with Google'}</span>
+              </button>
+            </form>
+          )}
 
           {/* Divider */}
           <div className="relative my-6">

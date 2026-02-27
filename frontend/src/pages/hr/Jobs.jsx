@@ -1,195 +1,184 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import {
-  Briefcase,
-  MapPin,
-  Users,
-  Eye,
-  Edit2,
-  Trash2,
-  Clock,
-} from "lucide-react";
-import Sidebar from "../../components/common/Sidebar";
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Briefcase, MapPin, Users, Eye, Edit2, Trash2, Clock } from 'lucide-react';
+import Sidebar from '../../components/common/Sidebar';
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState('all');
   const [selectedJob, setSelectedJob] = useState(null);
   const [showJobDetails, setShowJobDetails] = useState(false);
 
-  // ✅ Fetch Jobs from Backend
   useEffect(() => {
+    const fetchJobs = async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      setJobs([
+        {
+          id: 1,
+          title: 'Senior Registered Nurse',
+          department: 'Nursing',
+          location: 'Guntur, AP',
+          type: 'Full-time',
+          positions: 3,
+          applicants: 45,
+          status: 'active',
+          postedDate: '2024-01-15',
+          deadline: '2024-02-15'
+        },
+        {
+          id: 2,
+          title: 'Physical Therapist',
+          department: 'Physiotherapy',
+          location: 'Vijayawada, AP',
+          type: 'Full-time',
+          positions: 2,
+          applicants: 28,
+          status: 'active',
+          postedDate: '2024-01-10',
+          deadline: '2024-02-10'
+        },
+        {
+          id: 3,
+          title: 'Lab Technician',
+          department: 'Laboratory',
+          location: 'Guntur, AP',
+          type: 'Part-time',
+          positions: 1,
+          applicants: 15,
+          status: 'closed',
+          postedDate: '2023-12-20',
+          deadline: '2024-01-20'
+        }
+      ]);
+    };
     fetchJobs();
   }, []);
 
-  const fetchJobs = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/jobs");
-      const data = await res.json();
-      setJobs(data);
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
-    }
-  };
-
-  const deleteJob = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this job?")) return;
-
-    try {
-      await fetch(`http://localhost:5000/api/jobs/${id}`, {
-        method: "DELETE",
-      });
-      fetchJobs();
-    } catch (error) {
-      console.error("Delete failed:", error);
-    }
-  };
-
-  const filteredJobs =
-    filter === "all"
-      ? jobs
-      : jobs.filter((job) => job.status === filter);
+  const filteredJobs = jobs.filter(job => filter === 'all' || job.status === filter);
 
   const getStatusBadge = (status) => {
     const styles = {
-      active: "bg-green-100 text-green-800",
-      closed: "bg-red-100 text-red-800",
-      draft: "bg-gray-100 text-gray-800",
+      active: 'bg-green-100 text-green-800',
+      closed: 'bg-red-100 text-red-800',
+      draft: 'bg-gray-100 text-gray-800'
     };
     return styles[status] || styles.active;
   };
 
   return (
-    <div>
+    <div className="flex">
       <Sidebar />
-      <div className="ml-64 min-h-screen bg-gray-50 p-6">
-        <div className="mb-8 flex justify-between items-center">
+
+      {/* Main Content */}
+      <div className="w-full min-h-screen bg-gray-50 p-4 sm:p-6 
+                      mt-16 md:mt-0 
+                      md:ml-64">
+
+        {/* Header */}
+        <div className="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               My Jobs
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-1 sm:mt-2">
               Manage all your job postings
             </p>
           </div>
 
           <Link
             to="/hr/post-job"
-            className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium"
+            className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-2 sm:px-6 sm:py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium text-center"
           >
             + Post New Job
           </Link>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="text-sm text-gray-600 mb-1">
-              Total Jobs
-            </div>
-            <div className="text-3xl font-bold text-gray-900">
-              {jobs.length}
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-xl p-6 shadow-sm border">
+            <div className="text-sm text-gray-600 mb-1">Total Jobs</div>
+            <div className="text-3xl font-bold text-gray-900">{jobs.length}</div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="text-sm text-gray-600 mb-1">
-              Active
-            </div>
+          <div className="bg-white rounded-xl p-6 shadow-sm border">
+            <div className="text-sm text-gray-600 mb-1">Active</div>
             <div className="text-3xl font-bold text-green-600">
-              {jobs.filter((j) => j.status === "active").length}
+              {jobs.filter(j => j.status === 'active').length}
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="text-sm text-gray-600 mb-1">
-              Closed
-            </div>
+          <div className="bg-white rounded-xl p-6 shadow-sm border">
+            <div className="text-sm text-gray-600 mb-1">Closed</div>
             <div className="text-3xl font-bold text-red-600">
-              {jobs.filter((j) => j.status === "closed").length}
+              {jobs.filter(j => j.status === 'closed').length}
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="text-sm text-gray-600 mb-1">
-              Total Applicants
-            </div>
+          <div className="bg-white rounded-xl p-6 shadow-sm border">
+            <div className="text-sm text-gray-600 mb-1">Total Applicants</div>
             <div className="text-3xl font-bold text-cyan-600">
-              {jobs.reduce(
-                (sum, job) => sum + (job.applicants || 0),
-                0
-              )}
+              {jobs.reduce((sum, job) => sum + job.applicants, 0)}
             </div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="mb-6 flex space-x-4">
-          {["all", "active", "closed", "draft"].map(
-            (status) => (
-              <button
-                key={status}
-                onClick={() => setFilter(status)}
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  filter === status
-                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white"
-                    : "bg-white text-gray-700 border border-gray-200"
-                }`}
-              >
-                {status.charAt(0).toUpperCase() +
-                  status.slice(1)}
-              </button>
-            )
-          )}
+        <div className="mb-6 flex flex-wrap gap-3">
+          {['all', 'active', 'closed', 'draft'].map(status => (
+            <button
+              key={status}
+              onClick={() => setFilter(status)}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                filter === status
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                  : 'bg-white text-gray-700 border hover:bg-gray-50'
+              }`}
+            >
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </button>
+          ))}
         </div>
 
-        {/* Job List */}
+        {/* Jobs List */}
         <div className="space-y-4">
-          {filteredJobs.map((job) => (
-            <div
-              key={job.id}
-              className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"
-            >
-              <div className="flex justify-between items-start">
+          {filteredJobs.map(job => (
+            <div key={job.id} className="bg-white rounded-xl p-6 shadow-sm border">
+              <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+
                 <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <h3 className="text-xl font-bold text-gray-900">
+                  <div className="flex flex-wrap items-center gap-3 mb-3">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900">
                       {job.title}
                     </h3>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(
-                        job.status
-                      )}`}
-                    >
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(job.status)}`}>
                       {job.status}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
-                    <div className="flex items-center space-x-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
                       <Briefcase className="w-4 h-4" />
                       <span>{job.department}</span>
                     </div>
-                    <div className="flex items-center space-x-2">
+
+                    <div className="flex items-center gap-2">
                       <MapPin className="w-4 h-4" />
                       <span>{job.location}</span>
                     </div>
-                    <div className="flex items-center space-x-2">
+
+                    <div className="flex items-center gap-2">
                       <Users className="w-4 h-4" />
-                      <span>
-                        {job.applicants} Applicants
-                      </span>
+                      <span>{job.applicants} Applicants</span>
                     </div>
-                    <div className="flex items-center space-x-2">
+
+                    <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      <span>
-                        Deadline: {job.deadline}
-                      </span>
+                      <span>Deadline: {job.deadline}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex space-x-2 ml-4">
+                <div className="flex gap-2">
                   <button
                     onClick={() => {
                       setSelectedJob(job);
@@ -200,10 +189,11 @@ const Jobs = () => {
                     <Eye className="w-5 h-5" />
                   </button>
 
-                  <button
-                    onClick={() => deleteJob(job.id)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                  >
+                  <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                    <Edit2 className="w-5 h-5" />
+                  </button>
+
+                  <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
                     <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
@@ -211,54 +201,15 @@ const Jobs = () => {
             </div>
           ))}
         </div>
-      </div>
 
-      {showJobDetails && selectedJob && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white max-w-2xl w-full rounded-xl shadow-xl p-6">
-            <h2 className="text-xl font-bold mb-4">
-              Job Details
-            </h2>
-
-            <div className="space-y-3 text-sm">
-              <div>
-                <strong>Title:</strong> {selectedJob.title}
-              </div>
-              <div>
-                <strong>Department:</strong>{" "}
-                {selectedJob.department}
-              </div>
-              <div>
-                <strong>Location:</strong>{" "}
-                {selectedJob.location}
-              </div>
-              <div>
-                <strong>Positions:</strong>{" "}
-                {selectedJob.positions}
-              </div>
-              <div>
-                <strong>Applicants:</strong>{" "}
-                {selectedJob.applicants}
-              </div>
-              <div>
-                <strong>Status:</strong>{" "}
-                {selectedJob.status}
-              </div>
-            </div>
-
-            <div className="mt-6 text-right">
-              <button
-                onClick={() =>
-                  setShowJobDetails(false)
-                }
-                className="px-6 py-2 bg-cyan-600 text-white rounded-lg"
-              >
-                Close
-              </button>
-            </div>
+        {filteredJobs.length === 0 && (
+          <div className="text-center py-12 bg-white rounded-xl">
+            <Briefcase className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Jobs Found</h3>
+            <p className="text-gray-600">Start by posting a new job</p>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

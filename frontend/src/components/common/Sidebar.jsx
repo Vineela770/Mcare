@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/useAuth';
 import {
   LayoutDashboard,
@@ -20,30 +20,24 @@ import {
   UserCheck,
   CreditCard,
   CalendarCheck,
-  Copy,
-  Check
+  X,
+  Menu,
 } from 'lucide-react';
 
-// ✅ Updated skillPercentage default to 60 to match dashboard state
-const Sidebar = ({ skillPercentage = 60, userName }) => {
+const Sidebar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [copied, setCopied] = useState(false);
-  
+
+  const skillPercentage = 13;
   const targetPercentage = 87;
+
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
+    setMobileOpen(false);
     navigate('/');
-  };
-
-  // ✅ Function to handle copying ID to clipboard
-  const handleCopyId = () => {
-    const fullId = `MCARE-${user?.id || '001'}`;
-    navigator.clipboard.writeText(fullId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Reset icon after 2 seconds
   };
 
   const menuItems = {
@@ -73,6 +67,7 @@ const Sidebar = ({ skillPercentage = 60, userName }) => {
       { icon: Lock, label: 'Change Password', path: '/hr/change-password' },
       { icon: Trash2, label: 'Delete Profile', path: '/hr/delete-profile' },
     ],
+
     admin: [
       { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
       { icon: Users, label: 'Users Management', path: '/admin/users' },
@@ -85,109 +80,99 @@ const Sidebar = ({ skillPercentage = 60, userName }) => {
   };
 
   const currentMenu = menuItems[user?.role] || [];
-  const displayName = userName || user?.full_name || user?.name || 'Manoj Kumar';
 
-  return (
-    <div className="w-64 bg-white h-screen border-r border-gray-200 flex flex-col fixed left-0 top-0 z-40">
-      {/* Logo & User Info */}
+  const getProfilePath = () =>
+    user?.role === 'candidate'
+      ? '/candidate/profile'
+      : user?.role === 'hr'
+      ? '/hr/settings'
+      : '/admin/settings';
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (mobileOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = '';
+  }, [mobileOpen]);
+
+  const SidebarContent = ({ isMobile = false }) => (
+    <div className="w-full h-full bg-white flex flex-col overflow-y-auto">
+
+      {/* Logo */}
       <div className="p-6 border-b border-gray-200">
-        <Link to="/" className="flex items-center space-x-2 mb-4">
+        <Link
+          to="/"
+          onClick={() => isMobile && setMobileOpen(false)}
+          className="flex items-center space-x-2 mb-4"
+        >
           <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-xl">M</span>
           </div>
           <span className="text-2xl font-bold text-gray-900">MCARE</span>
         </Link>
 
-        {/* Dynamic User Profile Section */}
-        <div className="flex items-center space-x-3 mt-4 text-left">
-          {/* ✅ FIXED: Enhanced Profile Photo logic with explicit URL prefixing and cache-busting key */}
-          <div className="w-12 h-12 rounded-full overflow-hidden border border-cyan-200 shadow-sm flex items-center justify-center bg-gradient-to-br from-cyan-100 to-blue-100 flex-shrink-0">
-            {user?.profile_photo_url ? (
-              <img 
-                key={user.profile_photo_url} // Forces re-render when photo changes
-                src={`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${user.profile_photo_url}`} 
-                alt="Profile" 
-                className="w-full h-full object-cover"
-                onError={(e) => { 
-                  // If image fails to load (e.g. 404), fallback to the initial letter display
-                  e.target.style.display = 'none'; 
-                }} 
-              />
-            ) : null}
-            {/* Show Initial letter if no photo OR if image above fails to load (display: none) */}
-            <span className="text-xl font-bold text-cyan-600">
-              {displayName.charAt(0).toUpperCase()}
+        <div
+          onClick={() => {
+            navigate(getProfilePath());
+            if (isMobile) setMobileOpen(false);
+          }}
+          className="flex items-center space-x-3 mt-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition"
+        >
+          <div className="w-10 h-10 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-full flex items-center justify-center">
+            <span className="text-lg font-bold text-cyan-600">
+              {user?.name?.charAt(0) || 'U'}
             </span>
           </div>
-          <div className="overflow-hidden">
-            <p className="font-bold text-gray-900 truncate text-sm">
-              {displayName}
-            </p>
-            
-            <div className="flex items-center space-x-1.5 group">
-              <p className="text-[13px] font-bold text-cyan-600 font-mono uppercase tracking-tight">
-                ID: MCARE-{user?.id || '001'}
-              </p>
-              <button 
-                onClick={handleCopyId}
-                className="p-1 hover:bg-cyan-50 rounded-md transition-colors border border-transparent hover:border-cyan-100"
-                title="Copy ID"
-              >
-                {copied ? (
-                  <Check size={14} className="text-green-600" />
-                ) : (
-                  <Copy size={14} className="text-gray-400 group-hover:text-cyan-600" />
-                )}
-              </button>
-            </div>
+
+          <div>
+            <p className="font-semibold text-gray-900">{user?.name || 'User'}</p>
+            <p className="text-sm text-gray-500">User ID: {user?.id || 'MC-1001'}</p>
           </div>
         </div>
       </div>
 
-      {/* Navigation Menu */}
-      <nav className="flex-1 p-4 overflow-y-auto">
-        <div className="space-y-2">
-          {currentMenu.map((item, index) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-            
-            return (
-              <Link
-                key={index}
-                to={item.path}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                  isActive
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm'
-                    : 'text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
+      {/* Menu */}
+      <nav className="p-4 space-y-2">
+        {currentMenu.map((item, index) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.path;
+
+          return (
+            <Link
+              key={index}
+              to={item.path}
+              onClick={() => isMobile && setMobileOpen(false)}
+              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                isActive
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Icon className="w-5 h-5" />
+              <span className="font-medium">{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
 
-      {/* Skills Percentage – Candidate Only */}
+      {/* Skills */}
       {user?.role === 'candidate' && (
         <div className="px-4 pb-4">
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-            <div className="flex justify-between items-center mb-2">
-                <p className="text-[11px] font-bold text-gray-900">Skills Percentage:</p>
-                <span className="text-[11px] font-bold text-cyan-600">{skillPercentage}%</span>
-            </div>
-
-            <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden mb-3">
+            <p className="text-sm font-semibold text-gray-900 mb-2">
+              Skills Percentage: <span className="text-red-500">{skillPercentage}%</span>
+            </p>
+            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-3">
               <div
-                className="h-full bg-cyan-500 rounded-full transition-all duration-700"
+                className="h-full bg-cyan-500 rounded-full"
                 style={{ width: `${skillPercentage}%` }}
               />
             </div>
-
-            <p className="text-[10px] text-gray-500 leading-relaxed text-left">
-              Complete your profile to increase your score up to{' '}
-              <span className="font-bold text-cyan-600">
+            <p className="text-xs text-gray-500">
+              Improve your profile to reach{" "}
+              <span className="font-semibold text-cyan-600">
                 {targetPercentage}%
               </span>
             </p>
@@ -195,17 +180,67 @@ const Sidebar = ({ skillPercentage = 60, userName }) => {
         </div>
       )}
 
-      {/* Logout Button */}
-      <div className="p-4 border-t border-gray-200">
+      {/* Logout */}
+      <div className="px-4 pb-6">
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-3 px-4 py-3 rounded-lg w-full text-red-600 hover:bg-red-50 transition-colors"
+          className="flex items-center space-x-3 px-4 py-3 rounded-lg w-full text-red-600 hover:bg-red-50 transition-colors border border-red-200 bg-white"
         >
           <LogOut className="w-5 h-5" />
           <span className="font-medium">Logout</span>
         </button>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {/* Mobile Button */}
+      <button
+        type="button"
+        onClick={() => setMobileOpen(true)}
+        className="md:hidden fixed top-4 left-4 z-50 bg-white border border-gray-200 shadow-sm rounded-lg p-2"
+      >
+        <Menu className="w-6 h-6 text-gray-800" />
+      </button>
+
+      {/* Desktop */}
+      <div className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 z-40">
+        <SidebarContent />
+      </div>
+
+      {/* Mobile Drawer */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-[60]">
+
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setMobileOpen(false)}
+          />
+
+          {/* ✅ Scrollable Drawer */}
+          <div className="absolute left-0 top-0 h-screen w-[85%] max-w-[320px] bg-white shadow-2xl overflow-y-auto">
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 sticky top-0 bg-white z-10">
+              <p className="font-semibold text-gray-900">Menu</p>
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                className="p-2 rounded-lg hover:bg-gray-100"
+              >
+                <X className="w-5 h-5 text-gray-800" />
+              </button>
+            </div>
+
+            {/* Sidebar Content */}
+            <SidebarContent isMobile />
+
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
