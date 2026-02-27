@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { Save, Bell, Mail, Database, Shield, Globe, Server } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Save, Bell, Mail, Database, Shield, Globe, Server, CheckCircle, X, AlertCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import adminService from '../../api/adminService';
 
 const SystemSettings = () => {
   const [settings, setSettings] = useState({
     // General Settings
-    siteName: 'MCARE Healthcare Jobs',
-    siteDescription:
-      'Premier healthcare job portal connecting professionals with opportunities',
-    contactEmail: 'admin@mcare.com',
-    supportEmail: 'support@mcare.com',
+    siteName: '',
+    siteDescription: '',
+    contactEmail: '',
+    supportEmail: '',
 
     // Notification Settings
-    emailNotifications: true,
+    emailNotifications: false,
     smsNotifications: false,
-    pushNotifications: true,
+    pushNotifications: false,
 
     // Security Settings
     twoFactorAuth: false,
@@ -24,9 +24,46 @@ const SystemSettings = () => {
     // System Settings
     maintenanceMode: false,
     debugMode: false,
-    autoBackup: true,
+    autoBackup: false,
     backupFrequency: 'daily',
   });
+
+  const [notification, setNotification] = useState(null);
+
+  const fetchSettings = async () => {
+    try {
+      const data = await adminService.getSettings();
+      if (data) {
+        setSettings({
+          siteName: data.siteName || '',
+          siteDescription: data.siteDescription || '',
+          contactEmail: data.contactEmail || '',
+          supportEmail: data.supportEmail || '',
+          emailNotifications: data.emailNotifications || false,
+          smsNotifications: data.smsNotifications || false,
+          pushNotifications: data.pushNotifications || false,
+          twoFactorAuth: data.twoFactorAuth || false,
+          sessionTimeout: data.sessionTimeout || '30',
+          passwordExpiry: data.passwordExpiry || '90',
+          maintenanceMode: data.maintenanceMode || false,
+          debugMode: data.debugMode || false,
+          autoBackup: data.autoBackup || false,
+          backupFrequency: data.backupFrequency || 'daily',
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch settings:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -36,35 +73,58 @@ const SystemSettings = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Settings saved:', settings);
-    // TODO: Implement API call to save settings
+    try {
+      await adminService.updateSettings(settings);
+      showNotification('Settings saved successfully!');
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      showNotification(error.message || 'Failed to save settings', 'error');
+    }
   };
 
-  const handleReset = () => {
-    setSettings({
-      siteName: 'MCARE Healthcare Jobs',
-      siteDescription:
-        'Premier healthcare job portal connecting professionals with opportunities',
-      contactEmail: 'admin@mcare.com',
-      supportEmail: 'support@mcare.com',
-      emailNotifications: true,
-      smsNotifications: false,
-      pushNotifications: true,
-      twoFactorAuth: false,
-      sessionTimeout: '30',
-      passwordExpiry: '90',
-      maintenanceMode: false,
-      debugMode: false,
-      autoBackup: true,
-      backupFrequency: 'daily',
-    });
+  const handleReset = async () => {
+    try {
+      await fetchSettings();
+      showNotification('Settings reset to last saved values', 'info');
+    } catch (error) {
+      console.error('Failed to reset settings:', error);
+      showNotification('Failed to reset settings', 'error');
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
+
+      {/* Notification */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 animate-fade-in">
+          <div
+            className={`flex items-center space-x-3 px-6 py-3 rounded-lg shadow-lg ${
+              notification.type === 'success'
+                ? 'bg-green-500'
+                : notification.type === 'error'
+                ? 'bg-red-500'
+                : 'bg-blue-500'
+            } text-white`}
+          >
+            {notification.type === 'success' ? (
+              <CheckCircle className="w-5 h-5" />
+            ) : (
+              <AlertCircle className="w-5 h-5" />
+            )}
+            <span className="font-medium">{notification.message}</span>
+            <button
+              onClick={() => setNotification(null)}
+              className="ml-4 hover:bg-white/20 rounded p-1"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ✅ Desktop unchanged, ✅ Mobile: add extra top padding so header moves down */}
       <div className="ml-0 md:ml-64 min-h-screen bg-gray-50 p-4 sm:p-6 pt-16 sm:pt-6 md:pt-6">

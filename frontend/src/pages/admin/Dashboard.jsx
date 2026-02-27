@@ -23,21 +23,47 @@ const AdminDashboard = () => {
     activeToday: 0,
   });
 
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [systemStats, setSystemStats] = useState({
+    totalCandidates: 0,
+    totalHR: 0,
+    totalEmployees: 0,
+    applicationsToday: 0,
+  });
+
+  const fetchDashboardData = async () => {
+    try {
+      // Fetch main stats
+      const statsData = await adminService.getDashboardStats();
+      setStats({
+        totalUsers: statsData.totalUsers || 0,
+        totalJobs: statsData.totalJobs || 0,
+        employers: statsData.totalEmployers || 0,
+        activeToday: statsData.activeToday || 0,
+      });
+
+      // Fetch recent activities (limit to 4)
+      const activitiesData = await adminService.getActivities();
+      const activities = Array.isArray(activitiesData) ? activitiesData : [];
+      setRecentActivity(activities.slice(0, 4));
+
+      // Fetch users to calculate role-based stats
+      const usersData = await adminService.getUsers();
+      const users = Array.isArray(usersData) ? usersData : [];
+      
+      setSystemStats({
+        totalCandidates: users.filter(u => u.role === 'candidate').length,
+        totalHR: users.filter(u => u.role === 'hr').length,
+        totalEmployees: users.filter(u => u.role === 'employee' || u.role === 'employer').length,
+        applicationsToday: statsData.activeToday || 0,
+      });
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const data = await adminService.getDashboardStats();
-        setStats({
-          totalUsers: data.totalUsers || 0,
-          totalJobs: data.totalJobs || 0,
-          employers: data.totalEmployers || 0,
-          activeToday: data.activeToday || 0,
-        });
-      } catch (error) {
-        console.error('Failed to fetch dashboard stats:', error);
-      }
-    };
-    fetchStats();
+    fetchDashboardData();
   }, []);
 
   // ✅ Fixed color classes (Tailwind does not support dynamic strings)
@@ -73,45 +99,6 @@ const AdminDashboard = () => {
       bg: 'bg-purple-100',
       text: 'text-purple-600',
       link: '/admin/analytics',
-    },
-  ];
-
-  const recentActivity = [
-    {
-      id: 1,
-      user: 'John Doe',
-      action: 'registered as Candidate',
-      time: '5 min ago',
-      icon: UserCheck,
-      bg: 'bg-green-100',
-      text: 'text-green-600',
-    },
-    {
-      id: 2,
-      user: 'Manhattan Hospital',
-      action: 'posted a new job',
-      time: '15 min ago',
-      icon: Briefcase,
-      bg: 'bg-blue-100',
-      text: 'text-blue-600',
-    },
-    {
-      id: 3,
-      user: 'Sarah Johnson',
-      action: 'applied to Senior Nurse position',
-      time: '1 hour ago',
-      icon: Clock,
-      bg: 'bg-cyan-100',
-      text: 'text-cyan-600',
-    },
-    {
-      id: 4,
-      user: 'Old Account',
-      action: 'was deactivated',
-      time: '2 hours ago',
-      icon: UserX,
-      bg: 'bg-red-100',
-      text: 'text-red-600',
     },
   ];
 
@@ -202,29 +189,37 @@ const AdminDashboard = () => {
             </div>
 
             <div className="space-y-4">
-              {recentActivity.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
-                >
+              {recentActivity.length > 0 ? (
+                recentActivity.map((activity) => (
                   <div
-                    className={`w-10 h-10 ${activity.bg} rounded-lg flex items-center justify-center`}
+                    key={activity.id}
+                    className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
                   >
-                    <activity.icon className={`w-5 h-5 ${activity.text}`} />
+                    <div
+                      className={`w-10 h-10 ${activity.bg || 'bg-gray-100'} rounded-lg flex items-center justify-center`}
+                    >
+                      {activity.icon ? (
+                        <activity.icon className={`w-5 h-5 ${activity.color || activity.text || 'text-gray-600'}`} />
+                      ) : (
+                        <Clock className="w-5 h-5 text-gray-600" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-gray-900 text-sm md:text-base">
+                        <span className="font-semibold">
+                          {activity.user}
+                        </span>{' '}
+                        {activity.action || activity.details}
+                      </p>
+                      <p className="text-xs md:text-sm text-gray-500">
+                        {activity.time || activity.timestamp}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-gray-900 text-sm md:text-base">
-                      <span className="font-semibold">
-                        {activity.user}
-                      </span>{' '}
-                      {activity.action}
-                    </p>
-                    <p className="text-xs md:text-sm text-gray-500">
-                      {activity.time}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-gray-500 text-center py-8">No recent activity</p>
+              )}
             </div>
           </div>
 
@@ -240,7 +235,7 @@ const AdminDashboard = () => {
                   Total Candidates
                 </span>
                 <span className="text-lg md:text-xl font-bold text-cyan-600">
-                  1,847
+                  {systemStats.totalCandidates.toLocaleString()}
                 </span>
               </div>
 
@@ -249,7 +244,7 @@ const AdminDashboard = () => {
                   Total HR Users
                 </span>
                 <span className="text-lg md:text-xl font-bold text-blue-600">
-                  156
+                  {systemStats.totalHR.toLocaleString()}
                 </span>
               </div>
 
@@ -258,7 +253,7 @@ const AdminDashboard = () => {
                   Total Employees
                 </span>
                 <span className="text-lg md:text-xl font-bold text-green-600">
-                  455
+                  {systemStats.totalEmployees.toLocaleString()}
                 </span>
               </div>
 
@@ -267,7 +262,7 @@ const AdminDashboard = () => {
                   Applications Today
                 </span>
                 <span className="text-lg md:text-xl font-bold text-purple-600">
-                  67
+                  {systemStats.applicationsToday.toLocaleString()}
                 </span>
               </div>
             </div>
