@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Upload,
   Download,
@@ -14,15 +14,46 @@ import {
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
+import { resumeService } from '../../api/resumeService';
+import { userService } from '../../api/userService';
 
 const Resume = () => {
-  const [resumeFile, setResumeFile] = useState({
-    name: 'John_Doe_Resume.pdf',
-    size: '245 KB',
-    uploadedDate: '2024-01-01',
-  });
+  const [resumeFile, setResumeFile] = useState(null);
+  const [profileCompletion, setProfileCompletion] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [summary, setSummary] = useState('');
+  const [experiences, setExperiences] = useState([]);
+  const [educations, setEducations] = useState([]);
 
-  const [profileCompletion] = useState(75);
+  // Load resume data from backend on mount
+  useEffect(() => {
+    const fetchResumeData = async () => {
+      setLoading(true);
+      try {
+        const data = await resumeService.getUserResume();
+        if (data) {
+          setSummary(data.summary || '');
+          setExperiences(data.experiences || []);
+          setEducations(data.educations || []);
+          setProfileCompletion(data.profileCompletion || 0);
+          if (data.resumeUrl) {
+            setResumeFile({
+              name: data.resumeFileName || 'Resume.pdf',
+              size: data.resumeSize || 'N/A',
+              uploadedDate: data.resumeUploadedDate || new Date().toISOString().split('T')[0],
+              url: data.resumeUrl
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch resume data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResumeData();
+  }, []);
 
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showExperienceModal, setShowExperienceModal] = useState(false);
@@ -33,34 +64,6 @@ const Resume = () => {
 
   const [successMessage, setSuccessMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
-
-  const [summary, setSummary] = useState(
-    'Experienced healthcare professional with 5+ years in patient care. Specialized in emergency medicine with proven track record of delivering high-quality care in fast-paced environments.'
-  );
-
-  const [experiences, setExperiences] = useState([
-    {
-      id: 1,
-      title: 'Senior Registered Nurse',
-      company: 'Manhattan Hospital',
-      location: 'New York, NY',
-      startDate: '2020',
-      endDate: 'Present',
-      description:
-        'Provided comprehensive patient care in emergency department, managed critical cases, and mentored junior staff.',
-    },
-  ]);
-
-  const [educations, setEducations] = useState([
-    {
-      id: 1,
-      degree: 'Bachelor of Science in Nursing',
-      institution: 'Columbia University',
-      location: 'New York, NY',
-      startYear: '2016',
-      endYear: '2020',
-    },
-  ]);
 
   const [experienceForm, setExperienceForm] = useState({
     title: '',

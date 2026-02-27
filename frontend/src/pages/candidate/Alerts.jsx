@@ -1,43 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
 import { Bell, Plus, Briefcase, Trash2, Edit2, CheckCircle, X, AlertCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import { alertService } from '../../api/alertService';
 
 const Alerts = () => {
-  const [alerts, setAlerts] = useState([
-    {
-      id: 1,
-      title: 'Senior Nurse Jobs in New York',
-      keywords: 'Senior Nurse',
-      location: 'New York',
-      jobType: 'Full-time',
-      criteria: 'Senior Nurse • New York • Full-time',
-      frequency: 'Daily',
-      active: true,
-      matchingJobs: 12,
-    },
-    {
-      id: 2,
-      title: 'Physical Therapist Jobs',
-      keywords: 'Physical Therapist',
-      location: 'Any Location',
-      jobType: 'Full-time',
-      criteria: 'Physical Therapist • Any Location • Full-time',
-      frequency: 'Weekly',
-      active: true,
-      matchingJobs: 8,
-    },
-    {
-      id: 3,
-      title: 'Part-time Medical Jobs',
-      keywords: 'Medical',
-      location: 'Chicago',
-      jobType: 'Part-time',
-      criteria: 'Medical • Chicago • Part-time',
-      frequency: 'Daily',
-      active: false,
-      matchingJobs: 5,
-    },
-  ]);
+  const [alerts, setAlerts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load alerts from backend on mount
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      setLoading(true);
+      try {
+        const data = await alertService.getUserAlerts();
+        setAlerts(data);
+      } catch (error) {
+        console.error('Failed to fetch alerts:', error);
+        setAlerts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAlerts();
+  }, []);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);

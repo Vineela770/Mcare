@@ -2,52 +2,25 @@ import { useState, useEffect } from 'react';
 import { Send, Clock, CheckCircle, XCircle, Eye, FileText, Building2, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../../components/common/Sidebar';
+import { applicationService } from '../../api/applicationService';
 
 const Applications = () => {
   const [filter, setFilter] = useState('all');
   const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchApplications = async () => {
-      await new Promise(resolve => setTimeout(resolve, 0));
-      setApplications([
-        {
-          id: 1,
-          title: 'Senior Registered Nurse',
-          company: 'Manhattan Hospital',
-          location: 'New York, NY',
-          appliedDate: '2024-01-05',
-          status: 'Under Review',
-          salary: 'Rs. 75,000 - Rs. 95,000',
-        },
-        {
-          id: 2,
-          title: 'Physical Therapist',
-          company: 'Wellness Rehab',
-          location: 'Los Angeles, CA',
-          appliedDate: '2024-01-03',
-          status: 'Shortlisted',
-          salary: 'Rs. 65,000 - Rs. 85,000',
-        },
-        {
-          id: 3,
-          title: 'Lab Technician',
-          company: 'HealthCare Labs',
-          location: 'Chicago, IL',
-          appliedDate: '2023-12-28',
-          status: 'Interview',
-          salary: 'Rs. 45,000 - Rs. 55,000',
-        },
-        {
-          id: 4,
-          title: 'Medical Assistant',
-          company: 'City Medical',
-          location: 'Houston, TX',
-          appliedDate: '2023-12-20',
-          status: 'Rejected',
-          salary: 'Rs. 40,000 - Rs. 50,000',
-        },
-      ]);
+      setLoading(true);
+      try {
+        const data = await applicationService.getUserApplications();
+        setApplications(data);
+      } catch (error) {
+        console.error('Failed to fetch applications:', error);
+        setApplications([]);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchApplications();
   }, []);

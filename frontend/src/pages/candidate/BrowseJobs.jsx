@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { Search, MapPin, Briefcase, DollarSign, Clock, Star, X, FileText, Building2, Calendar, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
+import { jobService } from '../../api/jobService';
 
 
 const BrowseJobs = () => {
   const [jobs, setJobs] = useState([]);
+  const [allJobs, setAllJobs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('All Locations');
   const [jobType, setJobType] = useState('all');
@@ -20,87 +22,7 @@ const BrowseJobs = () => {
     availability: ''
   });
   const [errors, setErrors] = useState({});
-
-  const allJobs = [
-    {
-      id: 1,
-      title: 'Senior Registered Nurse - ICU',
-      company: 'MCARE Hospital',
-      location: 'Guntur, Andhra Pradesh',
-      type: 'Full-time',
-      salary: 'Rs. 50,000 - 70,000',
-      posted: '2 days ago',
-      saved: false,
-      description: 'We are seeking an experienced ICU nurse to join our critical care team. The ideal candidate will have strong clinical skills and excellent patient care abilities.',
-      requirements: ['B.Sc Nursing degree', 'Minimum 3 years ICU experience', 'Valid nursing license', 'BLS and ACLS certification'],
-      responsibilities: ['Monitor ICU patients', 'Administer medications', 'Coordinate with doctors', 'Maintain patient records']
-    },
-    {
-      id: 2,
-      title: 'Physical Therapist',
-      company: 'Apollo Hospitals',
-      location: 'Hyderabad, Telangana',
-      type: 'Full-time',
-      salary: 'Rs. 40,000 - 60,000',
-      posted: '1 week ago',
-      saved: true,
-      description: 'Join our rehabilitation team to help patients recover and improve their mobility through physical therapy treatments.',
-      requirements: ['BPT or MPT degree', '2+ years experience', 'Valid license', 'Strong communication skills'],
-      responsibilities: ['Assess patient conditions', 'Develop treatment plans', 'Perform therapy sessions', 'Track patient progress']
-    },
-    {
-      id: 3,
-      title: 'Lab Technician',
-      company: 'City Diagnostics',
-      location: 'Vijayawada, Andhra Pradesh',
-      type: 'Part-time',
-      salary: 'Rs. 25,000 - 35,000',
-      posted: '3 days ago',
-      saved: false,
-      description: 'Seeking skilled lab technician to perform diagnostic tests and maintain laboratory equipment.',
-      requirements: ['B.Sc MLT or equivalent', '1+ year experience', 'Knowledge of lab equipment', 'Attention to detail'],
-      responsibilities: ['Conduct laboratory tests', 'Maintain equipment', 'Record test results', 'Ensure quality control']
-    },
-    {
-      id: 4,
-      title: 'Medical Officer',
-      company: 'Care Hospital',
-      location: 'Guntur, Andhra Pradesh',
-      type: 'Full-time',
-      salary: 'Rs. 80,000 - 1,20,000',
-      posted: '1 day ago',
-      saved: false,
-      description: 'Experienced medical officer needed for our emergency department. Must be able to handle critical cases.',
-      requirements: ['MBBS degree', 'Valid medical license', '3+ years experience', 'Emergency care expertise'],
-      responsibilities: ['Diagnose and treat patients', 'Handle emergency cases', 'Prescribe medications', 'Maintain medical records']
-    },
-    {
-      id: 5,
-      title: 'Pharmacist',
-      company: 'MedPlus Health Services',
-      location: 'Hyderabad, Telangana',
-      type: 'Full-time',
-      salary: 'Rs. 30,000 - 45,000',
-      posted: '5 days ago',
-      saved: true,
-      description: 'Join our pharmacy team to provide medication counseling and ensure accurate dispensing of prescriptions.',
-      requirements: ['B.Pharm or D.Pharm', 'Valid pharmacy license', '2+ years experience', 'Good communication skills'],
-      responsibilities: ['Dispense medications', 'Counsel patients', 'Manage inventory', 'Verify prescriptions']
-    },
-    {
-      id: 6,
-      title: 'Dental Hygienist',
-      company: 'Smile Dental Clinic',
-      location: 'Vijayawada, Andhra Pradesh',
-      type: 'Part-time',
-      salary: 'Rs. 20,000 - 30,000',
-      posted: '1 week ago',
-      saved: false,
-      description: 'Looking for a skilled dental hygienist to provide preventive dental care and patient education.',
-      requirements: ['Dental hygiene certification', '1+ year experience', 'Patient care skills', 'Hygiene knowledge'],
-      responsibilities: ['Clean teeth', 'Take X-rays', 'Educate patients', 'Assist dentist']
-    }
-  ];
+  const [loading, setLoading] = useState(true);
 
   const cities = [
     'All Locations',
@@ -119,7 +41,23 @@ const BrowseJobs = () => {
   ];
 
   useEffect(() => {
-    setJobs(allJobs);
+    // Fetch jobs from backend
+    const fetchJobs = async () => {
+      setLoading(true);
+      try {
+        const data = await jobService.getCandidateJobs();
+        setAllJobs(data);
+        setJobs(data);
+      } catch (error) {
+        console.error('Failed to fetch jobs:', error);
+        setAllJobs([]);
+        setJobs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
   }, []);
 
   const handleSearch = () => {

@@ -12,6 +12,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
 import Sidebar from '../../components/common/Sidebar';
+import { userService } from '../../api/userService';
+import { applicationService } from '../../api/applicationService';
 
 const CandidateDashboard = () => {
   const { user } = useAuth();
@@ -24,44 +26,33 @@ const CandidateDashboard = () => {
   });
 
   const [recentApplications, setRecentApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setStats({
-      applied: 15,
-      shortlisted: 8,
-      interviews: 3,
-      profileViews: 234,
-    });
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      try {
+        // Fetch dashboard stats from backend
+        const statsData = await userService.getDashboardStats();
+        setStats({
+          applied: statsData.applications || 0,
+          shortlisted: statsData.shortlisted || 0,
+          interviews: statsData.interviews || 0,
+          profileViews: statsData.profileViews || 0,
+        });
 
-    setRecentApplications([
-      {
-        id: 1,
-        title: 'Senior Registered Nurse',
-        company: 'Manhattan Hospital',
-        location: 'New York, NY',
-        appliedDate: '2 days ago',
-        status: 'Under Review',
-        logo: '🏥',
-      },
-      {
-        id: 2,
-        title: 'Physical Therapist',
-        company: 'Wellness Rehab',
-        location: 'Los Angeles, CA',
-        appliedDate: '5 days ago',
-        status: 'Shortlisted',
-        logo: '🏋️',
-      },
-      {
-        id: 3,
-        title: 'Lab Technician',
-        company: 'HealthCare Labs',
-        location: 'Chicago, IL',
-        appliedDate: '1 week ago',
-        status: 'Interview',
-        logo: '🔬',
-      },
-    ]);
+        // Fetch recent applications
+        const applicationsData = await applicationService.getUserApplications();
+        setRecentApplications(applicationsData.slice(0, 3)); // Show only 3 recent
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+        // Keep default empty state
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
   }, []);
 
   const statStyles = {

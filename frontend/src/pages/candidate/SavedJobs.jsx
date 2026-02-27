@@ -1,42 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Heart, MapPin, Briefcase, Clock, Trash2, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
+import { jobService } from '../../api/jobService';
 
 const SavedJobs = () => {
-  const [savedJobs, setSavedJobs] = useState([
-    {
-      id: 1,
-      title: 'Senior Registered Nurse',
-      company: 'Manhattan Hospital',
-      location: 'New York, NY',
-      type: 'Full-time',
-      salary: 'Rs. 75,000 - Rs. 95,000',
-      posted: '2 days ago',
-      saved: true,
-    },
-    {
-      id: 2,
-      title: 'Physical Therapist',
-      company: 'Wellness Rehab Center',
-      location: 'Los Angeles, CA',
-      type: 'Full-time',
-      salary: 'Rs. 65,000 - Rs. 85,000',
-      posted: '1 week ago',
-      saved: true,
-    },
-    {
-      id: 3,
-      title: 'Medical Lab Technician',
-      company: 'HealthCare Labs',
-      location: 'Chicago, IL',
-      type: 'Part-time',
-      salary: 'Rs. 45,000 - Rs. 55,000',
-      posted: '3 days ago',
-      saved: true,
-    },
-  ]);
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSavedJobs = async () => {
+      setLoading(true);
+      try {
+        const data = await jobService.getSavedJobs();
+        setSavedJobs(data);
+      } catch (error) {
+        console.error('Failed to fetch saved jobs:', error);
+        setSavedJobs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSavedJobs();
+  }, []);
 
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [showApplyModal, setShowApplyModal] = useState(false);
