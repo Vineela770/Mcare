@@ -185,8 +185,29 @@ const SCHEMA_STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_guest_applications_status ON guest_applications(status)`,
 
+  // ── System Settings ──────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS system_settings (
+    id INTEGER PRIMARY KEY DEFAULT 1,
+    site_name VARCHAR(255) DEFAULT 'MCARE',
+    site_description TEXT DEFAULT 'Healthcare Jobs Platform',
+    contact_email VARCHAR(255) DEFAULT 'admin@mcare.com',
+    support_email VARCHAR(255) DEFAULT 'support@mcare.com',
+    email_notifications BOOLEAN DEFAULT TRUE,
+    sms_notifications BOOLEAN DEFAULT FALSE,
+    push_notifications BOOLEAN DEFAULT TRUE,
+    two_factor_auth BOOLEAN DEFAULT FALSE,
+    session_timeout INTEGER DEFAULT 30,
+    password_expiry INTEGER DEFAULT 90,
+    maintenance_mode BOOLEAN DEFAULT FALSE,
+    debug_mode BOOLEAN DEFAULT FALSE,
+    auto_backup BOOLEAN DEFAULT TRUE,
+    backup_frequency VARCHAR(50) DEFAULT 'daily',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `INSERT INTO system_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING`,
+
   // ── Activity Logs ──────────────────────────────────────────────────────────
-  `CREATE TABLE IF NOT EXISTS activity_logs (
+  `CREATE TABLE IF NOT EXISTS activity_logs (`
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
     action VARCHAR(100) NOT NULL,

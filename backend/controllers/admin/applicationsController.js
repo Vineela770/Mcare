@@ -8,7 +8,7 @@ exports.getAllApplications = async (req, res) => {
         a.id,
         a.status,
         a.created_at AS applied_at,
-        a.cover_letter_url,
+        a.cover_letter_path AS cover_letter_url,
         -- Candidate info
         u.id          AS user_id,
         u.full_name   AS candidate_name,
