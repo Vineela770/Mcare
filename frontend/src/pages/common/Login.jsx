@@ -33,7 +33,6 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    role: '',
   });
 
   const [error, setError] = useState('');
@@ -80,22 +79,12 @@ const Login = () => {
     e.preventDefault();
     setError('');
 
-    if (!formData.role) {
-      setError('Please select a role.');
-      return;
-    }
-
     setLoading(true);
     try {
-      // Call backend API for login
+      // Call backend API for login - backend returns user with their registered role
       const { token, user } = await authService.login(formData.email, formData.password);
       
-      // Verify role matches
-      if (user.role !== formData.role) {
-        setError(`This account is registered as ${user.role}. Please select the correct role.`);
-        return;
-      }
-      
+      // Auto-redirect based on user's registered role
       login(user, token);
       redirectByRole(user.role);
     } catch (err) {
@@ -107,11 +96,6 @@ const Login = () => {
 
   const handleGoogleSignIn = async () => {
     setError('');
-
-    if (!formData.role) {
-      setError('Please select a role before continuing with Google.');
-      return;
-    }
 
     setGoogleLoading(true);
     try {
@@ -273,25 +257,6 @@ const Login = () => {
                   {error}
                 </div>
               )}
-
-              {/* Role Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Login As</label>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
-                  required
-                >
-                  <option value="" disabled>
-                    Select Role
-                  </option>
-                  <option value="candidate">Doctor</option>
-                  <option value="hr">Employer</option>
-                  <option value="admin">Administrator</option>
-                </select>
-              </div>
 
               {/* Email */}
               <div>
