@@ -6,21 +6,20 @@ import employerService from '../../api/employerService';
 const Settings = () => {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    companyName: '',
+    full_name: '',
+    organization_name: '',
     email: '',
-
     phoneCountryCode: '+91',
     phone: '',
-
     alternatePhoneCountryCode: '+91',
     alternatePhone: '',
-
-    location: '',
-    pan: '',
-    gst: '',
-    logo: null,
-    coverPhoto: null,
-    about: '',
+    designation: '',
+    category: '',
+    numberOfBeds: '',
+    organization_city: '',
+    organization_address: '',
+    website: '',
+    description: '',
     notifications: {
       emailAlerts: true,
       applicationUpdates: true,
@@ -36,19 +35,25 @@ const Settings = () => {
       try {
         const data = await employerService.getProfile();
         if (data) {
+          const raw = data.phone_number || '';
+          const codeMatch = raw.match(/^(\+\d{1,3})/);
+          const code = codeMatch ? codeMatch[1] : '+91';
+          const digits = raw.replace(/^\+\d{1,3}/, '');
           setFormData({
-            companyName: data.company_name || '',
+            full_name: data.full_name || '',
+            organization_name: data.organization_name || '',
             email: data.email || '',
-            phoneCountryCode: data.phone_country_code || '+91',
-            phone: data.phone || '',
-            alternatePhoneCountryCode: data.alternate_phone_country_code || '+91',
-            alternatePhone: data.alternate_phone || '',
-            location: data.location || '',
-            pan: data.pan || '',
-            gst: data.gst || '',
-            logo: null,
-            coverPhoto: null,
-            about: data.about || '',
+            phoneCountryCode: code,
+            phone: digits,
+            alternatePhoneCountryCode: '+91',
+            alternatePhone: '',
+            designation: data.designation || '',
+            category: data.organization_category || '',
+            numberOfBeds: data.number_of_beds || '',
+            organization_city: data.organization_city || '',
+            organization_address: data.organization_address || '',
+            website: data.website_url || '',
+            description: data.description || '',
             notifications: {
               emailAlerts: data.email_alerts !== false,
               applicationUpdates: data.application_updates !== false,
@@ -102,7 +107,7 @@ const Settings = () => {
 
     const newErrors = {};
 
-    if (!formData.companyName.trim()) newErrors.companyName = 'Organization Name is required';
+    if (!formData.organization_name.trim()) newErrors.organization_name = 'Organization Name is required';
 
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Enter a valid email address';
@@ -113,16 +118,27 @@ const Settings = () => {
     if (formData.alternatePhone && !/^[0-9]{6,14}$/.test(formData.alternatePhone))
       newErrors.alternatePhone = 'Enter valid alternate phone number';
 
-    if (!formData.location.trim()) newErrors.location = 'Location is required';
+    if (!formData.organization_city.trim()) newErrors.organization_city = 'Location is required';
 
-    if (!formData.about.trim()) newErrors.about = 'About organization is required';
+    if (!formData.description.trim()) newErrors.description = 'About organization is required';
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
     try {
       setLoading(true);
-      await employerService.saveProfile(formData);
+      await employerService.saveProfile({
+        full_name: formData.full_name,
+        phone_number: `${formData.phoneCountryCode}${formData.phone}`,
+        designation: formData.designation,
+        organization_name: formData.organization_name,
+        organization_category: formData.category,
+        number_of_beds: formData.numberOfBeds || null,
+        organization_city: formData.organization_city,
+        organization_address: formData.organization_address,
+        website_url: formData.website,
+        description: formData.description,
+      });
       alert('Settings saved successfully!');
     } catch (error) {
       console.error('Failed to save profile:', error);
@@ -154,15 +170,26 @@ const Settings = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Organization Name *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                 <input
                   type="text"
-                  name="companyName"
-                  value={formData.companyName}
+                  name="full_name"
+                  value={formData.full_name}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 />
-                {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Organization Name *</label>
+                <input
+                  type="text"
+                  name="organization_name"
+                  value={formData.organization_name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                />
+                {errors.organization_name && <p className="text-red-500 text-sm mt-1">{errors.organization_name}</p>}
               </div>
 
               <div>
@@ -245,15 +272,15 @@ const Settings = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">City / Location *</label>
                 <input
                   type="text"
-                  name="location"
-                  value={formData.location}
+                  name="organization_city"
+                  value={formData.organization_city}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 />
-                {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
+                {errors.organization_city && <p className="text-red-500 text-sm mt-1">{errors.organization_city}</p>}
               </div>
             </div>
           </div>
@@ -292,56 +319,85 @@ const Settings = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  PAN Number <span className="text-gray-400">(Optional)</span>
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Designation</label>
                 <input
                   type="text"
-                  name="pan"
-                  value={formData.pan}
+                  name="designation"
+                  value={formData.designation}
                   onChange={handleChange}
-                  placeholder="ABCDE1234F"
+                  placeholder="e.g. HR Manager, Medical Director"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  GST Number <span className="text-gray-400">(Optional)</span>
-                </label>
-                <input
-                  type="text"
-                  name="gst"
-                  value={formData.gst}
+                <label className="block text-sm font-medium text-gray-700 mb-2">Organization Category</label>
+                <select
+                  name="category"
+                  value={formData.category}
                   onChange={handleChange}
-                  placeholder="27ABCDE1234F1Z5"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                >
+                  <option value="">Select Category</option>
+                  <option value="Hospital">Hospital</option>
+                  <option value="Clinic">Clinic</option>
+                  <option value="Diagnostic Lab">Diagnostic Lab</option>
+                  <option value="Pharmacy">Pharmacy</option>
+                  <option value="Nursing Home">Nursing Home</option>
+                  <option value="Medical College">Medical College</option>
+                  <option value="Research Institute">Research Institute</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Number of Beds</label>
+                <input
+                  type="number"
+                  name="numberOfBeds"
+                  value={formData.numberOfBeds}
+                  onChange={handleChange}
+                  placeholder="e.g. 100"
+                  min="0"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Logo Image *</label>
-                <input type="file" name="logo" accept="image/*" onChange={handleChange} className="w-full" />
-                {errors.logo && <p className="text-red-500 text-sm mt-1">{errors.logo}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Cover Photo *</label>
-                <input type="file" name="coverPhoto" accept="image/*" onChange={handleChange} className="w-full" />
-                {errors.coverPhoto && <p className="text-red-500 text-sm mt-1">{errors.coverPhoto}</p>}
+                <label className="block text-sm font-medium text-gray-700 mb-2">Website URL</label>
+                <input
+                  type="url"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  placeholder="https://yourhospital.com"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                />
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Brief About Organization *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Organization Address</label>
+                <input
+                  type="text"
+                  name="organization_address"
+                  value={formData.organization_address}
+                  onChange={handleChange}
+                  placeholder="Street, Area, Pin code"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">About Organization *</label>
                 <textarea
-                  name="about"
-                  value={formData.about}
+                  name="description"
+                  value={formData.description}
                   onChange={handleChange}
                   rows="4"
                   placeholder="Describe your organization (50–200 words)"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
                 />
-                {errors.about && <p className="text-red-500 text-sm mt-1">{errors.about}</p>}
+                {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
               </div>
             </div>
           </div>

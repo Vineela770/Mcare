@@ -45,8 +45,9 @@ exports.getUserById = async (req, res) => {
         ep.organization_address,
         ep.website_url,
         ep.description AS organization_description,
-        -- Application stats
-        (SELECT COUNT(*) FROM applications WHERE user_id = u.id) AS total_applications
+        -- Stats (candidates: applications count; HR: jobs posted count)
+        (SELECT COUNT(*) FROM applications WHERE user_id = u.id) AS total_applications,
+        (SELECT COUNT(*) FROM jobs WHERE employer_id = u.id) AS jobs_posted
       FROM users u
       LEFT JOIN candidate_profiles cp ON cp.user_id = u.id
       LEFT JOIN employer_profiles ep ON ep.user_id = u.id

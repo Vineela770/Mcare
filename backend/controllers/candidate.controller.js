@@ -555,3 +555,101 @@ exports.updateAlert = async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to update alert" });
     }
 };
+
+/**
+ * 👤 Get Basic Profile — for the candidate Profile settings page
+ */
+exports.getBasicProfile = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const result = await pool.query(
+            `SELECT u.id, u.full_name, u.email, u.phone_number, u.location, u.profile_photo_url,
+                    cp.gender, cp.dob, cp.qualification, cp.highest_qualification,
+                    cp.current_experience, cp.current_position, cp.preferred_job_type,
+                    cp.preferred_location, cp.expected_salary, cp.willing_to_relocate,
+                    cp.interested_in_teaching, cp.certifications, cp.professional_summary,
+                    cp.resume_url
+             FROM users u
+             LEFT JOIN candidate_profiles cp ON cp.user_id = u.id
+             WHERE u.id = $1`,
+            [userId]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        res.json({ success: true, profile: result.rows[0] });
+    } catch (err) {
+        console.error("❌ getBasicProfile Error:", err.message);
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+
+/**
+ * 👤 Update Basic Profile (name, phone, location, candidate profile fields)
+ * Used by the candidate Profile settings page
+ */
+exports.updateBasicProfile = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const {
+            full_name, phone_number, location,
+            gender, dob,
+            qualification, highest_qualification, current_experience,
+            current_position, preferred_job_type, preferred_location,
+            expected_salary, willing_to_relocate, interested_in_teaching,
+            certifications, professional_summary,
+        } = req.body;
+
+        // Update users table
+        await pool.query(
+            `UPDATE users SET
+               full_name    = COALESCE($1, full_name),
+               phone_number = COALESCE($2, phone_number),
+               location     = COALESCE($3, location),
+               updated_at   = NOW()
+             WHERE id = $4`,
+            [full_name || null, phone_number || null, location || null, userId]
+        );
+
+        // Upsert candidate_profiles using correct column names from migration
+        await pool.query(
+            `INSERT INTO candidate_profiles
+               (user_id, gender, dob, qualification, highest_qualification,
+                current_experience, current_position, preferred_job_type,
+                preferred_location, expected_salary, willing_to_relocate,
+                interested_in_teaching, certifications, professional_summary)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+             ON CONFLICT (user_id) DO UPDATE SET
+               gender               = COALESCE(EXCLUDED.gender,               candidate_profiles.gender),
+               dob                  = COALESCE(EXCLUDED.dob,                  candidate_profiles.dob),
+               qualification        = COALESCE(EXCLUDED.qualification,        candidate_profiles.qualification),
+               highest_qualification= COALESCE(EXCLUDED.highest_qualification,candidate_profiles.highest_qualification),
+               current_experience   = COALESCE(EXCLUDED.current_experience,   candidate_profiles.current_experience),
+               current_position     = COALESCE(EXCLUDED.current_position,     candidate_profiles.current_position),
+               preferred_job_type   = COALESCE(EXCLUDED.preferred_job_type,   candidate_profiles.preferred_job_type),
+               preferred_location   = COALESCE(EXCLUDED.preferred_location,   candidate_profiles.preferred_location),
+               expected_salary      = COALESCE(EXCLUDED.expected_salary,      candidate_profiles.expected_salary),
+               willing_to_relocate  = COALESCE(EXCLUDED.willing_to_relocate,  candidate_profiles.willing_to_relocate),
+               interested_in_teaching = COALESCE(EXCLUDED.interested_in_teaching, candidate_profiles.interested_in_teaching),
+               certifications       = COALESCE(EXCLUDED.certifications,       candidate_profiles.certifications),
+               professional_summary = COALESCE(EXCLUDED.professional_summary, candidate_profiles.professional_summary),
+               updated_at           = NOW()`,
+            [
+                userId,
+                gender || null, dob || null,
+                qualification || null, highest_qualification || null,
+                current_experience || null, current_position || null,
+                preferred_job_type || null, preferred_location || null,
+                expected_salary || null,
+                willing_to_relocate != null ? willing_to_relocate : null,
+                interested_in_teaching != null ? interested_in_teaching : null,
+                certifications || null, professional_summary || null,
+            ]
+        );
+
+        res.json({ success: true, message: "Profile updated successfully" });
+    } catch (err) {
+        console.error("❌ updateBasicProfile Error:", err.message);
+        res.status(500).json({ success: false, message: err.message });
+    }
+};

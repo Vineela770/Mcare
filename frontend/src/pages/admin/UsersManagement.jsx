@@ -946,7 +946,7 @@ const UsersManagement = () => {
                         )}
                         <div>
                           <span className="text-gray-500 text-xs">Jobs Posted</span>
-                          <p className="font-medium text-gray-800">{viewUser.total_applications || 0}</p>
+                          <p className="font-medium text-gray-800">{viewUser.jobs_posted || 0}</p>
                         </div>
                         {viewUser.organization_description && (
                           <div className="sm:col-span-2">

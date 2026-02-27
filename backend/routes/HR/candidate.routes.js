@@ -21,6 +21,11 @@ router.get("/applications/:id", candidateController.getApplicationDetails);
 // Resume/Profile
 router.get("/resume", candidateController.getUserResumeData);
 router.put("/resume", candidateController.updateResumeData);
+
+// Basic Profile (settings page)
+router.get("/profile", candidateController.getBasicProfile);
+router.put("/profile", candidateController.updateBasicProfile);
+
 router.post("/upload-resume", candidateController.uploadCV.single("resume"), (req, res) => {
   res.json({ success: true, resumeUrl: `/uploads/resumes/${req.file.filename}` });
 });

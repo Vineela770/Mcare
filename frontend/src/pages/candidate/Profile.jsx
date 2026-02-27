@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { User, Mail, Phone, MapPin, Calendar, Save, Camera, Upload, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
 import { useAuth } from '../../context/useAuth';
+import axios from '../../api/axios';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -49,6 +50,43 @@ const Profile = () => {
     setFormData((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
+  // Load profile on mount
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const res = await axios.get('/api/candidate/profile');
+        const p = res.data.profile || res.data;
+        const raw = p.phone_number || '';
+        // Strip country code prefix so only digits remain
+        const codeMatch = raw.match(/^(\+\d{1,3})/);
+        const code = codeMatch ? codeMatch[1] : '+91';
+        const digits = raw.replace(/^\+\d{1,3}/, '');
+        setFormData((prev) => ({
+          ...prev,
+          fullName: p.full_name || prev.fullName,
+          email: p.email || prev.email,
+          countryCode: code,
+          phone: digits,
+          location: p.location || '',
+          dateOfBirth: p.dob ? p.dob.split('T')[0] : '',
+          gender: p.gender || '',
+          experience: p.current_experience || '',
+          specialization: p.current_position || '',
+          certifications: p.certifications || '',
+          expectedSalary: p.expected_salary || '',
+          highestQualification: p.highest_qualification || '',
+          additionalQualification: p.qualification || '',
+          preferredCity: p.preferred_location || '',
+          interestedInTeaching: p.interested_in_teaching || false,
+          availability: p.preferred_job_type || '',
+        }));
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+      }
+    };
+    loadProfile();
+  }, []);
+
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) setSelectedFile(file);
@@ -63,15 +101,31 @@ const Profile = () => {
     setSelectedFile(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      ...formData,
-      phone: `${formData.countryCode}${formData.phone}`,
-    };
-    console.log('Saving profile:', payload);
-    setSuccessMessage('Profile updated successfully!');
-    setShowSuccessModal(true);
+    try {
+      await axios.put('/api/candidate/profile', {
+        full_name: formData.fullName,
+        phone_number: `${formData.countryCode}${formData.phone}`,
+        location: formData.location,
+        gender: formData.gender,
+        dob: formData.dateOfBirth || null,
+        qualification: formData.additionalQualification,
+        highest_qualification: formData.highestQualification,
+        current_experience: formData.experience,
+        current_position: formData.specialization,
+        expected_salary: formData.expectedSalary,
+        preferred_location: formData.preferredCity,
+        certifications: formData.certifications,
+        interested_in_teaching: formData.interestedInTeaching,
+        preferred_job_type: formData.availability,
+      });
+      setSuccessMessage('Profile updated successfully!');
+      setShowSuccessModal(true);
+    } catch (err) {
+      console.error('Failed to save profile:', err);
+      alert(err?.response?.data?.message || 'Failed to save profile. Please try again.');
+    }
   };
 
   return (
