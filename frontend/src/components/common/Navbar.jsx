@@ -58,7 +58,7 @@ const Navbar = () => {
   // Role-based links
   let roleLinks = [];
   let roleLabel = '';
-  if (user && user.role === 'admin') {
+  if (user && (user.role === 'admin' || user.role === 'administrator')) {
     roleLabel = 'Admin';
     roleLinks = [
       { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },

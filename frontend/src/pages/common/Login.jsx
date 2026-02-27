@@ -68,6 +68,7 @@ const Login = () => {
         navigate('/hr/dashboard');
         break;
       case 'admin':
+      case 'administrator':
         navigate('/admin/dashboard');
         break;
       default:
