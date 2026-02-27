@@ -11,8 +11,25 @@ import {
 import Sidebar from '../../components/common/Sidebar';
 import adminService from '../../api/adminService';
 
+const ROLE_LABELS = {
+  candidate: 'Doctor',
+  hr: 'Employer (HR)',
+  admin: 'Admin',
+  employee: 'Employee',
+};
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return '—';
+  return new Date(dateStr).toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+};
+
 const UsersManagement = () => {
   const [users, setUsers] = useState([]);
+  const [roleFilter, setRoleFilter] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -117,9 +134,15 @@ const UsersManagement = () => {
     }
   };
 
+  const filteredUsers = roleFilter === 'all' ? users : users.filter(u => u.role === roleFilter);
+
   const RolePill = ({ role }) => (
-    <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium capitalize">
-      {role}
+    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+      role === 'candidate' ? 'bg-cyan-100 text-cyan-800' :
+      role === 'hr' ? 'bg-blue-100 text-blue-800' :
+      'bg-gray-100 text-gray-800'
+    }`}>
+      {ROLE_LABELS[role] || role}
     </span>
   );
 
@@ -197,6 +220,23 @@ const UsersManagement = () => {
           </div>
         </div>
 
+        {/* Role Filter Tabs */}
+        <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+          {['all', 'candidate', 'hr', 'admin'].map(r => (
+            <button
+              key={r}
+              onClick={() => setRoleFilter(r)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                roleFilter === r
+                  ? 'bg-cyan-600 text-white'
+                  : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              {r === 'all' ? 'All Users' : (ROLE_LABELS[r] || r)}
+            </button>
+          ))}
+        </div>
+
         {/* Desktop Table */}
         <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <table className="w-full">
@@ -220,7 +260,7 @@ const UsersManagement = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -242,7 +282,7 @@ const UsersManagement = () => {
                     <StatusPill status={user.status} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {user.joined}
+                    {formatDate(user.joined)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-3">
                     <button
@@ -268,7 +308,7 @@ const UsersManagement = () => {
 
         {/* Mobile Cards */}
         <div className="md:hidden space-y-4">
-          {users.map((user) => (
+          {filteredUsers.map((user) => (
             <div
               key={user.id}
               className="bg-white rounded-xl shadow-sm border border-gray-100 p-4"
@@ -318,7 +358,7 @@ const UsersManagement = () => {
                 <div className="bg-gray-50 rounded-lg p-3 col-span-2">
                   <div className="text-xs text-gray-500 mb-1">Joined</div>
                   <div className="text-sm font-medium text-gray-900">
-                    {user.joined}
+                    {formatDate(user.joined)}
                   </div>
                 </div>
               </div>

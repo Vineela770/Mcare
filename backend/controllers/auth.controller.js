@@ -113,6 +113,16 @@ exports.register = async (req, res) => {
 
     await client.query('COMMIT'); 
 
+    // Log registration activity
+    try {
+      await pool.query(
+        `INSERT INTO activity_logs (user_id, action, description, user_role) VALUES ($1, $2, $3, $4)`,
+        [newUser.id, 'register', `New ${normalizedRole} registered: ${newUser.full_name} (${newUser.email})`, normalizedRole]
+      );
+    } catch (logErr) {
+      console.warn("Activity log (register) failed:", logErr.message);
+    }
+
     // ✅ 5. SEND PROFESSIONAL WELCOME EMAIL (only if configured)
     if ((process.env.EMAIL_USER || process.env.MAIL_USER) && process.env.EMAIL_PASS) {
       try {
@@ -226,6 +236,16 @@ exports.login = async (req, res) => {
       process.env.JWT_SECRET || 'mcare_secret_2026',
       { expiresIn: "1d" }
     );
+
+    // Log login activity
+    try {
+      await pool.query(
+        `INSERT INTO activity_logs (user_id, action, description, user_role) VALUES ($1, $2, $3, $4)`,
+        [user.id, 'login', `${user.full_name} logged in (${user.role})`, user.role]
+      );
+    } catch (logErr) {
+      console.warn("Activity log (login) failed:", logErr.message);
+    }
 
     res.json({
       success: true,

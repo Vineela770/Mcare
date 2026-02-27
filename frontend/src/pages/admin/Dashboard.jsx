@@ -24,11 +24,15 @@ const AdminDashboard = () => {
   });
 
   const [recentActivity, setRecentActivity] = useState([]);
+  const [recentRegistrations, setRecentRegistrations] = useState([]);
   const [systemStats, setSystemStats] = useState({
     totalCandidates: 0,
     totalHR: 0,
     totalEmployees: 0,
     applicationsToday: 0,
+    registeredToday: 0,
+    doctorsToday: 0,
+    employersToday: 0,
   });
 
   const fetchDashboardData = async () => {
@@ -42,21 +46,22 @@ const AdminDashboard = () => {
         activeToday: statsData.activeToday || 0,
       });
 
+      setRecentRegistrations(statsData.recentRegistrations || []);
+
+      setSystemStats({
+        totalCandidates: statsData.totalDoctors || 0,
+        totalHR: statsData.totalHR || 0,
+        totalEmployees: statsData.totalEmployers || 0,
+        applicationsToday: statsData.totalApplications || 0,
+        registeredToday: statsData.registeredToday || 0,
+        doctorsToday: statsData.doctorsRegisteredToday || 0,
+        employersToday: statsData.employersRegisteredToday || 0,
+      });
+
       // Fetch recent activities (limit to 4)
       const activitiesData = await adminService.getActivities();
       const activities = Array.isArray(activitiesData) ? activitiesData : [];
       setRecentActivity(activities.slice(0, 4));
-
-      // Fetch users to calculate role-based stats
-      const usersData = await adminService.getUsers();
-      const users = Array.isArray(usersData) ? usersData : [];
-      
-      setSystemStats({
-        totalCandidates: users.filter(u => u.role === 'candidate').length,
-        totalHR: users.filter(u => u.role === 'hr').length,
-        totalEmployees: users.filter(u => u.role === 'employee' || u.role === 'employer').length,
-        applicationsToday: statsData.activeToday || 0,
-      });
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     }
@@ -235,7 +240,7 @@ const AdminDashboard = () => {
             <div className="space-y-4">
               <div className="flex justify-between p-3 bg-cyan-50 rounded-lg">
                 <span className="text-gray-700 font-medium text-sm md:text-base">
-                  Total Candidates
+                  Total Doctors (Candidates)
                 </span>
                 <span className="text-lg md:text-xl font-bold text-cyan-600">
                   {systemStats.totalCandidates.toLocaleString()}
@@ -244,7 +249,7 @@ const AdminDashboard = () => {
 
               <div className="flex justify-between p-3 bg-blue-50 rounded-lg">
                 <span className="text-gray-700 font-medium text-sm md:text-base">
-                  Total HR Users
+                  Total Employers (HR)
                 </span>
                 <span className="text-lg md:text-xl font-bold text-blue-600">
                   {systemStats.totalHR.toLocaleString()}
@@ -253,24 +258,78 @@ const AdminDashboard = () => {
 
               <div className="flex justify-between p-3 bg-green-50 rounded-lg">
                 <span className="text-gray-700 font-medium text-sm md:text-base">
-                  Total Employees
+                  Total Applications
                 </span>
                 <span className="text-lg md:text-xl font-bold text-green-600">
-                  {systemStats.totalEmployees.toLocaleString()}
+                  {systemStats.applicationsToday.toLocaleString()}
                 </span>
               </div>
 
               <div className="flex justify-between p-3 bg-purple-50 rounded-lg">
                 <span className="text-gray-700 font-medium text-sm md:text-base">
-                  Applications Today
+                  Registered Today
                 </span>
                 <span className="text-lg md:text-xl font-bold text-purple-600">
-                  {systemStats.applicationsToday.toLocaleString()}
+                  {systemStats.registeredToday.toLocaleString()}
+                </span>
+              </div>
+
+              <div className="flex justify-between p-3 bg-orange-50 rounded-lg">
+                <span className="text-gray-700 font-medium text-sm md:text-base">
+                  Doctors Today
+                </span>
+                <span className="text-lg md:text-xl font-bold text-orange-600">
+                  {systemStats.doctorsToday.toLocaleString()}
+                </span>
+              </div>
+
+              <div className="flex justify-between p-3 bg-teal-50 rounded-lg">
+                <span className="text-gray-700 font-medium text-sm md:text-base">
+                  Employers Today
+                </span>
+                <span className="text-lg md:text-xl font-bold text-teal-600">
+                  {systemStats.employersToday.toLocaleString()}
                 </span>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Recent Registrations */}
+        {recentRegistrations.length > 0 && (
+          <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg md:text-xl font-bold text-gray-900">Recent Registrations</h2>
+              <Link to="/admin/users" className="text-cyan-600 hover:text-cyan-700 font-medium text-sm">View All →</Link>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs font-medium text-gray-500 uppercase border-b">
+                    <th className="pb-2 pr-4">Name</th>
+                    <th className="pb-2 pr-4">Email</th>
+                    <th className="pb-2 pr-4">Role</th>
+                    <th className="pb-2">Joined</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {recentRegistrations.map((u) => (
+                    <tr key={u.id} className="hover:bg-gray-50">
+                      <td className="py-2 pr-4 font-medium text-gray-900">{u.full_name}</td>
+                      <td className="py-2 pr-4 text-gray-600">{u.email}</td>
+                      <td className="py-2 pr-4">
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${u.role === 'candidate' ? 'bg-cyan-100 text-cyan-700' : 'bg-blue-100 text-blue-700'}`}>
+                          {u.role === 'candidate' ? 'Doctor' : u.role}
+                        </span>
+                      </td>
+                      <td className="py-2 text-gray-500">{new Date(u.created_at).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ const DATABASE_SCHEMA = `
 -- Drop tables if they exist (in correct order to handle foreign keys)
 DROP TABLE IF EXISTS password_reset_tokens CASCADE;
 DROP TABLE IF EXISTS job_alerts CASCADE;
+DROP TABLE IF EXISTS activity_logs CASCADE;
 DROP TABLE IF EXISTS saved_jobs CASCADE;
 DROP TABLE IF EXISTS applications CASCADE;
 DROP TABLE IF EXISTS messages CASCADE;
@@ -208,6 +209,21 @@ CREATE TABLE guest_applications (
 );
 
 CREATE INDEX idx_guest_applications_status ON guest_applications(status);
+
+-- Activity Logs (for tracking user registrations, logins, and key actions)
+CREATE TABLE activity_logs (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  action VARCHAR(100) NOT NULL,
+  description TEXT,
+  ip_address VARCHAR(50),
+  user_role VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_activity_logs_user_id ON activity_logs(user_id);
+CREATE INDEX idx_activity_logs_action ON activity_logs(action);
+CREATE INDEX idx_activity_logs_created_at ON activity_logs(created_at);
 
 -- Guest Jobs
 CREATE TABLE guest_jobs (
