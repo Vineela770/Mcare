@@ -38,6 +38,8 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
   const [policyType, setPolicyType] = useState('terms'); // 'terms' | 'privacy'
+  const [successMessage, setSuccessMessage] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // ✅ Country code dropdown (ONLY codes)
   const [countryCode, setCountryCode] = useState('+91');
@@ -168,8 +170,14 @@ const Register = () => {
       const response = await authService.register(submitData);
       
       if (response.success) {
-        // Registration successful - redirect to login
-        navigate('/login');
+        // Show success message
+        setSuccessMessage(response.message || 'Registration successful! Redirecting to login...');
+        setShowSuccess(true);
+        
+        // Redirect to login after 2 seconds
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
       } else {
         setError(response.message || 'Registration failed. Please try again.');
       }
@@ -533,7 +541,21 @@ const Register = () => {
           </Link>
         </div>
       </div>
-
+      {/* Success Modal */}
+      {showSuccess && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl max-w-md w-full p-8 text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Successful!</h2>
+            <p className="text-gray-600 mb-4">{successMessage}</p>
+            <div className="animate-pulse text-cyan-600 text-sm">Redirecting to login...</div>
+          </div>
+        </div>
+      )}
       {/* Policy Modal */}
       {showPolicy && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">

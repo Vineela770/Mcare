@@ -197,17 +197,19 @@ const sendEmail = async (to, subject, htmlContent, textContent = '') => {
       return null;
     }
 
-    // Force IPv4 by using Google's IPv4-only SMTP server
+    // Force IPv4 by using explicit IPv4 address and settings
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
       secure: false,
+      family: 4, // ✅ Force IPv4
       auth: {
         user: emailUser,
         pass: emailPass,
       },
       tls: {
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
+        ciphers: 'SSLv3'
       },
       connectionTimeout: 10000,
       greetingTimeout: 10000,
@@ -229,7 +231,9 @@ const sendEmail = async (to, subject, htmlContent, textContent = '') => {
     return info;
   } catch (error) {
     console.error(`❌ Email sending failed to ${to}:`, error.message);
-    throw error;
+    // ✅ Don't throw error - let registration continue even if email fails
+    console.warn(`⚠️ Email sending failed: ${error.message}`);
+    return null;
   }
 };
 
