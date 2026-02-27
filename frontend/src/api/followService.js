@@ -1,18 +1,33 @@
-// Backend integration removed - returning mock data
+import axios from './axios';
 
 export const followService = {
-  follow: async (followData) => {
-    console.log('[MOCK] follow called with:', followData);
-    return { id: Date.now(), ...followData };
+  // Follow an employer
+  follow: async (employerId) => {
+    try {
+      const response = await axios.post('/api/follow', { employerId });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to follow employer' };
+    }
   },
 
-  getUserFollows: async (userId) => {
-    console.log('[MOCK] getUserFollows called with:', userId);
-    return [];
+  // Get user's followed employers
+  getUserFollows: async () => {
+    try {
+      const response = await axios.get('/api/follow');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch followed employers' };
+    }
   },
 
-  unfollow: async (userId, employerId) => {
-    console.log('[MOCK] unfollow called with:', { userId, employerId });
-    return true;
+  // Unfollow an employer
+  unfollow: async (employerId) => {
+    try {
+      const response = await axios.delete(`/api/follow/${employerId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to unfollow employer' };
+    }
   },
 };

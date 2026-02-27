@@ -1,18 +1,33 @@
-// Backend integration removed - returning mock data
+import axios from './axios';
 
 export const shortlistService = {
-  createShortlist: async (shortlistData) => {
-    console.log('[MOCK] createShortlist called with:', shortlistData);
-    return { id: Date.now(), ...shortlistData };
+  // Add to shortlist (same as saved jobs)
+  createShortlist: async (jobId) => {
+    try {
+      const response = await axios.post('/api/candidate/saved-jobs', { jobId });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to add to shortlist' };
+    }
   },
 
-  getUserShortlist: async (userId) => {
-    console.log('[MOCK] getUserShortlist called with:', userId);
-    return [];
+  // Get user's shortlist
+  getUserShortlist: async () => {
+    try {
+      const response = await axios.get('/api/candidate/saved-jobs');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch shortlist' };
+    }
   },
 
+  // Remove from shortlist
   deleteShortlist: async (shortlistId) => {
-    console.log('[MOCK] deleteShortlist called with:', shortlistId);
-    return true;
+    try {
+      const response = await axios.delete(`/api/candidate/saved-jobs/${shortlistId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to remove from shortlist' };
+    }
   },
 };

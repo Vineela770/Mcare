@@ -1,27 +1,47 @@
-// Backend integration removed - returning mock data
+import axios from './axios';
 
 export const resumeService = {
-  uploadResume: async (file, userId) => {
-    console.log('[MOCK] uploadResume called with:', { fileName: file.name, userId });
-    return { 
-      id: Date.now(), 
-      userId, 
-      fileName: file.name, 
-      fileUrl: '#' 
-    };
+  // Upload resume file
+  uploadResume: async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('resume', file);
+      const response = await axios.post('/api/candidate/upload-resume', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to upload resume' };
+    }
   },
 
-  getUserResumes: async (userId) => {
-    console.log('[MOCK] getUserResumes called with:', userId);
-    return [];
+  // Get user's resume data
+  getUserResume: async () => {
+    try {
+      const response = await axios.get('/api/candidate/resume');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch resume' };
+    }
   },
 
-  deleteResume: async (resumeId) => {
-    console.log('[MOCK] deleteResume called with:', resumeId);
-    return true;
+  // Update resume data
+  updateResume: async (resumeData) => {
+    try {
+      const response = await axios.put('/api/candidate/resume', resumeData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update resume' };
+    }
   },
 
+  // Download resume
   downloadResume: (resumeUrl) => {
-    console.log('[MOCK] downloadResume called with:', resumeUrl);
+    // Get the API base URL
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    // Open resume in new tab
+    window.open(`${API_URL}${resumeUrl}`, '_blank');
   },
 };

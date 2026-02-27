@@ -1,23 +1,53 @@
-// Backend integration removed - returning mock data
+import axios from './axios';
 
 export const alertService = {
+  // Create a new job alert
   createAlert: async (alertData) => {
-    console.log('[MOCK] createAlert called with:', alertData);
-    return { id: Date.now(), ...alertData };
+    try {
+      const response = await axios.post('/api/candidate/alerts', alertData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to create alert' };
+    }
   },
 
-  getUserAlerts: async (userId) => {
-    console.log('[MOCK] getUserAlerts called with:', userId);
-    return [];
+  // Get user's job alerts
+  getUserAlerts: async () => {
+    try {
+      const response = await axios.get('/api/candidate/alerts');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch alerts' };
+    }
   },
 
+  // Update an alert
   updateAlert: async (alertId, alertData) => {
-    console.log('[MOCK] updateAlert called with:', { alertId, alertData });
-    return { id: alertId, ...alertData };
+    try {
+      const response = await axios.put(`/api/candidate/alerts/${alertId}`, alertData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update alert' };
+    }
   },
 
+  // Toggle alert active status
+  toggleAlert: async (alertId) => {
+    try {
+      const response = await axios.put(`/api/candidate/alerts/${alertId}/toggle`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to toggle alert' };
+    }
+  },
+
+  // Delete an alert
   deleteAlert: async (alertId) => {
-    console.log('[MOCK] deleteAlert called with:', alertId);
-    return true;
+    try {
+      const response = await axios.delete(`/api/candidate/alerts/${alertId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete alert' };
+    }
   },
 };

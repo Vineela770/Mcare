@@ -1,23 +1,23 @@
-// Backend integration removed - returning mock data
+import axios from './axios';
 
 export const analyticsService = {
-  getDashboard: async (employerId) => {
-    console.log('[MOCK] getDashboard called with:', employerId);
-    return { 
-      totalJobs: 0, 
-      activeJobs: 0, 
-      totalApplications: 0, 
-      pendingApplications: 0 
-    };
+  // Get dashboard analytics
+  getDashboard: async () => {
+    try {
+      const response = await axios.get('/api/analytics/dashboard');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch dashboard analytics' };
+    }
   },
 
+  // Get applications by status
   getApplicationsByStatus: async (employerId) => {
-    console.log('[MOCK] getApplicationsByStatus called with:', employerId);
-    return { 
-      pending: 0, 
-      reviewed: 0, 
-      accepted: 0, 
-      rejected: 0 
-    };
+    try {
+      const response = await axios.get(`/api/analytics/applications-by-status/${employerId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch applications data' };
+    }
   },
 };

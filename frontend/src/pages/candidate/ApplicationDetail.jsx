@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Building2, MapPin, DollarSign, Clock, Calendar, FileText, CheckCircle, XCircle, Mail, Phone, Download, ExternalLink, Briefcase, Users } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import { applicationService } from '../../api/applicationService';
 
 const ApplicationDetail = () => {
   const { id } = useParams();
@@ -10,190 +11,18 @@ const ApplicationDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API call
+    // Fetch application details from backend
     const fetchApplicationDetail = async () => {
       setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      
-      const mockApplications = {
-  1: {
-    id: 1,
-    title: 'Senior Registered Nurse',
-    company: 'Manhattan Hospital',
-    location: 'New York, NY',
-    appliedDate: '2024-01-05',
-    status: 'Under Review',
-    salary: '$75,000 - $95,000',
-    jobType: 'Full-time',
-    experience: '5+ years',
-    deadline: '2024-02-15',
-    description:
-      'We are seeking an experienced Senior Registered Nurse to join our dynamic healthcare team...',
-    responsibilities: [
-      'Provide direct patient care',
-      'Mentor junior nurses',
-      'Maintain patient records',
-    ],
-    requirements: [
-      'Valid RN License',
-      'BSN required',
-      '5+ years experience',
-    ],
-    benefits: [
-      'Health insurance',
-      '401(k)',
-      'Paid leave',
-    ],
-    coverLetter: 'Dear Hiring Manager,\n\nI am excited to apply...',
-    expectedSalary: '$85,000',
-    availability: 'Immediate',
-    resumeUrl: '/resumes/john-doe-resume.pdf',
-    timeline: [
-      { date: '2024-01-05', status: 'Application Submitted', icon: 'sent', completed: true },
-      { date: '2024-01-06', status: 'Under Review', icon: 'review', completed: true },
-      { date: '', status: 'Interview Scheduled', icon: 'interview', completed: false },
-      { date: '', status: 'Final Decision', icon: 'decision', completed: false },
-    ],
-    hrContact: {
-      name: 'Sarah Johnson',
-      title: 'HR Manager',
-      email: 'sarah.johnson@manhattanhospital.com',
-      phone: '+1 (212) 555-0123',
-    },
-  },
-
-  2: {
-    id: 2,
-    title: 'Physical Therapist',
-    company: 'Wellness Rehab',
-    location: 'Los Angeles, CA',
-    appliedDate: '2024-01-03',
-    status: 'Shortlisted',
-    salary: '$65,000 - $85,000',
-    jobType: 'Full-time',
-    experience: '3+ years',
-    deadline: '2024-02-10',
-    description:
-      'We are looking for a licensed Physical Therapist to help patients recover mobility.',
-    responsibilities: [
-      'Evaluate patient conditions',
-      'Design therapy programs',
-      'Monitor progress',
-    ],
-    requirements: [
-      'PT License',
-      'DPT Degree',
-      'Rehab experience',
-    ],
-    benefits: [
-      'Flexible hours',
-      'Insurance',
-      'Paid holidays',
-    ],
-    coverLetter: 'Dear Team,\n\nI am applying for the Physical Therapist role...',
-    expectedSalary: '$75,000',
-    availability: '2 Weeks',
-    resumeUrl: '/resumes/john-doe-resume.pdf',
-    timeline: [
-      { date: '2024-01-03', status: 'Application Submitted', icon: 'sent', completed: true },
-      { date: '2024-01-05', status: 'Shortlisted', icon: 'review', completed: true },
-      { date: '', status: 'Interview Scheduled', icon: 'interview', completed: false },
-    ],
-    hrContact: {
-      name: 'Emily Carter',
-      title: 'Recruiter',
-      email: 'emily@wellnessrehab.com',
-      phone: '+1 (310) 555-8899',
-    },
-  },
-
-  3: {
-    id: 3,
-    title: 'Lab Technician',
-    company: 'HealthCare Labs',
-    location: 'Chicago, IL',
-    appliedDate: '2023-12-28',
-    status: 'Interview',
-    salary: '$45,000 - $55,000',
-    jobType: 'Full-time',
-    experience: '2+ years',
-    deadline: '2024-01-30',
-    description:
-      'Seeking a Lab Technician to perform diagnostic tests and maintain lab equipment.',
-    responsibilities: [
-      'Conduct lab tests',
-      'Maintain equipment',
-      'Record results',
-    ],
-    requirements: [
-      'Lab certification',
-      'Attention to detail',
-    ],
-    benefits: [
-      'Bonuses',
-      'Medical insurance',
-    ],
-    coverLetter: 'Dear Hiring Team,\n\nI am excited to interview...',
-    expectedSalary: '$50,000',
-    availability: 'Immediate',
-    resumeUrl: '/resumes/john-doe-resume.pdf',
-    timeline: [
-      { date: '2023-12-28', status: 'Application Submitted', icon: 'sent', completed: true },
-      { date: '2024-01-02', status: 'Interview Scheduled', icon: 'interview', completed: true },
-    ],
-    hrContact: {
-      name: 'Robert Mills',
-      title: 'Lab Manager',
-      email: 'robert@healthlabs.com',
-      phone: '+1 (312) 555-6677',
-    },
-  },
-
-  4: {
-    id: 4,
-    title: 'Medical Assistant',
-    company: 'City Medical',
-    location: 'Houston, TX',
-    appliedDate: '2023-12-20',
-    status: 'Rejected',
-    salary: '$40,000 - $50,000',
-    jobType: 'Full-time',
-    experience: '1+ years',
-    deadline: '2024-01-10',
-    description:
-      'Medical Assistant role supporting physicians and patient care.',
-    responsibilities: [
-      'Patient intake',
-      'Maintain records',
-      'Assist doctors',
-    ],
-    requirements: [
-      'Medical Assistant certification',
-    ],
-    benefits: [
-      'Paid leave',
-    ],
-    coverLetter: 'Thank you for considering my application...',
-    expectedSalary: '$45,000',
-    availability: 'Immediate',
-    resumeUrl: '/resumes/john-doe-resume.pdf',
-    timeline: [
-      { date: '2023-12-20', status: 'Application Submitted', icon: 'sent', completed: true },
-      { date: '2023-12-28', status: 'Rejected', icon: 'decision', completed: true },
-    ],
-    hrContact: {
-      name: 'Linda Brown',
-      title: 'HR Lead',
-      email: 'linda@citymedical.com',
-      phone: '+1 (713) 555-9988',
-    },
-  },
-};
-
-setApplication(mockApplications[id] || null);
-setLoading(false);
-
+      try {
+        const data = await applicationService.getApplicationDetails(id);
+        setApplication(data);
+      } catch (error) {
+        console.error('Failed to fetch application details:', error);
+        setApplication(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchApplicationDetail();

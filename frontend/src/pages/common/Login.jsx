@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
+import { authService } from '../../api/authService';
 
 const GoogleIcon = ({ className = 'w-5 h-5' }) => (
   <svg className={className} viewBox="0 0 48 48" aria-hidden="true">
@@ -86,19 +87,19 @@ const Login = () => {
 
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const mockUser = {
-        id: 1,
-        name: 'John Doe',
-        email: formData.email,
-        role: formData.role,
-      };
-
-      login(mockUser, 'mock-token-' + Date.now());
-      redirectByRole(formData.role);
-    } catch {
-      setError('Invalid credentials. Please try again.');
+      // Call backend API for login
+      const { token, user } = await authService.login(formData.email, formData.password);
+      
+      // Verify role matches
+      if (user.role !== formData.role) {
+        setError(`This account is registered as ${user.role}. Please select the correct role.`);
+        return;
+      }
+      
+      login(user, token);
+      redirectByRole(user.role);
+    } catch (err) {
+      setError(err.message || 'Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -114,19 +115,11 @@ const Login = () => {
 
     setGoogleLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 900));
-
-      const mockGoogleUser = {
-        id: 2,
-        name: 'Google User',
-        email: 'googleuser@example.com',
-        role: formData.role,
-      };
-
-      login(mockGoogleUser, 'google-token-' + Date.now());
-      redirectByRole(formData.role);
-    } catch {
-      setError('Google sign-in failed. Please try again.');
+      // TODO: Implement actual Google OAuth flow
+      // For now, show message that Google login is not implemented
+      setError('Google sign-in will be available soon. Please use email/password login.');
+    } catch (err) {
+      setError(err.message || 'Google sign-in failed. Please try again.');
     } finally {
       setGoogleLoading(false);
     }

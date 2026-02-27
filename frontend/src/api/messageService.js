@@ -1,13 +1,23 @@
-// Backend integration removed - returning mock data
+import axios from './axios';
 
 export const messageService = {
+  // Send a message
   sendMessage: async (messageData) => {
-    console.log('[MOCK] sendMessage called with:', messageData);
-    return { id: Date.now(), ...messageData, sentAt: new Date().toISOString() };
+    try {
+      const response = await axios.post('/api/messages', messageData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to send message' };
+    }
   },
 
-  getUserMessages: async (userId) => {
-    console.log('[MOCK] getUserMessages called with:', userId);
-    return [];
+  // Get user messages
+  getUserMessages: async () => {
+    try {
+      const response = await axios.get('/api/messages');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch messages' };
+    }
   },
 };

@@ -1,28 +1,67 @@
-// Backend integration removed - returning mock data
+import axios from './axios';
 
 export const applicationService = {
+  // Get user's applications
+  getUserApplications: async () => {
+    try {
+      const response = await axios.get('/api/candidate/applications');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch applications' };
+    }
+  },
+
+  // Get single application details
+  getApplicationDetails: async (applicationId) => {
+    try {
+      const response = await axios.get(`/api/candidate/applications/${applicationId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch application details' };
+    }
+  },
+
+  // Create new application (apply to job)
   createApplication: async (applicationData) => {
-    console.log('[MOCK] createApplication called with:', applicationData);
-    return { id: Date.now(), ...applicationData, status: 'pending' };
+    try {
+      const response = await axios.post('/api/candidate/jobs/apply', applicationData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to submit application' };
+    }
   },
 
-  getUserApplications: async (userId) => {
-    console.log('[MOCK] getUserApplications called with:', userId);
-    return [];
-  },
-
+  // Get applications for a specific job (for HR/admin)
   getJobApplications: async (jobId) => {
-    console.log('[MOCK] getJobApplications called with:', jobId);
-    return [];
+    try {
+      const response = await axios.get(`/api/applications/job/${jobId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch job applications' };
+    }
   },
 
+  // Update application status (for HR/admin)
   updateApplicationStatus: async (applicationId, status) => {
-    console.log('[MOCK] updateApplicationStatus called with:', { applicationId, status });
-    return { success: true, status };
+    try {
+      const response = await axios.put(`/api/applications/${applicationId}/status`, { status });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update application status' };
+    }
   },
 
+  // Get application statistics (for HR/admin)
   getApplicationStats: async (jobId) => {
-    console.log('[MOCK] getApplicationStats called with:', jobId);
-    return { total: 0, pending: 0, reviewed: 0, accepted: 0, rejected: 0 };
+    try {
+      const response = await axios.get(`/api/applications/stats/${jobId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch application stats' };
+    }
   },
 };

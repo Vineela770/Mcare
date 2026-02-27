@@ -1,38 +1,97 @@
-// Backend integration removed - returning mock data
+import axios from './axios';
 
 export const jobService = {
-  getJobs: async (limit = 20, offset = 0) => {
-    console.log('[MOCK] getJobs called with:', { limit, offset });
-    return { jobs: [], total: 0 };
+  // Get all jobs (public)
+  getJobs: async (params = {}) => {
+    try {
+      const response = await axios.get('/api/jobs', { params });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch jobs' };
+    }
   },
 
+  // Get single job by ID (public)
   getJobById: async (jobId) => {
-    console.log('[MOCK] getJobById called with:', jobId);
-    return null;
+    try {
+      const response = await axios.get(`/api/jobs/${jobId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch job details' };
+    }
   },
 
-  createJob: async (jobData) => {
-    console.log('[MOCK] createJob called with:', jobData);
-    return { id: Date.now(), ...jobData };
+  // Get all jobs for candidates (with auth)
+  getCandidateJobs: async (params = {}) => {
+    try {
+      const response = await axios.get('/api/candidate/jobs', { params });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch jobs' };
+    }
   },
 
-  updateJob: async (jobId, jobData) => {
-    console.log('[MOCK] updateJob called with:', { jobId, jobData });
-    return { id: jobId, ...jobData };
+  // Get job details for candidates (with auth)
+  getCandidateJobById: async (jobId) => {
+    try {
+      const response = await axios.get(`/api/candidate/jobs/${jobId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch job details' };
+    }
   },
 
-  closeJob: async (jobId) => {
-    console.log('[MOCK] closeJob called with:', jobId);
-    return { success: true };
+  // Apply to a job
+  applyToJob: async (jobData) => {
+    try {
+      const response = await axios.post('/api/candidate/jobs/apply', jobData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // for file uploads
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to apply for job' };
+    }
   },
 
-  deleteJob: async (jobId) => {
-    console.log('[MOCK] deleteJob called with:', jobId);
-    return true;
+  // Save a job
+  saveJob: async (jobId) => {
+    try {
+      const response = await axios.post('/api/candidate/saved-jobs', { jobId });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to save job' };
+    }
   },
 
-  getEmployerJobs: async (employerId) => {
-    console.log('[MOCK] getEmployerJobs called with:', employerId);
-    return [];
+  // Get saved jobs
+  getSavedJobs: async () => {
+    try {
+      const response = await axios.get('/api/candidate/saved-jobs');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch saved jobs' };
+    }
+  },
+
+  // Remove saved job
+  deleteSavedJob: async (savedJobId) => {
+    try {
+      const response = await axios.delete(`/api/candidate/saved-jobs/${savedJobId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to remove saved job' };
+    }
+  },
+
+  // Search hospitals
+  searchHospitals: async (query) => {
+    try {
+      const response = await axios.get('/api/candidate/search/hospitals', { params: { q: query } });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to search hospitals' };
+    }
   },
 };

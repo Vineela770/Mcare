@@ -1,33 +1,85 @@
-// Backend integration removed - returning mock data
+import axios from './axios';
 
 export const userService = {
-  getProfile: async (userId) => {
-    console.log('[MOCK] getProfile called with:', userId);
-    return { id: userId, name: 'Mock User', email: 'user@example.com' };
+  // Get user profile/resume data
+  getProfile: async () => {
+    try {
+      const response = await axios.get('/api/candidate/resume');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch profile' };
+    }
   },
 
-  updateProfile: async (userId, profileData) => {
-    console.log('[MOCK] updateProfile called with:', { userId, profileData });
-    return { id: userId, ...profileData };
+  // Update user profile/resume data
+  updateProfile: async (profileData) => {
+    try {
+      const response = await axios.put('/api/candidate/resume', profileData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update profile' };
+    }
   },
 
-  changePassword: async (userId, passwordData) => {
-    console.log('[MOCK] changePassword called with:', { userId, passwordData });
-    return { message: 'Password changed successfully' };
+  // Change password
+  changePassword: async (passwordData) => {
+    try {
+      const response = await axios.post('/api/auth/change-password', passwordData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to change password' };
+    }
   },
 
-  getDashboardStats: async (userId) => {
-    console.log('[MOCK] getDashboardStats called with:', userId);
-    return { 
-      applications: 0, 
-      shortlisted: 0, 
-      interviews: 0, 
-      following: 0 
-    };
+  // Get dashboard statistics
+  getDashboardStats: async () => {
+    try {
+      const response = await axios.get('/api/candidate/dashboard');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch dashboard stats' };
+    }
   },
 
-  deleteAccount: async (userId) => {
-    console.log('[MOCK] deleteAccount called with:', userId);
-    return true;
+  // Delete account
+  deleteAccount: async () => {
+    try {
+      const response = await axios.delete('/api/auth/delete-profile');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete account' };
+    }
+  },
+
+  // Upload profile photo
+  uploadPhoto: async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('photo', file);
+      const response = await axios.post('/api/candidate/upload-photo', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to upload photo' };
+    }
+  },
+
+  // Upload resume
+  uploadResume: async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('resume', file);
+      const response = await axios.post('/api/candidate/upload-resume', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to upload resume' };
+    }
   },
 };

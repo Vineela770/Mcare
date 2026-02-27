@@ -1,23 +1,43 @@
-// Backend integration removed - returning mock data
+import axios from './axios';
 
 export const employerService = {
-  createProfile: async (userId, employerData) => {
-    console.log('[MOCK] createProfile called with:', { userId, employerData });
-    return { id: Date.now(), userId, ...employerData };
+  // Create employer profile
+  createProfile: async (employerData) => {
+    try {
+      const response = await axios.post('/api/employer/profile', employerData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to create employer profile' };
+    }
   },
 
-  getProfileByUserId: async (userId) => {
-    console.log('[MOCK] getProfileByUserId called with:', userId);
-    return null;
+  // Get employer profile by user ID
+  getProfileByUserId: async () => {
+    try {
+      const response = await axios.get('/api/employer/profile');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch employer profile' };
+    }
   },
 
+  // Get employer profile by ID
   getProfileById: async (employerId) => {
-    console.log('[MOCK] getProfileById called with:', employerId);
-    return null;
+    try {
+      const response = await axios.get(`/api/employer/${employerId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch employer details' };
+    }
   },
 
-  updateProfile: async (userId, employerData) => {
-    console.log('[MOCK] updateProfile called with:', { userId, employerData });
-    return { userId, ...employerData };
+  // Update employer profile
+  updateProfile: async (employerData) => {
+    try {
+      const response = await axios.put('/api/employer/profile', employerData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update employer profile' };
+    }
   },
 };

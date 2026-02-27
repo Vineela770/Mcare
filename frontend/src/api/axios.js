@@ -1,25 +1,43 @@
-// Backend integration removed
-// This file is no longer needed but kept for compatibility
+import axios from 'axios';
 
-export default {
-  get: async () => { 
-    console.log('[MOCK] axios.get called'); 
-    return { data: null }; 
+// Get API URL from environment variable
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+// Create axios instance with default config
+const axiosInstance = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
   },
-  post: async () => { 
-    console.log('[MOCK] axios.post called'); 
-    return { data: null }; 
+  withCredentials: true,
+});
+
+// Add request interceptor to include auth token
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
   },
-  put: async () => { 
-    console.log('[MOCK] axios.put called'); 
-    return { data: null }; 
-  },
-  patch: async () => { 
-    console.log('[MOCK] axios.patch called'); 
-    return { data: null }; 
-  },
-  delete: async () => { 
-    console.log('[MOCK] axios.delete called'); 
-    return { data: null }; 
-  },
-};
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor for error handling
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Unauthorized - clear token and redirect to login
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default axiosInstance;

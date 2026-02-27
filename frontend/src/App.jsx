@@ -23,7 +23,7 @@ import SavedJobs from './pages/candidate/SavedJobs';
 import Messages from './pages/candidate/Messages';
 import Alerts from './pages/candidate/Alerts';
 import Profile from './pages/candidate/Profile';
-import CandidateEmployers from './pages/candidate/employers';
+import CandidateEmployers from './pages/candidate/Employers';
 import ChangePassword from './pages/candidate/change-password';
 import DeleteProfile from "./pages/candidate/delete-profile";
 

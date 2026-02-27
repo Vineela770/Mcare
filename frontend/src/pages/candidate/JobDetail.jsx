@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Building2, MapPin, DollarSign, Clock, Calendar, Briefcase, Users, Heart, Send, CheckCircle, Share2 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
+import { jobService } from '../../api/jobService';
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -20,77 +21,22 @@ const JobDetail = () => {
   });
 
   useEffect(() => {
-    // Simulate API call
+    // Fetch job details from backend
     const fetchJobDetail = async () => {
       setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Mock data - in real app, fetch from API
-      const mockJob = {
-        id: parseInt(id),
-        title: 'Senior Registered Nurse',
-        company: 'Manhattan Hospital',
-        location: 'New York, NY',
-        salary: '$75,000 - $95,000',
-        jobType: 'Full-time',
-        experience: '5+ years',
-        postedDate: '2 days ago',
-        deadline: '2024-02-15',
-        openings: 3,
-        applicants: 45,
+      try {
+        const data = await jobService.getCandidateJobById(id);
+        setJob(data);
         
-        description: `We are seeking an experienced Senior Registered Nurse to join our dynamic healthcare team at Manhattan Hospital. This is an excellent opportunity for a dedicated professional who is passionate about patient care and clinical excellence.
-
-The ideal candidate will have extensive experience in acute care settings, strong leadership abilities, and a commitment to providing compassionate, high-quality healthcare services. You will work collaboratively with our multidisciplinary team to ensure optimal patient outcomes.`,
-        
-        responsibilities: [
-          'Provide comprehensive nursing care to patients in accordance with established policies and procedures',
-          'Assess patient conditions and develop individualized care plans',
-          'Administer medications and treatments as prescribed by physicians',
-          'Monitor and document patient progress, vital signs, and medical records',
-          'Mentor and provide guidance to junior nursing staff',
-          'Collaborate with physicians, therapists, and other healthcare professionals',
-          'Ensure compliance with healthcare regulations and safety standards',
-          'Participate in quality improvement initiatives and continuing education programs'
-        ],
-        
-        requirements: [
-          'Valid RN license in good standing',
-          'Bachelor of Science in Nursing (BSN) required; Master\'s degree preferred',
-          '5+ years of clinical nursing experience in acute care setting',
-          'BLS and ACLS certification required',
-          'Strong clinical assessment and critical thinking skills',
-          'Excellent communication and interpersonal abilities',
-          'Ability to work effectively in a fast-paced environment',
-          'Proficiency with electronic medical records (EMR) systems'
-        ],
-        
-        benefits: [
-          'Competitive salary with annual performance reviews',
-          'Comprehensive health, dental, and vision insurance',
-          '401(k) retirement plan with 6% employer matching',
-          'Generous paid time off and holiday schedule',
-          'Tuition reimbursement and continuing education support',
-          'Professional development and career advancement opportunities',
-          'Employee wellness programs and gym membership discounts',
-          'Relocation assistance available for qualified candidates'
-        ],
-        
-        companyInfo: {
-          name: 'Manhattan Hospital',
-          about: 'Manhattan Hospital is a leading healthcare institution with over 50 years of excellence in patient care. We are committed to providing world-class medical services and fostering an environment of innovation and collaboration.',
-          size: '1000+ employees',
-          industry: 'Healthcare',
-          website: 'www.manhattanhospital.com'
-        }
-      };
-      
-      setJob(mockJob);
-      setLoading(false);
-      
-      // Check if job is saved (from localStorage or API)
-      const savedJobs = JSON.parse(localStorage.getItem('savedJobs') || '[]');
-      setIsSaved(savedJobs.includes(parseInt(id)));
+        // Check if job is saved (from localStorage or API)
+        const savedJobs = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+        setIsSaved(savedJobs.includes(parseInt(id)));
+      } catch (error) {
+        console.error('Failed to fetch job details:', error);
+        setJob(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchJobDetail();
