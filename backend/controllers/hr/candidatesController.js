@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+const pool = require("../../config/db");
 
 // GET all candidates
 exports.getCandidates = async (req, res) => {

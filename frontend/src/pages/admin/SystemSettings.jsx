@@ -57,7 +57,10 @@ const SystemSettings = () => {
   };
 
   useEffect(() => {
-    fetchSettings();
+    const loadData = async () => {
+      await fetchSettings();
+    };
+    loadData();
   }, []);
 
   const showNotification = (message, type = 'success') => {

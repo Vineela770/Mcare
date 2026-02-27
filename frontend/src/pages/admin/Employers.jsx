@@ -43,7 +43,10 @@ const Employers = () => {
   };
 
   useEffect(() => {
-    fetchEmployers();
+    const loadData = async () => {
+      await fetchEmployers();
+    };
+    loadData();
   }, []);
 
   const [formData, setFormData] = useState({

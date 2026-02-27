@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+const pool = require("../../config/db");
 
 // Get all conversations
 exports.getConversations = async (req, res) => {

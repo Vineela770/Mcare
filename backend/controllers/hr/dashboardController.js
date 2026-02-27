@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+const pool = require("../../config/db");
 
 // Get Dashboard Statistics
 exports.getDashboardStats = async (req, res) => {

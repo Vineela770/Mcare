@@ -63,7 +63,10 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
-    fetchDashboardData();
+    const loadData = async () => {
+      await fetchDashboardData();
+    };
+    loadData();
   }, []);
 
   // ✅ Fixed color classes (Tailwind does not support dynamic strings)

@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
 import { CheckCircle } from 'lucide-react';
+import jobService from '../../services/jobService';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -40,6 +41,31 @@ const Home = () => {
     coverLetter: '',
     resume: null,
   });
+
+  // ✅ Backend Jobs State - Dynamic Category Counts
+  const [liveJobs, setLiveJobs] = useState([]);
+
+  // ✅ Fetch Jobs from Backend
+  useEffect(() => {
+    const fetchLiveJobs = async () => {
+      try {
+        const jobsData = await jobService.getJobs();
+        setLiveJobs(jobsData || []);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+        setLiveJobs([]);
+      }
+    };
+    fetchLiveJobs();
+  }, []);
+
+  // ✅ Dynamic Job Count by Category
+  const getJobCountByCategory = (categoryKey) => {
+    return liveJobs.filter(job => 
+      job.categoryKey === categoryKey || 
+      job.category?.toLowerCase().includes(categoryKey.toLowerCase())
+    ).length;
+  };
 
   const [quickPostData, setQuickPostData] = useState({
     companyName: '',
@@ -147,13 +173,13 @@ const Home = () => {
   };
 
   const categories = [
-    { id: 1, title: 'Hospital Jobs – Doctors', icon: '🏥', positions: 4, key: 'doctors' },
-    { id: 2, title: 'Hospital Management', icon: '📊', positions: 1, key: 'management' },
-    { id: 3, title: 'Medical Colleges', icon: '🎓', positions: 1, key: 'colleges' },
-    { id: 4, title: 'Allied Health', icon: '🩺', positions: 2, key: 'allied' },
-    { id: 5, title: 'Nursing', icon: '👩‍⚕️', positions: 2, key: 'nursing' },
-    { id: 6, title: 'Alternative Medicine', icon: '🌿', positions: 2, key: 'alternative' },
-    { id: 7, title: 'Dental', icon: '🦷', positions: 2, key: 'dental' },
+    { id: 1, title: 'Hospital Jobs – Doctors', icon: '🏥', positions: getJobCountByCategory('doctors'), key: 'doctors' },
+    { id: 2, title: 'Hospital Management', icon: '📊', positions: getJobCountByCategory('management'), key: 'management' },
+    { id: 3, title: 'Medical Colleges', icon: '🎓', positions: getJobCountByCategory('colleges'), key: 'colleges' },
+    { id: 4, title: 'Allied Health', icon: '🩺', positions: getJobCountByCategory('allied'), key: 'allied' },
+    { id: 5, title: 'Nursing', icon: '👩‍⚕️', positions: getJobCountByCategory('nursing'), key: 'nursing' },
+    { id: 6, title: 'Alternative Medicine', icon: '🌿', positions: getJobCountByCategory('alternative'), key: 'alternative' },
+    { id: 7, title: 'Dental', icon: '🦷', positions: getJobCountByCategory('dental'), key: 'dental' },
   ];
 
   const tabs = [

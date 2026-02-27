@@ -15,6 +15,7 @@ const Reports = () => {
     totalDownloads: 0,
     scheduled: 0
   });
+  const [scheduledReports, setScheduledReports] = useState([]);
 
   useEffect(() => {
     fetchReportStats();
@@ -29,6 +30,11 @@ const Reports = () => {
         totalDownloads: data.totalDownloads || 0,
         scheduled: data.scheduled || 0
       });
+      
+      // Fetch scheduled reports if available
+      if (data.scheduledReports && Array.isArray(data.scheduledReports)) {
+        setScheduledReports(data.scheduledReports);
+      }
     } catch (error) {
       console.error('Failed to fetch report stats:', error);
     }
@@ -73,8 +79,6 @@ const Reports = () => {
       icon: Users,
       color: 'text-blue-600',
       bg: 'bg-blue-50',
-      period: 'Last 30 days',
-      size: '2.4 MB'
     },
     {
       title: 'Job Postings Report',
@@ -82,8 +86,6 @@ const Reports = () => {
       icon: Briefcase,
       color: 'text-green-600',
       bg: 'bg-green-50',
-      period: 'Last 30 days',
-      size: '1.8 MB'
     },
     {
       title: 'Revenue Report',
@@ -91,8 +93,6 @@ const Reports = () => {
       icon: IndianRupee,
       color: 'text-yellow-600',
       bg: 'bg-yellow-50',
-      period: 'Last 30 days',
-      size: '1.2 MB'
     },
     {
       title: 'Employer Activity Report',
@@ -100,8 +100,6 @@ const Reports = () => {
       icon: Briefcase,
       color: 'text-purple-600',
       bg: 'bg-purple-50',
-      period: 'Last 30 days',
-      size: '2.0 MB'
     },
     {
       title: 'Candidate Activity Report',
@@ -109,16 +107,14 @@ const Reports = () => {
       icon: Users,
       color: 'text-pink-600',
       bg: 'bg-pink-50',
-      period: 'Last 30 days',
-      size: '2.7 MB'
     }
   ];
 
   const quickStats = [
-    { label: 'Total Reports', value: stats.totalReports.toString(), change: '+12%', color: 'text-blue-600' },
-    { label: 'This Month', value: stats.thisMonth.toString(), change: '+3', color: 'text-green-600' },
-    { label: 'Total Downloads', value: stats.totalDownloads.toString(), change: '+28%', color: 'text-cyan-600' },
-    { label: 'Scheduled', value: stats.scheduled.toString(), change: '0', color: 'text-purple-600' }
+    { label: 'Total Reports', value: stats.totalReports.toString(), color: 'text-blue-600' },
+    { label: 'This Month', value: stats.thisMonth.toString(), color: 'text-green-600' },
+    { label: 'Total Downloads', value: stats.totalDownloads.toString(), color: 'text-cyan-600' },
+    { label: 'Scheduled', value: stats.scheduled.toString(), color: 'text-purple-600' }
   ];
 
   return (
@@ -140,10 +136,7 @@ const Reports = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6">
           {quickStats.map((stat, index) => (
             <div key={index} className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-gray-600 text-sm">{stat.label}</p>
-                <span className={`text-xs font-medium ${stat.color}`}>{stat.change}</span>
-              </div>
+              <p className="text-gray-600 text-sm mb-2">{stat.label}</p>
               <p className="text-2xl md:text-3xl font-bold text-gray-900">{stat.value}</p>
             </div>
           ))}
@@ -215,19 +208,12 @@ const Reports = () => {
               <h3 className="text-lg font-semibold text-gray-900 mb-2">{report.title}</h3>
               <p className="text-sm text-gray-600 mb-4">{report.description}</p>
 
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-sm">
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-500">
-                    <FileText className="w-4 h-4 inline mr-1" />
-                    {report.size}
-                  </span>
-                  <span className="text-gray-500">{report.period}</span>
-                </div>
+              <div className="flex items-center justify-end">
                 <button
                   onClick={() => handleGenerateReport(report.title)}
-                  className="text-cyan-600 font-medium"
+                  className="text-cyan-600 font-medium hover:text-cyan-700"
                 >
-                  Generate
+                  Generate →
                 </button>
               </div>
             </div>
@@ -241,18 +227,26 @@ const Reports = () => {
           </h2>
 
           <div className="space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-50 rounded-lg gap-3">
-              <div className="flex items-center space-x-3">
-                <div className="bg-blue-100 p-2 rounded-lg">
-                  <FileText className="w-5 h-5 text-blue-600" />
+            {scheduledReports.length > 0 ? (
+              scheduledReports.map((report, index) => (
+                <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-50 rounded-lg gap-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="bg-blue-100 p-2 rounded-lg">
+                      <FileText className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{report.title || report.name}</p>
+                      <p className="text-sm text-gray-600">{report.schedule || report.description}</p>
+                    </div>
+                  </div>
+                  <span className={`text-sm font-medium ${report.status === 'active' ? 'text-cyan-600' : 'text-gray-500'}`}>
+                    {report.status || 'Inactive'}
+                  </span>
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900">Monthly User Report</p>
-                  <p className="text-sm text-gray-600">Scheduled for 1st of every month</p>
-                </div>
-              </div>
-              <span className="text-sm text-cyan-600 font-medium">Active</span>
-            </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-8">No scheduled reports available</p>
+            )}
           </div>
         </div>
       </div>

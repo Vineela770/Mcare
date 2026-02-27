@@ -37,7 +37,10 @@ const UsersManagement = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
+    const loadData = async () => {
+      await fetchUsers();
+    };
+    loadData();
   }, []);
 
   const showNotification = (message, type = 'success') => {
