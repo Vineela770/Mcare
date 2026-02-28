@@ -203,7 +203,7 @@ const Navbar = () => {
                   to="/register"
                   className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                 >
-                  Get Started
+                  Register
                 </Link>
               </>
             )}
@@ -284,7 +284,7 @@ const Navbar = () => {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="block w-full px-4 py-3 text-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-blue-700 shadow-md"
                     >
-                      Get Started
+                      Register
                     </Link>
                   </>
                 )}
