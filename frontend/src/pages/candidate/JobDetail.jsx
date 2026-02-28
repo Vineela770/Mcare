@@ -14,6 +14,8 @@ const JobDetail = () => {
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [applicationData, setApplicationData] = useState({
     coverLetter: '',
     expectedSalary: '',
@@ -26,7 +28,8 @@ const JobDetail = () => {
       setLoading(true);
       try {
         const data = await jobService.getCandidateJobById(id);
-        setJob(data);
+        // Backend returns { success, job: {...} } — extract the job object
+        setJob(data?.job || data);
         
         // Check if job is saved (from localStorage or API)
         const savedJobs = JSON.parse(localStorage.getItem('savedJobs') || '[]');
@@ -59,18 +62,29 @@ const JobDetail = () => {
   };
 
   const handleApply = () => {
+    setSubmitError('');
     setShowApplyModal(true);
   };
 
-  const handleSubmitApplication = () => {
-    console.log('Application submitted:', {
-      job,
-      application: applicationData
-    });
-    setSuccessMessage(`Application submitted for ${job.title}!`);
-    setShowSuccessModal(true);
-    setShowApplyModal(false);
-    setApplicationData({ coverLetter: '', expectedSalary: '', availability: '' });
+  const handleSubmitApplication = async () => {
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      await jobService.applyToJob({
+        job_id: id,
+        source: job.source,   // 'jobs' or 'hr_post'
+        cover_letter: applicationData.coverLetter,
+        availability: applicationData.availability,
+      });
+      setSuccessMessage(`Application submitted for ${job.title}! The employer will review your profile shortly.`);
+      setShowSuccessModal(true);
+      setShowApplyModal(false);
+      setApplicationData({ coverLetter: '', expectedSalary: '', availability: '' });
+    } catch (err) {
+      setSubmitError(err?.message || 'Failed to submit application. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleShare = () => {
@@ -382,18 +396,25 @@ const JobDetail = () => {
                   placeholder="e.g., Immediate, 2 weeks notice"
                 />
               </div>
+              {submitError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                  {submitError}
+                </div>
+              )}
               <div className="flex justify-end space-x-3 pt-4">
                 <button
                   onClick={() => setShowApplyModal(false)}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  disabled={submitting}
+                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSubmitApplication}
-                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
+                  disabled={submitting}
+                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 disabled:opacity-60"
                 >
-                  Submit Application
+                  {submitting ? 'Submitting…' : 'Submit Application'}
                 </button>
               </div>
             </div>
