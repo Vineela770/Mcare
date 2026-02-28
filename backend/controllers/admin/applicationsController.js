@@ -32,7 +32,7 @@ exports.getAllApplications = async (req, res) => {
       LEFT JOIN mcare_job_posts mjp ON mjp.id = a.hr_job_id
       LEFT JOIN employer_profiles ep ON ep.user_id = j.employer_id
       LEFT JOIN users eu ON eu.id = j.employer_id
-      ORDER BY a.created_at DESC
+      ORDER BY a.applied_at DESC
     `);
     res.json(result.rows);
   } catch (error) {
@@ -49,18 +49,19 @@ exports.getUserApplications = async (req, res) => {
       SELECT 
         a.id,
         a.status,
-        a.created_at AS applied_at,
-        a.cover_letter_url,
-        j.id       AS job_id,
-        j.title    AS job_title,
-        j.location AS job_location,
-        j.job_type,
-        ep.organization_name AS employer_name
+        a.applied_at,
+        a.cover_letter_path AS cover_letter_url,
+        COALESCE(j.id::text, mjp.id::text) AS job_id,
+        COALESCE(j.title, mjp.title)       AS job_title,
+        COALESCE(j.location, mjp.location) AS job_location,
+        COALESCE(j.job_type, mjp.job_type) AS job_type,
+        COALESCE(ep.organization_name, 'MCARE HR') AS employer_name
       FROM applications a
-      JOIN jobs j ON j.id = a.job_id
+      LEFT JOIN jobs j ON j.id = a.job_id
+      LEFT JOIN mcare_job_posts mjp ON mjp.id = a.hr_job_id
       LEFT JOIN employer_profiles ep ON ep.user_id = j.employer_id
       WHERE a.user_id = $1
-      ORDER BY a.created_at DESC
+      ORDER BY a.applied_at DESC
     `, [userId]);
     res.json(result.rows);
   } catch (error) {
