@@ -68,7 +68,7 @@ const HRChangePassword = () => {
                     type={showOld ? "text" : "password"}
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
-                    className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full py-3 text-base min-h-[48px] bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     style={{ WebkitTextFillColor: '#111827', color: '#111827' }}
                   />
                   <button
@@ -96,7 +96,7 @@ const HRChangePassword = () => {
                     type={showNew ? "text" : "password"}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full py-3 text-base min-h-[48px] bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     style={{ WebkitTextFillColor: '#111827', color: '#111827' }}
                   />
                   <button
@@ -124,7 +124,7 @@ const HRChangePassword = () => {
                     type={showConfirm ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full py-3 text-base min-h-[48px] bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     style={{ WebkitTextFillColor: '#111827', color: '#111827' }}
                   />
                   <button
