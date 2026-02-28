@@ -50,7 +50,7 @@ const Home = () => {
     const fetchLiveJobs = async () => {
       try {
         const jobsData = await jobService.getJobs();
-        setLiveJobs(jobsData || []);
+        setLiveJobs(Array.isArray(jobsData) ? jobsData : []);
       } catch (error) {
         console.error('Error fetching jobs:', error);
         setLiveJobs([]);

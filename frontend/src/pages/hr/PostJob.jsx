@@ -155,14 +155,13 @@ const PostJob = () => {
                 required
               >
                 <option value="">Select Department</option>
+                <option value="doctors">Hospital Jobs – Doctors</option>
+                <option value="management">Hospital Management</option>
+                <option value="colleges">Medical Colleges</option>
+                <option value="allied">Allied Health</option>
                 <option value="nursing">Nursing</option>
-                <option value="medical">Medical</option>
-                <option value="surgical">Surgical</option>
-                <option value="emergency">Emergency</option>
-                <option value="pediatric">Pediatric</option>
-                <option value="cardiology">Cardiology</option>
-                <option value="radiology">Radiology</option>
-                <option value="laboratory">Laboratory</option>
+                <option value="alternative">Alternative Medicine</option>
+                <option value="dental">Dental</option>
               </select>
             </div>
 
