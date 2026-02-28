@@ -105,6 +105,13 @@ const Register = () => {
     e.preventDefault();
     setError('');
 
+    // ✅ Validate email format
+    const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address (e.g. name@example.com)');
+      return;
+    }
+
     if (formData.email !== formData.confirmEmail) {
       setError('Email addresses do not match');
       return;
@@ -185,7 +192,13 @@ const Register = () => {
       }
     } catch (err) {
       console.error('Registration error:', err);
-      setError(err.message || 'Registration failed. Please try again.');
+      // err is error.response?.data from authService — extract .message properly
+      const msg =
+        (typeof err === 'string' ? err : null) ||
+        err?.message ||
+        err?.error ||
+        'Registration failed. Please try again.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
