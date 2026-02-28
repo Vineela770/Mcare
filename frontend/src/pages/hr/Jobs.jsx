@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Briefcase, MapPin, Users, Eye, Edit2, Trash2, Clock } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import { employerService } from '../../api/employerService';
+import Toast from '../../components/common/Toast';
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -10,6 +11,8 @@ const Jobs = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [showJobDetails, setShowJobDetails] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -28,6 +31,20 @@ const Jobs = () => {
     fetchJobs();
   }, []);
 
+  const handleDelete = async (jobId) => {
+    if (!window.confirm('Delete this job posting?')) return;
+    setDeletingId(jobId);
+    try {
+      await employerService.deleteJob(jobId);
+      setJobs(prev => prev.filter(j => j.id !== jobId));
+      setToast({ message: 'Job deleted successfully.', type: 'success' });
+    } catch (err) {
+      setToast({ message: 'Failed to delete job. Please try again.', type: 'error' });
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const filteredJobs = Array.isArray(jobs) ? jobs.filter(job => filter === 'all' || job.status === filter) : [];
 
   const getStatusBadge = (status) => {
@@ -41,6 +58,7 @@ const Jobs = () => {
 
   return (
     <div className="flex">
+      <Toast toast={toast} onClose={() => setToast(null)} />
       <Sidebar />
 
       {/* Main Content */}
@@ -91,7 +109,7 @@ const Jobs = () => {
           <div className="bg-white rounded-xl p-6 shadow-sm border">
             <div className="text-sm text-gray-600 mb-1">Total Applicants</div>
             <div className="text-3xl font-bold text-cyan-600">
-              {jobs.reduce((sum, job) => sum + job.applicants, 0)}
+              {jobs.reduce((sum, job) => sum + (Number(job.applicants) || 0), 0)}
             </div>
           </div>
         </div>
@@ -142,7 +160,7 @@ const Jobs = () => {
 
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4" />
-                      <span>{job.applicants} Applicants</span>
+                      <span>{Number(job.applicants) || 0} Applicants</span>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -167,7 +185,11 @@ const Jobs = () => {
                     <Edit2 className="w-5 h-5" />
                   </button>
 
-                  <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                  <button
+                    onClick={() => handleDelete(job.id)}
+                    disabled={deletingId === job.id}
+                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-40"
+                  >
                     <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
