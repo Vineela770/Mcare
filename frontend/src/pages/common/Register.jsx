@@ -195,7 +195,7 @@ const Register = () => {
   const isPasswordTyped = formData.password.trim().length > 0; // ✅ for confirm password enable/disable
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-white flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-teal-800 via-emerald-700 to-emerald-500 flex items-center justify-center px-4 py-12">
       <div className="max-w-2xl w-full">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -203,10 +203,10 @@ const Register = () => {
             <div className="w-12 h-12 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-xl flex items-center justify-center">
               <span className="text-white font-bold text-2xl">M</span>
             </div>
-            <span className="text-3xl font-bold text-gray-900">MCARE</span>
+            <span className="text-3xl font-bold text-white">MCARE</span>
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900 mt-6 mb-2">Register</h1>
-          <p className="text-gray-600">Start your healthcare career journey today</p>
+          <h1 className="text-3xl font-bold text-white mt-6 mb-2">Register</h1>
+          <p className="text-emerald-100">Start your healthcare career journey today</p>
         </div>
 
         {/* Info banner when redirected from Apply Now */}
@@ -546,7 +546,7 @@ const Register = () => {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-gray-600 hover:text-emerald-700 font-medium">
+          <Link to="/" className="text-white/80 hover:text-white font-medium">
             ← Back to Home
           </Link>
         </div>
