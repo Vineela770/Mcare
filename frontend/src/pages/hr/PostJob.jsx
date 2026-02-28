@@ -1,10 +1,22 @@
-import { useState } from 'react';
-import { Briefcase, MapPin, Clock, Users, Phone, FileText, Send, CheckCircle } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Briefcase, MapPin, Clock, Users, Phone, Send, CheckCircle, Type, Building2, IndianRupee, Calendar, ClipboardList, Gift } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
+import Toast from '../../components/common/Toast';
+import { employerService } from '../../api/employerService';
+
+const safeText = (val) => (val && String(val).trim() ? String(val).trim() : '—');
 
 const PostJob = () => {
+  const navigate = useNavigate();
+  const formRef = useRef(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [previewData, setPreviewData] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [postedJob, setPostedJob] = useState(null);
 
   // ✅ Dropdown data
   const countryCodes = ['+91', '+1', '+44', '+61', '+971'];
@@ -63,23 +75,39 @@ const PostJob = () => {
 
   const handleSaveDraft = () => {
     console.log('Job Saved as Draft:', formData);
+    setToast({ message: 'Job saved as draft.', type: 'info' });
     setFormData(initialForm);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleReview = () => {
+    const ok = formRef.current?.checkValidity();
+    if (!ok) {
+      formRef.current?.reportValidity();
+      return;
+    }
+    setPreviewData({ ...formData, phone: `${formData.countryCode}${formData.phone}` });
+    setShowReviewModal(true);
+  };
 
-    const payload = {
-      ...formData,
-      phone: `${formData.countryCode}${formData.phone}`,
-    };
-
-    console.log('Job Posted:', payload);
-    setShowSuccessModal(true);
+  const handleFinalSubmit = async () => {
+    setSubmitting(true);
+    try {
+      const result = await employerService.postJob(previewData);
+      setShowReviewModal(false);
+      setPostedJob(result || previewData);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error('Failed to post job:', error);
+      setShowReviewModal(false);
+      setToast({ message: error?.message || 'Failed to post job. Please try again.', type: 'error' });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div>
+      <Toast toast={toast} onClose={() => setToast(null)} />
       <Sidebar />
 
       {/* ✅ Mobile: no left margin + top padding for hamburger
@@ -91,13 +119,17 @@ const PostJob = () => {
         </div>
 
         <form
-          onSubmit={handleSubmit}
-          className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100"
+          ref={formRef}
+          onSubmit={(e) => e.preventDefault()}
+          className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 w-full lg:w-[70%]"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {/* Job Title */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Job Title *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Type className="w-4 h-4 inline mr-1" />
+                Job Title *
+              </label>
               <input
                 type="text"
                 name="title"
@@ -111,7 +143,10 @@ const PostJob = () => {
 
             {/* Department */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Department *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Building2 className="w-4 h-4 inline mr-1" />
+                Department *
+              </label>
               <select
                 name="department"
                 value={formData.department}
@@ -235,7 +270,10 @@ const PostJob = () => {
 
             {/* Salary */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Salary Range *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <IndianRupee className="w-4 h-4 inline mr-1" />
+                Salary Range *
+              </label>
               <select
                 name="salary"
                 value={formData.salary}
@@ -272,7 +310,10 @@ const PostJob = () => {
 
             {/* Deadline */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Application Deadline *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Calendar className="w-4 h-4 inline mr-1" />
+                Application Deadline *
+              </label>
               <input
                 type="date"
                 name="deadline"
@@ -286,7 +327,7 @@ const PostJob = () => {
             {/* Description */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                <FileText className="w-4 h-4 inline mr-1" />
+                <ClipboardList className="w-4 h-4 inline mr-1" />
                 Job Description *
               </label>
               <textarea
@@ -318,7 +359,10 @@ const PostJob = () => {
 
             {/* Benefits */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Benefits & Perks</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Gift className="w-4 h-4 inline mr-1" />
+                Benefits & Perks
+              </label>
               <textarea
                 name="benefits"
                 value={formData.benefits}
@@ -342,20 +386,70 @@ const PostJob = () => {
               Save as Draft
             </button>
             <button
-              type="submit"
+              type="button"
+              onClick={handleReview}
               className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium flex items-center justify-center space-x-2"
             >
               <Send className="w-5 h-5" />
-              <span>Post Job</span>
+              <span>Review</span>
             </button>
           </div>
         </form>
+
+        {/* Review Modal */}
+        {showReviewModal && previewData && (
+          <Modal
+            isOpen={showReviewModal}
+            onClose={() => setShowReviewModal(false)}
+            title="Review Job Posting"
+          >
+            <div className="space-y-4">
+              <p className="text-sm text-gray-500">Please review the details before submitting.</p>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm">
+                <div><span className="font-medium text-gray-700">Title:</span> {safeText(previewData.title)}</div>
+                <div><span className="font-medium text-gray-700">Department:</span> {safeText(previewData.department)}</div>
+                <div><span className="font-medium text-gray-700">Location:</span> {safeText(previewData.location)}</div>
+                <div><span className="font-medium text-gray-700">Job Type:</span> {safeText(previewData.jobType)}</div>
+                <div><span className="font-medium text-gray-700">Experience:</span> {safeText(previewData.experience)}</div>
+                <div><span className="font-medium text-gray-700">Salary:</span> {safeText(previewData.salary)}</div>
+                <div><span className="font-medium text-gray-700">Positions:</span> {safeText(previewData.positions)}</div>
+                <div><span className="font-medium text-gray-700">Deadline:</span> {safeText(previewData.deadline)}</div>
+                <div><span className="font-medium text-gray-700">Phone:</span> {safeText(previewData.phone)}</div>
+                {previewData.description && (
+                  <div>
+                    <span className="font-medium text-gray-700">Description:</span>{' '}
+                    {previewData.description.slice(0, 120)}{previewData.description.length > 120 ? '…' : ''}
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+                <button
+                  onClick={() => setShowReviewModal(false)}
+                  className="w-full sm:w-auto px-5 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={handleFinalSubmit}
+                  disabled={submitting}
+                  className="w-full sm:w-auto px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  <Send className="w-4 h-4" />
+                  {submitting ? 'Submitting…' : 'Submit Job'}
+                </button>
+              </div>
+            </div>
+          </Modal>
+        )}
 
         {/* Success Modal */}
         {showSuccessModal && (
           <Modal
             isOpen={showSuccessModal}
-            onClose={() => setShowSuccessModal(false)}
+            onClose={() => {
+              setShowSuccessModal(false);
+              navigate('/hr/jobs');
+            }}
             title="Job Posted Successfully!"
           >
             <div className="space-y-4 text-center">
@@ -366,7 +460,7 @@ const PostJob = () => {
               <h3 className="text-xl font-bold text-gray-900">Job Posting Complete</h3>
 
               <p className="text-gray-600">
-                Your job posting for <span className="font-semibold">{formData.title}</span> has been published
+                Your job posting for <span className="font-semibold">{postedJob?.title || formData.title}</span> has been published
                 successfully and is now visible to candidates.
               </p>
 
@@ -374,20 +468,16 @@ const PostJob = () => {
                 <p className="text-sm text-gray-600 mb-2">Job Details:</p>
                 <ul className="space-y-1 text-sm">
                   <li className="text-gray-700">
-                    <span className="font-medium">Department:</span> {formData.department}
+                    <span className="font-medium">Department:</span> {postedJob?.department || formData.department}
                   </li>
                   <li className="text-gray-700">
-                    <span className="font-medium">Location:</span> {formData.location}
+                    <span className="font-medium">Location:</span> {postedJob?.location || formData.location}
                   </li>
                   <li className="text-gray-700">
-                    <span className="font-medium">Positions:</span> {formData.positions}
+                    <span className="font-medium">Positions:</span> {postedJob?.positions || formData.positions}
                   </li>
                   <li className="text-gray-700">
-                    <span className="font-medium">Deadline:</span> {formData.deadline}
-                  </li>
-                  <li className="text-gray-700">
-                    <span className="font-medium">Phone:</span> {formData.countryCode}
-                    {formData.phone}
+                    <span className="font-medium">Deadline:</span> {postedJob?.deadline || formData.deadline}
                   </li>
                 </ul>
               </div>
@@ -398,16 +488,20 @@ const PostJob = () => {
                   onClick={() => {
                     setShowSuccessModal(false);
                     setFormData(initialForm);
+                    setPostedJob(null);
                   }}
                   className="w-full sm:w-auto px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 >
                   Post Another Job
                 </button>
                 <button
-                  onClick={() => setShowSuccessModal(false)}
+                  onClick={() => {
+                    setShowSuccessModal(false);
+                    navigate('/hr/jobs');
+                  }}
                   className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
                 >
-                  View All Jobs
+                  View My Jobs
                 </button>
               </div>
             </div>

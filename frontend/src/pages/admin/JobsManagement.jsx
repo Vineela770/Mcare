@@ -137,7 +137,7 @@ const JobsManagement = () => {
 
   const confirmDelete = async () => {
     try {
-      await adminService.deleteJob(selectedJob.id);
+      await adminService.deleteJob(selectedJob.id, selectedJob.source);
       await fetchJobs(); // Refresh the list
       setShowDeleteModal(false);
       showNotification(`Job "${selectedJob.title}" has been deleted.`, 'info');
@@ -277,6 +277,9 @@ const JobsManagement = () => {
                     <div>
                       <p className="font-semibold text-gray-900">{job.title}</p>
                       <p className="text-sm text-gray-500">{job.posted}</p>
+                      {job.source === 'hr_post' && (
+                        <span className="inline-block mt-1 px-2 py-0.5 bg-purple-50 text-purple-600 text-xs rounded-full font-medium">HR Posted</span>
+                      )}
                     </div>
                   </td>
                   <td className="py-4 px-6 text-gray-900">{job.employer}</td>

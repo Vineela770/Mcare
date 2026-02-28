@@ -76,9 +76,10 @@ const adminService = {
     }
   },
 
-  deleteJob: async (id) => {
+  deleteJob: async (id, source) => {
     try {
-      const response = await axios.delete(`/api/admin/jobs/${id}`);
+      const params = source ? { source } : {};
+      const response = await axios.delete(`/api/admin/jobs/${id}`, { params });
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to delete job' };

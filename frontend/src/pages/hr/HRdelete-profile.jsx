@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, CheckCircle } from "lucide-react";
 import Sidebar from "../../components/common/Sidebar";
 
 const HRDeleteProfile = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState(false);
     const navigate = useNavigate();
 
     const handleDelete = (e) => {
@@ -18,9 +19,8 @@ const HRDeleteProfile = () => {
         }
 
         setError("");
-
-        alert("Your profile has been deleted successfully.");
-        navigate("/");
+        setSuccess(true);
+        setTimeout(() => navigate("/"), 1500);
     };
 
     return (
@@ -71,12 +71,21 @@ const HRDeleteProfile = () => {
 
                 {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
-                <button
+                {success && (
+                  <div className="mt-4 flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <p className="text-green-700 text-sm font-medium">Your profile has been deleted successfully. Redirecting...</p>
+                  </div>
+                )}
+
+                {!success && (
+                  <button
                     type="submit"
                     className="mt-6 bg-sky-500 hover:bg-sky-600 text-white px-5 md:px-6 py-2.5 md:py-3 rounded-lg transition w-full sm:w-auto"
-                >
+                  >
                     Delete Profile
-                </button>
+                  </button>
+                )}
                 </form>
             </div>
             </div>

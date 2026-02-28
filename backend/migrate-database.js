@@ -238,6 +238,27 @@ const SCHEMA_STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_guest_jobs_status ON guest_jobs(status)`,
 
+  // ── HR Job Posts ─────────────────────────────────────────────────────────
+  `CREATE TABLE IF NOT EXISTS mcare_job_posts (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    department VARCHAR(100),
+    location VARCHAR(255),
+    phone VARCHAR(50),
+    job_type VARCHAR(50) DEFAULT 'full-time',
+    experience VARCHAR(100),
+    salary VARCHAR(100),
+    positions INTEGER DEFAULT 1,
+    description TEXT,
+    requirements TEXT,
+    benefits TEXT,
+    deadline DATE,
+    status VARCHAR(50) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_mcare_job_posts_status ON mcare_job_posts(status)`,
+
   // ── updated_at trigger function ────────────────────────────────────────────
   `CREATE OR REPLACE FUNCTION update_updated_at_column()
    RETURNS TRIGGER AS $$

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Save, Bell, User, Mail } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import Toast from '../../components/common/Toast';
 import employerService from '../../api/employerService';
 
 const Settings = () => {
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
   const [formData, setFormData] = useState({
     full_name: '',
     organization_name: '',
@@ -139,10 +141,10 @@ const Settings = () => {
         website_url: formData.website,
         description: formData.description,
       });
-      alert('Settings saved successfully!');
+      setToast({ message: 'Settings saved successfully!', type: 'success' });
     } catch (error) {
       console.error('Failed to save profile:', error);
-      alert('Failed to save settings. Please try again.');
+      setToast({ message: 'Failed to save settings. Please try again.', type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -150,6 +152,7 @@ const Settings = () => {
 
   return (
     <div>
+      <Toast toast={toast} onClose={() => setToast(null)} />
       <Sidebar />
 
       {/* ✅ Mobile: no left margin + add top padding for hamburger

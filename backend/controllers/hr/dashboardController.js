@@ -44,3 +44,38 @@ exports.getRecentApplications = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Get This Week Statistics
+exports.getWeeklyStats = async (req, res) => {
+  try {
+    const weekStart = new Date();
+    weekStart.setDate(weekStart.getDate() - 7);
+    const weekStartISO = weekStart.toISOString();
+
+    const newApps = await pool.query(
+      "SELECT COUNT(*) FROM applications WHERE applied_date >= $1",
+      [weekStartISO]
+    );
+    const shortlisted = await pool.query(
+      "SELECT COUNT(*) FROM applications WHERE status='Shortlisted' AND applied_date >= $1",
+      [weekStartISO]
+    );
+    const interviews = await pool.query(
+      "SELECT COUNT(*) FROM applications WHERE status='Interview' AND applied_date >= $1",
+      [weekStartISO]
+    );
+    const rejected = await pool.query(
+      "SELECT COUNT(*) FROM applications WHERE status='Rejected' AND applied_date >= $1",
+      [weekStartISO]
+    );
+
+    res.json({
+      newApplications: parseInt(newApps.rows[0].count),
+      shortlisted: parseInt(shortlisted.rows[0].count),
+      interviews: parseInt(interviews.rows[0].count),
+      rejected: parseInt(rejected.rows[0].count),
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

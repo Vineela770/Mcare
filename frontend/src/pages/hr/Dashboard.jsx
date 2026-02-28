@@ -25,6 +25,12 @@ const HRDashboard = () => {
   });
 
   const [recentApplications, setRecentApplications] = useState([]);
+  const [weeklyStats, setWeeklyStats] = useState({
+    newApplications: 0,
+    shortlisted: 0,
+    interviews: 0,
+    rejected: 0,
+  });
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -46,6 +52,19 @@ const HRDashboard = () => {
         const applicationsData = await employerService.getRecentApplications();
         const appsArray = Array.isArray(applicationsData) ? applicationsData : [];
         setRecentApplications(appsArray.slice(0, 3));
+
+        // Fetch weekly stats
+        try {
+          const weekData = await employerService.getWeeklyStats();
+          setWeeklyStats({
+            newApplications: weekData.newApplications || 0,
+            shortlisted: weekData.shortlisted || 0,
+            interviews: weekData.interviews || 0,
+            rejected: weekData.rejected || 0,
+          });
+        } catch {
+          // fallback silently – weekly stats non-critical
+        }
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
         setRecentApplications([]);
@@ -214,37 +233,37 @@ const HRDashboard = () => {
             <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-5 md:mb-6">This Week</h2>
 
             <div className="space-y-3 md:space-y-4">
-              <div className="flex items-center justify-between p-3 bg-cyan-50 rounded-lg">
+              <Link to="/hr/applications" className="flex items-center justify-between p-3 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors">
                 <div className="flex items-center space-x-3">
                   <FileText className="w-5 h-5 text-cyan-600" />
                   <span className="text-gray-700 text-sm md:text-base">New Applications</span>
                 </div>
-                <span className="text-xl font-bold text-cyan-600">32</span>
-              </div>
+                <span className="text-xl font-bold text-cyan-600">{weeklyStats.newApplications}</span>
+              </Link>
 
-              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+              <Link to="/hr/applications" className="flex items-center justify-between p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
                 <div className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-blue-600" />
                   <span className="text-gray-700 text-sm md:text-base">Shortlisted</span>
                 </div>
-                <span className="text-xl font-bold text-blue-600">12</span>
-              </div>
+                <span className="text-xl font-bold text-blue-600">{weeklyStats.shortlisted}</span>
+              </Link>
 
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <Link to="/hr/interviews" className="flex items-center justify-between p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
                 <div className="flex items-center space-x-3">
                   <Users className="w-5 h-5 text-green-600" />
                   <span className="text-gray-700 text-sm md:text-base">Interviews</span>
                 </div>
-                <span className="text-xl font-bold text-green-600">8</span>
-              </div>
+                <span className="text-xl font-bold text-green-600">{weeklyStats.interviews}</span>
+              </Link>
 
-              <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+              <Link to="/hr/applications" className="flex items-center justify-between p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
                 <div className="flex items-center space-x-3">
                   <XCircle className="w-5 h-5 text-red-600" />
                   <span className="text-gray-700 text-sm md:text-base">Rejected</span>
                 </div>
-                <span className="text-xl font-bold text-red-600">15</span>
-              </div>
+                <span className="text-xl font-bold text-red-600">{weeklyStats.rejected}</span>
+              </Link>
             </div>
           </div>
         </div>

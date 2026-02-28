@@ -20,6 +20,15 @@ export const employerService = {
     }
   },
 
+  getWeeklyStats: async () => {
+    try {
+      const response = await axios.get('/api/hr/dashboard/weekly-stats');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch weekly stats' };
+    }
+  },
+
   // Jobs
   getJobs: async () => {
     try {
@@ -27,6 +36,15 @@ export const employerService = {
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to fetch jobs' };
+    }
+  },
+
+  postJob: async (jobData) => {
+    try {
+      const response = await axios.post('/api/hr/jobs', jobData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to post job' };
     }
   },
 

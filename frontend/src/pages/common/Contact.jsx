@@ -27,24 +27,24 @@ const Contact = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="py-14 md:py-20 px-4 bg-gradient-to-r from-cyan-500 to-blue-600">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 md:mb-6">
+      <section className="py-8 md:py-12 px-4 bg-gradient-to-r from-cyan-500 to-blue-600">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">
             Get In Touch
           </h1>
-          <p className="text-base md:text-xl text-cyan-100">
+          <p className="text-sm md:text-lg text-cyan-100">
             Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
           </p>
         </div>
       </section>
 
       {/* Contact Info & Form */}
-      <section className="py-12 md:py-16 px-4">
+      <section className="py-8 md:py-12 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
 
             {/* Contact Information */}
-            <div className="lg:col-span-1 space-y-5 md:space-y-6">
+            <div className="lg:col-span-1 space-y-4 md:space-y-5">
               {[
                 {
                   icon: <Phone className="w-6 h-6 text-cyan-600" />,
@@ -88,15 +88,15 @@ const Contact = () => {
             {/* Contact Form */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-xl p-6 md:p-8 shadow-lg border border-gray-100">
-                <div className="flex items-center space-x-3 mb-5 md:mb-6">
+                <div className="flex items-center space-x-3 mb-4 md:mb-5">
                   <MessageSquare className="w-7 h-7 md:w-8 md:h-8 text-cyan-600" />
                   <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                     Send us a Message
                   </h2>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                     <div>
                       <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
                         Your Name
@@ -160,7 +160,12 @@ const Contact = () => {
 
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold py-2.5 md:py-3 px-6 rounded-lg text-sm md:text-base hover:from-cyan-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center space-x-2"
+                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white
+                              font-medium py-2 px-4 text-sm
+                              md:font-semibold md:py-3 md:px-6 md:text-base
+                              rounded-lg hover:from-cyan-600 hover:to-blue-700
+                              transition-all duration-200 shadow-md hover:shadow-lg
+                              flex items-center justify-center space-x-2"
                   >
                     <Send className="w-4 h-4 md:w-5 md:h-5" />
                     <span>Send Message</span>
@@ -173,13 +178,13 @@ const Contact = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-12 md:py-16 px-4 bg-gray-50">
+      <section className="py-8 md:py-12 px-4 bg-gray-50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-900 mb-8 md:mb-12">
+          <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-900 mb-6 md:mb-8">
             Frequently Asked Questions
           </h2>
 
-          <div className="space-y-5 md:space-y-6">
+          <div className="space-y-4 md:space-y-5">
             <div className="bg-white rounded-xl p-5 md:p-6 shadow-lg border border-gray-100">
               <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">
                 How do I create an account?

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { User, Mail, Phone, MapPin, Calendar, Save, Camera, Upload, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
+import Toast from '../../components/common/Toast';
 import { useAuth } from '../../context/useAuth';
 import axios from '../../api/axios';
 
@@ -12,6 +13,7 @@ const Profile = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const [toast, setToast] = useState(null);
 
   // Country codes dropdown
   const countryCodes = ['+91', '+1', '+44', '+61', '+971'];
@@ -124,12 +126,13 @@ const Profile = () => {
       setShowSuccessModal(true);
     } catch (err) {
       console.error('Failed to save profile:', err);
-      alert(err?.response?.data?.message || 'Failed to save profile. Please try again.');
+      setToast({ message: err?.response?.data?.message || 'Failed to save profile. Please try again.', type: 'error' });
     }
   };
 
   return (
     <div>
+      <Toast toast={toast} onClose={() => setToast(null)} />
       <Sidebar />
 
       <div className="ml-0 md:ml-64 min-h-screen bg-gray-50 p-4 sm:p-6">
