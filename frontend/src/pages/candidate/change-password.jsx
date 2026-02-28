@@ -70,13 +70,13 @@ const ChangePassword = () => {
                       type={showOld ? "text" : "password"}
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
-                      className="w-full bg-gray-100 px-4 py-3 rounded-lg pr-12 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-sky-400"
+                      className="w-full bg-gray-100 border border-gray-300 px-4 py-3 rounded-lg pr-12 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="Enter old password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowOld(!showOld)}
-                      className="absolute right-4 top-3.5 text-gray-500 hover:text-gray-700"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center text-gray-500 hover:text-gray-700"
                       aria-label={showOld ? "Hide old password" : "Show old password"}
                     >
                       {showOld ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -97,13 +97,13 @@ const ChangePassword = () => {
                       type={showNew ? "text" : "password"}
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full bg-gray-100 px-4 py-3 rounded-lg pr-12 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-sky-400"
+                      className="w-full bg-gray-100 border border-gray-300 px-4 py-3 rounded-lg pr-12 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="Enter new password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowNew(!showNew)}
-                      className="absolute right-4 top-3.5 text-gray-500 hover:text-gray-700"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center text-gray-500 hover:text-gray-700"
                       aria-label={showNew ? "Hide new password" : "Show new password"}
                     >
                       {showNew ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -124,13 +124,13 @@ const ChangePassword = () => {
                       type={showConfirm ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full bg-gray-100 px-4 py-3 rounded-lg pr-12 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-sky-400"
+                      className="w-full bg-gray-100 border border-gray-300 px-4 py-3 rounded-lg pr-12 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="Retype new password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirm(!showConfirm)}
-                      className="absolute right-4 top-3.5 text-gray-500 hover:text-gray-700"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center text-gray-500 hover:text-gray-700"
                       aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
                     >
                       {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
