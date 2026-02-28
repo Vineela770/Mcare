@@ -37,7 +37,7 @@ const Applications = () => {
   const filteredApplications =
     filter === 'all'
       ? (Array.isArray(applications) ? applications : [])
-      : (Array.isArray(applications) ? applications.filter(a => a.status.toLowerCase() === filter) : []);
+      : (Array.isArray(applications) ? applications.filter(a => (a.status || '').toLowerCase() === filter.toLowerCase()) : []);
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -115,9 +115,9 @@ const Applications = () => {
                   <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">{app.title}</h3>
 
                   <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 text-gray-600 text-sm">
-                    <InfoItem icon={<Building2 />} text={app.company} />
-                    <InfoItem icon={<MapPin />} text={app.location} />
-                    <InfoItem icon={<Clock />} text={`Applied ${app.appliedDate}`} />
+                    <InfoItem icon={<Building2 />} text={app.company_name || app.company || '—'} />
+                    <InfoItem icon={<MapPin />} text={app.location || '—'} />
+                    <InfoItem icon={<Clock />} text={app.applied_at ? `Applied ${new Date(app.applied_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}` : ''} />
                   </div>
                 </div>
 
@@ -130,7 +130,9 @@ const Applications = () => {
 
               {/* Bottom Section */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 gap-2">
-                <span className="text-gray-900 font-semibold">{app.salary}</span>
+                <span className="text-gray-900 font-semibold text-sm">
+                  {app.job_type || ''}
+                </span>
                 <Link
                   to={`/candidate/application/${app.id}`}
                   className="flex items-center space-x-2 text-cyan-600 hover:text-cyan-700 font-medium text-sm"

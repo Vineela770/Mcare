@@ -259,6 +259,11 @@ const SCHEMA_STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_mcare_job_posts_status ON mcare_job_posts(status)`,
 
+  // ── Allow applications to HR-posted jobs ─────────────────────────────────
+  `ALTER TABLE applications ALTER COLUMN job_id DROP NOT NULL`,
+  `ALTER TABLE applications ADD COLUMN IF NOT EXISTS hr_job_id INTEGER REFERENCES mcare_job_posts(id) ON DELETE CASCADE`,
+  `CREATE INDEX IF NOT EXISTS idx_applications_hr_job_id ON applications(hr_job_id)`,
+
   // ── updated_at trigger function ────────────────────────────────────────────
   `CREATE OR REPLACE FUNCTION update_updated_at_column()
    RETURNS TRIGGER AS $$

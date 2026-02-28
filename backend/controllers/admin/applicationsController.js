@@ -13,22 +13,23 @@ exports.getAllApplications = async (req, res) => {
         u.id          AS user_id,
         u.full_name   AS candidate_name,
         u.email       AS candidate_email,
-        u.phone_number AS candidate_phone,
+        u.phone       AS candidate_phone,
         cp.qualification,
         cp.resume_url,
-        -- Job info
-        j.id          AS job_id,
-        j.title       AS job_title,
-        j.location    AS job_location,
-        j.job_type,
+        -- Job info (from either table)
+        COALESCE(j.id::text, mjp.id::text)               AS job_id,
+        COALESCE(j.title, mjp.title)                     AS job_title,
+        COALESCE(j.location, mjp.location)               AS job_location,
+        COALESCE(j.job_type, mjp.job_type)               AS job_type,
         -- Employer info
-        ep.organization_name AS employer_name,
-        eu.full_name         AS employer_contact,
-        eu.email             AS employer_email
+        COALESCE(ep.organization_name, 'MCARE HR')       AS employer_name,
+        COALESCE(eu.full_name, 'HR Admin')               AS employer_contact,
+        COALESCE(eu.email, '')                           AS employer_email
       FROM applications a
       JOIN users u ON u.id = a.user_id
       LEFT JOIN candidate_profiles cp ON cp.user_id = u.id
-      JOIN jobs j ON j.id = a.job_id
+      LEFT JOIN jobs j ON j.id = a.job_id
+      LEFT JOIN mcare_job_posts mjp ON mjp.id = a.hr_job_id
       LEFT JOIN employer_profiles ep ON ep.user_id = j.employer_id
       LEFT JOIN users eu ON eu.id = j.employer_id
       ORDER BY a.created_at DESC

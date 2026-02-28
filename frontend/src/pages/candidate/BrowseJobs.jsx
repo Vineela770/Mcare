@@ -23,6 +23,8 @@ const BrowseJobs = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
+  const [applying, setApplying] = useState(false);
+  const [applyError, setApplyError] = useState('');
 
   const cities = [
     'All Locations',
@@ -137,25 +139,34 @@ const BrowseJobs = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmitApplication = () => {
+  const handleSubmitApplication = async () => {
     if (!validateApplication()) return;
 
-    console.log('Application submitted:', {
-      job: selectedJob,
-      application: applicationData
-    });
+    setApplying(true);
+    setApplyError('');
+    try {
+      await jobService.applyToJob({
+        job_id: selectedJob.source === 'hr_post' ? null : selectedJob.id,
+        hr_job_id: selectedJob.source === 'hr_post' ? selectedJob.id : null,
+        source: selectedJob.source || 'jobs',
+        availability: applicationData.availability,
+        cover_letter: applicationData.coverLetter,
+      });
 
-    setSuccessMessage(`Application submitted for ${selectedJob.title}!`);
-    setShowSuccessModal(true);
-    setShowApplyModal(false);
+      setSuccessMessage(`Application submitted for ${selectedJob.title}!`);
+      setShowSuccessModal(true);
+      setShowApplyModal(false);
+      setApplicationData({ coverLetter: '', expectedSalary: '', availability: '' });
+      setErrors({});
 
-    setApplicationData({
-      coverLetter: '',
-      expectedSalary: '',
-      availability: ''
-    });
-
-    setErrors({});
+      // mark job as applied in list
+      setJobs(prev => prev.map(j => j.id === selectedJob.id ? { ...j, already_applied: true } : j));
+      setAllJobs(prev => prev.map(j => j.id === selectedJob.id ? { ...j, already_applied: true } : j));
+    } catch (err) {
+      setApplyError(err?.message || 'Failed to submit application. Please try again.');
+    } finally {
+      setApplying(false);
+    }
   };
 
   return (
@@ -264,11 +275,16 @@ const BrowseJobs = () => {
                   >
                     Details
                   </button>
-                  <button
+                <button
                     onClick={() => handleApply(job)}
-                    className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium text-sm"
+                    disabled={job.already_applied}
+                    className={`px-4 py-2 rounded-lg font-medium text-sm ${
+                      job.already_applied
+                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700'
+                    }`}
                   >
-                    Apply
+                    {job.already_applied ? 'Applied' : 'Apply'}
                   </button>
                 </div>
               </div>
@@ -352,9 +368,13 @@ const BrowseJobs = () => {
                 )}
               </div>
 
+              {applyError && (
+                <p className="text-red-500 text-sm bg-red-50 px-4 py-2 rounded-lg">{applyError}</p>
+              )}
+
               <div className="flex justify-end space-x-3 pt-4">
                 <button
-                  onClick={() => setShowApplyModal(false)}
+                  onClick={() => { setShowApplyModal(false); setApplyError(''); }}
                   className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
@@ -362,11 +382,11 @@ const BrowseJobs = () => {
                 <button
                   type="button"
                   onClick={handleSubmitApplication}
-                  className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                  disabled={applying}
+                  className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 disabled:opacity-60"
                 >
-                  Submit Application
+                  {applying ? 'Submitting…' : 'Submit Application'}
                 </button>
-
               </div>
             </div>
           </Modal>

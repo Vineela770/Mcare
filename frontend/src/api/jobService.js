@@ -44,11 +44,7 @@ export const jobService = {
   // Apply to a job
   applyToJob: async (jobData) => {
     try {
-      const response = await axios.post('/api/candidate/jobs/apply', jobData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // for file uploads
-        },
-      });
+      const response = await axios.post('/api/candidate/jobs/apply', jobData);
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to apply for job' };

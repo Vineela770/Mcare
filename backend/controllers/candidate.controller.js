@@ -238,28 +238,34 @@ exports.getAllJobs = async (req, res) => {
  */
 exports.applyToJob = async (req, res) => {
     try {
-        const { job_id, availability } = req.body;
-        const userId = req.user.id; 
-        const cover_letter_path = req.file ? `/uploads/cover_letters/${req.file.filename}` : null;
+        const { job_id, hr_job_id, source, availability, cover_letter } = req.body;
+        const userId = req.user.id;
 
-        const checkDuplicate = await pool.query(
-            "SELECT id FROM applications WHERE job_id = $1 AND user_id = $2",
-            [job_id, userId]
+        const isHrPost = source === 'hr_post' || !!hr_job_id;
+        const finalJobId   = isHrPost ? null : (job_id || null);
+        const finalHrJobId = isHrPost ? (hr_job_id || job_id) : null;
+
+        // Duplicate check
+        const dupCheck = await pool.query(
+            `SELECT id FROM applications WHERE user_id = $1
+             AND ($2::int IS NULL OR job_id = $2)
+             AND ($3::int IS NULL OR hr_job_id = $3)`,
+            [userId, finalJobId, finalHrJobId]
         );
-
-        if (checkDuplicate.rows.length > 0) {
-            return res.status(400).json({ success: false, message: "Already applied" });
+        if (dupCheck.rows.length > 0) {
+            return res.status(400).json({ success: false, message: 'Already applied to this job' });
         }
 
         await pool.query(
-            `INSERT INTO applications (job_id, user_id, cover_letter_path, availability, status, applied_at) 
-             VALUES ($1, $2, $3, $4, 'Under Review', NOW())`,
-            [job_id, userId, cover_letter_path, availability]
+            `INSERT INTO applications (job_id, hr_job_id, user_id, cover_letter_path, availability, status, applied_at)
+             VALUES ($1, $2, $3, $4, $5, 'Under Review', NOW())`,
+            [finalJobId, finalHrJobId, userId, cover_letter || null, availability || null]
         );
 
-        res.status(201).json({ success: true, message: "Application submitted!" });
+        res.status(201).json({ success: true, message: 'Application submitted!' });
     } catch (err) {
-        res.status(500).json({ success: false, message: "Error submitting" });
+        console.error('Apply error:', err.message);
+        res.status(500).json({ success: false, message: 'Error submitting application' });
     }
 };
 
@@ -270,16 +276,25 @@ exports.getMyApplications = async (req, res) => {
     try {
         const userId = req.user.id;
         const apps = await pool.query(
-            `SELECT a.id, j.title, j.company_name, j.location, a.status, a.applied_at 
-             FROM applications a 
-             JOIN jobs j ON a.job_id = j.id 
-             WHERE a.user_id = $1 
+            `SELECT
+               a.id,
+               COALESCE(j.title,  mjp.title)  AS title,
+               COALESCE(j.company_name, mjp.department, 'MCARE') AS company_name,
+               COALESCE(j.location, mjp.location) AS location,
+               COALESCE(j.job_type, mjp.job_type) AS job_type,
+               a.status,
+               a.applied_at
+             FROM applications a
+             LEFT JOIN jobs j ON j.id = a.job_id
+             LEFT JOIN mcare_job_posts mjp ON mjp.id = a.hr_job_id
+             WHERE a.user_id = $1
              ORDER BY a.applied_at DESC`,
             [userId]
         );
-        res.json({ success: true, applications: apps.rows });
+        res.json(apps.rows);
     } catch (err) {
-        res.status(500).json({ success: false, message: "Error" });
+        console.error('getMyApplications error:', err.message);
+        res.status(500).json({ success: false, message: 'Error fetching applications' });
     }
 };
 
