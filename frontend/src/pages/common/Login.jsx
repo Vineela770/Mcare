@@ -295,7 +295,7 @@ const Login = () => {
                     onChange={handleChange}
                     placeholder="Enter your password"
                     className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 text-gray-900"
-                    style={{ WebkitTextFillColor: '#111827', color: '#111827' }}
+                    style={showPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : { color: '#111827' }}
                     required
                   />
                   <button
