@@ -26,9 +26,9 @@ const ActivityLog = () => {
   };
 
   const stats = [
-    { label: 'Total Activities', value: (activities.length || 0).toString(), icon: Clock, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Total Activities', value: (activities.length || 0).toString(), icon: Clock, color: 'text-teal-700', bg: 'bg-teal-50' },
     { label: 'Today', value: (activities.filter(a => a.timestamp?.includes('min') || a.timestamp?.includes('hour')).length || 0).toString(), icon: Clock, color: 'text-green-600', bg: 'bg-green-50' },
-    { label: 'This Week', value: (activities.length || 0).toString(), icon: Clock, color: 'text-cyan-600', bg: 'bg-cyan-50' },
+    { label: 'This Week', value: (activities.length || 0).toString(), icon: Clock, color: 'text-emerald-700', bg: 'bg-emerald-50' },
     { label: 'This Month', value: (activities.length || 0).toString(), icon: Clock, color: 'text-purple-600', bg: 'bg-purple-50' },
   ];
 
@@ -88,7 +88,7 @@ return (
                 onClick={() => setFilterType(type)}
                 className={`px-4 py-2 rounded-lg transition-colors ${
                   filterType === type
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                    ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -110,7 +110,7 @@ return (
               placeholder="Search activities..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
             />
           </div>
         </div>

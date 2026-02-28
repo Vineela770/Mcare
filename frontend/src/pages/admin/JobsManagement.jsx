@@ -59,8 +59,8 @@ const JobsManagement = () => {
         label: 'Total Jobs',
         value: jobsList.length.toString(),
         icon: Briefcase,
-        color: 'text-blue-600',
-        bg: 'bg-blue-50',
+        color: 'text-teal-700',
+        bg: 'bg-teal-50',
       },
       {
         label: 'Active Jobs',
@@ -80,8 +80,8 @@ const JobsManagement = () => {
         label: 'Total Applications',
         value: jobsList.reduce((sum, job) => sum + job.applications, 0).toString(),
         icon: Users,
-        color: 'text-cyan-600',
-        bg: 'bg-cyan-50',
+        color: 'text-emerald-700',
+        bg: 'bg-emerald-50',
       },
     ],
     [jobsList]
@@ -215,7 +215,7 @@ const JobsManagement = () => {
                 onClick={() => setFilterStatus('all')}
                 className={`px-4 py-2 rounded-lg transition-colors ${
                   filterStatus === 'all'
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                    ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -225,7 +225,7 @@ const JobsManagement = () => {
                 onClick={() => setFilterStatus('active')}
                 className={`px-4 py-2 rounded-lg transition-colors ${
                   filterStatus === 'active'
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                    ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -235,7 +235,7 @@ const JobsManagement = () => {
                 onClick={() => setFilterStatus('closed')}
                 className={`px-4 py-2 rounded-lg transition-colors ${
                   filterStatus === 'closed'
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                    ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -250,7 +250,7 @@ const JobsManagement = () => {
                 placeholder="Search jobs..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
               />
             </div>
           </div>
@@ -293,7 +293,7 @@ const JobsManagement = () => {
                     <span className="text-sm text-gray-900">{job.type}</span>
                   </td>
                   <td className="py-4 px-6">
-                    <span className="px-3 py-1 bg-cyan-50 text-cyan-600 rounded-full text-sm font-medium">
+                    <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium">
                       {job.applications} applicants
                     </span>
                   </td>
@@ -464,7 +464,7 @@ const JobsManagement = () => {
                     >
                       {selectedJob.status}
                     </span>
-                    <span className="px-4 py-2 bg-cyan-50 text-cyan-600 rounded-full text-sm font-medium">
+                    <span className="px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium">
                       {selectedJob.applications} Applications
                     </span>
                   </div>
@@ -502,7 +502,7 @@ const JobsManagement = () => {
                         <a
                           href={applicant.resume}
                           download
-                          className="p-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors"
+                          className="p-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                           title="Download Resume"
                         >
                           <Download className="w-4 h-4" />
@@ -569,7 +569,7 @@ const JobsManagement = () => {
                         value={editFormData.title}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -581,7 +581,7 @@ const JobsManagement = () => {
                         value={editFormData.employer}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -593,7 +593,7 @@ const JobsManagement = () => {
                         value={editFormData.location}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -603,7 +603,7 @@ const JobsManagement = () => {
                         name="type"
                         value={editFormData.type}
                         onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       >
                         <option value="Full-time">Full-time</option>
                         <option value="Part-time">Part-time</option>
@@ -617,7 +617,7 @@ const JobsManagement = () => {
                         name="status"
                         value={editFormData.status}
                         onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       >
                         <option value="Active">Active</option>
                         <option value="Closed">Closed</option>
@@ -633,7 +633,7 @@ const JobsManagement = () => {
                         onChange={handleFormChange}
                         required
                         placeholder="e.g., ₹5,00,000 - ₹7,00,000"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -645,7 +645,7 @@ const JobsManagement = () => {
                         onChange={handleFormChange}
                         required
                         rows="3"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -657,7 +657,7 @@ const JobsManagement = () => {
                         onChange={handleFormChange}
                         required
                         rows="2"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -673,7 +673,7 @@ const JobsManagement = () => {
                   </button>
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                   >
                     Update Job
                   </button>
@@ -721,7 +721,7 @@ const JobsManagement = () => {
                 <button
                   type="button"
                   onClick={() => setShowDeleteModal(false)}
-                  className="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600 sm:mt-0 sm:w-auto sm:text-sm"
                 >
                   Cancel
                 </button>
@@ -736,7 +736,7 @@ const JobsManagement = () => {
         <div className="fixed top-4 right-4 z-50 animate-slide-in">
           <div
             className={`flex items-center space-x-3 px-6 py-4 rounded-lg shadow-lg ${
-              notification.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+              notification.type === 'success' ? 'bg-green-500' : 'bg-teal-600'
             } text-white`}
           >
             <CheckCircle className="w-5 h-5" />

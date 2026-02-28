@@ -89,9 +89,9 @@ const HRDashboard = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'New':
-        return 'bg-cyan-100 text-cyan-700';
+        return 'bg-emerald-100 text-emerald-700';
       case 'Reviewed':
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-teal-100 text-teal-800';
       case 'Interview':
         return 'bg-green-100 text-green-700';
       case 'Rejected':
@@ -103,8 +103,8 @@ const HRDashboard = () => {
 
   // ✅ Tailwind-safe color mapping (prevents bg-${} from failing in production)
   const statStyles = {
-    cyan: { bg: 'bg-cyan-100', text: 'text-cyan-600' },
-    blue: { bg: 'bg-blue-100', text: 'text-blue-600' },
+    cyan: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
+    blue: { bg: 'bg-teal-100', text: 'text-teal-700' },
     green: { bg: 'bg-green-100', text: 'text-green-600' },
     purple: { bg: 'bg-purple-100', text: 'text-purple-600' },
   };
@@ -149,24 +149,24 @@ const HRDashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl p-5 md:p-6 mb-6 md:mb-8">
+        <div className="bg-gradient-to-r from-teal-700 to-emerald-500 rounded-xl p-5 md:p-6 mb-6 md:mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="text-white">
               <h3 className="text-xl md:text-2xl font-bold mb-2">Need to Hire Talent?</h3>
-              <p className="text-cyan-100 text-sm md:text-base">Post a new job and start receiving applications</p>
+              <p className="text-emerald-100 text-sm md:text-base">Post a new job and start receiving applications</p>
             </div>
 
             {/* ✅ Mobile buttons stack, desktop stays row */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full md:w-auto">
               <Link
                 to="/hr/post-job"
-                className="w-full sm:w-auto text-center bg-white text-cyan-600 px-6 py-3 rounded-lg hover:bg-gray-100 font-medium"
+                className="w-full sm:w-auto text-center bg-white text-emerald-700 px-6 py-3 rounded-lg hover:bg-gray-100 font-medium"
               >
                 Post New Job
               </Link>
               <Link
                 to="/hr/applications"
-                className="w-full sm:w-auto text-center bg-cyan-700 text-white px-6 py-3 rounded-lg hover:bg-cyan-800 font-medium"
+                className="w-full sm:w-auto text-center bg-emerald-700 text-white px-6 py-3 rounded-lg hover:bg-emerald-800 font-medium"
               >
                 Review Applications
               </Link>
@@ -179,7 +179,7 @@ const HRDashboard = () => {
           <div className="lg:col-span-2 bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between mb-5 md:mb-6">
               <h2 className="text-lg md:text-xl font-bold text-gray-900">Recent Applications</h2>
-              <Link to="/hr/applications" className="text-cyan-600 hover:text-cyan-700 font-medium text-sm">
+              <Link to="/hr/applications" className="text-emerald-700 hover:text-emerald-700 font-medium text-sm">
                 View All →
               </Link>
             </div>
@@ -188,11 +188,11 @@ const HRDashboard = () => {
               {recentApplications.map((app) => (
                 <div
                   key={app.id}
-                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border border-gray-200 rounded-lg hover:border-cyan-300 transition-colors"
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border border-gray-200 rounded-lg hover:border-emerald-400 transition-colors"
                 >
                   <div className="flex items-start sm:items-center space-x-4 min-w-0">
-                    <div className="w-12 h-12 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-full flex items-center justify-center shrink-0">
-                      <span className="text-lg font-bold text-cyan-600">{app.candidateName.charAt(0)}</span>
+                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center shrink-0">
+                      <span className="text-lg font-bold text-emerald-700">{app.candidateName.charAt(0)}</span>
                     </div>
 
                     <div className="min-w-0">
@@ -217,7 +217,7 @@ const HRDashboard = () => {
                         setSelectedApplication(app);
                         setShowDetails(true);
                       }}
-                      className="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg"
+                      className="p-2 text-emerald-700 hover:bg-emerald-50 rounded-lg"
                       title="View Details"
                     >
                       <Eye className="w-5 h-5" />
@@ -233,20 +233,20 @@ const HRDashboard = () => {
             <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-5 md:mb-6">This Week</h2>
 
             <div className="space-y-3 md:space-y-4">
-              <Link to="/hr/applications" className="flex items-center justify-between p-3 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors">
+              <Link to="/hr/applications" className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors">
                 <div className="flex items-center space-x-3">
-                  <FileText className="w-5 h-5 text-cyan-600" />
+                  <FileText className="w-5 h-5 text-emerald-700" />
                   <span className="text-gray-700 text-sm md:text-base">New Applications</span>
                 </div>
-                <span className="text-xl font-bold text-cyan-600">{weeklyStats.newApplications}</span>
+                <span className="text-xl font-bold text-emerald-700">{weeklyStats.newApplications}</span>
               </Link>
 
-              <Link to="/hr/applications" className="flex items-center justify-between p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+              <Link to="/hr/applications" className="flex items-center justify-between p-3 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors">
                 <div className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-blue-600" />
+                  <CheckCircle className="w-5 h-5 text-teal-700" />
                   <span className="text-gray-700 text-sm md:text-base">Shortlisted</span>
                 </div>
-                <span className="text-xl font-bold text-blue-600">{weeklyStats.shortlisted}</span>
+                <span className="text-xl font-bold text-teal-700">{weeklyStats.shortlisted}</span>
               </Link>
 
               <Link to="/hr/interviews" className="flex items-center justify-between p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
@@ -308,7 +308,7 @@ const HRDashboard = () => {
             <div className="mt-6">
               <button
                 onClick={() => setShowDetails(false)}
-                className="w-full sm:w-auto px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
+                className="w-full sm:w-auto px-6 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-700"
               >
                 Close
               </button>

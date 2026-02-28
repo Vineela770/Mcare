@@ -69,8 +69,8 @@ const Applications = () => {
           label: 'Total Applications',
           value: appsArray.length.toString(),
           icon: Clock,
-          color: 'text-blue-600',
-          bg: 'bg-blue-50',
+          color: 'text-teal-700',
+          bg: 'bg-teal-50',
         },
         {
           label: 'Pending Review',
@@ -147,7 +147,7 @@ const Applications = () => {
     const statusConfig = {
       Pending: { bg: 'bg-yellow-50', text: 'text-yellow-600', icon: Clock },
       Shortlisted: { bg: 'bg-green-50', text: 'text-green-600', icon: CheckCircle },
-      'Interview Scheduled': { bg: 'bg-blue-50', text: 'text-blue-600', icon: Clock },
+      'Interview Scheduled': { bg: 'bg-teal-50', text: 'text-teal-700', icon: Clock },
       Rejected: { bg: 'bg-red-50', text: 'text-red-600', icon: XCircle },
     };
     const config = statusConfig[status] || statusConfig.Pending;
@@ -288,7 +288,7 @@ const Applications = () => {
                 placeholder="Search candidates..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
               />
             </div>
           </div>
@@ -302,7 +302,7 @@ const Applications = () => {
               <select
                 value={selectedJob}
                 onChange={(e) => setSelectedJob(e.target.value)}
-                className="w-full lg:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                className="w-full lg:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
               >
                 {jobs.map((job) => (
                   <option key={job.id} value={job.id}>
@@ -327,7 +327,7 @@ const Applications = () => {
                     onClick={() => setFilterStatus(b.id)}
                     className={`px-4 py-2 rounded-lg transition-colors ${
                       filterStatus === b.id
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                        ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
@@ -378,7 +378,7 @@ const Applications = () => {
                   >
                     <td className="py-4 px-6">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-700 to-emerald-500 flex items-center justify-center text-white font-semibold flex-shrink-0">
                           {application.candidateAvatar}
                         </div>
                         <div>
@@ -477,7 +477,7 @@ const Applications = () => {
               <div key={application.id} className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-700 to-emerald-500 flex items-center justify-center text-white font-semibold flex-shrink-0">
                       {application.candidateAvatar}
                     </div>
                     <div className="min-w-0">
@@ -585,7 +585,7 @@ const Applications = () => {
           >
             <div className="space-y-6">
               <div className="flex items-center space-x-4 pb-4 border-b">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-teal-700 to-emerald-500 flex items-center justify-center text-white text-2xl font-bold">
                   {selectedApplication.candidateAvatar}
                 </div>
                 <div className="flex-1">
@@ -645,7 +645,7 @@ const Applications = () => {
                   {selectedApplication.skills.map((skill, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm"
+                      className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm"
                     >
                       {skill}
                     </span>
@@ -755,7 +755,7 @@ const Applications = () => {
                   value={rejectReason}
                   onChange={(e) => setRejectReason(e.target.value)}
                   rows="4"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                   placeholder="Provide feedback to the candidate..."
                 />
               </div>
@@ -795,7 +795,7 @@ const Applications = () => {
               <p className="text-lg text-gray-900">{successMessage}</p>
               <button
                 onClick={() => setShowSuccessModal(false)}
-                className="mt-6 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                className="mt-6 px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
               >
                 Close
               </button>

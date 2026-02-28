@@ -151,7 +151,7 @@ const Profile = () => {
           {/* Profile Picture */}
           <div className="p-4 sm:p-6 border-b border-gray-200 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
             <div className="relative">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
                 {user?.name?.charAt(0).toUpperCase() || 'U'}
               </div>
 
@@ -170,7 +170,7 @@ const Profile = () => {
               <button
                 type="button"
                 onClick={() => setShowPhotoModal(true)}
-                className="mt-1 sm:mt-2 text-cyan-600 hover:text-cyan-700 font-medium text-xs sm:text-sm"
+                className="mt-1 sm:mt-2 text-emerald-700 hover:text-emerald-700 font-medium text-xs sm:text-sm"
               >
                 Change Profile Picture
               </button>
@@ -198,7 +198,7 @@ const Profile = () => {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
                 />
               </div>
 
@@ -213,7 +213,7 @@ const Profile = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
                 />
               </div>
 
@@ -224,7 +224,7 @@ const Profile = () => {
                   Phone Number
                 </label>
 
-                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-cyan-500">
+                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-emerald-600">
                   <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 bg-gray-50 border-r border-gray-200 text-xs sm:text-sm">
                     <Phone className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                     <select
@@ -265,7 +265,7 @@ const Profile = () => {
                   name="location"
                   value={formData.location}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
                 />
               </div>
 
@@ -280,7 +280,7 @@ const Profile = () => {
                   name="dateOfBirth"
                   value={formData.dateOfBirth}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
                 />
               </div>
 
@@ -293,7 +293,7 @@ const Profile = () => {
                   name="highestQualification"
                   value={formData.highestQualification}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
                 >
                   <option value="">Select Qualification</option>
                   <option value="MBBS">MBBS</option>
@@ -319,7 +319,7 @@ const Profile = () => {
                   value={formData.additionalQualification}
                   onChange={handleChange}
                   placeholder="Type Your Additional Qualification"
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
                 />
               </div>
 
@@ -332,7 +332,7 @@ const Profile = () => {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
                 >
                   <option value="">Select Gender</option>
                   <option value="male">Male</option>
@@ -379,7 +379,7 @@ const Profile = () => {
 
               <button
                 type="submit"
-                className="flex items-center justify-center gap-1 sm:gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 sm:px-6 py-1 sm:py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 text-sm sm:text-base"
+                className="flex items-center justify-center gap-1 sm:gap-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-4 sm:px-6 py-1 sm:py-2 rounded-lg hover:from-teal-800 hover:to-emerald-600 text-sm sm:text-base"
               >
                 <Save className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>Save Changes</span>
@@ -427,7 +427,7 @@ const Profile = () => {
                   type="button"
                   onClick={handlePhotoUpload}
                   disabled={!selectedFile}
-                  className="px-4 sm:px-6 py-1 sm:py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                  className="px-4 sm:px-6 py-1 sm:py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
                   Upload Photo
                 </button>
@@ -449,7 +449,7 @@ const Profile = () => {
               <button
                 type="button"
                 onClick={() => setShowSuccessModal(false)}
-                className="mt-2 sm:mt-4 px-4 sm:px-6 py-1 sm:py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 text-sm sm:text-base"
+                className="mt-2 sm:mt-4 px-4 sm:px-6 py-1 sm:py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 text-sm sm:text-base"
               >
                 Close
               </button>

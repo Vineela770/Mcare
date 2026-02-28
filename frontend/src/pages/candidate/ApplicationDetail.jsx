@@ -19,7 +19,7 @@ const getStatusIcon = (status) => {
 const getStatusColor = (status) => {
   switch ((status || '').toLowerCase()) {
     case 'under review': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-    case 'shortlisted':  return 'bg-blue-100 text-blue-700 border-blue-200';
+    case 'shortlisted':  return 'bg-teal-100 text-teal-800 border-teal-200';
     case 'interview':    return 'bg-green-100 text-green-700 border-green-200';
     case 'rejected':     return 'bg-red-100 text-red-700 border-red-200';
     default:             return 'bg-gray-100 text-gray-700 border-gray-200';
@@ -57,7 +57,7 @@ const ApplicationDetail = () => {
         <Sidebar />
         <div className="md:ml-64 min-h-screen bg-gray-50 p-6 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto mb-4" />
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-700 mx-auto mb-4" />
             <p className="text-gray-600">Loading application details…</p>
           </div>
         </div>
@@ -76,7 +76,7 @@ const ApplicationDetail = () => {
             <p className="text-gray-600 mb-6">The application you're looking for doesn't exist.</p>
             <button
               onClick={() => navigate('/candidate/applications')}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700"
+              className="bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-6 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600"
             >
               Back to Applications
             </button>
@@ -157,10 +157,10 @@ const ApplicationDetail = () => {
                   return (
                     <div key={step} className="flex-1 flex flex-col items-center gap-2">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
-                        ${done ? 'bg-cyan-500 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                        ${done ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-400'}`}>
                         {i + 1}
                       </div>
-                      <span className={`text-xs text-center leading-tight ${done ? 'text-cyan-600 font-medium' : 'text-gray-400'}`}>
+                      <span className={`text-xs text-center leading-tight ${done ? 'text-emerald-700 font-medium' : 'text-gray-400'}`}>
                         {step}
                       </span>
                     </div>
@@ -258,7 +258,7 @@ const ApplicationDetail = () => {
               <div className="space-y-3">
                 <Link
                   to="/candidate/browse-jobs"
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-colors text-sm"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 transition-colors text-sm"
                 >
                   <ExternalLink className="w-4 h-4" />
                   <span>Browse More Jobs</span>

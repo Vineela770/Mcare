@@ -59,8 +59,8 @@ const CandidateDashboard = () => {
   }, []);
 
   const statStyles = {
-    cyan: 'bg-cyan-100 text-cyan-600',
-    blue: 'bg-blue-100 text-blue-600',
+    cyan: 'bg-emerald-100 text-emerald-700',
+    blue: 'bg-teal-100 text-teal-700',
     green: 'bg-green-100 text-green-600',
     purple: 'bg-purple-100 text-purple-600',
   };
@@ -75,7 +75,7 @@ const CandidateDashboard = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Under Review': return 'bg-yellow-100 text-yellow-700';
-      case 'Shortlisted': return 'bg-blue-100 text-blue-700';
+      case 'Shortlisted': return 'bg-teal-100 text-teal-800';
       case 'Interview': return 'bg-green-100 text-green-700';
       case 'Rejected': return 'bg-red-100 text-red-700';
       default: return 'bg-gray-100 text-gray-700';
@@ -126,13 +126,13 @@ const CandidateDashboard = () => {
           </div>
 
           {/* CTA Section */}
-          <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl p-5 md:p-6 mb-8">
+          <div className="bg-gradient-to-r from-teal-700 to-emerald-500 rounded-xl p-5 md:p-6 mb-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div className="text-white mb-4 md:mb-0">
                 <h3 className="text-xl md:text-2xl font-bold mb-2">
                   Ready to Find Your Next Role?
                 </h3>
-                <p className="text-cyan-100 text-sm md:text-base">
+                <p className="text-emerald-100 text-sm md:text-base">
                   Browse thousands of healthcare jobs matched to your skills
                 </p>
               </div>
@@ -140,13 +140,13 @@ const CandidateDashboard = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   to="/candidate/browse-jobs"
-                  className="bg-white text-cyan-600 px-6 py-3 rounded-lg font-medium text-center"
+                  className="bg-white text-emerald-700 px-6 py-3 rounded-lg font-medium text-center"
                 >
                   Browse Jobs
                 </Link>
                 <Link
                   to="/candidate/resume"
-                  className="bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium text-center"
+                  className="bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium text-center"
                 >
                   Update Resume
                 </Link>
@@ -162,7 +162,7 @@ const CandidateDashboard = () => {
                 <h2 className="text-lg md:text-xl font-bold text-gray-900">
                   Recent Applications
                 </h2>
-                <Link to="/candidate/applications" className="text-cyan-600 text-sm font-medium">
+                <Link to="/candidate/applications" className="text-emerald-700 text-sm font-medium">
                   View All →
                 </Link>
               </div>
@@ -171,10 +171,10 @@ const CandidateDashboard = () => {
                 {recentApplications.map((app) => (
                   <div
                     key={app.id}
-                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-gray-200 rounded-lg hover:border-cyan-300 transition"
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-gray-200 rounded-lg hover:border-emerald-400 transition"
                   >
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-lg flex items-center justify-center text-2xl">
+                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-lg flex items-center justify-center text-2xl">
                         {app.logo}
                       </div>
 
@@ -219,8 +219,8 @@ const CandidateDashboard = () => {
                   to="/candidate/browse-jobs"
                   className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50"
                 >
-                  <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
-                    <Briefcase className="w-5 h-5 text-cyan-600" />
+                  <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                    <Briefcase className="w-5 h-5 text-emerald-700" />
                   </div>
                   <div>
                     <div className="font-medium text-gray-900 text-sm md:text-base">
@@ -236,8 +236,8 @@ const CandidateDashboard = () => {
                   to="/candidate/resume"
                   className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50"
                 >
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-teal-700" />
                   </div>
                   <div>
                     <div className="font-medium text-gray-900 text-sm md:text-base">

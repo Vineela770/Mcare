@@ -48,7 +48,7 @@ const Interviews = () => {
 
   const getStatusBadge = (status) => {
     const styles = {
-      upcoming: 'bg-blue-100 text-blue-800',
+      upcoming: 'bg-teal-100 text-teal-800',
       completed: 'bg-green-100 text-green-800',
       cancelled: 'bg-red-100 text-red-800',
     };
@@ -148,7 +148,7 @@ const Interviews = () => {
 
           <button
             onClick={handleScheduleInterview}
-            className="w-full md:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium"
+            className="w-full md:w-auto bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-5 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium"
           >
             Schedule Interview
           </button>
@@ -163,7 +163,7 @@ const Interviews = () => {
                 onClick={() => setFilter(status)}
                 className={`shrink-0 px-4 py-2 rounded-lg font-medium transition-colors ${
                   filter === status
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                    ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white'
                     : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
                 }`}
               >
@@ -220,7 +220,7 @@ const Interviews = () => {
                 <div className="flex flex-col sm:flex-row md:flex-col gap-2 md:ml-4">
                   <button
                     onClick={() => handleJoinInterview(interview)}
-                    className="w-full md:w-auto px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 text-sm"
+                    className="w-full md:w-auto px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-700 text-sm"
                   >
                     Join Interview
                   </button>
@@ -276,7 +276,7 @@ const Interviews = () => {
                         value={formData.candidateName}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -288,7 +288,7 @@ const Interviews = () => {
                         value={formData.position}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -300,7 +300,7 @@ const Interviews = () => {
                         value={formData.date}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -312,7 +312,7 @@ const Interviews = () => {
                         value={formData.time}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -322,7 +322,7 @@ const Interviews = () => {
                         name="type"
                         value={formData.type}
                         onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       >
                         <option value="Video Call">Video Call</option>
                         <option value="Phone">Phone</option>
@@ -338,7 +338,7 @@ const Interviews = () => {
                         value={formData.interviewer}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -351,7 +351,7 @@ const Interviews = () => {
                         onChange={handleFormChange}
                         required
                         placeholder="Zoom link, office location, etc."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -367,7 +367,7 @@ const Interviews = () => {
                   </button>
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                   >
                     Schedule Interview
                   </button>
@@ -411,7 +411,7 @@ const Interviews = () => {
                         value={formData.candidateName}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -423,7 +423,7 @@ const Interviews = () => {
                         value={formData.position}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -435,7 +435,7 @@ const Interviews = () => {
                         value={formData.date}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -447,7 +447,7 @@ const Interviews = () => {
                         value={formData.time}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -457,7 +457,7 @@ const Interviews = () => {
                         name="type"
                         value={formData.type}
                         onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       >
                         <option value="Video Call">Video Call</option>
                         <option value="Phone">Phone</option>
@@ -473,7 +473,7 @@ const Interviews = () => {
                         value={formData.interviewer}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -486,7 +486,7 @@ const Interviews = () => {
                         onChange={handleFormChange}
                         required
                         placeholder="Zoom link, office location, etc."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -502,7 +502,7 @@ const Interviews = () => {
                   </button>
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                   >
                     Update Interview
                   </button>
@@ -518,7 +518,7 @@ const Interviews = () => {
         <div className="fixed top-4 right-4 z-50">
           <div
             className={`flex items-center space-x-3 px-6 py-4 rounded-lg shadow-lg ${
-              notification.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+              notification.type === 'success' ? 'bg-green-500' : 'bg-teal-600'
             } text-white`}
           >
             <CheckCircle className="w-5 h-5" />

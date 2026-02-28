@@ -160,12 +160,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-white flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-white flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-xl flex items-center justify-center">
               <span className="text-white font-bold text-2xl">M</span>
             </div>
             <span className="text-3xl font-bold text-gray-900">MCARE</span>
@@ -184,7 +184,7 @@ const Login = () => {
               </p>
 
               {resetMessage && (
-                <div className="bg-cyan-50 border border-cyan-200 text-cyan-700 px-4 py-3 rounded-lg text-sm">
+                <div className="bg-emerald-50 border border-emerald-300 text-emerald-700 px-4 py-3 rounded-lg text-sm">
                   {resetMessage}
                 </div>
               )}
@@ -197,14 +197,14 @@ const Login = () => {
                   value={resetEmail}
                   onChange={(e) => setResetEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={resetLoading}
-                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-teal-700 to-emerald-500 text-white py-3 rounded-lg font-medium hover:from-teal-800 hover:to-emerald-600 disabled:opacity-50"
               >
                 {resetLoading ? 'Sending...' : 'Send Reset Link'}
               </button>
@@ -212,7 +212,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={goBackToLogin}
-                className="w-full text-sm text-gray-600 hover:text-cyan-600"
+                className="w-full text-sm text-gray-600 hover:text-emerald-700"
               >
                 ← Back to Login
               </button>
@@ -225,7 +225,7 @@ const Login = () => {
               </p>
 
               {recoveryMessage && (
-                <div className="bg-cyan-50 border border-cyan-200 text-cyan-700 px-4 py-3 rounded-lg text-sm">
+                <div className="bg-emerald-50 border border-emerald-300 text-emerald-700 px-4 py-3 rounded-lg text-sm">
                   {recoveryMessage}
                 </div>
               )}
@@ -238,14 +238,14 @@ const Login = () => {
                   value={recoveryEmail}
                   onChange={(e) => setRecoveryEmail(e.target.value)}
                   placeholder="Enter recovery email"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={recoveryLoading}
-                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-teal-700 to-emerald-500 text-white py-3 rounded-lg font-medium hover:from-teal-800 hover:to-emerald-600 disabled:opacity-50"
               >
                 {recoveryLoading ? 'Sending...' : 'Next'}
               </button>
@@ -253,7 +253,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={goBackToLogin}
-                className="w-full text-sm text-gray-600 hover:text-cyan-600"
+                className="w-full text-sm text-gray-600 hover:text-emerald-700"
               >
                 ← Back to Login
               </button>
@@ -277,7 +277,7 @@ const Login = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
                     required
                   />
                 </div>
@@ -294,7 +294,7 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
                     required
                   />
                   <button
@@ -311,7 +311,7 @@ const Login = () => {
               <div className="flex items-start justify-between">
                 {/* Left: Remember */}
                 <label className="flex items-center">
-                  <input type="checkbox" className="w-4 h-4 text-cyan-600 border-gray-300 rounded" />
+                  <input type="checkbox" className="w-4 h-4 text-emerald-700 border-gray-300 rounded" />
                   <span className="ml-2 text-sm text-gray-600">Remember me</span>
                 </label>
 
@@ -325,7 +325,7 @@ const Login = () => {
                       setResetMessage('');
                       setResetEmail('');
                     }}
-                    className="text-sm text-cyan-600 hover:text-cyan-700 font-medium"
+                    className="text-sm text-emerald-700 hover:text-emerald-700 font-medium"
                   >
                     Forgot password?
                   </button>
@@ -338,7 +338,7 @@ const Login = () => {
                       setRecoveryMessage('');
                       setRecoveryEmail('');
                     }}
-                    className="mt-1 text-sm text-cyan-600 hover:text-cyan-700 font-medium"
+                    className="mt-1 text-sm text-emerald-700 hover:text-emerald-700 font-medium"
                   >
                     Recovery account?
                   </button>
@@ -349,7 +349,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg font-medium disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-teal-700 to-emerald-500 text-white py-3 rounded-lg font-medium disabled:opacity-50"
               >
                 {loading ? 'Signing in...' : 'Sign In'}
               </button>
@@ -380,7 +380,7 @@ const Login = () => {
           {/* Register Link */}
           <Link
             to="/register"
-            className="block w-full text-center border-2 border-cyan-500 text-cyan-600 py-3 rounded-lg hover:bg-cyan-50 font-medium"
+            className="block w-full text-center border-2 border-emerald-600 text-emerald-700 py-3 rounded-lg hover:bg-emerald-50 font-medium"
           >
             Register
           </Link>
@@ -388,7 +388,7 @@ const Login = () => {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-gray-600 hover:text-cyan-600 font-medium">
+          <Link to="/" className="text-gray-600 hover:text-emerald-700 font-medium">
             ← Back to Home
           </Link>
         </div>

@@ -110,7 +110,7 @@ const SystemSettings = () => {
                 ? 'bg-green-500'
                 : notification.type === 'error'
                 ? 'bg-red-500'
-                : 'bg-blue-500'
+                : 'bg-teal-600'
             } text-white`}
           >
             {notification.type === 'success' ? (
@@ -145,7 +145,7 @@ const SystemSettings = () => {
           {/* General Settings */}
           <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <Globe className="w-5 h-5 mr-2 text-cyan-500" />
+              <Globe className="w-5 h-5 mr-2 text-emerald-600" />
               General Settings
             </h2>
 
@@ -159,7 +159,7 @@ const SystemSettings = () => {
                   name="siteName"
                   value={settings.siteName}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
                 />
               </div>
 
@@ -172,7 +172,7 @@ const SystemSettings = () => {
                   name="contactEmail"
                   value={settings.contactEmail}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
                 />
               </div>
 
@@ -185,7 +185,7 @@ const SystemSettings = () => {
                   value={settings.siteDescription}
                   onChange={handleChange}
                   rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
                 />
               </div>
 
@@ -198,7 +198,7 @@ const SystemSettings = () => {
                   name="supportEmail"
                   value={settings.supportEmail}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
                 />
               </div>
             </div>
@@ -207,7 +207,7 @@ const SystemSettings = () => {
           {/* Notification Settings */}
           <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <Bell className="w-5 h-5 mr-2 text-cyan-500" />
+              <Bell className="w-5 h-5 mr-2 text-emerald-600" />
               Notification Settings
             </h2>
 
@@ -233,7 +233,7 @@ const SystemSettings = () => {
                       onChange={handleChange}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
                   </label>
                 </div>
               </div>
@@ -257,7 +257,7 @@ const SystemSettings = () => {
                       onChange={handleChange}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
                   </label>
                 </div>
               </div>
@@ -283,7 +283,7 @@ const SystemSettings = () => {
                       onChange={handleChange}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
                   </label>
                 </div>
               </div>
@@ -293,7 +293,7 @@ const SystemSettings = () => {
           {/* Security Settings */}
           <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <Shield className="w-5 h-5 mr-2 text-cyan-500" />
+              <Shield className="w-5 h-5 mr-2 text-emerald-600" />
               Security Settings
             </h2>
 
@@ -307,7 +307,7 @@ const SystemSettings = () => {
                   name="sessionTimeout"
                   value={settings.sessionTimeout}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
                 />
               </div>
 
@@ -320,7 +320,7 @@ const SystemSettings = () => {
                   name="passwordExpiry"
                   value={settings.passwordExpiry}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
                 />
               </div>
 
@@ -343,7 +343,7 @@ const SystemSettings = () => {
                         onChange={handleChange}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
                     </label>
                   </div>
                 </div>
@@ -354,7 +354,7 @@ const SystemSettings = () => {
           {/* System Settings */}
           <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <Server className="w-5 h-5 mr-2 text-cyan-500" />
+              <Server className="w-5 h-5 mr-2 text-emerald-600" />
               System Configuration
             </h2>
 
@@ -380,7 +380,7 @@ const SystemSettings = () => {
                       onChange={handleChange}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
                   </label>
                 </div>
               </div>
@@ -404,7 +404,7 @@ const SystemSettings = () => {
                       onChange={handleChange}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
                   </label>
                 </div>
               </div>
@@ -428,7 +428,7 @@ const SystemSettings = () => {
                       onChange={handleChange}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-700"></div>
                   </label>
                 </div>
               </div>
@@ -441,7 +441,7 @@ const SystemSettings = () => {
                   name="backupFrequency"
                   value={settings.backupFrequency}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
                 >
                   <option value="hourly">Hourly</option>
                   <option value="daily">Daily</option>
@@ -463,7 +463,7 @@ const SystemSettings = () => {
 
             <button
               type="submit"
-              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:shadow-lg transition-shadow flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:shadow-lg transition-shadow flex items-center justify-center space-x-2"
             >
               <Save className="w-5 h-5" />
               <span>Save Settings</span>

@@ -82,7 +82,7 @@ const SavedJobs = () => {
             <p className="text-gray-600 mb-6">Start saving jobs you're interested in</p>
             <Link
               to="/candidate/browse-jobs"
-              className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium"
+              className="inline-block bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-4 py-2 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium"
             >
               Browse Jobs
             </Link>
@@ -117,9 +117,9 @@ const SavedJobs = () => {
                 {/* Apply Button */}
                 <button
                   onClick={() => handleApplyClick(job)}
-                  className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white
+                  className="bg-gradient-to-r from-teal-700 to-emerald-500 text-white
                     px-3 py-1.5 text-sm rounded-md
-                    hover:from-cyan-600 hover:to-blue-700 font-medium
+                    hover:from-teal-800 hover:to-emerald-600 font-medium
                     transition"
                 >
                   Apply Now
@@ -128,9 +128,9 @@ const SavedJobs = () => {
                 {/* View Details Button */}
                 <Link
                   to={`/candidate/job/${job.id}`}
-                  className="border border-cyan-600 text-cyan-600
+                  className="border border-emerald-700 text-emerald-700
                     px-3 py-1.5 text-sm rounded-md
-                    hover:bg-cyan-50 font-medium
+                    hover:bg-emerald-50 font-medium
                     transition"
                 >
                   View Details
@@ -193,7 +193,7 @@ const SavedJobs = () => {
                 </button>
                 <button
                   onClick={handleSubmitApplication}
-                  className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg w-full sm:w-auto"
+                  className="px-4 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg w-full sm:w-auto"
                 >
                   Submit Application
                 </button>
@@ -209,7 +209,7 @@ const SavedJobs = () => {
               <p>{successMessage}</p>
               <button
                 onClick={() => setShowSuccessModal(false)}
-                className="mt-4 px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
+                className="mt-4 px-4 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
               >
                 Close
               </button>

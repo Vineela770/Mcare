@@ -77,7 +77,7 @@ const Logo = ({ size = 'md' }) => {
       {/* Text */}
       <div className="flex flex-col leading-none">
         <div>
-          <span className={`${textSizes[size]} font-bold text-cyan-600`}>MCARE</span>
+          <span className={`${textSizes[size]} font-bold text-emerald-700`}>MCARE</span>
           <span className={`${textSizes[size]} font-bold text-gray-900 ml-1`}>JOBS</span>
         </div>
         <span className={`${subtextSizes[size]} text-gray-500`}>Job Search Here</span>

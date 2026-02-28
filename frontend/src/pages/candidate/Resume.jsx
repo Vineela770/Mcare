@@ -178,13 +178,13 @@ const Resume = () => {
           </div>
 
           {/* Profile Completion */}
-          <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl p-5 md:p-6 mb-6 md:mb-8">
+          <div className="bg-gradient-to-r from-teal-700 to-emerald-500 rounded-xl p-5 md:p-6 mb-6 md:mb-8">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-white text-lg md:text-xl font-bold mb-1 md:mb-2">
                   Profile Completion
                 </h3>
-                <p className="text-cyan-100 text-sm md:text-base">
+                <p className="text-emerald-100 text-sm md:text-base">
                   Complete your profile to increase visibility
                 </p>
               </div>
@@ -192,7 +192,7 @@ const Resume = () => {
                 {profileCompletion}%
               </div>
             </div>
-            <div className="w-full bg-cyan-700 rounded-full h-3">
+            <div className="w-full bg-emerald-700 rounded-full h-3">
               <div
                 className="bg-white h-3 rounded-full transition-all duration-300"
                 style={{ width: `${profileCompletion}%` }}
@@ -229,14 +229,14 @@ const Resume = () => {
                       <div className="flex space-x-2">
                         <button
                           onClick={handleViewResume}
-                          className="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg"
+                          className="p-2 text-emerald-700 hover:bg-emerald-50 rounded-lg"
                           aria-label="View resume"
                         >
                           <Eye className="w-5 h-5" />
                         </button>
                         <button
                           onClick={handleDownloadResume}
-                          className="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg"
+                          className="p-2 text-emerald-700 hover:bg-emerald-50 rounded-lg"
                           aria-label="Download resume"
                         >
                           <Download className="w-5 h-5" />
@@ -246,7 +246,7 @@ const Resume = () => {
 
                     <button
                       onClick={() => setShowUploadModal(true)}
-                      className="w-full py-2 text-cyan-600 hover:bg-cyan-50 rounded-lg font-medium flex items-center justify-center space-x-2"
+                      className="w-full py-2 text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium flex items-center justify-center space-x-2"
                     >
                       <Upload className="w-5 h-5" />
                       <span>Replace Resume</span>
@@ -263,7 +263,7 @@ const Resume = () => {
                     </p>
                     <button
                       onClick={() => setShowUploadModal(true)}
-                      className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium"
+                      className="bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-6 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium"
                     >
                       Choose File
                     </button>
@@ -279,7 +279,7 @@ const Resume = () => {
                   </h2>
                   <button
                     onClick={() => setShowSummaryModal(true)}
-                    className="text-cyan-600 hover:text-cyan-700"
+                    className="text-emerald-700 hover:text-emerald-700"
                     aria-label="Edit summary"
                   >
                     <Edit2 className="w-5 h-5" />
@@ -298,7 +298,7 @@ const Resume = () => {
                   </h2>
                   <button
                     onClick={() => setShowExperienceModal(true)}
-                    className="text-cyan-600 hover:text-cyan-700 font-medium flex items-center space-x-1"
+                    className="text-emerald-700 hover:text-emerald-700 font-medium flex items-center space-x-1"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Add Experience</span>
@@ -307,7 +307,7 @@ const Resume = () => {
 
                 <div className="space-y-6">
                   {experiences.map((exp) => (
-                    <div key={exp.id} className="border-l-2 border-cyan-500 pl-4">
+                    <div key={exp.id} className="border-l-2 border-emerald-600 pl-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <h3 className="font-bold text-gray-900 text-sm md:text-base">
@@ -342,7 +342,7 @@ const Resume = () => {
                   </h2>
                   <button
                     onClick={() => setShowEducationModal(true)}
-                    className="text-cyan-600 hover:text-cyan-700 font-medium flex items-center space-x-1"
+                    className="text-emerald-700 hover:text-emerald-700 font-medium flex items-center space-x-1"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Add Education</span>
@@ -351,7 +351,7 @@ const Resume = () => {
 
                 <div className="space-y-6">
                   {educations.map((edu) => (
-                    <div key={edu.id} className="border-l-2 border-blue-500 pl-4">
+                    <div key={edu.id} className="border-l-2 border-teal-600 pl-4">
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <h3 className="font-bold text-gray-900 text-sm md:text-base">
@@ -387,8 +387,8 @@ const Resume = () => {
                     onClick={() => setShowExperienceModal(true)}
                     className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
-                      <Briefcase className="w-5 h-5 text-cyan-600" />
+                    <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                      <Briefcase className="w-5 h-5 text-emerald-700" />
                     </div>
                     <div className="text-left">
                       <div className="font-medium text-gray-900 text-sm md:text-base">
@@ -404,8 +404,8 @@ const Resume = () => {
                     onClick={() => setShowEducationModal(true)}
                     className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <GraduationCap className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+                      <GraduationCap className="w-5 h-5 text-teal-700" />
                     </div>
                     <div className="text-left">
                       <div className="font-medium text-gray-900 text-sm md:text-base">
@@ -452,7 +452,7 @@ const Resume = () => {
                 <p className="text-lg text-gray-900">{successMessage}</p>
                 <button
                   onClick={() => setShowSuccessModal(false)}
-                  className="mt-6 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                  className="mt-6 px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                 >
                   Close
                 </button>
@@ -493,7 +493,7 @@ const Resume = () => {
                       handleDownloadResume();
                       setShowViewModal(false);
                     }}
-                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 flex items-center justify-center space-x-2"
+                    className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 flex items-center justify-center space-x-2"
                   >
                     <Download className="w-4 h-4" />
                     <span>Download</span>
@@ -547,7 +547,7 @@ const Resume = () => {
                   <button
                     onClick={handleUploadResume}
                     disabled={!selectedFile}
-                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Upload
                   </button>
@@ -568,7 +568,7 @@ const Resume = () => {
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
                   rows="6"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                   placeholder="Describe your professional background and expertise..."
                 />
                 <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
@@ -580,7 +580,7 @@ const Resume = () => {
                   </button>
                   <button
                     onClick={handleSaveSummary}
-                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                    className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                   >
                     Save Changes
                   </button>
@@ -607,7 +607,7 @@ const Resume = () => {
                     onChange={(e) =>
                       setExperienceForm({ ...experienceForm, title: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., Senior Registered Nurse"
                   />
                 </div>
@@ -622,7 +622,7 @@ const Resume = () => {
                     onChange={(e) =>
                       setExperienceForm({ ...experienceForm, company: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., Manhattan Hospital"
                   />
                 </div>
@@ -637,7 +637,7 @@ const Resume = () => {
                     onChange={(e) =>
                       setExperienceForm({ ...experienceForm, location: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., New York, NY"
                   />
                 </div>
@@ -654,7 +654,7 @@ const Resume = () => {
                       onChange={(e) =>
                         setExperienceForm({ ...experienceForm, startDate: e.target.value })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       placeholder="e.g., 2020"
                     />
                   </div>
@@ -668,7 +668,7 @@ const Resume = () => {
                       onChange={(e) =>
                         setExperienceForm({ ...experienceForm, endDate: e.target.value })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       placeholder="e.g., Present"
                     />
                   </div>
@@ -684,7 +684,7 @@ const Resume = () => {
                       setExperienceForm({ ...experienceForm, description: e.target.value })
                     }
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="Describe your responsibilities and achievements..."
                   />
                 </div>
@@ -698,7 +698,7 @@ const Resume = () => {
                   </button>
                   <button
                     onClick={handleAddExperience}
-                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                    className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                   >
                     Add Experience
                   </button>
@@ -725,7 +725,7 @@ const Resume = () => {
                     onChange={(e) =>
                       setEducationForm({ ...educationForm, degree: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., Bachelor of Science in Nursing"
                   />
                 </div>
@@ -743,7 +743,7 @@ const Resume = () => {
                         institution: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., Columbia University"
                   />
                 </div>
@@ -758,7 +758,7 @@ const Resume = () => {
                     onChange={(e) =>
                       setEducationForm({ ...educationForm, location: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., New York, NY"
                   />
                 </div>
@@ -775,7 +775,7 @@ const Resume = () => {
                       onChange={(e) =>
                         setEducationForm({ ...educationForm, startYear: e.target.value })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       placeholder="e.g., 2016"
                     />
                   </div>
@@ -789,7 +789,7 @@ const Resume = () => {
                       onChange={(e) =>
                         setEducationForm({ ...educationForm, endYear: e.target.value })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       placeholder="e.g., 2020"
                     />
                   </div>
@@ -804,7 +804,7 @@ const Resume = () => {
                   </button>
                   <button
                     onClick={handleAddEducation}
-                    className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                    className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                   >
                     Add Education
                   </button>

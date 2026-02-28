@@ -77,8 +77,8 @@ const Reports = () => {
       title: 'User Analytics Report',
       description: 'Detailed analysis of user registrations, activity, and demographics',
       icon: Users,
-      color: 'text-blue-600',
-      bg: 'bg-blue-50',
+      color: 'text-teal-700',
+      bg: 'bg-teal-50',
     },
     {
       title: 'Job Postings Report',
@@ -111,9 +111,9 @@ const Reports = () => {
   ];
 
   const quickStats = [
-    { label: 'Total Reports', value: stats.totalReports.toString(), color: 'text-blue-600' },
+    { label: 'Total Reports', value: stats.totalReports.toString(), color: 'text-teal-700' },
     { label: 'This Month', value: stats.thisMonth.toString(), color: 'text-green-600' },
-    { label: 'Total Downloads', value: stats.totalDownloads.toString(), color: 'text-cyan-600' },
+    { label: 'Total Downloads', value: stats.totalDownloads.toString(), color: 'text-emerald-700' },
     { label: 'Scheduled', value: stats.scheduled.toString(), color: 'text-purple-600' }
   ];
 
@@ -154,7 +154,7 @@ const Reports = () => {
                   name="from"
                   value={dateRange.from}
                   onChange={handleDateChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
                 />
               </div>
 
@@ -165,14 +165,14 @@ const Reports = () => {
                   name="to"
                   value={dateRange.to}
                   onChange={handleDateChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
                 />
               </div>
 
               <div className="flex items-end">
                 <button
                   onClick={handleApplyFilter}
-                  className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
+                  className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
                 >
                   Apply Filter
                 </button>
@@ -181,7 +181,7 @@ const Reports = () => {
 
             <button
               onClick={handleDownloadAll}
-              className="w-full md:w-auto px-6 py-2 border border-cyan-500 text-cyan-600 rounded-lg hover:bg-cyan-50 flex items-center justify-center space-x-2"
+              className="w-full md:w-auto px-6 py-2 border border-emerald-600 text-emerald-700 rounded-lg hover:bg-emerald-50 flex items-center justify-center space-x-2"
             >
               <Download className="w-5 h-5" />
               <span>Download All</span>
@@ -211,7 +211,7 @@ const Reports = () => {
               <div className="flex items-center justify-end">
                 <button
                   onClick={() => handleGenerateReport(report.title)}
-                  className="text-cyan-600 font-medium hover:text-cyan-700"
+                  className="text-emerald-700 font-medium hover:text-emerald-700"
                 >
                   Generate →
                 </button>
@@ -231,15 +231,15 @@ const Reports = () => {
               scheduledReports.map((report, index) => (
                 <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-50 rounded-lg gap-3">
                   <div className="flex items-center space-x-3">
-                    <div className="bg-blue-100 p-2 rounded-lg">
-                      <FileText className="w-5 h-5 text-blue-600" />
+                    <div className="bg-teal-100 p-2 rounded-lg">
+                      <FileText className="w-5 h-5 text-teal-700" />
                     </div>
                     <div>
                       <p className="font-medium text-gray-900">{report.title || report.name}</p>
                       <p className="text-sm text-gray-600">{report.schedule || report.description}</p>
                     </div>
                   </div>
-                  <span className={`text-sm font-medium ${report.status === 'active' ? 'text-cyan-600' : 'text-gray-500'}`}>
+                  <span className={`text-sm font-medium ${report.status === 'active' ? 'text-emerald-700' : 'text-gray-500'}`}>
                     {report.status || 'Inactive'}
                   </span>
                 </div>
@@ -255,7 +255,7 @@ const Reports = () => {
       {notification && (
         <div className="fixed top-4 right-4 left-4 md:left-auto z-50">
           <div className={`flex items-center justify-between px-6 py-4 rounded-lg shadow-lg text-white ${
-            notification.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+            notification.type === 'success' ? 'bg-green-500' : 'bg-teal-600'
           }`}>
             <div className="flex items-center space-x-3">
               <CheckCircle className="w-5 h-5" />

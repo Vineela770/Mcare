@@ -315,13 +315,13 @@ const AllJobs = () => {
       <Navbar />
 
       {/* Search Section */}
-      <section className="bg-gradient-to-r from-cyan-500 to-blue-600 py-12 md:py-16 px-4">
+      <section className="bg-gradient-to-r from-teal-700 to-emerald-500 py-12 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
           {/* ✅ Mobile-only smaller heading + description (desktop unchanged) */}
           <h1 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-6">
             Find Your Perfect Healthcare Job
           </h1>
-          <p className="text-sm md:text-lg text-cyan-100 mb-6 md:mb-8">
+          <p className="text-sm md:text-lg text-emerald-100 mb-6 md:mb-8">
             Browse {jobs.length} open positions from top healthcare facilities
           </p>
 
@@ -356,7 +356,7 @@ const AllJobs = () => {
               <select
                 value={jobType}
                 onChange={(e) => setJobType(e.target.value)}
-                className="px-4 py-3 bg-gray-50 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-cyan-500"
+                className="px-4 py-3 bg-gray-50 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-emerald-600"
               >
                 <option value="all">All Types</option>
                 <option value="Full-time">Full-time</option>
@@ -367,7 +367,7 @@ const AllJobs = () => {
               <button
                 type="button"
                 onClick={() => window.scrollTo({ top: 380, behavior: 'smooth' })}
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium"
+                className="bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-6 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium"
               >
                 Search
               </button>
@@ -397,7 +397,7 @@ const AllJobs = () => {
               <span>More Filters</span>
 
               {activeMoreFiltersCount > 0 && (
-                <span className="ml-2 text-xs bg-cyan-600 text-white px-2 py-0.5 rounded-full">
+                <span className="ml-2 text-xs bg-emerald-700 text-white px-2 py-0.5 rounded-full">
                   {activeMoreFiltersCount}
                 </span>
               )}
@@ -406,7 +406,7 @@ const AllJobs = () => {
 
           {loading ? (
             <div className="bg-white rounded-xl border border-gray-100 p-10 text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-700 mx-auto"></div>
               <p className="text-gray-600 mt-4">Loading jobs...</p>
             </div>
           ) : filteredJobs.length === 0 ? (
@@ -422,7 +422,7 @@ const AllJobs = () => {
                     setJobType('all');
                     resetMoreFilters();
                   }}
-                  className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
+                  className="px-6 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-700"
                 >
                   Clear All
                 </button>
@@ -443,8 +443,8 @@ const AllJobs = () => {
                   className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-100"
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-lg flex items-center justify-center">
-                      <Briefcase className="w-6 h-6 text-cyan-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-lg flex items-center justify-center">
+                      <Briefcase className="w-6 h-6 text-emerald-700" />
                     </div>
 
                     <button
@@ -473,7 +473,7 @@ const AllJobs = () => {
                   </div>
 
                   <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">
+                    <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
                       {job.type}
                     </span>
                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
@@ -494,7 +494,7 @@ const AllJobs = () => {
                         setSelectedJob(job);
                         setShowDetailsModal(true);
                       }}
-                      className="text-cyan-600 hover:text-cyan-700 font-medium text-sm"
+                      className="text-emerald-700 hover:text-emerald-700 font-medium text-sm"
                     >
                       View Details →
                     </button>
@@ -514,7 +514,7 @@ const AllJobs = () => {
                 disabled={!canLoadMore}
                 className={`bg-white border-2 px-8 py-3 rounded-lg font-medium transition ${
                   canLoadMore
-                    ? 'border-cyan-500 text-cyan-600 hover:bg-cyan-50'
+                    ? 'border-emerald-600 text-emerald-700 hover:bg-emerald-50'
                     : 'border-gray-300 text-gray-400 cursor-not-allowed'
                 }`}
               >
@@ -542,7 +542,7 @@ const AllJobs = () => {
               <select
                 value={moreFilters.postedWithin}
                 onChange={(e) => setMoreFilters((p) => ({ ...p, postedWithin: e.target.value }))}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-cyan-500 outline-none"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-600 outline-none"
               >
                 <option value="any">Any time</option>
                 <option value="1">Last 1 day</option>
@@ -561,7 +561,7 @@ const AllJobs = () => {
                   placeholder="Min (e.g. 30000)"
                   value={moreFilters.minSalary}
                   onChange={(e) => setMoreFilters((p) => ({ ...p, minSalary: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-cyan-500 outline-none"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-600 outline-none"
                 />
                 <input
                   type="number"
@@ -569,7 +569,7 @@ const AllJobs = () => {
                   placeholder="Max (e.g. 80000)"
                   value={moreFilters.maxSalary}
                   onChange={(e) => setMoreFilters((p) => ({ ...p, maxSalary: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-cyan-500 outline-none"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-600 outline-none"
                 />
               </div>
               <p className="text-xs text-gray-500 mt-2">
@@ -586,7 +586,7 @@ const AllJobs = () => {
                 type="button"
                 onClick={() => setMoreFilters((p) => ({ ...p, onlySaved: !p.onlySaved }))}
                 className={`w-12 h-7 rounded-full relative transition ${
-                  moreFilters.onlySaved ? 'bg-cyan-600' : 'bg-gray-300'
+                  moreFilters.onlySaved ? 'bg-emerald-700' : 'bg-gray-300'
                 }`}
                 aria-label="Toggle saved jobs only"
               >
@@ -619,7 +619,7 @@ const AllJobs = () => {
                 <button
                   type="button"
                   onClick={() => setShowFiltersModal(false)}
-                  className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
+                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
                 >
                   Apply Filters
                 </button>
@@ -639,7 +639,7 @@ const AllJobs = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between pb-4 border-b">
               <div className="flex items-center space-x-3">
-                <Building2 className="w-8 h-8 text-cyan-600" />
+                <Building2 className="w-8 h-8 text-emerald-700" />
                 <div>
                   <p className="font-semibold text-gray-900">{selectedJob.company}</p>
                   <p className="text-sm text-gray-600">{selectedJob.location}</p>
@@ -679,7 +679,7 @@ const AllJobs = () => {
               </button>
               <button
                 onClick={() => handleApplyNow(selectedJob)}
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
+                className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
               >
                 Apply Now
               </button>
@@ -758,7 +758,7 @@ const AllJobs = () => {
               </button>
               <button
                 onClick={handleSubmitApplication}
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
+                className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
               >
                 Submit Application
               </button>
@@ -789,7 +789,7 @@ const AllJobs = () => {
 
             <button
               onClick={() => setShowSuccessModal(false)}
-              className="px-6 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600"
+              className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
             >
               Close
             </button>

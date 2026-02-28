@@ -184,8 +184,8 @@ const Home = () => {
   };
 
   const categories = [
-    { id: 1, title: 'Hospital Jobs – Doctors', Icon: Stethoscope, bg: 'bg-cyan-100',    iconColor: 'text-cyan-600',    positions: getJobCountByCategory('doctors'),     key: 'doctors' },
-    { id: 2, title: 'Hospital Management',    Icon: Building2,   bg: 'bg-blue-100',    iconColor: 'text-blue-600',    positions: getJobCountByCategory('management'), key: 'management' },
+    { id: 1, title: 'Hospital Jobs – Doctors', Icon: Stethoscope, bg: 'bg-emerald-100',    iconColor: 'text-emerald-700',    positions: getJobCountByCategory('doctors'),     key: 'doctors' },
+    { id: 2, title: 'Hospital Management',    Icon: Building2,   bg: 'bg-teal-100',    iconColor: 'text-teal-700',    positions: getJobCountByCategory('management'), key: 'management' },
     { id: 3, title: 'Medical Colleges',        Icon: GraduationCap, bg: 'bg-purple-100', iconColor: 'text-purple-600', positions: getJobCountByCategory('colleges'),    key: 'colleges' },
     { id: 4, title: 'Allied Health',           Icon: Activity,    bg: 'bg-green-100',  iconColor: 'text-green-600',   positions: getJobCountByCategory('allied'),      key: 'allied' },
     { id: 5, title: 'Nursing',                 Icon: Heart,       bg: 'bg-pink-100',   iconColor: 'text-pink-600',    positions: getJobCountByCategory('nursing'),     key: 'nursing' },
@@ -685,8 +685,8 @@ const Home = () => {
   const jobs = liveJobs;
 
   const steps = [
-    { id: 1, Icon: UserPlus,   iconBg: 'bg-cyan-500',  title: 'Register an account', description: 'Create your professional profile in minutes.' },
-    { id: 2, Icon: Search,     iconBg: 'bg-blue-500',  title: 'Search jobs',          description: 'Explore thousands of verified healthcare jobs.' },
+    { id: 1, Icon: UserPlus,   iconBg: 'bg-emerald-600',  title: 'Register an account', description: 'Create your professional profile in minutes.' },
+    { id: 2, Icon: Search,     iconBg: 'bg-teal-600',  title: 'Search jobs',          description: 'Explore thousands of verified healthcare jobs.' },
     { id: 3, Icon: FileCheck,  iconBg: 'bg-green-500', title: 'Apply easily',         description: 'Apply instantly and connect with recruiters.' },
   ];
 
@@ -831,7 +831,7 @@ const Home = () => {
         />
 
         {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-blue-800/75 to-cyan-600/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-900/80 via-teal-800/75 to-emerald-700/70" />
 
         {/* Content */}
         <div className="relative z-10 w-full max-w-6xl px-4 py-12 md:py-20 text-center">
@@ -890,7 +890,7 @@ const Home = () => {
     <div className="px-3 py-2 md:px-3 md:py-1.5">
       <button
         type="submit"
-        className="w-full md:w-auto bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 md:py-1.5 font-semibold rounded-full transition text-sm md:text-base"
+        className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 md:py-1.5 font-semibold rounded-full transition text-sm md:text-base"
       >
         Find Jobs
       </button>
@@ -902,14 +902,14 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-3 mt-6">
             <button
               onClick={() => setShowQuickApplyModal(true)}
-              className="bg-white text-cyan-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition"
+              className="bg-white text-emerald-700 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition"
             >
               Quick Apply
             </button>
 
             <button
               onClick={() => setShowQuickPostModal(true)}
-              className="border-2 border-white text-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-cyan-600 transition"
+              className="border-2 border-white text-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-emerald-700 transition"
             >
               Quick Post Job
             </button>
@@ -953,14 +953,14 @@ const Home = () => {
               <div
                 key={category.id}
                 onClick={() => handleCategoryClick(category.key)}
-                className="bg-white rounded-2xl p-6 hover:shadow-xl hover:border-cyan-200 transition-all duration-300 cursor-pointer border border-gray-100 group hover:-translate-y-1"
+                className="bg-white rounded-2xl p-6 hover:shadow-xl hover:border-emerald-300 transition-all duration-300 cursor-pointer border border-gray-100 group hover:-translate-y-1"
               >
                 <div className="flex items-center gap-4">
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${category.bg} group-hover:scale-110 transition-transform duration-300`}>
                     <category.Icon className={`w-7 h-7 ${category.iconColor}`} />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-base font-bold text-gray-900 group-hover:text-cyan-600 transition-colors">
+                    <h3 className="text-base font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">
                       {category.title}
                     </h3>
                     <p className="text-sm text-gray-500 mt-0.5">
@@ -969,7 +969,7 @@ const Home = () => {
                         : 'Positions available'}
                     </p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" />
+                  <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" />
                 </div>
               </div>
             ))}
@@ -1025,7 +1025,7 @@ const Home = () => {
                     }}
                     className={`flex-shrink-0 px-4 py-2 rounded-full border whitespace-nowrap transition ${
                       activeTab === tab.id
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow'
+                        ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white shadow'
                         : 'bg-white hover:bg-gray-100'
                     }`}
                   >
@@ -1046,7 +1046,7 @@ const Home = () => {
                     }}
                     className={`px-5 py-2 rounded-full border whitespace-nowrap transition ${
                       activeTab === tab.id
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow'
+                        ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white shadow'
                         : 'bg-white hover:bg-gray-100'
                     }`}
                   >
@@ -1073,7 +1073,7 @@ const Home = () => {
             <select
               value={selectedDegree}
               onChange={(e) => { setSelectedDegree(e.target.value); setFilterSpecialization(''); }}
-              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-cyan-300 focus:outline-none focus:border-cyan-400 cursor-pointer"
+              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
             >
               <option value="">Select Degree</option>
               {degrees.map((deg) => (
@@ -1085,7 +1085,7 @@ const Home = () => {
               value={filterSpecialization}
               onChange={(e) => setFilterSpecialization(e.target.value)}
               disabled={!selectedDegree}
-              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-cyan-300 focus:outline-none focus:border-cyan-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="">Select Specialization</option>
               {specializations.map((spec) => (
@@ -1096,7 +1096,7 @@ const Home = () => {
             <select
               value={filterCity}
               onChange={(e) => { setFilterCity(e.target.value); setActiveDot(0); }}
-              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-cyan-300 focus:outline-none focus:border-cyan-400 cursor-pointer"
+              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
             >
               <option value="">All Cities</option>
               {jobCities.map((c) => (
@@ -1107,7 +1107,7 @@ const Home = () => {
             <select
               value={filterSalary}
               onChange={(e) => { setFilterSalary(e.target.value); setActiveDot(0); }}
-              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-cyan-300 focus:outline-none focus:border-cyan-400 cursor-pointer"
+              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
             >
               {salaryRanges.map((range) => (
                 <option key={range.value || 'all'} value={range.value}>{range.label}</option>
@@ -1116,7 +1116,7 @@ const Home = () => {
 
             <button
               onClick={() => { setSelectedDegree(''); setFilterSpecialization(''); setFilterCity(''); setFilterSalary(''); }}
-              className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-full transition text-sm font-medium border border-cyan-500"
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full transition text-sm font-medium border border-emerald-600"
             >
               Clear Filters
             </button>
@@ -1147,7 +1147,7 @@ const Home = () => {
 
           <button
             onClick={() => handleApply(job)}
-            className="mt-4 bg-cyan-500 text-white px-4 py-2 rounded text-sm"
+            className="mt-4 bg-emerald-600 text-white px-4 py-2 rounded text-sm"
           >
             Apply Now
           </button>
@@ -1199,7 +1199,7 @@ const Home = () => {
 
                   <button
                     onClick={() => handleApply(job)}
-                    className="mt-4 bg-cyan-500 text-white px-4 py-2 rounded"
+                    className="mt-4 bg-emerald-600 text-white px-4 py-2 rounded"
                   >
                     Apply Now
                   </button>
@@ -1220,7 +1220,7 @@ const Home = () => {
                 key={dot}
                 onClick={() => setActiveDot(dot)}
                 className={`w-3 h-3 rounded-full ${
-                  activeDot === dot ? 'bg-cyan-500' : 'bg-gray-300'
+                  activeDot === dot ? 'bg-emerald-600' : 'bg-gray-300'
                 }`}
               />
             ))}
@@ -1304,7 +1304,7 @@ const Home = () => {
               {hospitalLogos
                 .slice(slideIdx * LOGOS_PER_SLIDE, slideIdx * LOGOS_PER_SLIDE + LOGOS_PER_SLIDE)
                 .map((logo, i) => (
-                  <div key={i} className="bg-white rounded-2xl border border-gray-200 shadow-md p-6 flex items-center justify-center w-52 h-32 hover:shadow-lg hover:border-cyan-200 transition-all duration-300 group">
+                  <div key={i} className="bg-white rounded-2xl border border-gray-200 shadow-md p-6 flex items-center justify-center w-52 h-32 hover:shadow-lg hover:border-emerald-300 transition-all duration-300 group">
                     <img src={logo} alt="Hospital Logo" className="h-16 max-w-full object-contain grayscale group-hover:grayscale-0 transition duration-300" />
                   </div>
                 ))}
@@ -1318,7 +1318,7 @@ const Home = () => {
 </section>
 
       {/* CTA Section */}
-<section className="py-12 md:py-16 bg-gradient-to-r from-cyan-500 to-blue-600">
+<section className="py-12 md:py-16 bg-gradient-to-r from-teal-700 to-emerald-500">
   <div className="max-w-4xl mx-auto text-center px-4">
 
     {/* Heading */}
@@ -1327,7 +1327,7 @@ const Home = () => {
     </h2>
 
     {/* Description */}
-    <p className="text-sm sm:text-base md:text-lg text-cyan-100 mb-6 md:mb-8">
+    <p className="text-sm sm:text-base md:text-lg text-emerald-100 mb-6 md:mb-8">
       Join thousands of healthcare professionals finding their perfect job match
     </p>
 
@@ -1336,14 +1336,14 @@ const Home = () => {
 
       <Link
         to="/register"
-        className="bg-white text-cyan-600 px-6 md:px-8 py-2.5 md:py-3 rounded-lg font-medium text-sm md:text-base inline-flex items-center justify-center transition shadow-lg hover:bg-gray-50"
+        className="bg-white text-emerald-700 px-6 md:px-8 py-2.5 md:py-3 rounded-lg font-medium text-sm md:text-base inline-flex items-center justify-center transition shadow-lg hover:bg-gray-50"
       >
         Create Free Account
       </Link>
 
       <Link
         to="/jobs"
-        className="bg-white text-cyan-600 px-6 md:px-8 py-2.5 md:py-3 rounded-lg font-medium text-sm md:text-base transition shadow-lg hover:bg-gray-50 inline-flex items-center justify-center"
+        className="bg-white text-emerald-700 px-6 md:px-8 py-2.5 md:py-3 rounded-lg font-medium text-sm md:text-base transition shadow-lg hover:bg-gray-50 inline-flex items-center justify-center"
       >
         Browse Jobs
       </Link>
@@ -1363,7 +1363,7 @@ const Home = () => {
       {/* Logo Section */}
       <div>
         <div className="flex items-center space-x-2 mb-3 md:mb-4">
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-lg md:text-xl">M</span>
           </div>
           <span className="text-lg md:text-2xl font-bold text-white">MCARE</span>
@@ -1384,9 +1384,9 @@ const Home = () => {
               For Candidates
             </h3>
             <ul className="space-y-1 md:space-y-2 text-xs md:text-sm">
-              <li><Link to="/jobs" className="hover:text-cyan-400 transition">Browse Jobs</Link></li>
-              <li><Link to="/register" className="hover:text-cyan-400 transition">Create Account</Link></li>
-              <li><Link to="/login" className="hover:text-cyan-400 transition">Sign In</Link></li>
+              <li><Link to="/jobs" className="hover:text-emerald-500 transition">Browse Jobs</Link></li>
+              <li><Link to="/register" className="hover:text-emerald-500 transition">Create Account</Link></li>
+              <li><Link to="/login" className="hover:text-emerald-500 transition">Sign In</Link></li>
             </ul>
           </div>
 
@@ -1396,8 +1396,8 @@ const Home = () => {
               For Employers
             </h3>
             <ul className="space-y-1 md:space-y-2 text-xs md:text-sm">
-              <li><Link to="/register" className="hover:text-cyan-400 transition">Post a Job</Link></li>
-              <li><Link to="/login" className="hover:text-cyan-400 transition">Employer Login</Link></li>
+              <li><Link to="/register" className="hover:text-emerald-500 transition">Post a Job</Link></li>
+              <li><Link to="/login" className="hover:text-emerald-500 transition">Employer Login</Link></li>
             </ul>
           </div>
 
@@ -1407,8 +1407,8 @@ const Home = () => {
               Company
             </h3>
             <ul className="space-y-1 md:space-y-2 text-xs md:text-sm">
-              <li><Link to="/about" className="hover:text-cyan-400 transition">About Us</Link></li>
-              <li><Link to="/contact" className="hover:text-cyan-400 transition">Contact</Link></li>
+              <li><Link to="/about" className="hover:text-emerald-500 transition">About Us</Link></li>
+              <li><Link to="/contact" className="hover:text-emerald-500 transition">Contact</Link></li>
             </ul>
           </div>
 
@@ -1436,7 +1436,7 @@ const Home = () => {
                 value={applicationData.coverLetter}
                 onChange={(e) => setApplicationData({ ...applicationData, coverLetter: e.target.value })}
                 placeholder="Tell us why you're a great fit for this role..."
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
             </div>
 
@@ -1447,7 +1447,7 @@ const Home = () => {
                 value={applicationData.expectedSalary}
                 onChange={(e) => setApplicationData({ ...applicationData, expectedSalary: e.target.value })}
                 placeholder="Rs. 50,000"
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
             </div>
 
@@ -1457,7 +1457,7 @@ const Home = () => {
                 type="date"
                 value={applicationData.availability}
                 onChange={(e) => setApplicationData({ ...applicationData, availability: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
             </div>
 
@@ -1467,7 +1467,7 @@ const Home = () => {
               </button>
               <button
                 onClick={handleSubmitApplication}
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
+                className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
               >
                 Submit Application
               </button>
@@ -1486,7 +1486,7 @@ const Home = () => {
             <p className="text-lg text-gray-900">{successMessage}</p>
             <button
               onClick={() => setShowSuccessModal(false)}
-              className="mt-6 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+              className="mt-6 px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
             >
               Close
             </button>
@@ -1515,7 +1515,7 @@ const Home = () => {
                 type="text"
                 value={quickApplyData.name}
                 onChange={(e) => setQuickApplyData({ ...quickApplyData, name: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
               {quickApplyErrors.name && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.name}</p>}
             </div>
@@ -1528,7 +1528,7 @@ const Home = () => {
                 type="email"
                 value={quickApplyData.email}
                 onChange={(e) => setQuickApplyData({ ...quickApplyData, email: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
               {quickApplyErrors.email && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.email}</p>}
             </div>
@@ -1542,7 +1542,7 @@ const Home = () => {
                 <select
                   value={quickApplyData.countryCode}
                   onChange={(e) => setQuickApplyData({ ...quickApplyData, countryCode: e.target.value })}
-                  className="w-32 px-3 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-32 px-3 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
                 >
                   {countryCodes.map((country) => (
                     <option key={country.code} value={country.code}>
@@ -1555,7 +1555,7 @@ const Home = () => {
                   type="tel"
                   value={quickApplyData.phone}
                   onChange={(e) => setQuickApplyData({ ...quickApplyData, phone: e.target.value })}
-                  className="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
                   placeholder="Enter phone number"
                 />
               </div>
@@ -1571,7 +1571,7 @@ const Home = () => {
                 rows="4"
                 value={quickApplyData.coverLetter}
                 onChange={(e) => setQuickApplyData({ ...quickApplyData, coverLetter: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
               {quickApplyErrors.coverLetter && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.coverLetter}</p>}
             </div>
@@ -1582,13 +1582,13 @@ const Home = () => {
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={(e) => setQuickApplyData({ ...quickApplyData, resume: e.target.files?.[0] || null })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
               {quickApplyErrors.resume && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.resume}</p>}
             </div>
 
             <div className="flex justify-between pt-4">
-              <button onClick={() => navigate('/register')} className="text-cyan-600 font-medium">
+              <button onClick={() => navigate('/register')} className="text-emerald-700 font-medium">
                 Register Instead
               </button>
 
@@ -1611,7 +1611,7 @@ const Home = () => {
                     setQuickApplyErrors({});
                   }
                 }}
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
+                className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
               >
                 Submit
               </button>
@@ -1641,7 +1641,7 @@ const Home = () => {
                 type="text"
                 value={quickPostData.companyName}
                 onChange={(e) => setQuickPostData({ ...quickPostData, companyName: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
               {quickPostErrors.companyName && <p className="text-red-500 text-sm mt-1">{quickPostErrors.companyName}</p>}
             </div>
@@ -1654,7 +1654,7 @@ const Home = () => {
                 type="email"
                 value={quickPostData.email}
                 onChange={(e) => setQuickPostData({ ...quickPostData, email: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
               {quickPostErrors.email && <p className="text-red-500 text-sm mt-1">{quickPostErrors.email}</p>}
             </div>
@@ -1668,7 +1668,7 @@ const Home = () => {
                 <select
                   value={quickPostData.countryCode}
                   onChange={(e) => setQuickPostData({ ...quickPostData, countryCode: e.target.value })}
-                  className="w-32 px-3 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-32 px-3 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
                 >
                   {countryCodes.map((country) => (
                     <option key={country.code} value={country.code}>
@@ -1681,7 +1681,7 @@ const Home = () => {
                   type="tel"
                   value={quickPostData.phone}
                   onChange={(e) => setQuickPostData({ ...quickPostData, phone: e.target.value })}
-                  className="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
                   placeholder="Enter phone number"
                 />
               </div>
@@ -1697,7 +1697,7 @@ const Home = () => {
                 type="text"
                 value={quickPostData.jobTitle}
                 onChange={(e) => setQuickPostData({ ...quickPostData, jobTitle: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
               {quickPostErrors.jobTitle && <p className="text-red-500 text-sm mt-1">{quickPostErrors.jobTitle}</p>}
             </div>
@@ -1710,7 +1710,7 @@ const Home = () => {
                 type="text"
                 value={quickPostData.location}
                 onChange={(e) => setQuickPostData({ ...quickPostData, location: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
               />
               {quickPostErrors.location && <p className="text-red-500 text-sm mt-1">{quickPostErrors.location}</p>}
             </div>
@@ -1724,7 +1724,7 @@ const Home = () => {
                 rows="4"
                 value={quickPostData.jobDescription}
                 onChange={(e) => setQuickPostData({ ...quickPostData, jobDescription: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
                 placeholder="Enter job responsibilities, required skills, experience, etc."
               />
 
@@ -1732,7 +1732,7 @@ const Home = () => {
             </div>
 
             <div className="flex justify-between pt-4">
-              <button onClick={() => navigate('/register')} className="text-cyan-600 font-medium">
+              <button onClick={() => navigate('/register')} className="text-emerald-700 font-medium">
                 Register Instead
               </button>
 
@@ -1757,7 +1757,7 @@ const Home = () => {
                     setQuickPostErrors({});
                   }
                 }}
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
+                className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
               >
                 Submit Job
               </button>

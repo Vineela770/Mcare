@@ -94,7 +94,7 @@ const JobDetail = () => {
         <div className="ml-64 min-h-screen bg-gray-50 p-6">
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-700 mx-auto mb-4"></div>
               <p className="text-gray-600">Loading job details...</p>
             </div>
           </div>
@@ -114,7 +114,7 @@ const JobDetail = () => {
             <p className="text-gray-600 mb-6">The job you're looking for doesn't exist or has been removed.</p>
             <button
               onClick={() => navigate('/candidate/browse-jobs')}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700"
+              className="bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-6 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600"
             >
               Browse Jobs
             </button>
@@ -175,7 +175,7 @@ const JobDetail = () => {
               <div className="flex items-center space-x-3 pt-4 border-t border-gray-200">
                 <button
                   onClick={handleApply}
-                  className="flex-1 flex items-center justify-center space-x-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium"
+                  className="flex-1 flex items-center justify-center space-x-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-6 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium"
                 >
                   <Send className="w-4 h-4" />
                   <span>Apply Now</span>
@@ -212,7 +212,7 @@ const JobDetail = () => {
               <ul className="space-y-3">
                 {job.responsibilities.map((item, index) => (
                   <li key={index} className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-cyan-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-emerald-700 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{item}</span>
                   </li>
                 ))}
@@ -225,7 +225,7 @@ const JobDetail = () => {
               <ul className="space-y-3">
                 {job.requirements.map((item, index) => (
                   <li key={index} className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-teal-700 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{item}</span>
                   </li>
                 ))}
@@ -246,7 +246,7 @@ const JobDetail = () => {
             </div>
 
             {/* Company Info */}
-            <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-xl p-6 border border-cyan-100">
+            <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-6 border border-emerald-100">
               <h2 className="text-xl font-bold text-gray-900 mb-4">About {job.companyInfo.name}</h2>
               <p className="text-gray-700 leading-relaxed mb-4">{job.companyInfo.about}</p>
               <div className="grid grid-cols-2 gap-4 text-sm">
@@ -323,7 +323,7 @@ const JobDetail = () => {
                 >
                   <div className="font-medium text-gray-900 mb-1">Registered Nurse</div>
                   <div className="text-sm text-gray-600">City Hospital</div>
-                  <div className="text-sm text-cyan-600 mt-1">$70,000 - $90,000</div>
+                  <div className="text-sm text-emerald-700 mt-1">$70,000 - $90,000</div>
                 </Link>
                 <Link
                   to="/candidate/browse-jobs"
@@ -331,7 +331,7 @@ const JobDetail = () => {
                 >
                   <div className="font-medium text-gray-900 mb-1">Nurse Practitioner</div>
                   <div className="text-sm text-gray-600">Metro Medical Center</div>
-                  <div className="text-sm text-cyan-600 mt-1">$85,000 - $105,000</div>
+                  <div className="text-sm text-emerald-700 mt-1">$85,000 - $105,000</div>
                 </Link>
               </div>
               <Link
@@ -358,7 +358,7 @@ const JobDetail = () => {
                   value={applicationData.coverLetter}
                   onChange={(e) => setApplicationData({ ...applicationData, coverLetter: e.target.value })}
                   rows="6"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                   placeholder="Tell us why you're a great fit for this position..."
                 />
               </div>
@@ -368,7 +368,7 @@ const JobDetail = () => {
                   type="text"
                   value={applicationData.expectedSalary}
                   onChange={(e) => setApplicationData({ ...applicationData, expectedSalary: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                   placeholder="e.g., $80,000"
                 />
               </div>
@@ -378,7 +378,7 @@ const JobDetail = () => {
                   type="text"
                   value={applicationData.availability}
                   onChange={(e) => setApplicationData({ ...applicationData, availability: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                   placeholder="e.g., Immediate, 2 weeks notice"
                 />
               </div>
@@ -391,7 +391,7 @@ const JobDetail = () => {
                 </button>
                 <button
                   onClick={handleSubmitApplication}
-                  className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                 >
                   Submit Application
                 </button>
@@ -414,7 +414,7 @@ const JobDetail = () => {
               <p className="text-lg text-gray-900">{successMessage}</p>
               <button
                 onClick={() => setShowSuccessModal(false)}
-                className="mt-6 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                className="mt-6 px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
               >
                 Close
               </button>

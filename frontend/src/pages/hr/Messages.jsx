@@ -221,7 +221,7 @@ const Messages = () => {
                         onClick={() => startConversationWith(c)}
                         className="p-3 md:p-4 cursor-pointer border-b hover:bg-gray-50 flex items-center gap-3"
                       >
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold overflow-hidden">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-700 to-emerald-500 flex items-center justify-center text-white font-semibold overflow-hidden">
                           {c.photo
                             ? <img src={c.photo} alt={c.name} className="w-full h-full object-cover" />
                             : c.name?.charAt(0)?.toUpperCase()}
@@ -253,12 +253,12 @@ const Messages = () => {
                         key={conv.other_id}
                         onClick={() => selectConversation(conv)}
                         className={`p-3 md:p-4 cursor-pointer border-b hover:bg-gray-50 ${
-                          selectedChat?.other_id === conv.other_id ? 'bg-cyan-50' : ''
+                          selectedChat?.other_id === conv.other_id ? 'bg-emerald-50' : ''
                         }`}
                       >
                         <div className="flex justify-between">
                           <div className="flex gap-3">
-                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold overflow-hidden flex-shrink-0">
+                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-r from-teal-700 to-emerald-500 flex items-center justify-center text-white font-semibold overflow-hidden flex-shrink-0">
                               {conv.photo
                                 ? <img src={conv.photo} alt={conv.candidate_name} className="w-full h-full object-cover" />
                                 : conv.candidate_name?.charAt(0)?.toUpperCase()}
@@ -275,7 +275,7 @@ const Messages = () => {
                           </div>
 
                           {conv.unread_count > 0 && (
-                            <span className="bg-cyan-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 self-start mt-1">
+                            <span className="bg-emerald-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 self-start mt-1">
                               {conv.unread_count}
                             </span>
                           )}
@@ -307,7 +307,7 @@ const Messages = () => {
                         ←
                       </button>
 
-                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold overflow-hidden">
+                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-r from-teal-700 to-emerald-500 flex items-center justify-center text-white font-semibold overflow-hidden">
                         {selectedChat.photo
                           ? <img src={selectedChat.photo} alt={selectedChat.candidate_name} className="w-full h-full object-cover" />
                           : selectedChat.candidate_name?.charAt(0)?.toUpperCase()}
@@ -339,12 +339,12 @@ const Messages = () => {
                           <div
                             className={`max-w-[80%] md:max-w-md px-3 md:px-4 py-2 rounded-lg text-sm ${
                               isOwn
-                                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                                ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white'
                                 : 'bg-gray-100'
                             }`}
                           >
                             <p>{msg.message_text}</p>
-                            <p className={`text-xs mt-1 ${isOwn ? 'text-cyan-100' : 'text-gray-400'}`}>
+                            <p className={`text-xs mt-1 ${isOwn ? 'text-emerald-100' : 'text-gray-400'}`}>
                               {formatTime(msg.sent_at)}
                             </p>
                           </div>
@@ -398,7 +398,7 @@ const Messages = () => {
                     <button
                       type="submit"
                       disabled={sending || !messageText.trim()}
-                      className="p-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg disabled:opacity-50"
+                      className="p-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg disabled:opacity-50"
                     >
                       <Send className="w-5 h-5" />
                     </button>

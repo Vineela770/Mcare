@@ -55,7 +55,7 @@ const Navbar = () => {
     if (!user?.role) return null;
     
     const badges = {
-      candidate: { color: 'bg-blue-100 text-blue-700', label: 'Candidate' },
+      candidate: { color: 'bg-teal-100 text-teal-800', label: 'Candidate' },
       hr: { color: 'bg-green-100 text-green-700', label: 'HR' },
       employee: { color: 'bg-purple-100 text-purple-700', label: 'Employee' },
       admin: { color: 'bg-red-100 text-red-700', label: 'Admin' },
@@ -75,11 +75,11 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-lg">M</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-cyan-600 font-bold text-lg">MCARE</span>
+              <span className="text-emerald-700 font-bold text-lg">MCARE</span>
               <span className="text-gray-500 text-xs">Healthcare Jobs</span>
             </div>
           </Link>
@@ -92,7 +92,7 @@ const Navbar = () => {
                   <Link
                     key={link.to}
                     to={link.to}
-                    className="flex items-center gap-2 text-gray-700 hover:text-cyan-600 font-medium transition"
+                    className="flex items-center gap-2 text-gray-700 hover:text-emerald-700 font-medium transition"
                   >
                     {link.icon}
                     {link.label}
@@ -104,27 +104,27 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/" className="text-gray-700 hover:text-cyan-600 font-medium">
+                <Link to="/" className="text-gray-700 hover:text-emerald-700 font-medium">
                   Home
                 </Link>
-                <Link to="/jobs" className="text-gray-700 hover:text-cyan-600 font-medium">
+                <Link to="/jobs" className="text-gray-700 hover:text-emerald-700 font-medium">
                   Jobs
                 </Link>
-                <Link to="/about" className="text-gray-700 hover:text-cyan-600 font-medium">
+                <Link to="/about" className="text-gray-700 hover:text-emerald-700 font-medium">
                   About
                 </Link>
-                <Link to="/contact" className="text-gray-700 hover:text-cyan-600 font-medium">
+                <Link to="/contact" className="text-gray-700 hover:text-emerald-700 font-medium">
                   Contact
                 </Link>
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-cyan-600 border border-cyan-600 rounded-lg hover:bg-cyan-50 transition"
+                  className="px-4 py-2 text-emerald-700 border border-emerald-700 rounded-lg hover:bg-emerald-50 transition"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:shadow-lg transition"
+                  className="px-4 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:shadow-lg transition"
                 >
                   Register
                 </Link>
@@ -157,7 +157,7 @@ const Navbar = () => {
                     key={link.to}
                     to={link.to}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-2 py-2 text-gray-700 hover:text-cyan-600"
+                    className="flex items-center gap-2 py-2 text-gray-700 hover:text-emerald-700"
                   >
                     {link.icon}
                     {link.label}
@@ -173,24 +173,24 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/" className="block py-2 text-gray-700 hover:text-cyan-600">
+                <Link to="/" className="block py-2 text-gray-700 hover:text-emerald-700">
                   Home
                 </Link>
-                <Link to="/jobs" className="block py-2 text-gray-700 hover:text-cyan-600">
+                <Link to="/jobs" className="block py-2 text-gray-700 hover:text-emerald-700">
                   Jobs
                 </Link>
-                <Link to="/about" className="block py-2 text-gray-700 hover:text-cyan-600">
+                <Link to="/about" className="block py-2 text-gray-700 hover:text-emerald-700">
                   About
                 </Link>
-                <Link to="/contact" className="block py-2 text-gray-700 hover:text-cyan-600">
+                <Link to="/contact" className="block py-2 text-gray-700 hover:text-emerald-700">
                   Contact
                 </Link>
-                <Link to="/login" className="block py-2 text-cyan-600 font-semibold">
+                <Link to="/login" className="block py-2 text-emerald-700 font-semibold">
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="block py-2 px-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg mt-2 text-center"
+                  className="block py-2 px-4 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg mt-2 text-center"
                 >
                   Register
                 </Link>

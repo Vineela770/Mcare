@@ -209,7 +209,7 @@ const BrowseJobs = () => {
             <select
               value={jobType}
               onChange={(e) => setJobType(e.target.value)}
-              className="px-4 py-3 bg-gray-50 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-cyan-500"
+              className="px-4 py-3 bg-gray-50 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-emerald-600"
             >
               <option value="all">All Types</option>
               <option value="full-time">Full-time</option>
@@ -218,7 +218,7 @@ const BrowseJobs = () => {
             </select>
             <button
               onClick={handleSearch}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium flex items-center justify-center space-x-2"
+              className="bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-6 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium flex items-center justify-center space-x-2"
             >
               <Search className="w-5 h-5" />
               <span>Search</span>
@@ -238,8 +238,8 @@ const BrowseJobs = () => {
           {jobs.map((job) => (
             <div key={job.id} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
               <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-lg flex items-center justify-center">
-                  <Briefcase className="w-6 h-6 text-cyan-600" />
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-lg flex items-center justify-center">
+                  <Briefcase className="w-6 h-6 text-emerald-700" />
                 </div>
                 <button
                   onClick={() => handleSaveJob(job.id)}
@@ -255,7 +255,7 @@ const BrowseJobs = () => {
                 <span className="text-sm">{job.location}</span>
               </div>
               <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">
+                <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
                   {job.type || 'Full-time'}
                 </span>
                 <div className="flex items-center space-x-1 text-gray-900 font-semibold text-sm">
@@ -271,7 +271,7 @@ const BrowseJobs = () => {
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleViewDetails(job)}
-                    className="text-cyan-600 hover:text-cyan-700 font-medium text-sm px-3 py-1 border border-cyan-600 rounded-lg"
+                    className="text-emerald-700 hover:text-emerald-700 font-medium text-sm px-3 py-1 border border-emerald-700 rounded-lg"
                   >
                     Details
                   </button>
@@ -281,7 +281,7 @@ const BrowseJobs = () => {
                     className={`px-4 py-2 rounded-lg font-medium text-sm ${
                       job.already_applied
                         ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700'
+                        : 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white hover:from-teal-800 hover:to-emerald-600'
                     }`}
                   >
                     {job.already_applied ? 'Applied' : 'Apply'}
@@ -310,7 +310,7 @@ const BrowseJobs = () => {
                     setApplicationData({ ...applicationData, coverLetter: e.target.value })
                   }
                   placeholder="Tell us why you're a great fit for this role..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                   rows="6"
                 />
 
@@ -335,7 +335,7 @@ const BrowseJobs = () => {
                     })
                   }
                   placeholder="Rs. 50,000"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 />
 
                 {errors.expectedSalary && (
@@ -358,7 +358,7 @@ const BrowseJobs = () => {
                       availability: e.target.value
                     })
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 />
 
                 {errors.availability && (
@@ -383,7 +383,7 @@ const BrowseJobs = () => {
                   type="button"
                   onClick={handleSubmitApplication}
                   disabled={applying}
-                  className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 disabled:opacity-60"
+                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 disabled:opacity-60"
                 >
                   {applying ? 'Submitting…' : 'Submit Application'}
                 </button>
@@ -402,7 +402,7 @@ const BrowseJobs = () => {
             <div className="space-y-6">
               <div className="flex items-center justify-between pb-4 border-b">
                 <div className="flex items-center space-x-3">
-                  <Building2 className="w-8 h-8 text-cyan-600" />
+                  <Building2 className="w-8 h-8 text-emerald-700" />
                   <div>
                     <p className="font-semibold text-gray-900">{selectedJob.company}</p>
                     <p className="text-sm text-gray-600">{selectedJob.location}</p>
@@ -440,7 +440,7 @@ const BrowseJobs = () => {
                     setShowDetailsModal(false);
                     handleApply(selectedJob);
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                 >
                   Apply Now
                 </button>
@@ -463,7 +463,7 @@ const BrowseJobs = () => {
               <p className="text-lg text-gray-900">{successMessage}</p>
               <button
                 onClick={() => setShowSuccessModal(false)}
-                className="mt-6 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                className="mt-6 px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
               >
                 Close
               </button>

@@ -79,7 +79,7 @@ const Jobs = () => {
 
           <Link
             to="/hr/post-job"
-            className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-2 sm:px-6 sm:py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium text-center"
+            className="bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-5 py-2 sm:px-6 sm:py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium text-center"
           >
             + Post New Job
           </Link>
@@ -108,7 +108,7 @@ const Jobs = () => {
 
           <div className="bg-white rounded-xl p-6 shadow-sm border">
             <div className="text-sm text-gray-600 mb-1">Total Applicants</div>
-            <div className="text-3xl font-bold text-cyan-600">
+            <div className="text-3xl font-bold text-emerald-700">
               {jobs.reduce((sum, job) => sum + (Number(job.applicants) || 0), 0)}
             </div>
           </div>
@@ -122,7 +122,7 @@ const Jobs = () => {
               onClick={() => setFilter(status)}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 filter === status
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                  ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white'
                   : 'bg-white text-gray-700 border hover:bg-gray-50'
               }`}
             >
@@ -176,12 +176,12 @@ const Jobs = () => {
                       setSelectedJob(job);
                       setShowJobDetails(true);
                     }}
-                    className="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg"
+                    className="p-2 text-emerald-700 hover:bg-emerald-50 rounded-lg"
                   >
                     <Eye className="w-5 h-5" />
                   </button>
 
-                  <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                  <button className="p-2 text-teal-700 hover:bg-teal-50 rounded-lg">
                     <Edit2 className="w-5 h-5" />
                   </button>
 

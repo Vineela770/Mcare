@@ -50,7 +50,7 @@ const Candidates = () => {
     const colors = {
       Available: 'bg-green-100 text-green-800',
       Interviewing: 'bg-yellow-100 text-yellow-800',
-      Hired: 'bg-blue-100 text-blue-800',
+      Hired: 'bg-teal-100 text-teal-800',
       Rejected: 'bg-red-100 text-red-800',
     };
     return colors[status] || colors.Available;
@@ -159,7 +159,7 @@ const Candidates = () => {
 
           <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm border border-gray-100">
             <div className="text-xs md:text-sm text-gray-600 mb-1">Avg Rating</div>
-            <div className="text-2xl md:text-3xl font-bold text-cyan-600">{avgRating}</div>
+            <div className="text-2xl md:text-3xl font-bold text-emerald-700">{avgRating}</div>
           </div>
         </div>
 
@@ -173,7 +173,7 @@ const Candidates = () => {
                 placeholder="Search by name or specialization..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
               />
             </div>
 
@@ -182,7 +182,7 @@ const Candidates = () => {
               <select
                 value={filterSpecialization}
                 onChange={(e) => setFilterSpecialization(e.target.value)}
-                className="w-full lg:w-72 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full lg:w-72 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
               >
                 <option value="all">All Specializations</option>
                 <option value="Registered Nurse">Registered Nurse</option>
@@ -229,7 +229,7 @@ const Candidates = () => {
                   <tr key={candidate.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                        <div className="w-10 h-10 bg-gradient-to-r from-teal-700 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
                           {candidate.name.charAt(0)}
                         </div>
                         <div className="ml-4">
@@ -259,7 +259,7 @@ const Candidates = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
                         onClick={() => handleViewCandidate(candidate)}
-                        className="text-cyan-600 hover:text-cyan-900"
+                        className="text-emerald-700 hover:text-emerald-900"
                         title="View Details"
                       >
                         <Eye className="w-5 h-5" />
@@ -280,7 +280,7 @@ const Candidates = () => {
                       </button>
                       <button
                         onClick={() => handleDownloadResume(candidate)}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="text-teal-700 hover:text-teal-900"
                         title="Download Resume"
                       >
                         <Download className="w-5 h-5" />
@@ -299,7 +299,7 @@ const Candidates = () => {
             <div key={c.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className="w-11 h-11 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold shrink-0">
+                  <div className="w-11 h-11 bg-gradient-to-r from-teal-700 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold shrink-0">
                     {c.name.charAt(0)}
                   </div>
 
@@ -364,7 +364,7 @@ const Candidates = () => {
 
                 <button
                   onClick={() => handleDownloadResume(c)}
-                  className="px-3 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 text-sm font-medium inline-flex items-center gap-2"
+                  className="px-3 py-2 rounded-lg bg-teal-50 text-teal-800 hover:bg-teal-100 text-sm font-medium inline-flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   Resume
@@ -400,7 +400,7 @@ const Candidates = () => {
 
                 <div className="mt-4">
                   <div className="flex items-center mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                    <div className="w-20 h-20 bg-gradient-to-r from-teal-700 to-emerald-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
                       {selectedCandidate.name.charAt(0)}
                     </div>
                     <div className="ml-4 min-w-0">
@@ -459,7 +459,7 @@ const Candidates = () => {
               <div className="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row justify-end gap-3">
                 <button
                   onClick={() => handleDownloadResume(selectedCandidate)}
-                  className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center space-x-2"
+                  className="w-full sm:w-auto px-4 py-2 bg-teal-700 text-white rounded-lg hover:bg-teal-700 flex items-center justify-center space-x-2"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download Resume</span>
@@ -537,7 +537,7 @@ const Candidates = () => {
         <div className="fixed top-4 right-4 z-50">
           <div
             className={`flex items-center space-x-3 px-6 py-4 rounded-lg shadow-lg ${
-              notification.type === 'success' ? 'bg-green-500' : notification.type === 'info' ? 'bg-blue-500' : 'bg-red-500'
+              notification.type === 'success' ? 'bg-green-500' : notification.type === 'info' ? 'bg-teal-600' : 'bg-red-500'
             } text-white`}
           >
             {notification.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}

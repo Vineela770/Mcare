@@ -52,7 +52,7 @@ const Applications = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Under Review': return 'bg-yellow-100 text-yellow-700';
-      case 'Shortlisted': return 'bg-blue-100 text-blue-700';
+      case 'Shortlisted': return 'bg-teal-100 text-teal-800';
       case 'Interview': return 'bg-green-100 text-green-700';
       case 'Rejected': return 'bg-red-100 text-red-700';
       default: return 'bg-gray-100 text-gray-700';
@@ -91,7 +91,7 @@ const Applications = () => {
                 onClick={() => setFilter(tab)}
                 className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap ${
                   filter === tab
-                    ? 'bg-cyan-100 text-cyan-700'
+                    ? 'bg-emerald-100 text-emerald-700'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -135,7 +135,7 @@ const Applications = () => {
                 </span>
                 <Link
                   to={`/candidate/application/${app.id}`}
-                  className="flex items-center space-x-2 text-cyan-600 hover:text-cyan-700 font-medium text-sm"
+                  className="flex items-center space-x-2 text-emerald-700 hover:text-emerald-700 font-medium text-sm"
                 >
                   <Eye className="w-4 h-4" />
                   <span>View Details</span>
@@ -153,7 +153,7 @@ const Applications = () => {
             <p className="text-gray-600 mb-6 text-sm md:text-base">Start applying to jobs to see them here</p>
             <Link
               to="/candidate/browse-jobs"
-              className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium text-sm md:text-base"
+              className="inline-block bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-6 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium text-sm md:text-base"
             >
               Browse Jobs
             </Link>
@@ -168,9 +168,9 @@ const Applications = () => {
 
 const StatCard = ({ icon, label, value, color }) => {
   const colors = {
-    cyan: 'bg-cyan-100 text-cyan-600',
+    cyan: 'bg-emerald-100 text-emerald-700',
     yellow: 'bg-yellow-100 text-yellow-600',
-    blue: 'bg-blue-100 text-blue-600',
+    blue: 'bg-teal-100 text-teal-700',
     green: 'bg-green-100 text-green-600',
   };
 

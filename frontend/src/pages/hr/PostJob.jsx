@@ -135,7 +135,7 @@ const PostJob = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="e.g., Senior Registered Nurse"
                 required
               />
@@ -151,7 +151,7 @@ const PostJob = () => {
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 required
               >
                 <option value="">Select Department</option>
@@ -176,7 +176,7 @@ const PostJob = () => {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="e.g., Guntur, Andhra Pradesh"
                 required
               />
@@ -191,7 +191,7 @@ const PostJob = () => {
 
               {/* ✅ Mobile: stack country code + phone (no overflow)
                   ✅ Desktop: keep row layout */}
-              <div className="flex flex-col sm:flex-row sm:items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-cyan-500">
+              <div className="flex flex-col sm:flex-row sm:items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-emerald-600">
                 <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b sm:border-b-0 sm:border-r border-gray-300">
                   <Phone className="text-gray-400 w-5 h-5" />
                   <select
@@ -235,7 +235,7 @@ const PostJob = () => {
                 name="jobType"
                 value={formData.jobType}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 required
               >
                 <option value="full-time">Full-time</option>
@@ -255,7 +255,7 @@ const PostJob = () => {
                 name="experience"
                 value={formData.experience}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 required
               >
                 <option value="">Select Experience</option>
@@ -277,7 +277,7 @@ const PostJob = () => {
                 name="salary"
                 value={formData.salary}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 required
               >
                 <option value="">Select Salary Range</option>
@@ -300,7 +300,7 @@ const PostJob = () => {
                 name="positions"
                 value={formData.positions}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="e.g., 3"
                 min="1"
                 required
@@ -318,7 +318,7 @@ const PostJob = () => {
                 name="deadline"
                 value={formData.deadline}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 required
               />
             </div>
@@ -334,7 +334,7 @@ const PostJob = () => {
                 value={formData.description}
                 onChange={handleChange}
                 rows="6"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="Describe the job role, responsibilities, and day-to-day tasks..."
                 required
               />
@@ -350,7 +350,7 @@ const PostJob = () => {
                 value={formData.requirements}
                 onChange={handleChange}
                 rows="4"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="List the required qualifications, certifications, and skills..."
                 required
               />
@@ -367,7 +367,7 @@ const PostJob = () => {
                 value={formData.benefits}
                 onChange={handleChange}
                 rows="3"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="List benefits like health insurance, paid time off, etc..."
               />
             </div>
@@ -387,7 +387,7 @@ const PostJob = () => {
             <button
               type="button"
               onClick={handleReview}
-              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium flex items-center justify-center space-x-2"
             >
               <Send className="w-5 h-5" />
               <span>Review</span>
@@ -431,7 +431,7 @@ const PostJob = () => {
                 <button
                   onClick={handleFinalSubmit}
                   disabled={submitting}
-                  className="w-full sm:w-auto px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 disabled:opacity-60 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-5 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
                   {submitting ? 'Submitting…' : 'Submit Job'}
@@ -498,7 +498,7 @@ const PostJob = () => {
                     setShowSuccessModal(false);
                     navigate('/hr/jobs');
                   }}
-                  className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                  className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                 >
                   View My Jobs
                 </button>

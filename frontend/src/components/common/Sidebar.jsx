@@ -110,7 +110,7 @@ const Sidebar = () => {
           onClick={() => isMobile && setMobileOpen(false)}
           className="flex items-center space-x-2 mb-4"
         >
-          <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-xl">M</span>
           </div>
           <span className="text-2xl font-bold text-gray-900">MCARE</span>
@@ -123,8 +123,8 @@ const Sidebar = () => {
           }}
           className="flex items-center space-x-3 mt-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition"
         >
-          <div className="w-10 h-10 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-full flex items-center justify-center">
-            <span className="text-lg font-bold text-cyan-600">
+          <div className="w-10 h-10 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center">
+            <span className="text-lg font-bold text-emerald-700">
               {user?.name?.charAt(0) || 'U'}
             </span>
           </div>
@@ -149,7 +149,7 @@ const Sidebar = () => {
               onClick={() => isMobile && setMobileOpen(false)}
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                  ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white'
                   : 'text-gray-700 hover:bg-gray-50'
               }`}
             >
@@ -169,13 +169,13 @@ const Sidebar = () => {
             </p>
             <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-3">
               <div
-                className="h-full bg-cyan-500 rounded-full"
+                className="h-full bg-emerald-600 rounded-full"
                 style={{ width: `${skillPercentage}%` }}
               />
             </div>
             <p className="text-xs text-gray-500">
               Improve your profile to reach{" "}
-              <span className="font-semibold text-cyan-600">
+              <span className="font-semibold text-emerald-700">
                 {targetPercentage}%
               </span>
             </p>

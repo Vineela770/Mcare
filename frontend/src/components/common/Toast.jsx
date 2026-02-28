@@ -26,7 +26,7 @@ const Toast = ({ toast, onClose, duration = 3500 }) => {
   const map = {
     success: { wrap: 'bg-green-50 border-green-200', txt: 'text-green-800', icon: <CheckCircle className="w-5 h-5 text-green-600 shrink-0" /> },
     error:   { wrap: 'bg-red-50 border-red-200',     txt: 'text-red-800',   icon: <XCircle    className="w-5 h-5 text-red-600 shrink-0"   /> },
-    info:    { wrap: 'bg-cyan-50 border-cyan-200',   txt: 'text-cyan-800',  icon: <AlertCircle className="w-5 h-5 text-cyan-600 shrink-0"  /> },
+    info:    { wrap: 'bg-emerald-50 border-emerald-300',   txt: 'text-emerald-800',  icon: <AlertCircle className="w-5 h-5 text-emerald-700 shrink-0"  /> },
   };
   const style = map[toast.type] || map.info;
 

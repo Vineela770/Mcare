@@ -195,12 +195,12 @@ const Register = () => {
   const isPasswordTyped = formData.password.trim().length > 0; // ✅ for confirm password enable/disable
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-white flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-white flex items-center justify-center px-4 py-12">
       <div className="max-w-2xl w-full">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-xl flex items-center justify-center">
               <span className="text-white font-bold text-2xl">M</span>
             </div>
             <span className="text-3xl font-bold text-gray-900">MCARE</span>
@@ -211,9 +211,9 @@ const Register = () => {
 
         {/* Info banner when redirected from Apply Now */}
         {fromState?.message && (
-          <div className="mb-4 bg-cyan-50 border border-cyan-200 text-cyan-800 px-4 py-3 rounded-lg flex items-start gap-2">
-            <span className="mt-0.5 text-cyan-500">ℹ️</span>
-            <p className="text-sm">{fromState.message} Already have an account? <Link to="/login" state={fromState} className="font-semibold underline hover:text-cyan-700">Log in here</Link>.</p>
+          <div className="mb-4 bg-emerald-50 border border-emerald-300 text-emerald-800 px-4 py-3 rounded-lg flex items-start gap-2">
+            <span className="mt-0.5 text-emerald-600">ℹ️</span>
+            <p className="text-sm">{fromState.message} Already have an account? <Link to="/login" state={fromState} className="font-semibold underline hover:text-emerald-700">Log in here</Link>.</p>
           </div>
         )}
 
@@ -240,7 +240,7 @@ const Register = () => {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
               required
             >
               <option value="" disabled>
@@ -281,7 +281,7 @@ const Register = () => {
                     value={formData.fullName}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -293,7 +293,7 @@ const Register = () => {
                   Phone Number
                 </label>
 
-                <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-cyan-500">
+                <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-emerald-600">
                   <div className="flex items-center gap-2 px-3 py-3 bg-gray-50 border-r border-gray-300">
                     <Phone className="text-gray-400 w-5 h-5" />
                     <select
@@ -333,7 +333,7 @@ const Register = () => {
                     value={formData.location}
                     onChange={handleChange}
                     placeholder="City, State"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -348,7 +348,7 @@ const Register = () => {
                       name="qualification"
                       value={formData.qualification}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       required
                     >
                       <option value="" disabled>
@@ -391,7 +391,7 @@ const Register = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -409,7 +409,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder={isEmailTyped ? 're-enter your email' : 'Enter email first'}
                     disabled={!isEmailTyped}
-                    className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent
+                    className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent
                       ${!isEmailTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     required={isEmailTyped}
                   />
@@ -427,7 +427,7 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     required
                   />
                   <button
@@ -452,7 +452,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder={isPasswordTyped ? 'Re-enter password' : 'Enter password first'}
                     disabled={!isPasswordTyped}
-                    className={`w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent
+                    className={`w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent
                       ${!isPasswordTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     required={isPasswordTyped}
                   />
@@ -480,7 +480,7 @@ const Register = () => {
                 name="agreeTerms"
                 checked={formData.agreeTerms}
                 onChange={handleChange}
-                className="w-4 h-4 mt-1 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
+                className="w-4 h-4 mt-1 text-emerald-700 border-gray-300 rounded focus:ring-emerald-600"
               />
               <div className="ml-2 text-sm text-gray-600">
                 I agree to the{' '}
@@ -490,7 +490,7 @@ const Register = () => {
                     setPolicyType('terms');
                     setShowPolicy(true);
                   }}
-                  className="text-cyan-600 hover:text-cyan-700 font-medium underline"
+                  className="text-emerald-700 hover:text-emerald-700 font-medium underline"
                 >
                   Terms of Service
                 </button>{' '}
@@ -501,7 +501,7 @@ const Register = () => {
                     setPolicyType('privacy');
                     setShowPolicy(true);
                   }}
-                  className="text-cyan-600 hover:text-cyan-700 font-medium underline"
+                  className="text-emerald-700 hover:text-emerald-700 font-medium underline"
                 >
                   Privacy Policy
                 </button>
@@ -512,7 +512,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-teal-700 to-emerald-500 text-white py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span>Creating Account...</span>
@@ -538,7 +538,7 @@ const Register = () => {
           {/* Login Link */}
           <Link
             to="/login"
-            className="block w-full text-center border-2 border-cyan-500 text-cyan-600 py-3 rounded-lg hover:bg-cyan-50 font-medium"
+            className="block w-full text-center border-2 border-emerald-600 text-emerald-700 py-3 rounded-lg hover:bg-emerald-50 font-medium"
           >
             Sign In
           </Link>
@@ -546,7 +546,7 @@ const Register = () => {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-gray-600 hover:text-cyan-600 font-medium">
+          <Link to="/" className="text-gray-600 hover:text-emerald-700 font-medium">
             ← Back to Home
           </Link>
         </div>
@@ -562,7 +562,7 @@ const Register = () => {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Successful!</h2>
             <p className="text-gray-600 mb-4">{successMessage}</p>
-            <div className="animate-pulse text-cyan-600 text-sm">Redirecting to login...</div>
+            <div className="animate-pulse text-emerald-700 text-sm">Redirecting to login...</div>
           </div>
         </div>
       )}
@@ -619,7 +619,7 @@ const Register = () => {
             <div className="mt-6 text-right">
               <button
                 onClick={() => setShowPolicy(false)}
-                className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
+                className="px-6 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-700"
               >
                 Close
               </button>

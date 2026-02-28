@@ -80,16 +80,16 @@ const AdminDashboard = () => {
       label: 'Total Users',
       value: stats.totalUsers,
       icon: Users,
-      bg: 'bg-cyan-100',
-      text: 'text-cyan-600',
+      bg: 'bg-emerald-100',
+      text: 'text-emerald-700',
       link: '/admin/users',
     },
     {
       label: 'Active Jobs',
       value: stats.totalJobs,
       icon: Briefcase,
-      bg: 'bg-blue-100',
-      text: 'text-blue-600',
+      bg: 'bg-teal-100',
+      text: 'text-teal-700',
       link: '/admin/jobs',
     },
     {
@@ -151,13 +151,13 @@ const AdminDashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl p-5 md:p-6 mb-6 md:mb-8">
+        <div className="bg-gradient-to-r from-teal-700 to-emerald-500 rounded-xl p-5 md:p-6 mb-6 md:mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div className="text-white mb-4 md:mb-0">
               <h3 className="text-xl md:text-2xl font-bold mb-2">
                 System Administration
               </h3>
-              <p className="text-cyan-100 text-sm md:text-base">
+              <p className="text-emerald-100 text-sm md:text-base">
                 Manage users, jobs, and platform settings
               </p>
             </div>
@@ -166,13 +166,13 @@ const AdminDashboard = () => {
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 to="/admin/users"
-                className="bg-white text-cyan-600 px-5 py-2.5 rounded-lg hover:bg-gray-100 font-medium text-center"
+                className="bg-white text-emerald-700 px-5 py-2.5 rounded-lg hover:bg-gray-100 font-medium text-center"
               >
                 Manage Users
               </Link>
               <Link
                 to="/admin/reports"
-                className="bg-cyan-700 text-white px-5 py-2.5 rounded-lg hover:bg-cyan-800 font-medium text-center"
+                className="bg-emerald-700 text-white px-5 py-2.5 rounded-lg hover:bg-emerald-800 font-medium text-center"
               >
                 View Reports
               </Link>
@@ -190,7 +190,7 @@ const AdminDashboard = () => {
               </h2>
               <Link
                 to="/admin/activity"
-                className="text-cyan-600 hover:text-cyan-700 font-medium text-sm"
+                className="text-emerald-700 hover:text-emerald-700 font-medium text-sm"
               >
                 View All →
               </Link>
@@ -238,20 +238,20 @@ const AdminDashboard = () => {
             </h2>
 
             <div className="space-y-4">
-              <div className="flex justify-between p-3 bg-cyan-50 rounded-lg">
+              <div className="flex justify-between p-3 bg-emerald-50 rounded-lg">
                 <span className="text-gray-700 font-medium text-sm md:text-base">
                   Total Doctors (Candidates)
                 </span>
-                <span className="text-lg md:text-xl font-bold text-cyan-600">
+                <span className="text-lg md:text-xl font-bold text-emerald-700">
                   {systemStats.totalCandidates.toLocaleString()}
                 </span>
               </div>
 
-              <div className="flex justify-between p-3 bg-blue-50 rounded-lg">
+              <div className="flex justify-between p-3 bg-teal-50 rounded-lg">
                 <span className="text-gray-700 font-medium text-sm md:text-base">
                   Total Employers (HR)
                 </span>
-                <span className="text-lg md:text-xl font-bold text-blue-600">
+                <span className="text-lg md:text-xl font-bold text-teal-700">
                   {systemStats.totalHR.toLocaleString()}
                 </span>
               </div>
@@ -300,7 +300,7 @@ const AdminDashboard = () => {
           <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100 mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg md:text-xl font-bold text-gray-900">Recent Registrations</h2>
-              <Link to="/admin/users" className="text-cyan-600 hover:text-cyan-700 font-medium text-sm">View All →</Link>
+              <Link to="/admin/users" className="text-emerald-700 hover:text-emerald-700 font-medium text-sm">View All →</Link>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -318,7 +318,7 @@ const AdminDashboard = () => {
                       <td className="py-2 pr-4 font-medium text-gray-900">{u.full_name}</td>
                       <td className="py-2 pr-4 text-gray-600">{u.email}</td>
                       <td className="py-2 pr-4">
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${u.role === 'candidate' ? 'bg-cyan-100 text-cyan-700' : 'bg-blue-100 text-blue-700'}`}>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${u.role === 'candidate' ? 'bg-emerald-100 text-emerald-700' : 'bg-teal-100 text-teal-800'}`}>
                           {u.role === 'candidate' ? 'Doctor' : u.role}
                         </span>
                       </td>

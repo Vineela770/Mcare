@@ -170,8 +170,8 @@ const UsersManagement = () => {
 
   const RolePill = ({ role }) => (
     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-      role === 'candidate' ? 'bg-cyan-100 text-cyan-800' :
-      role === 'hr' ? 'bg-blue-100 text-blue-800' :
+      role === 'candidate' ? 'bg-emerald-100 text-emerald-800' :
+      role === 'hr' ? 'bg-teal-100 text-teal-800' :
       'bg-gray-100 text-gray-800'
     }`}>
       {ROLE_LABELS[role] || role}
@@ -209,7 +209,7 @@ const UsersManagement = () => {
 
           <button
             onClick={handleAddUser}
-            className="w-full md:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 md:px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium flex items-center justify-center md:justify-start space-x-2"
+            className="w-full md:w-auto bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-5 md:px-6 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium flex items-center justify-center md:justify-start space-x-2"
           >
             <UserPlus className="w-5 h-5" />
             <span>Add User</span>
@@ -230,7 +230,7 @@ const UsersManagement = () => {
             <div className="text-xs md:text-sm text-gray-600 mb-1">
               Candidates
             </div>
-            <div className="text-2xl md:text-3xl font-bold text-cyan-600">
+            <div className="text-2xl md:text-3xl font-bold text-emerald-700">
               {users.filter((u) => u.role === 'candidate').length}
             </div>
           </div>
@@ -238,7 +238,7 @@ const UsersManagement = () => {
             <div className="text-xs md:text-sm text-gray-600 mb-1">
               HR/Employers
             </div>
-            <div className="text-2xl md:text-3xl font-bold text-blue-600">
+            <div className="text-2xl md:text-3xl font-bold text-teal-700">
               {users.filter((u) => u.role === 'hr').length}
             </div>
           </div>
@@ -260,7 +260,7 @@ const UsersManagement = () => {
               onClick={() => setRoleFilter(r)}
               className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
                 roleFilter === r
-                  ? 'bg-cyan-600 text-white'
+                  ? 'bg-emerald-700 text-white'
                   : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
               }`}
             >
@@ -296,7 +296,7 @@ const UsersManagement = () => {
                 <tr key={user.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                      <div className="w-10 h-10 bg-gradient-to-r from-teal-700 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
                         {user.name.charAt(0)}
                       </div>
                       <div className="ml-4">
@@ -326,7 +326,7 @@ const UsersManagement = () => {
                     </button>
                     <button
                       onClick={() => handleEditUser(user)}
-                      className="text-blue-600 hover:text-blue-900"
+                      className="text-teal-700 hover:text-teal-900"
                       title="Edit User"
                     >
                       <Edit2 className="w-5 h-5" />
@@ -354,7 +354,7 @@ const UsersManagement = () => {
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="w-11 h-11 bg-gradient-to-r from-teal-700 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
                     {user.name.charAt(0)}
                   </div>
                   <div>
@@ -377,7 +377,7 @@ const UsersManagement = () => {
                   </button>
                   <button
                     onClick={() => handleEditUser(user)}
-                    className="p-2 rounded-lg border border-gray-200 text-blue-600 active:scale-95"
+                    className="p-2 rounded-lg border border-gray-200 text-teal-700 active:scale-95"
                     title="Edit User"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -456,7 +456,7 @@ const UsersManagement = () => {
                         value={formData.name}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                         placeholder="Enter full name"
                       />
                     </div>
@@ -471,7 +471,7 @@ const UsersManagement = () => {
                         value={formData.email}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                         placeholder="user@example.com"
                       />
                     </div>
@@ -484,7 +484,7 @@ const UsersManagement = () => {
                         name="role"
                         value={formData.role}
                         onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       >
                         <option value="candidate">Candidate</option>
                         <option value="hr">HR</option>
@@ -501,7 +501,7 @@ const UsersManagement = () => {
                         name="status"
                         value={formData.status}
                         onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       >
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
@@ -520,7 +520,7 @@ const UsersManagement = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                    className="px-4 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                   >
                     Add User
                   </button>
@@ -567,7 +567,7 @@ const UsersManagement = () => {
                         value={formData.name}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -581,7 +581,7 @@ const UsersManagement = () => {
                         value={formData.email}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -593,7 +593,7 @@ const UsersManagement = () => {
                         name="role"
                         value={formData.role}
                         onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       >
                         <option value="candidate">Candidate</option>
                         <option value="hr">HR</option>
@@ -610,7 +610,7 @@ const UsersManagement = () => {
                         name="status"
                         value={formData.status}
                         onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       >
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
@@ -629,7 +629,7 @@ const UsersManagement = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+                    className="px-4 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
                   >
                     Update User
                   </button>
@@ -681,7 +681,7 @@ const UsersManagement = () => {
                 <button
                   type="button"
                   onClick={() => setShowDeleteModal(false)}
-                  className="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600 sm:mt-0 sm:w-auto sm:text-sm"
                 >
                   Cancel
                 </button>
@@ -701,7 +701,7 @@ const UsersManagement = () => {
             />
             <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl z-10">
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-cyan-500 to-blue-600 rounded-t-2xl">
+              <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-teal-700 to-emerald-500 rounded-t-2xl">
                 <h2 className="text-xl font-bold text-white">Full Profile Details</h2>
                 <button
                   onClick={() => setShowViewModal(false)}
@@ -718,7 +718,7 @@ const UsersManagement = () => {
 
                   {/* ── Basic Info ── */}
                   <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-700 to-emerald-500 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
                       {viewUser.name?.charAt(0) || '?'}
                     </div>
                     <div>
@@ -726,7 +726,7 @@ const UsersManagement = () => {
                       <p className="text-gray-500 text-sm">{viewUser.email}</p>
                       <div className="flex flex-wrap gap-2 mt-2">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                          viewUser.role === 'candidate' ? 'bg-cyan-100 text-cyan-700' : 'bg-blue-100 text-blue-700'
+                          viewUser.role === 'candidate' ? 'bg-emerald-100 text-emerald-700' : 'bg-teal-100 text-teal-800'
                         }`}>
                           {ROLE_LABELS[viewUser.role] || viewUser.role}
                         </span>
@@ -773,8 +773,8 @@ const UsersManagement = () => {
                   {/* ── Doctor / Candidate Profile ── */}
                   {viewUser.role === 'candidate' && (
                     <div className="space-y-4">
-                      <div className="bg-cyan-50 rounded-xl p-4">
-                        <h4 className="font-semibold text-cyan-800 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
+                      <div className="bg-emerald-50 rounded-xl p-4">
+                        <h4 className="font-semibold text-emerald-800 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
                           <GraduationCap className="w-4 h-4" /> Medical Professional Details
                         </h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
@@ -836,7 +836,7 @@ const UsersManagement = () => {
                                 arr = [String(viewUser.skills)];
                               }
                               return arr.map((sk, i) => (
-                                <span key={i} className="px-2 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs">{sk}</span>
+                                <span key={i} className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs">{sk}</span>
                               ));
                             })()}
                           </div>
@@ -852,14 +852,14 @@ const UsersManagement = () => {
                       )}
 
                       {/* Resume */}
-                      <div className="bg-blue-50 rounded-xl p-4">
-                        <h4 className="font-semibold text-blue-800 mb-3 text-sm uppercase tracking-wide">Resume / CV</h4>
+                      <div className="bg-teal-50 rounded-xl p-4">
+                        <h4 className="font-semibold text-teal-800 mb-3 text-sm uppercase tracking-wide">Resume / CV</h4>
                         {viewUser.resume_url ? (
                           <a
                             href={`${import.meta.env.VITE_API_URL || 'https://mcare-backend-61sy.onrender.com'}${viewUser.resume_url}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-lg text-sm hover:bg-teal-700 transition-colors"
                           >
                             <Download className="w-4 h-4" />
                             View / Download Resume
@@ -879,7 +879,7 @@ const UsersManagement = () => {
                             try { edu = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch (parseErr) { void parseErr; }
                             if (Array.isArray(edu)) {
                               return edu.map((e, i) => (
-                                <div key={i} className="mb-2 text-sm border-l-2 border-cyan-300 pl-3">
+                                <div key={i} className="mb-2 text-sm border-l-2 border-emerald-400 pl-3">
                                   <p className="font-medium text-gray-800">{e.degree || e.title || '—'}</p>
                                   <p className="text-gray-500">{e.institution || e.school || ''} {e.year ? `· ${e.year}` : ''}</p>
                                 </div>
@@ -902,8 +902,8 @@ const UsersManagement = () => {
 
                   {/* ── Employer / HR Profile ── */}
                   {viewUser.role === 'hr' && (
-                    <div className="bg-blue-50 rounded-xl p-4">
-                      <h4 className="font-semibold text-blue-800 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
+                    <div className="bg-teal-50 rounded-xl p-4">
+                      <h4 className="font-semibold text-teal-800 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
                         <Building2 className="w-4 h-4" /> Organization Details
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
@@ -938,7 +938,7 @@ const UsersManagement = () => {
                               href={viewUser.website_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="block font-medium text-blue-600 hover:underline"
+                              className="block font-medium text-teal-700 hover:underline"
                             >
                               {viewUser.website_url}
                             </a>
@@ -962,7 +962,7 @@ const UsersManagement = () => {
                   {viewUser.role === 'candidate' && (
                     <div className="bg-gray-50 rounded-xl p-4">
                       <h4 className="font-semibold text-gray-700 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
-                        <Briefcase className="w-4 h-4 text-cyan-600" /> Job Applications ({userApps.length})
+                        <Briefcase className="w-4 h-4 text-emerald-700" /> Job Applications ({userApps.length})
                       </h4>
                       {userApps.length === 0 ? (
                         <p className="text-sm text-gray-400 italic">No applications yet.</p>
@@ -975,7 +975,7 @@ const UsersManagement = () => {
                                 <p className="text-gray-400">{app.employer_name || ''}{app.job_location ? ` · ${app.job_location}` : ''}</p>
                               </div>
                               <span className={`px-2 py-0.5 rounded-full font-medium whitespace-nowrap flex-shrink-0 ${
-                                (app.status || '').toLowerCase() === 'shortlisted' ? 'bg-cyan-100 text-cyan-700' :
+                                (app.status || '').toLowerCase() === 'shortlisted' ? 'bg-emerald-100 text-emerald-700' :
                                 (app.status || '').toLowerCase() === 'rejected' ? 'bg-red-100 text-red-700' :
                                 (app.status || '').toLowerCase() === 'interview' ? 'bg-purple-100 text-purple-700' :
                                 'bg-yellow-100 text-yellow-700'
@@ -996,7 +996,7 @@ const UsersManagement = () => {
                 {viewUser && (
                   <button
                     onClick={() => { setShowViewModal(false); handleEditUser(viewUser); }}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 flex items-center gap-2"
+                    className="px-4 py-2 bg-teal-700 text-white rounded-lg text-sm hover:bg-teal-700 flex items-center gap-2"
                   >
                     <Edit2 className="w-4 h-4" /> Edit User
                   </button>
@@ -1018,7 +1018,7 @@ const UsersManagement = () => {
         <div className="fixed top-4 right-4 z-50">
           <div
             className={`flex items-center space-x-3 px-5 py-4 rounded-lg shadow-lg ${
-              notification.type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+              notification.type === 'success' ? 'bg-green-500' : 'bg-teal-600'
             } text-white max-w-[92vw] md:max-w-md`}
           >
             <CheckCircle className="w-5 h-5 flex-shrink-0" />

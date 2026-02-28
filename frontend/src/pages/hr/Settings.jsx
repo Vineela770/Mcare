@@ -167,7 +167,7 @@ const Settings = () => {
           {/* Account Information */}
           <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <div className="flex items-center space-x-3 mb-6">
-              <User className="w-6 h-6 text-cyan-600" />
+              <User className="w-6 h-6 text-emerald-700" />
               <h2 className="text-lg sm:text-xl font-bold text-gray-900">Account Information</h2>
             </div>
 
@@ -179,7 +179,7 @@ const Settings = () => {
                   name="full_name"
                   value={formData.full_name}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 />
               </div>
 
@@ -190,7 +190,7 @@ const Settings = () => {
                   name="organization_name"
                   value={formData.organization_name}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 />
                 {errors.organization_name && <p className="text-red-500 text-sm mt-1">{errors.organization_name}</p>}
               </div>
@@ -205,7 +205,7 @@ const Settings = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
@@ -221,7 +221,7 @@ const Settings = () => {
                     name="phoneCountryCode"
                     value={formData.phoneCountryCode}
                     onChange={handleChange}
-                    className="px-3 py-2 border border-gray-300 rounded-lg sm:rounded-l-lg sm:rounded-r-none bg-gray-50 focus:ring-2 focus:ring-cyan-500"
+                    className="px-3 py-2 border border-gray-300 rounded-lg sm:rounded-l-lg sm:rounded-r-none bg-gray-50 focus:ring-2 focus:ring-emerald-600"
                   >
                     {countryCodes.map((country) => (
                       <option key={country.code} value={country.code}>
@@ -236,7 +236,7 @@ const Settings = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="Enter phone number"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg sm:rounded-r-lg sm:rounded-l-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent mt-2 sm:mt-0"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg sm:rounded-r-lg sm:rounded-l-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent mt-2 sm:mt-0"
                   />
                 </div>
 
@@ -252,7 +252,7 @@ const Settings = () => {
                     name="alternatePhoneCountryCode"
                     value={formData.alternatePhoneCountryCode}
                     onChange={handleChange}
-                    className="px-3 py-2 border border-gray-300 rounded-lg sm:rounded-l-lg sm:rounded-r-none bg-gray-50 focus:ring-2 focus:ring-cyan-500"
+                    className="px-3 py-2 border border-gray-300 rounded-lg sm:rounded-l-lg sm:rounded-r-none bg-gray-50 focus:ring-2 focus:ring-emerald-600"
                   >
                     {countryCodes.map((country) => (
                       <option key={country.code} value={country.code}>
@@ -267,7 +267,7 @@ const Settings = () => {
                     value={formData.alternatePhone}
                     onChange={handleChange}
                     placeholder="Enter alternate number"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg sm:rounded-r-lg sm:rounded-l-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent mt-2 sm:mt-0"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg sm:rounded-r-lg sm:rounded-l-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent mt-2 sm:mt-0"
                   />
                 </div>
 
@@ -281,7 +281,7 @@ const Settings = () => {
                   name="organization_city"
                   value={formData.organization_city}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 />
                 {errors.organization_city && <p className="text-red-500 text-sm mt-1">{errors.organization_city}</p>}
               </div>
@@ -291,7 +291,7 @@ const Settings = () => {
           {/* Notification Preferences */}
           <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <div className="flex items-center space-x-3 mb-6">
-              <Bell className="w-6 h-6 text-cyan-600" />
+              <Bell className="w-6 h-6 text-emerald-700" />
               <h2 className="text-lg sm:text-xl font-bold text-gray-900">Notification Preferences</h2>
             </div>
 
@@ -309,7 +309,7 @@ const Settings = () => {
                     name={key}
                     checked={value}
                     onChange={handleChange}
-                    className="w-5 h-5 text-cyan-600 focus:ring-cyan-500 rounded"
+                    className="w-5 h-5 text-emerald-700 focus:ring-emerald-600 rounded"
                   />
                 </label>
               ))}
@@ -329,7 +329,7 @@ const Settings = () => {
                   value={formData.designation}
                   onChange={handleChange}
                   placeholder="e.g. HR Manager, Medical Director"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
 
@@ -339,7 +339,7 @@ const Settings = () => {
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
                 >
                   <option value="">Select Category</option>
                   <option value="Hospital">Hospital</option>
@@ -362,7 +362,7 @@ const Settings = () => {
                   onChange={handleChange}
                   placeholder="e.g. 100"
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
 
@@ -374,7 +374,7 @@ const Settings = () => {
                   value={formData.website}
                   onChange={handleChange}
                   placeholder="https://yourhospital.com"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
 
@@ -386,7 +386,7 @@ const Settings = () => {
                   value={formData.organization_address}
                   onChange={handleChange}
                   placeholder="Street, Area, Pin code"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
 
@@ -398,7 +398,7 @@ const Settings = () => {
                   onChange={handleChange}
                   rows="4"
                   placeholder="Describe your organization (50–200 words)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
                 />
                 {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
               </div>
@@ -409,7 +409,7 @@ const Settings = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="w-full sm:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 sm:px-8 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-6 sm:px-8 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium flex items-center justify-center space-x-2"
             >
               <Save className="w-5 h-5" />
               <span>Save Changes</span>

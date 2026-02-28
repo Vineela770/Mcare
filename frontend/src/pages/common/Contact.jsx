@@ -27,12 +27,12 @@ const Contact = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="py-8 md:py-12 px-4 bg-gradient-to-r from-cyan-500 to-blue-600">
+      <section className="py-8 md:py-12 px-4 bg-gradient-to-r from-teal-700 to-emerald-500">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">
             Get In Touch
           </h1>
-          <p className="text-sm md:text-lg text-cyan-100">
+          <p className="text-sm md:text-lg text-emerald-100">
             Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
           </p>
         </div>
@@ -47,14 +47,14 @@ const Contact = () => {
             <div className="lg:col-span-1 space-y-4 md:space-y-5">
               {[
                 {
-                  icon: <Phone className="w-6 h-6 text-cyan-600" />,
-                  bg: "bg-cyan-100",
+                  icon: <Phone className="w-6 h-6 text-emerald-700" />,
+                  bg: "bg-emerald-100",
                   title: "Phone",
                   lines: ["+91 1800-123-4567", "Mon-Fri, 9AM-6PM"],
                 },
                 {
-                  icon: <Mail className="w-6 h-6 text-blue-600" />,
-                  bg: "bg-blue-100",
+                  icon: <Mail className="w-6 h-6 text-teal-700" />,
+                  bg: "bg-teal-100",
                   title: "Email",
                   lines: ["support@mcare.com", "careers@mcare.com"],
                 },
@@ -89,7 +89,7 @@ const Contact = () => {
             <div className="lg:col-span-2">
               <div className="bg-white rounded-xl p-6 md:p-8 shadow-lg border border-gray-100">
                 <div className="flex items-center space-x-3 mb-4 md:mb-5">
-                  <MessageSquare className="w-7 h-7 md:w-8 md:h-8 text-cyan-600" />
+                  <MessageSquare className="w-7 h-7 md:w-8 md:h-8 text-emerald-700" />
                   <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                     Send us a Message
                   </h2>
@@ -107,7 +107,7 @@ const Contact = () => {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        className="w-full px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
                         placeholder="John Doe"
                       />
                     </div>
@@ -122,7 +122,7 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        className="w-full px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
                         placeholder="john@example.com"
                       />
                     </div>
@@ -138,7 +138,7 @@ const Contact = () => {
                       value={formData.subject}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                      className="w-full px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
                       placeholder="How can we help?"
                     />
                   </div>
@@ -153,17 +153,17 @@ const Contact = () => {
                       onChange={handleChange}
                       required
                       rows="5"
-                      className="w-full px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 resize-none"
+                      className="w-full px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 resize-none"
                       placeholder="Tell us more about your inquiry..."
                     ></textarea>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white
+                    className="w-full bg-gradient-to-r from-teal-700 to-emerald-500 text-white
                               font-medium py-2 px-4 text-sm
                               md:font-semibold md:py-3 md:px-6 md:text-base
-                              rounded-lg hover:from-cyan-600 hover:to-blue-700
+                              rounded-lg hover:from-teal-800 hover:to-emerald-600
                               transition-all duration-200 shadow-md hover:shadow-lg
                               flex items-center justify-center space-x-2"
                   >
@@ -234,7 +234,7 @@ const Contact = () => {
             </p>
             <button
               onClick={() => setShowSuccessModal(false)}
-              className="mt-6 px-6 py-2 text-sm md:text-base bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700"
+              className="mt-6 px-6 py-2 text-sm md:text-base bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
             >
               Close
             </button>

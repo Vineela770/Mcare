@@ -204,7 +204,7 @@ const Alerts = () => {
 
           <button
             onClick={openCreate}
-            className="flex items-center justify-center space-x-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium w-full md:w-auto"
+            className="flex items-center justify-center space-x-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-5 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium w-full md:w-auto"
           >
             <Plus className="w-5 h-5" />
             <span>Create Alert</span>
@@ -267,7 +267,7 @@ const Alerts = () => {
                       onChange={() => handleToggleAlert(alert.id)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-cyan-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                    <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-emerald-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
                   </label>
                 </div>
               </div>
@@ -283,7 +283,7 @@ const Alerts = () => {
             <p className="text-gray-600 mb-6">Create alerts to get notified about new job opportunities</p>
             <button
               onClick={openCreate}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-cyan-600 hover:to-blue-700 font-medium"
+              className="bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-6 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium"
             >
               Create Your First Alert
             </button>
@@ -319,7 +319,7 @@ const Alerts = () => {
                     value={formData.title}
                     onChange={handleChange}
                     placeholder="e.g., ICU Nurse Jobs"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
                     required
                   />
                 </div>
@@ -332,7 +332,7 @@ const Alerts = () => {
                     value={formData.keywords}
                     onChange={handleChange}
                     placeholder="e.g., Senior Nurse"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
                     required
                   />
                 </div>
@@ -345,7 +345,7 @@ const Alerts = () => {
                     value={formData.location}
                     onChange={handleChange}
                     placeholder="e.g., Hyderabad"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
                     required
                   />
                 </div>
@@ -357,7 +357,7 @@ const Alerts = () => {
                       name="jobType"
                       value={formData.jobType}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
                     >
                       <option value="Full-time">Full-time</option>
                       <option value="Part-time">Part-time</option>
@@ -371,7 +371,7 @@ const Alerts = () => {
                       name="frequency"
                       value={formData.frequency}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
                     >
                       <option value="Daily">Daily</option>
                       <option value="Weekly">Weekly</option>
@@ -390,7 +390,7 @@ const Alerts = () => {
 
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700"
+                    className="w-full sm:w-auto px-5 py-2 rounded-lg bg-gradient-to-r from-teal-700 to-emerald-500 text-white hover:from-teal-800 hover:to-emerald-600"
                   >
                     Create Alert
                   </button>
@@ -428,7 +428,7 @@ const Alerts = () => {
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
                     required
                   />
                 </div>
@@ -440,7 +440,7 @@ const Alerts = () => {
                     name="keywords"
                     value={formData.keywords}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
                     required
                   />
                 </div>
@@ -452,7 +452,7 @@ const Alerts = () => {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
                     required
                   />
                 </div>
@@ -464,7 +464,7 @@ const Alerts = () => {
                       name="jobType"
                       value={formData.jobType}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
                     >
                       <option value="Full-time">Full-time</option>
                       <option value="Part-time">Part-time</option>
@@ -478,7 +478,7 @@ const Alerts = () => {
                       name="frequency"
                       value={formData.frequency}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
                     >
                       <option value="Daily">Daily</option>
                       <option value="Weekly">Weekly</option>
@@ -497,7 +497,7 @@ const Alerts = () => {
 
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700"
+                    className="w-full sm:w-auto px-5 py-2 rounded-lg bg-gradient-to-r from-teal-700 to-emerald-500 text-white hover:from-teal-800 hover:to-emerald-600"
                   >
                     Update Alert
                   </button>
@@ -573,7 +573,7 @@ const Alerts = () => {
 
                 <button
                   onClick={() => setShowSuccessModal(false)}
-                  className="mt-6 w-full px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700"
+                  className="mt-6 w-full px-5 py-2 rounded-lg bg-gradient-to-r from-teal-700 to-emerald-500 text-white hover:from-teal-800 hover:to-emerald-600"
                 >
                   Close
                 </button>
