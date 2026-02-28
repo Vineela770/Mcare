@@ -147,45 +147,85 @@ exports.getAllJobs = async (req, res) => {
         const userId = req.user.id;
         const { keyword, location, type } = req.query;
 
-        let queryText = `
-            SELECT j.*, 
-            CASE WHEN s.id IS NOT NULL THEN TRUE ELSE FALSE END as saved,
-            CASE WHEN a.id IS NOT NULL THEN TRUE ELSE FALSE END as already_applied
-            FROM jobs j 
-            LEFT JOIN saved_jobs s ON j.id = s.job_id AND s.user_id = $1
-            LEFT JOIN applications a ON j.id = a.job_id AND a.user_id = $1
-            WHERE j.is_active = true
-        `;
-
         const queryParams = [userId];
         let paramCount = 1;
+        let jobsWhereExtra = '';
+        let hrWhereExtra = '';
 
-        if (keyword && keyword.trim() !== '') {
+        if (keyword && keyword.trim()) {
             paramCount++;
-            queryText += ` AND (j.title ILIKE $${paramCount} OR j.company_name ILIKE $${paramCount})`;
-            queryParams.push(`%${keyword}%`);
+            jobsWhereExtra += ` AND (j.title ILIKE $${paramCount} OR j.company_name ILIKE $${paramCount})`;
+            hrWhereExtra  += ` AND (mjp.title ILIKE $${paramCount} OR mjp.department ILIKE $${paramCount})`;
+            queryParams.push(`%${keyword.trim()}%`);
         }
 
         if (location && location !== 'All Locations') {
             paramCount++;
-            queryText += ` AND j.location = $${paramCount}`;
-            queryParams.push(location);
+            jobsWhereExtra += ` AND j.location ILIKE $${paramCount}`;
+            hrWhereExtra  += ` AND mjp.location ILIKE $${paramCount}`;
+            queryParams.push(`%${location}%`);
         }
 
-        if (type && type !== 'All Types') {
+        if (type && type !== 'All Types' && type !== 'all') {
             paramCount++;
-            queryText += ` AND j.job_type = $${paramCount}`;
-            queryParams.push(type);
+            jobsWhereExtra += ` AND j.job_type ILIKE $${paramCount}`;
+            hrWhereExtra  += ` AND mjp.job_type ILIKE $${paramCount}`;
+            queryParams.push(`%${type}%`);
         }
 
-        queryText += ` ORDER BY j.created_at DESC`;
+        const queryText = `
+            SELECT * FROM (
+                SELECT
+                    j.id,
+                    j.title,
+                    COALESCE(j.company_name, 'MCARE') AS company,
+                    j.location,
+                    j.job_type AS type,
+                    CASE
+                        WHEN j.min_salary IS NOT NULL AND j.min_salary != ''
+                        THEN CONCAT(j.min_salary, ' - ', j.max_salary)
+                        ELSE 'Negotiable'
+                    END AS salary,
+                    j.description,
+                    j.requirements,
+                    TO_CHAR(j.created_at, 'DD Mon YYYY') AS posted,
+                    j.created_at,
+                    CASE WHEN s.id IS NOT NULL THEN TRUE ELSE FALSE END AS saved,
+                    CASE WHEN a.id IS NOT NULL THEN TRUE ELSE FALSE END AS already_applied,
+                    'jobs' AS source
+                FROM jobs j
+                LEFT JOIN saved_jobs s ON j.id = s.job_id AND s.user_id = $1
+                LEFT JOIN applications a ON j.id = a.job_id AND a.user_id = $1
+                WHERE j.is_active = true${jobsWhereExtra}
 
-        const jobs = await pool.query(queryText, queryParams);
-        
-        res.json({ 
-            success: true, 
-            count: jobs.rows.length,
-            jobs: jobs.rows 
+                UNION ALL
+
+                SELECT
+                    mjp.id,
+                    mjp.title,
+                    COALESCE(mjp.department, 'MCARE') AS company,
+                    mjp.location,
+                    mjp.job_type AS type,
+                    COALESCE(mjp.salary, 'Negotiable') AS salary,
+                    mjp.description,
+                    mjp.requirements,
+                    TO_CHAR(mjp.created_at, 'DD Mon YYYY') AS posted,
+                    mjp.created_at,
+                    FALSE AS saved,
+                    FALSE AS already_applied,
+                    'hr_post' AS source
+                FROM mcare_job_posts mjp
+                WHERE mjp.status = 'active'${hrWhereExtra}
+            ) AS all_jobs
+            ORDER BY created_at DESC
+        `;
+
+        const result = await pool.query(queryText, queryParams);
+
+        res.json({
+            success: true,
+            count: result.rows.length,
+            jobs: result.rows
         });
     } catch (err) {
         console.error("❌ Fetch Jobs Error:", err.message);
@@ -249,9 +289,32 @@ exports.getMyApplications = async (req, res) => {
 exports.getJobById = async (req, res) => {
     try {
         const { id } = req.params;
-        const job = await pool.query("SELECT * FROM jobs WHERE id = $1", [id]);
-        if (job.rows.length === 0) return res.status(404).json({ success: false, message: "Job not found" });
-        res.json({ success: true, job: job.rows[0] });
+
+        // Try jobs table first
+        let result = await pool.query(
+            `SELECT id, title, company_name AS company, location, job_type AS type,
+                    CASE WHEN min_salary IS NOT NULL AND min_salary != ''
+                         THEN CONCAT(min_salary, ' - ', max_salary) ELSE 'Negotiable' END AS salary,
+                    description, requirements,
+                    TO_CHAR(created_at, 'DD Mon YYYY') AS posted, 'jobs' AS source
+             FROM jobs WHERE id = $1`,
+            [id]
+        );
+
+        // Fall back to mcare_job_posts
+        if (result.rows.length === 0) {
+            result = await pool.query(
+                `SELECT id, title, COALESCE(department, 'MCARE') AS company, location,
+                        job_type AS type, COALESCE(salary, 'Negotiable') AS salary,
+                        description, requirements,
+                        TO_CHAR(created_at, 'DD Mon YYYY') AS posted, 'hr_post' AS source
+                 FROM mcare_job_posts WHERE id = $1`,
+                [id]
+            );
+        }
+
+        if (result.rows.length === 0) return res.status(404).json({ success: false, message: "Job not found" });
+        res.json({ success: true, job: result.rows[0] });
     } catch (err) {
         res.status(500).json({ success: false, message: "Server error" });
     }

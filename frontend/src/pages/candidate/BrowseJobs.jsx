@@ -46,8 +46,8 @@ const BrowseJobs = () => {
       setLoading(true);
       try {
         const data = await jobService.getCandidateJobs();
-        // Ensure data is an array
-        const jobsArray = Array.isArray(data) ? data : [];
+        // API returns { success, count, jobs: [...] }
+        const jobsArray = Array.isArray(data) ? data : (Array.isArray(data?.jobs) ? data.jobs : []);
         setAllJobs(jobsArray);
         setJobs(jobsArray);
       } catch (error) {
@@ -68,19 +68,19 @@ const BrowseJobs = () => {
 
     if (searchTerm) {
       filtered = filtered.filter(job =>
-        job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.company.toLowerCase().includes(searchTerm.toLowerCase())
+        (job.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (job.company || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     if (location && location !== 'All Locations') {
-      filtered = filtered.filter(job => job.location === location);
+      filtered = filtered.filter(job => (job.location || '').toLowerCase().includes(location.toLowerCase()));
     }
 
 
     if (jobType !== 'all') {
       filtered = filtered.filter(job =>
-        job.type.toLowerCase() === jobType.toLowerCase()
+        (job.type || '').toLowerCase().includes(jobType.toLowerCase())
       );
     }
 
@@ -245,11 +245,11 @@ const BrowseJobs = () => {
               </div>
               <div className="flex items-center justify-between mb-4">
                 <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-sm font-medium">
-                  {job.type}
+                  {job.type || 'Full-time'}
                 </span>
                 <div className="flex items-center space-x-1 text-gray-900 font-semibold text-sm">
                   <DollarSign className="w-4 h-4" />
-                  <span>{job.salary.split(' - ')[0]}</span>
+                  <span>{(job.salary || 'Negotiable').split(' - ')[0]}</span>
                 </div>
               </div>
               <div className="flex items-center justify-between pt-4 border-t border-gray-100">
@@ -396,25 +396,12 @@ const BrowseJobs = () => {
 
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">Job Description</h3>
-                <p className="text-gray-600">{selectedJob.description}</p>
+                <p className="text-gray-600 whitespace-pre-line">{selectedJob.description || 'No description provided.'}</p>
               </div>
 
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">Requirements</h3>
-                <ul className="list-disc list-inside space-y-1">
-                  {selectedJob.requirements.map((req, index) => (
-                    <li key={index} className="text-gray-600">{req}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Responsibilities</h3>
-                <ul className="list-disc list-inside space-y-1">
-                  {selectedJob.responsibilities.map((resp, index) => (
-                    <li key={index} className="text-gray-600">{resp}</li>
-                  ))}
-                </ul>
+                <p className="text-gray-600 whitespace-pre-line">{selectedJob.requirements || 'No requirements specified.'}</p>
               </div>
 
               <div className="flex justify-end space-x-3 pt-4 border-t">
