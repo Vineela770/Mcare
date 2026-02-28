@@ -70,7 +70,7 @@ const ChangePassword = () => {
                       type={showOld ? "text" : "password"}
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
-                      className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="Enter old password"
                     />
                     <button
@@ -97,7 +97,7 @@ const ChangePassword = () => {
                       type={showNew ? "text" : "password"}
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="Enter new password"
                     />
                     <button
@@ -124,7 +124,7 @@ const ChangePassword = () => {
                       type={showConfirm ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="Retype new password"
                     />
                     <button

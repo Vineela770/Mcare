@@ -427,7 +427,7 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="w-full h-12 pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent relative z-0"
+                    className="w-full h-12 pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900"
                     required
                   />
                   <button
@@ -452,7 +452,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder={isPasswordTyped ? 'Re-enter password' : 'Enter password first'}
                     disabled={!isPasswordTyped}
-                    className={`w-full h-12 pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent relative z-0
+                    className={`w-full h-12 pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900
                       ${!isPasswordTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     required={isPasswordTyped}
                   />
