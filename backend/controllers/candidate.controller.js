@@ -343,13 +343,30 @@ exports.getApplicationDetails = async (req, res) => {
         const { id } = req.params;
         const userId = req.user.id;
         const result = await pool.query(
-            `SELECT a.*, j.title, j.company_name FROM applications a
-             JOIN jobs j ON a.job_id = j.id WHERE a.id = $1 AND a.user_id = $2`,
+            `SELECT
+               a.id,
+               a.status,
+               a.applied_at,
+               a.cover_letter_path,
+               a.availability,
+               COALESCE(j.title,  mjp.title)  AS job_title,
+               COALESCE(j.company_name, mjp.department, 'MCARE') AS company_name,
+               COALESCE(j.location, mjp.location) AS location,
+               COALESCE(j.job_type, mjp.job_type) AS job_type,
+               COALESCE(j.description, mjp.description) AS description,
+               COALESCE(j.requirements, mjp.requirements) AS requirements,
+               mjp.benefits
+             FROM applications a
+             LEFT JOIN jobs j ON j.id = a.job_id
+             LEFT JOIN mcare_job_posts mjp ON mjp.id = a.hr_job_id
+             WHERE a.id = $1 AND a.user_id = $2`,
             [id, userId]
         );
-        res.json({ success: true, application: result.rows[0] });
+        if (!result.rows[0]) return res.status(404).json({ success: false, message: 'Application not found' });
+        res.json(result.rows[0]);
     } catch (err) {
-        res.status(500).json({ success: false, message: "Error" });
+        console.error('getApplicationDetails error:', err.message);
+        res.status(500).json({ success: false, message: 'Error fetching application details' });
     }
 };
 

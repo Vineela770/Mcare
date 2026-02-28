@@ -188,8 +188,8 @@ const StatCard = ({ icon, label, value, color }) => {
 };
 
 const InfoItem = ({ icon, text }) => (
-  <div className="flex items-center space-x-1">
-    <span className="w-4 h-4">{icon}</span>
+  <div className="flex items-center gap-1.5">
+    <span className="w-4 h-4 flex-shrink-0 flex items-center justify-center">{icon}</span>
     <span>{text}</span>
   </div>
 );
