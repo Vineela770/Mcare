@@ -10,14 +10,27 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import { useLocation as useRouterLocation } from 'react-router-dom';
+import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
 import { jobService } from '../../api/jobService';
+import { useAuth } from '../../context/useAuth';
 
 const AllJobs = () => {
   // ✅ URL params support (Browse Jobs -> show particular job)
   const routerLocation = useRouterLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const handleApplyNow = (job) => {
+    if (!isAuthenticated) {
+      navigate('/register', { state: { from: '/jobs', message: 'Please register or log in to apply for jobs.' } });
+      return;
+    }
+    setSelectedJob(job);
+    setShowDetailsModal(false);
+    setShowApplyModal(true);
+  };
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
@@ -465,7 +478,7 @@ const AllJobs = () => {
                     </span>
                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
                       <DollarSign className="w-4 h-4" />
-                      <span>{job.salary.split(' - ')[0]}</span>
+                      <span>{job.salary?.split(' - ')[0] || 'Not disclosed'}</span>
                     </div>
                   </div>
 
@@ -665,10 +678,7 @@ const AllJobs = () => {
                 Close
               </button>
               <button
-                onClick={() => {
-                  setShowDetailsModal(false);
-                  setShowApplyModal(true);
-                }}
+                onClick={() => handleApplyNow(selectedJob)}
                 className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg"
               >
                 Apply Now

@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, UserPlus } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
 import { authService } from '../../api/authService';
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromState = location.state || {};
   const { login } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -174,9 +176,9 @@ const Register = () => {
         setSuccessMessage(response.message || 'Registration successful! Redirecting to login...');
         setShowSuccess(true);
         
-        // Redirect to login after 2 seconds
+        // Redirect to login after 2 seconds (carry state.from so login can redirect back)
         setTimeout(() => {
-          navigate('/login');
+          navigate('/login', { state: fromState });
         }, 2000);
       } else {
         setError(response.message || 'Registration failed. Please try again.');
@@ -206,6 +208,14 @@ const Register = () => {
           <h1 className="text-3xl font-bold text-gray-900 mt-6 mb-2">Register</h1>
           <p className="text-gray-600">Start your healthcare career journey today</p>
         </div>
+
+        {/* Info banner when redirected from Apply Now */}
+        {fromState?.message && (
+          <div className="mb-4 bg-cyan-50 border border-cyan-200 text-cyan-800 px-4 py-3 rounded-lg flex items-start gap-2">
+            <span className="mt-0.5 text-cyan-500">ℹ️</span>
+            <p className="text-sm">{fromState.message} Already have an account? <Link to="/login" state={fromState} className="font-semibold underline hover:text-cyan-700">Log in here</Link>.</p>
+          </div>
+        )}
 
         {/* Register Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8">

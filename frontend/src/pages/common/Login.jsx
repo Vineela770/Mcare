@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
 import { authService } from '../../api/authService';
@@ -27,6 +27,8 @@ const GoogleIcon = ({ className = 'w-5 h-5' }) => (
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromPath = location.state?.from || null;
   const { login } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -60,6 +62,11 @@ const Login = () => {
   };
 
   const redirectByRole = (role) => {
+    // If redirected here from a protected action, send candidate back
+    if (fromPath && role === 'candidate') {
+      navigate(fromPath);
+      return;
+    }
     switch (role) {
       case 'candidate':
         navigate('/candidate/dashboard');
