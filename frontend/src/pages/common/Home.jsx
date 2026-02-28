@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Stethoscope, Building2, GraduationCap, Activity, Heart, Leaf, Smile, UserPlus, Search, FileCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 import jobService from '../../api/jobService';
 
 const Home = () => {
@@ -59,6 +59,29 @@ const Home = () => {
     fetchLiveJobs();
   }, []);
 
+  // Auto-scroll category tabs
+  useEffect(() => {
+    const allTabIds = ['latest', 'doctors', 'management', 'colleges', 'allied', 'alternative', 'nursing', 'dental'];
+    const timer = setInterval(() => {
+      setActiveTab(prev => {
+        const idx = allTabIds.indexOf(prev);
+        return allTabIds[(idx + 1) % allTabIds.length];
+      });
+      setActiveDot(0);
+      setFilterSpecialization('');
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Auto-scroll hospital logos
+  useEffect(() => {
+    const total = Math.ceil(6 / 3); // hospitalLogos.length / LOGOS_PER_SLIDE
+    const timer = setInterval(() => {
+      setLogoIndex(prev => (prev + 1) % total);
+    }, 2500);
+    return () => clearInterval(timer);
+  }, []);
+
   // ✅ Dynamic Job Count by Category
   const getJobCountByCategory = (categoryKey) => {
     return liveJobs.filter(job => 
@@ -96,18 +119,6 @@ const Home = () => {
   ];
 
   const LOGOS_PER_SLIDE = 3;
-
-  const handleLogoPrev = () => {
-    setLogoIndex((prev) =>
-      prev === 0 ? Math.ceil(hospitalLogos.length / LOGOS_PER_SLIDE) - 1 : prev - 1
-    );
-  };
-
-  const handleLogoNext = () => {
-    setLogoIndex((prev) =>
-      prev === Math.ceil(hospitalLogos.length / LOGOS_PER_SLIDE) - 1 ? 0 : prev + 1
-    );
-  };
 
   const [applicationData, setApplicationData] = useState({
     coverLetter: '',
@@ -173,13 +184,13 @@ const Home = () => {
   };
 
   const categories = [
-    { id: 1, title: 'Hospital Jobs – Doctors', icon: '🏥', positions: getJobCountByCategory('doctors'), key: 'doctors' },
-    { id: 2, title: 'Hospital Management', icon: '📊', positions: getJobCountByCategory('management'), key: 'management' },
-    { id: 3, title: 'Medical Colleges', icon: '🎓', positions: getJobCountByCategory('colleges'), key: 'colleges' },
-    { id: 4, title: 'Allied Health', icon: '🩺', positions: getJobCountByCategory('allied'), key: 'allied' },
-    { id: 5, title: 'Nursing', icon: '👩‍⚕️', positions: getJobCountByCategory('nursing'), key: 'nursing' },
-    { id: 6, title: 'Alternative Medicine', icon: '🌿', positions: getJobCountByCategory('alternative'), key: 'alternative' },
-    { id: 7, title: 'Dental', icon: '🦷', positions: getJobCountByCategory('dental'), key: 'dental' },
+    { id: 1, title: 'Hospital Jobs – Doctors', Icon: Stethoscope, bg: 'bg-cyan-100',    iconColor: 'text-cyan-600',    positions: getJobCountByCategory('doctors'),     key: 'doctors' },
+    { id: 2, title: 'Hospital Management',    Icon: Building2,   bg: 'bg-blue-100',    iconColor: 'text-blue-600',    positions: getJobCountByCategory('management'), key: 'management' },
+    { id: 3, title: 'Medical Colleges',        Icon: GraduationCap, bg: 'bg-purple-100', iconColor: 'text-purple-600', positions: getJobCountByCategory('colleges'),    key: 'colleges' },
+    { id: 4, title: 'Allied Health',           Icon: Activity,    bg: 'bg-green-100',  iconColor: 'text-green-600',   positions: getJobCountByCategory('allied'),      key: 'allied' },
+    { id: 5, title: 'Nursing',                 Icon: Heart,       bg: 'bg-pink-100',   iconColor: 'text-pink-600',    positions: getJobCountByCategory('nursing'),     key: 'nursing' },
+    { id: 6, title: 'Alternative Medicine',    Icon: Leaf,        bg: 'bg-emerald-100',iconColor: 'text-emerald-600', positions: getJobCountByCategory('alternative'), key: 'alternative' },
+    { id: 7, title: 'Dental',                  Icon: Smile,       bg: 'bg-orange-100', iconColor: 'text-orange-600',  positions: getJobCountByCategory('dental'),      key: 'dental' },
   ];
 
   const tabs = [
@@ -674,9 +685,9 @@ const Home = () => {
   const jobs = liveJobs;
 
   const steps = [
-    { id: 1, icon: '👤', title: 'Register an account', description: 'Create your professional profile in minutes.' },
-    { id: 2, icon: '🔍', title: 'Search jobs', description: 'Explore thousands of verified healthcare jobs.' },
-    { id: 3, icon: '📋', title: 'Apply easily', description: 'Apply instantly and connect with recruiters.' },
+    { id: 1, Icon: UserPlus,   iconBg: 'bg-cyan-500',  title: 'Register an account', description: 'Create your professional profile in minutes.' },
+    { id: 2, Icon: Search,     iconBg: 'bg-blue-500',  title: 'Search jobs',          description: 'Explore thousands of verified healthcare jobs.' },
+    { id: 3, Icon: FileCheck,  iconBg: 'bg-green-500', title: 'Apply easily',         description: 'Apply instantly and connect with recruiters.' },
   ];
 
   const TOP_CATEGORIES_LIMIT = 3;
@@ -942,23 +953,23 @@ const Home = () => {
               <div
                 key={category.id}
                 onClick={() => handleCategoryClick(category.key)}
-                className="bg-white rounded-2xl p-6 hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 group"
+                className="bg-white rounded-2xl p-6 hover:shadow-xl hover:border-cyan-200 transition-all duration-300 cursor-pointer border border-gray-100 group hover:-translate-y-1"
               >
                 <div className="flex items-center gap-4">
-                  <div className="text-5xl">{category.icon}</div>
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${category.bg} group-hover:scale-110 transition-transform duration-300`}>
+                    <category.Icon className={`w-7 h-7 ${category.iconColor}`} />
+                  </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-cyan-600 transition-colors">
+                    <h3 className="text-base font-bold text-gray-900 group-hover:text-cyan-600 transition-colors">
                       {category.title}
                     </h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {category.positions} open position{category.positions !== 1 ? 's' : ''}
+                    <p className="text-sm text-gray-500 mt-0.5">
+                      {category.positions > 0
+                        ? `${category.positions} open position${category.positions !== 1 ? 's' : ''}`
+                        : 'Positions available'}
                     </p>
                   </div>
-                  <div className="text-cyan-500 group-hover:translate-x-1 transition-transform">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
+                  <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" />
                 </div>
               </div>
             ))}
@@ -1057,15 +1068,12 @@ const Home = () => {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-8">
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8">
 
             <select
               value={selectedDegree}
-              onChange={(e) => {
-                setSelectedDegree(e.target.value);
-                setFilterSpecialization('');
-              }}
-              className="border rounded-lg px-3 py-2 text-sm md:text-base"
+              onChange={(e) => { setSelectedDegree(e.target.value); setFilterSpecialization(''); }}
+              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-cyan-300 focus:outline-none focus:border-cyan-400 cursor-pointer"
             >
               <option value="">Select Degree</option>
               {degrees.map((deg) => (
@@ -1077,7 +1085,7 @@ const Home = () => {
               value={filterSpecialization}
               onChange={(e) => setFilterSpecialization(e.target.value)}
               disabled={!selectedDegree}
-              className="border rounded-lg px-3 py-2 text-sm md:text-base"
+              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-cyan-300 focus:outline-none focus:border-cyan-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="">Select Specialization</option>
               {specializations.map((spec) => (
@@ -1087,11 +1095,8 @@ const Home = () => {
 
             <select
               value={filterCity}
-              onChange={(e) => {
-                setFilterCity(e.target.value);
-                setActiveDot(0);
-              }}
-              className="border rounded-lg px-3 py-2 text-sm md:text-base"
+              onChange={(e) => { setFilterCity(e.target.value); setActiveDot(0); }}
+              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-cyan-300 focus:outline-none focus:border-cyan-400 cursor-pointer"
             >
               <option value="">All Cities</option>
               {jobCities.map((c) => (
@@ -1101,30 +1106,20 @@ const Home = () => {
 
             <select
               value={filterSalary}
-              onChange={(e) => {
-                setFilterSalary(e.target.value);
-                setActiveDot(0);
-              }}
-              className="border rounded-lg px-3 py-2 text-sm md:text-base"
+              onChange={(e) => { setFilterSalary(e.target.value); setActiveDot(0); }}
+              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-cyan-300 focus:outline-none focus:border-cyan-400 cursor-pointer"
             >
               {salaryRanges.map((range) => (
-                <option key={range.value || 'all'} value={range.value}>
-                  {range.label}
-                </option>
+                <option key={range.value || 'all'} value={range.value}>{range.label}</option>
               ))}
             </select>
 
             <button
-  onClick={() => {
-    setSelectedDegree('');
-    setFilterSpecialization('');
-    setFilterCity('');
-    setFilterSalary('');
-  }}
-  className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition text-sm md:text-base"
->
-  Clear Filters
-</button>
+              onClick={() => { setSelectedDegree(''); setFilterSpecialization(''); setFilterCity(''); setFilterSalary(''); }}
+              className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-full transition text-sm font-medium border border-cyan-500"
+            >
+              Clear Filters
+            </button>
           </div>
 
           {/* Jobs Section */}
@@ -1254,16 +1249,14 @@ const Home = () => {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
       {steps.map((step) => (
         <div key={step.id} className="text-center px-2 md:px-0">
-          <div className="mb-3 md:mb-4 flex justify-center">
-            <div className="text-4xl md:text-6xl">
-              {step.icon}
+          <div className="mb-5 flex justify-center">
+            <div className={`w-18 h-18 w-[72px] h-[72px] ${step.iconBg} rounded-full flex items-center justify-center shadow-lg`}>
+              <step.Icon className="w-9 h-9 text-white" />
             </div>
           </div>
-
           <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">
             {step.title}
           </h3>
-
           <p className="text-sm md:text-base text-gray-600 leading-relaxed">
             {step.description}
           </p>
@@ -1289,67 +1282,36 @@ const Home = () => {
       </p>
     </div>
 
-    <div className="relative flex items-center">
-
-      {/* LEFT ARROW – Desktop Only */}
-      <button
-        onClick={handleLogoPrev}
-        className="hidden md:block absolute left-0 z-10 bg-cyan-500 hover:bg-cyan-600 text-white p-3 rounded-lg"
-      >
-        ‹
-      </button>
+    <div className="overflow-hidden">
 
       {/* ===== MOBILE VIEW (Swipe) ===== */}
-      <div className="flex md:hidden overflow-x-auto gap-8 no-scrollbar scroll-smooth px-2">
+      <div className="flex md:hidden overflow-x-auto gap-4 no-scrollbar scroll-smooth px-2">
         {hospitalLogos.map((logo, i) => (
-          <img
-            key={i}
-            src={logo}
-            alt="Hospital Logo"
-            className="h-14 flex-shrink-0 object-contain grayscale hover:grayscale-0 transition"
-          />
+          <div key={i} className="flex-shrink-0 bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center justify-center w-36 h-24 hover:shadow-md transition">
+            <img src={logo} alt="Hospital Logo" className="h-12 max-w-full object-contain grayscale hover:grayscale-0 transition" />
+          </div>
         ))}
       </div>
 
-      {/* ===== DESKTOP VIEW (Slider with Arrows) ===== */}
+      {/* ===== DESKTOP VIEW (Auto-scroll slider) ===== */}
       <div className="hidden md:block overflow-hidden w-full">
         <div
-          className="flex transition-transform duration-500"
+          className="flex transition-transform duration-700"
           style={{ transform: `translateX(-${logoIndex * 100}%)` }}
         >
-          {Array.from({
-            length: Math.ceil(hospitalLogos.length / LOGOS_PER_SLIDE),
-          }).map((_, slideIdx) => (
-            <div
-              key={slideIdx}
-              className="min-w-full flex justify-center items-center gap-12"
-            >
+          {Array.from({ length: Math.ceil(hospitalLogos.length / LOGOS_PER_SLIDE) }).map((_, slideIdx) => (
+            <div key={slideIdx} className="min-w-full flex justify-center items-center gap-8">
               {hospitalLogos
-                .slice(
-                  slideIdx * LOGOS_PER_SLIDE,
-                  slideIdx * LOGOS_PER_SLIDE + LOGOS_PER_SLIDE
-                )
+                .slice(slideIdx * LOGOS_PER_SLIDE, slideIdx * LOGOS_PER_SLIDE + LOGOS_PER_SLIDE)
                 .map((logo, i) => (
-                  <img
-                    key={i}
-                    src={logo}
-                    alt="Hospital Logo"
-                    className="h-20 object-contain grayscale hover:grayscale-0 transition"
-                  />
+                  <div key={i} className="bg-white rounded-2xl border border-gray-200 shadow-md p-6 flex items-center justify-center w-52 h-32 hover:shadow-lg hover:border-cyan-200 transition-all duration-300 group">
+                    <img src={logo} alt="Hospital Logo" className="h-16 max-w-full object-contain grayscale group-hover:grayscale-0 transition duration-300" />
+                  </div>
                 ))}
             </div>
           ))}
         </div>
       </div>
-
-      {/* RIGHT ARROW – Desktop Only */}
-      <button
-        onClick={handleLogoNext}
-        className="hidden md:block absolute right-0 z-10 bg-cyan-500 hover:bg-cyan-600 text-white p-3 rounded-lg"
-      >
-        ›
-      </button>
-
     </div>
 
   </div>
@@ -1374,14 +1336,14 @@ const Home = () => {
 
       <Link
         to="/register"
-        className="bg-white text-cyan-600 px-6 md:px-8 py-2.5 md:py-3 rounded-lg hover:bg-gray-100 font-medium text-sm md:text-base inline-flex items-center justify-center transition shadow-lg"
+        className="bg-white text-cyan-600 px-6 md:px-8 py-2.5 md:py-3 rounded-lg font-medium text-sm md:text-base inline-flex items-center justify-center transition shadow-lg hover:bg-gray-50"
       >
-        <span>Create Free Account</span>
+        Create Free Account
       </Link>
 
       <Link
         to="/jobs"
-        className="bg-transparent border-2 border-white text-white px-6 md:px-8 py-2.5 md:py-3 rounded-lg hover:bg-white hover:text-cyan-600 font-medium text-sm md:text-base transition shadow-lg"
+        className="bg-white text-cyan-600 px-6 md:px-8 py-2.5 md:py-3 rounded-lg font-medium text-sm md:text-base transition shadow-lg hover:bg-gray-50 inline-flex items-center justify-center"
       >
         Browse Jobs
       </Link>

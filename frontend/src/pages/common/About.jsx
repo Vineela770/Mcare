@@ -91,7 +91,7 @@ const About = () => {
             Our Story
           </h2>
 
-          <div className="bg-white rounded-xl p-6 md:p-10 shadow-lg border border-gray-100">
+          <div className="bg-white rounded-xl p-6 md:p-10">
             <p className="text-sm md:text-lg text-gray-700 leading-relaxed mb-4 md:mb-6 text-justify first-line:indent-8">
               MCARE was founded with a simple yet powerful vision: to revolutionize healthcare recruitment in India. We
               recognized the challenges faced by both healthcare professionals seeking meaningful careers and medical
@@ -121,13 +121,13 @@ const About = () => {
           <div className="flex flex-row sm:flex-row justify-center gap-3 md:gap-4">
             <Link
               to="/register"
-              className="bg-white text-cyan-600 px-6 md:px-8 py-2.5 md:py-3 rounded-lg hover:bg-gray-100 font-medium inline-flex items-center justify-center transition shadow-lg text-sm md:text-base"
+              className="bg-white text-cyan-600 px-6 md:px-8 py-2.5 md:py-3 rounded-lg hover:bg-gray-50 font-medium inline-flex items-center justify-center transition shadow-lg text-sm md:text-base"
             >
               Get Started Today
             </Link>
             <Link
               to="/jobs"
-              className="bg-transparent border-2 border-white text-white px-6 md:px-8 py-2.5 md:py-3 rounded-lg hover:bg-white hover:text-cyan-600 font-medium transition shadow-lg text-sm md:text-base"
+              className="bg-white text-cyan-600 px-6 md:px-8 py-2.5 md:py-3 rounded-lg hover:bg-gray-50 font-medium transition shadow-lg text-sm md:text-base inline-flex items-center justify-center"
             >
               Browse Jobs
             </Link>
