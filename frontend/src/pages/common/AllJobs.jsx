@@ -640,30 +640,22 @@ const AllJobs = () => {
 
             <div>
               <h3 className="font-semibold text-gray-900 mb-2">Job Description</h3>
-              <p className="text-gray-600">{selectedJob.description}</p>
+              <p className="text-gray-600 whitespace-pre-line">{selectedJob.description || 'No description provided.'}</p>
             </div>
 
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Requirements</h3>
-              <ul className="list-disc list-inside space-y-1">
-                {selectedJob.requirements?.map((req, i) => (
-                  <li key={i} className="text-gray-600">
-                    {req}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {selectedJob.requirements && (
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Requirements</h3>
+                <p className="text-gray-600 whitespace-pre-line">{selectedJob.requirements}</p>
+              </div>
+            )}
 
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Responsibilities</h3>
-              <ul className="list-disc list-inside space-y-1">
-                {selectedJob.responsibilities?.map((resp, i) => (
-                  <li key={i} className="text-gray-600">
-                    {resp}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {selectedJob.benefits && (
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Benefits</h3>
+                <p className="text-gray-600 whitespace-pre-line">{selectedJob.benefits}</p>
+              </div>
+            )}
 
             <div className="flex justify-end space-x-3 pt-4 border-t">
               <button
