@@ -1068,58 +1068,63 @@ const Home = () => {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8">
+          <div className="mb-8 px-2">
+            {/* 2-col grid on mobile, single row on desktop */}
+            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-center md:gap-3">
+              <select
+                value={selectedDegree}
+                onChange={(e) => { setSelectedDegree(e.target.value); setFilterSpecialization(''); }}
+                className="w-full border border-gray-200 rounded-full px-3 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              >
+                <option value="">Select Degree</option>
+                {degrees.map((deg) => (
+                  <option key={deg} value={deg}>{deg}</option>
+                ))}
+              </select>
 
-            <select
-              value={selectedDegree}
-              onChange={(e) => { setSelectedDegree(e.target.value); setFilterSpecialization(''); }}
-              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
-            >
-              <option value="">Select Degree</option>
-              {degrees.map((deg) => (
-                <option key={deg} value={deg}>{deg}</option>
-              ))}
-            </select>
+              <select
+                value={filterSpecialization}
+                onChange={(e) => setFilterSpecialization(e.target.value)}
+                disabled={!selectedDegree}
+                className="w-full border border-gray-200 rounded-full px-3 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <option value="">Select Specialization</option>
+                {specializations.map((spec) => (
+                  <option key={spec} value={spec}>{spec}</option>
+                ))}
+              </select>
 
-            <select
-              value={filterSpecialization}
-              onChange={(e) => setFilterSpecialization(e.target.value)}
-              disabled={!selectedDegree}
-              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <option value="">Select Specialization</option>
-              {specializations.map((spec) => (
-                <option key={spec} value={spec}>{spec}</option>
-              ))}
-            </select>
+              <select
+                value={filterCity}
+                onChange={(e) => { setFilterCity(e.target.value); setActiveDot(0); }}
+                className="w-full border border-gray-200 rounded-full px-3 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              >
+                <option value="">All Cities</option>
+                {jobCities.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
 
-            <select
-              value={filterCity}
-              onChange={(e) => { setFilterCity(e.target.value); setActiveDot(0); }}
-              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
-            >
-              <option value="">All Cities</option>
-              {jobCities.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
+              <select
+                value={filterSalary}
+                onChange={(e) => { setFilterSalary(e.target.value); setActiveDot(0); }}
+                className="w-full border border-gray-200 rounded-full px-3 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              >
+                {salaryRanges.map((range) => (
+                  <option key={range.value || 'all'} value={range.value}>{range.label}</option>
+                ))}
+              </select>
+            </div>
 
-            <select
-              value={filterSalary}
-              onChange={(e) => { setFilterSalary(e.target.value); setActiveDot(0); }}
-              className="border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
-            >
-              {salaryRanges.map((range) => (
-                <option key={range.value || 'all'} value={range.value}>{range.label}</option>
-              ))}
-            </select>
-
-            <button
-              onClick={() => { setSelectedDegree(''); setFilterSpecialization(''); setFilterCity(''); setFilterSalary(''); }}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full transition text-sm font-medium border border-emerald-600"
-            >
-              Clear Filters
-            </button>
+            {/* Clear Filters — full width on mobile, inline on desktop */}
+            <div className="flex justify-center mt-2 md:mt-3">
+              <button
+                onClick={() => { setSelectedDegree(''); setFilterSpecialization(''); setFilterCity(''); setFilterSalary(''); }}
+                className="w-full md:w-auto px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full transition text-sm font-medium border border-emerald-600"
+              >
+                Clear Filters
+              </button>
+            </div>
           </div>
 
           {/* Jobs Section */}
