@@ -63,29 +63,35 @@ const AdminApplications = () => {
   const [applications, setApplications] = useState([]);
   const [stats, setStats] = useState({ total: 0, byStatus: [] });
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState('');
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [viewApp, setViewApp] = useState(null);
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      try {
-        const [appsData, statsData] = await Promise.all([
-          adminService.getAllApplications(),
-          adminService.getApplicationStats(),
-        ]);
-        setApplications(Array.isArray(appsData) ? appsData : []);
-        setStats(statsData || { total: 0, byStatus: [] });
-      } catch (err) {
-        console.error('Failed to fetch applications:', err);
-        setApplications([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+  const load = async () => {
+    setLoading(true);
+    setFetchError('');
+    // Fetch separately so a stats failure doesn't hide the applications list
+    try {
+      const appsData = await adminService.getAllApplications();
+      setApplications(Array.isArray(appsData) ? appsData : []);
+    } catch (err) {
+      console.error('Failed to fetch applications:', err);
+      const msg = err?.message || err?.error || 'Failed to load applications. Please retry.';
+      setFetchError(msg);
+      setApplications([]);
+    }
+    try {
+      const statsData = await adminService.getApplicationStats();
+      setStats(statsData || { total: 0, byStatus: [] });
+    } catch {
+      // Stats failure is non-critical
+    }
+    setLoading(false);
+  };
+
+  // eslint-disable-next-line
+  useEffect(() => { load(); }, []);
 
   const allStatuses = ['all', ...Array.from(new Set(applications.map(a => a.status).filter(Boolean)))];
 
@@ -109,12 +115,28 @@ const AdminApplications = () => {
       <div className="ml-0 md:ml-64 min-h-screen bg-gray-50 p-4 sm:p-6 pt-16 sm:pt-6 md:pt-6">
 
         {/* Header */}
-        <div className="mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Applications Management</h1>
-          <p className="text-gray-600 mt-1 text-sm md:text-base">
-            All job applications submitted by doctors / candidates
-          </p>
+        <div className="mb-6 md:mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Applications Management</h1>
+            <p className="text-gray-600 mt-1 text-sm md:text-base">
+              All job applications submitted by doctors / candidates
+            </p>
+          </div>
+          <button
+            onClick={load}
+            className="mt-1 px-3 py-1.5 text-xs bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+          >
+            Refresh
+          </button>
         </div>
+
+        {/* Error banner */}
+        {fetchError && (
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center justify-between">
+            <span className="text-sm">{fetchError}</span>
+            <button onClick={load} className="text-sm font-medium underline ml-4">Retry</button>
+          </div>
+        )}
 
         {/* Stat Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
