@@ -71,6 +71,7 @@ const ChangePassword = () => {
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
                       className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      style={{ WebkitTextFillColor: '#111827', color: '#111827' }}
                       placeholder="Enter old password"
                     />
                     <button
@@ -98,6 +99,7 @@ const ChangePassword = () => {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      style={{ WebkitTextFillColor: '#111827', color: '#111827' }}
                       placeholder="Enter new password"
                     />
                     <button
@@ -125,6 +127,7 @@ const ChangePassword = () => {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="w-full h-12 bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      style={{ WebkitTextFillColor: '#111827', color: '#111827' }}
                       placeholder="Retype new password"
                     />
                     <button

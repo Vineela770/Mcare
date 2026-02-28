@@ -426,8 +426,9 @@ const Register = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder="••••••••"
+                    placeholder="Enter your password"
                     className="w-full h-12 pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900"
+                    style={{ WebkitTextFillColor: '#111827', color: '#111827' }}
                     required
                   />
                   <button
@@ -454,6 +455,7 @@ const Register = () => {
                     disabled={!isPasswordTyped}
                     className={`w-full h-12 pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900
                       ${!isPasswordTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                    style={{ WebkitTextFillColor: '#111827', color: '#111827' }}
                     required={isPasswordTyped}
                   />
                   <button
