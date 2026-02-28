@@ -69,7 +69,7 @@ const HRChangePassword = () => {
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
                     className="w-full py-3 text-base min-h-[48px] bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    style={showOld ? { WebkitTextFillColor: '#111827', color: '#111827' } : { color: '#111827' }}
+                    style={showOld ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                   />
                   <button
                     type="button"
@@ -97,7 +97,7 @@ const HRChangePassword = () => {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     className="w-full py-3 text-base min-h-[48px] bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    style={showNew ? { WebkitTextFillColor: '#111827', color: '#111827' } : { color: '#111827' }}
+                    style={showNew ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                   />
                   <button
                     type="button"
@@ -125,7 +125,7 @@ const HRChangePassword = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className="w-full py-3 text-base min-h-[48px] bg-gray-100 border border-gray-300 px-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    style={showConfirm ? { WebkitTextFillColor: '#111827', color: '#111827' } : { color: '#111827' }}
+                    style={showConfirm ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                   />
                   <button
                     type="button"

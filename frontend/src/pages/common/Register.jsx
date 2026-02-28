@@ -428,7 +428,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder="Enter your password"
                     className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900"
-                    style={showPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : { color: '#111827' }}
+                    style={showPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                     required
                   />
                   <button
@@ -455,7 +455,7 @@ const Register = () => {
                     disabled={!isPasswordTyped}
                     className={`w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900
                       ${!isPasswordTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-                    style={showConfirmPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : { color: '#111827' }}
+                    style={showConfirmPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                     required={isPasswordTyped}
                   />
                   <button
