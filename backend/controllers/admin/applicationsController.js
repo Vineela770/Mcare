@@ -13,7 +13,6 @@ exports.getAllApplications = async (req, res) => {
         u.id          AS user_id,
         u.full_name   AS candidate_name,
         u.email       AS candidate_email,
-        u.phone       AS candidate_phone,
         cp.qualification,
         cp.resume_url,
         -- Job info (from either table)
