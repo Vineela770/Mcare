@@ -35,6 +35,17 @@ a {
   text-decoration: none;
 }
 
+/* Text Selection - Green Theme */
+::selection {
+  background-color: #10b981;
+  color: white;
+}
+
+::-moz-selection {
+  background-color: #10b981;
+  color: white;
+}
+
 /* Notification Animation */
 @keyframes slide-in {
   from {
@@ -67,4 +78,58 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Select and Option Elements - Force Green Theme */
+select {
+  accent-color: #10b981 !important;
+}
+
+select option {
+  background-color: white;
+  color: #0f172a;
+}
+
+select option:checked,
+select option:hover,
+select option:focus {
+  background-color: #10b981 !important;
+  background: #10b981 !important;
+  color: white !important;
+}
+
+/* Webkit specific for select dropdowns */
+select option:checked {
+  background: linear-gradient(0deg, #10b981 0%, #10b981 100%) !important;
+  color: white !important;
+}
+
+/* Firefox specific */
+@-moz-document url-prefix() {
+  select option:checked {
+    background-color: #10b981 !important;
+    color: white !important;
+  }
+}
+
+/* Input Autofill - Green Theme */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* All form elements accent color */
+input, textarea, select, button {
+  accent-color: #10b981;
+}
+
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+  accent-color: #10b981;
+  background-color: #10b981;
+  border-color: #10b981;
 }
