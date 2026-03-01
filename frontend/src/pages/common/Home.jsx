@@ -1515,7 +1515,7 @@ const Home = () => {
 </form>
 
           {/* Quick Buttons */}
-          <div className="flex flex-col sm:flex-row justify-center gap-3 mt-6">
+          <div className="flex flex-row justify-center gap-3 mt-6">
             <button
               onClick={() => setShowQuickApplyModal(true)}
               className="bg-white text-emerald-700 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition"
