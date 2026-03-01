@@ -58,8 +58,8 @@ const Home = () => {
     resume: null,
   });
 
-  // ✅ Backend Jobs State - Dynamic Category Counts
-  const [liveJobs, setLiveJobs] = useState([]);
+  // ✅ Backend Jobs State - Dynamic Category Counts (Initialize with dummy data)
+  const [liveJobs, setLiveJobs] = useState(DUMMY_JOBS);
 
   // ✅ Fetch Jobs from Backend
   useEffect(() => {
@@ -67,12 +67,18 @@ const Home = () => {
       try {
         const jobsData = await jobService.getJobs();
         const jobs = Array.isArray(jobsData) ? jobsData : [];
-        // Use dummy data if no backend jobs available
-        setLiveJobs(jobs.length > 0 ? jobs : DUMMY_JOBS);
+        console.log('📊 Fetched jobs from backend:', jobs.length);
+        // Use backend jobs if available, otherwise keep dummy data
+        if (jobs.length > 0) {
+          setLiveJobs(jobs);
+          console.log('✅ Using backend jobs');
+        } else {
+          console.log('⚠️ No backend jobs, using dummy data');
+        }
       } catch (error) {
-        console.error('Error fetching jobs:', error);
-        // Use dummy data on error
-        setLiveJobs(DUMMY_JOBS);
+        console.error('❌ Error fetching jobs:', error);
+        console.log('✅ Using dummy data due to error');
+        // Dummy data already set in initial state
       }
     };
     fetchLiveJobs();
