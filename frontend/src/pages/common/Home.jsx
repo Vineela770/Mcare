@@ -1325,7 +1325,7 @@ const Home = () => {
     const specializationMatch = filterSpecialization
       ? job.specialization === filterSpecialization
       : true;
-    const cityMatch = filterCity ? job.location === filterCity : true;
+    const cityMatch = filterCity ? job.city === filterCity : true;
 
     let salaryMatch = true;
     if (filterSalary) {
@@ -1839,7 +1839,7 @@ const Home = () => {
 
                   <button
                     onClick={() => handleApply(job)}
-                    className="w-full bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200"
+                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
                   >
                     Apply Now
                   </button>
@@ -1860,7 +1860,7 @@ const Home = () => {
                 key={dot}
                 onClick={() => setActiveDot(dot)}
                 className={`w-3 h-3 rounded-full transition-colors ${
-                  activeDot === dot ? 'bg-cyan-500' : 'bg-gray-300'
+                  activeDot === dot ? 'bg-emerald-600' : 'bg-gray-300'
                 }`}
               />
             ))}

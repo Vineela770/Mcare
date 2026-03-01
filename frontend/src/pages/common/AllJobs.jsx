@@ -775,7 +775,7 @@ const AllJobs = () => {
                     <button
                       type="button"
                       onClick={() => handleApplyNow(job)}
-                      className="flex-1 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="flex-1 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-lg text-sm font-medium transition-all"
                     >
                       Apply Now
                     </button>
