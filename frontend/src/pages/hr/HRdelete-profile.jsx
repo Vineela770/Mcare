@@ -57,7 +57,7 @@ const HRDeleteProfile = () => {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-gray-100 px-4 py-3 rounded-lg pr-12 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                    className="w-full bg-gray-100 px-4 py-3 rounded-lg pr-12 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
 
                     <button
@@ -81,7 +81,7 @@ const HRDeleteProfile = () => {
                 {!success && (
                   <button
                     type="submit"
-                    className="mt-6 bg-sky-500 hover:bg-sky-600 text-white px-5 md:px-6 py-2.5 md:py-3 rounded-lg transition w-full sm:w-auto"
+                    className="mt-6 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-5 md:px-6 py-2.5 md:py-3 rounded-lg transition w-full sm:w-auto"
                   >
                     Delete Profile
                   </button>
@@ -91,7 +91,7 @@ const HRDeleteProfile = () => {
             </div>
 
             {/* Footer */}
-            <footer className="bg-sky-500 text-white text-center py-6 px-4">
+            <footer className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-center py-6 px-4">
             <p className="text-sm">© 2025 Mcare Jobs. All Right Reserved.</p>
             <p className="text-sm mt-1">Privacy policy, Terms & Conditions.</p>
             <p className="text-sm mt-2">Developed By – MerQ Digisol</p>

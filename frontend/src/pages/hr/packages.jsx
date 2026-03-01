@@ -57,7 +57,7 @@ const Packages = () => {
                 <h3 className="font-semibold text-gray-800 mb-3">
                     Corporate Office
                 </h3>
-                <p className="text-sky-600 leading-relaxed break-words">
+                <p className="text-emerald-600 leading-relaxed break-words">
                     201, Aster Prime Hospital,
                     <br />
                     Ameerpet, Hyderabad,
@@ -67,8 +67,8 @@ const Packages = () => {
                 </div>
             </div>
 
-            {/* Bottom blue bar */}
-            <div className="bg-sky-500 text-white text-center py-4 text-xs sm:text-sm px-4">
+            {/* Bottom green bar */}
+            <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-center py-4 text-xs sm:text-sm px-4">
                 <p>
                 © 2025 Mcare Jobs. All Right Reserved – Privacy policy, Terms &amp; Conditions.
                 </p>

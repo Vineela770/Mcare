@@ -30,7 +30,7 @@ const CandidateAlerts = () => {
                     <input
                     type="text"
                     placeholder="Search ..."
-                    className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 text-gray-600 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                    className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                     <span className="absolute left-4 top-3.5 text-gray-400">
                     🔍
@@ -42,7 +42,7 @@ const CandidateAlerts = () => {
                     <span className="text-gray-700 font-medium">
                     Sort by:
                     </span>
-                    <select className="w-full sm:w-auto px-5 py-3 border border-sky-400 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-sky-400">
+                    <select className="w-full sm:w-auto px-5 py-3 border border-emerald-500 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     <option>Default</option>
                     <option defaultValue>Newest</option>
                     <option>Oldest</option>
@@ -59,7 +59,7 @@ const CandidateAlerts = () => {
             </main>
 
             {/* Footer */}
-            <footer className="w-full bg-sky-500 text-white text-center py-6 px-4">
+            <footer className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-center py-6 px-4">
             <p className="text-sm">
                 © 2025 Mcare Jobs. All Right Reserved.
             </p>

@@ -144,7 +144,7 @@ const HRChangePassword = () => {
 
               <button
                 type="submit"
-                className="bg-sky-500 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-lg hover:bg-sky-600 w-full sm:w-auto"
+                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-lg transition w-full sm:w-auto"
               >
                 Change Password
               </button>
@@ -153,7 +153,7 @@ const HRChangePassword = () => {
         </div>
 
         {/* Footer */}
-        <footer className="bg-sky-500 text-white text-center py-6 px-4">
+        <footer className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-center py-6 px-4">
           <p className="text-sm">© 2025 Mcare Jobs. All Right Reserved.</p>
           <p className="text-sm mt-1">
             Privacy policy, Terms & Conditions.
@@ -176,7 +176,7 @@ const HRChangePassword = () => {
             </p>
             <button
               onClick={() => setShowSuccess(false)}
-              className="bg-sky-500 text-white px-6 py-2 rounded-lg hover:bg-sky-600 w-full sm:w-auto"
+              className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-2 rounded-lg transition w-full sm:w-auto"
             >
               OK
             </button>
