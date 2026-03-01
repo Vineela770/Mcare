@@ -165,14 +165,62 @@ const Home = () => {
   });
 
   const cities = [
-    'Miyapur',
-    'Kukatpally',
-    'Chandanagar',
-    'Lingampally',
-    'LB Nagar',
-    'Ameerpet',
-    'Mehdipatnam',
-    'Gachibowli',
+    // Major Metros
+    'Mumbai',
+    'Delhi',
+    'Bangalore',
+    'Hyderabad',
+    'Chennai',
+    'Kolkata',
+    'Pune',
+    'Ahmedabad',
+    
+    // Tier 1 Cities
+    'Jaipur',
+    'Lucknow',
+    'Kanpur',
+    'Nagpur',
+    'Indore',
+    'Thane',
+    'Bhopal',
+    'Visakhapatnam',
+    'Vadodara',
+    'Patna',
+    'Ludhiana',
+    
+    // Healthcare Hubs
+    'Vellore',
+    'Manipal',
+    'Mysore',
+    'Coimbatore',
+    'Kochi',
+    'Trivandrum',
+    'Mangalore',
+    'Puducherry',
+    
+    // Tier 2 Cities
+    'Chandigarh',
+    'Gurgaon',
+    'Noida',
+    'Ghaziabad',
+    'Faridabad',
+    'Rajkot',
+    'Surat',
+    'Nashik',
+    'Aurangabad',
+    'Amritsar',
+    'Jalandhar',
+    'Ranchi',
+    'Guwahati',
+    'Bhubaneswar',
+    'Raipur',
+    'Dehradun',
+    'Jammu',
+    'Vijayawada',
+    'Guntur',
+    'Warangal',
+    'Tirupati',
+    'Madurai',
   ];
 
   const handleApply = (job) => {
