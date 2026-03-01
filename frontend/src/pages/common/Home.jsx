@@ -715,7 +715,7 @@ const Home = () => {
     { id: 3, Icon: FileCheck,  iconBg: 'bg-green-500', title: 'Apply easily',         description: 'Apply instantly and connect with recruiters.' },
   ];
 
-  const TOP_CATEGORIES_LIMIT = 3;
+  const TOP_CATEGORIES_LIMIT = 5;
 
   const topCategoryKeys = Object.entries(
     jobs.reduce((acc, job) => {
@@ -726,6 +726,10 @@ const Home = () => {
     .sort((a, b) => b[1] - a[1])
     .slice(0, TOP_CATEGORIES_LIMIT)
     .map(([key]) => key);
+
+  console.log('🔍 Top category keys:', topCategoryKeys);
+  console.log('📊 Total jobs available:', jobs.length);
+  console.log('🎯 Active tab:', activeTab);
 
   // ✅ Get degrees based on active tab
   const degrees =
@@ -753,8 +757,12 @@ const Home = () => {
 
   const baseJobs =
     activeTab === 'latest'
-      ? jobs.filter((job) => topCategoryKeys.includes(job.categoryKey))
+      ? topCategoryKeys.length > 0 
+        ? jobs.filter((job) => topCategoryKeys.includes(job.categoryKey))
+        : jobs // Show all jobs if no top categories calculated yet
       : jobs.filter((job) => job.categoryKey === activeTab);
+
+  console.log('📋 Base jobs after category filter:', baseJobs.length);
 
   const filteredJobs = baseJobs.filter((job) => {
     const specializationMatch = filterSpecialization
@@ -771,6 +779,14 @@ const Home = () => {
 
     return specializationMatch && cityMatch && salaryMatch;
   });
+
+  console.log('🎯 Filters applied:', { 
+    specialization: filterSpecialization, 
+    city: filterCity, 
+    salary: filterSalary,
+    degree: selectedDegree 
+  });
+  console.log('✅ Filtered jobs count:', filteredJobs.length);
 
   const JOBS_PER_SLIDE = 2;
   const totalDots = Math.max(1, Math.ceil(filteredJobs.length / JOBS_PER_SLIDE));
