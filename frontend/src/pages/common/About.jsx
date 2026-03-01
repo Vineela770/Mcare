@@ -91,22 +91,20 @@ const About = () => {
             Our Story
           </h2>
 
-          <div className="bg-white rounded-xl p-6 md:p-10">
-            <p className="text-sm md:text-lg text-gray-700 leading-relaxed mb-4 md:mb-6 text-justify first-line:indent-8">
-              MCARE was founded with a simple yet powerful vision: to revolutionize healthcare recruitment in India. We
-              recognized the challenges faced by both healthcare professionals seeking meaningful careers and medical
-              facilities struggling to find qualified talent.
-            </p>
-            <p className="text-sm md:text-lg text-gray-700 leading-relaxed mb-4 md:mb-6 text-justify first-line:indent-8">
-              Since our inception, we've connected thousands of doctors, nurses, technicians, and other healthcare
-              professionals with leading hospitals, clinics, and healthcare organizations across the country.
-            </p>
-            <p className="text-sm md:text-lg text-gray-700 leading-relaxed text-justify first-line:indent-8">
-              Today, MCARE stands as India's #1 healthcare job platform, trusted by professionals and employers alike.
-              Our commitment to excellence, innovation, and integrity continues to drive us forward as we work to
-              transform the healthcare recruitment landscape.
-            </p>
-          </div>
+          <p className="text-sm md:text-lg text-gray-700 leading-relaxed mb-4 md:mb-6 text-justify first-line:indent-8">
+            MCARE was founded with a simple yet powerful vision: to revolutionize healthcare recruitment in India. We
+            recognized the challenges faced by both healthcare professionals seeking meaningful careers and medical
+            facilities struggling to find qualified talent.
+          </p>
+          <p className="text-sm md:text-lg text-gray-700 leading-relaxed mb-4 md:mb-6 text-justify first-line:indent-8">
+            Since our inception, we've connected thousands of doctors, nurses, technicians, and other healthcare
+            professionals with leading hospitals, clinics, and healthcare organizations across the country.
+          </p>
+          <p className="text-sm md:text-lg text-gray-700 leading-relaxed text-justify first-line:indent-8">
+            Today, MCARE stands as India's #1 healthcare job platform, trusted by professionals and employers alike.
+            Our commitment to excellence, innovation, and integrity continues to drive us forward as we work to
+            transform the healthcare recruitment landscape.
+          </p>
         </div>
       </section>
 
