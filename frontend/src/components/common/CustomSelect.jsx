@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
 
 const CustomSelect = ({ 
+  name,
   value, 
   onChange, 
   options = [], 
@@ -66,12 +67,14 @@ const CustomSelect = ({
   );
 
   const handleSelect = (option) => {
-    onChange({ target: { value: option } });
+    onChange({ target: { name, value: option } });
     setIsOpen(false);
     setSearchTerm('');
   };
 
-  const displayValue = value === 'all' ? placeholder : getLabel(value);
+  // Determine display value - show placeholder if value is empty/falsy or 'all'
+  const shouldShowPlaceholder = !value || value === '' || value === 'all';
+  const displayValue = shouldShowPlaceholder ? placeholder : getLabel(value);
 
   return (
     <div ref={selectRef} className={`relative ${className}`}>
@@ -84,7 +87,7 @@ const CustomSelect = ({
       >
         <div className="flex items-center space-x-3">
           {Icon && <Icon className="w-5 h-5 text-gray-400" />}
-          <span className={value === 'all' || !value || value === '' ? 'text-gray-400' : 'text-gray-900'}>
+          <span className={shouldShowPlaceholder ? 'text-gray-400' : 'text-gray-900'}>
             {displayValue}
           </span>
         </div>

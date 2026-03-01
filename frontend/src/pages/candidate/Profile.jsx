@@ -269,17 +269,19 @@ const Profile = () => {
                   Phone Number
                 </label>
 
-                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-emerald-600">
-                  <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 bg-gray-50 border-r border-gray-200 text-xs sm:text-sm">
-                    <Phone className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-                    <CustomSelect
-                      name="countryCode"
-                      value={formData.countryCode}
-                      onChange={handleChange}
-                      options={countryCodes}
-                      className="bg-transparent text-xs sm:text-sm"
-                    />
-                  </div>
+                <div className="flex gap-2">
+                  <select
+                    name="countryCode"
+                    value={formData.countryCode}
+                    onChange={handleChange}
+                    className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white cursor-pointer hover:border-emerald-400"
+                  >
+                    {countryCodes.map((code) => (
+                      <option key={code} value={code}>
+                        {code}
+                      </option>
+                    ))}
+                  </select>
 
                   <input
                     type="tel"
@@ -288,7 +290,7 @@ const Profile = () => {
                     onChange={handleChange}
                     placeholder="Enter phone number"
                     inputMode="numeric"
-                    className="w-full px-3 sm:px-4 py-2 sm:py-2 outline-none text-sm sm:text-base"
+                    className="flex-1 px-3 sm:px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1 sm:text-sm">
@@ -334,11 +336,10 @@ const Profile = () => {
                 </label>
                 <CustomSelect
                   name="highestQualification"
-                  value={formData.highestQualification}
+                  value={formData.highestQualification || ''}
                   onChange={handleChange}
                   options={['', 'MBBS', 'MD', 'MS', 'BDS', 'MDS', 'BHMS', 'BAMS', 'DM', 'MCh']}
                   placeholder="Select Qualification"
-                  className="w-full text-sm sm:text-base"
                   optionLabels={{'': 'Select Qualification'}}
                 />
               </div>
@@ -365,11 +366,10 @@ const Profile = () => {
                 </label>
                 <CustomSelect
                   name="gender"
-                  value={formData.gender}
+                  value={formData.gender || ''}
                   onChange={handleChange}
                   options={['', 'male', 'female', 'other', 'prefer-not-to-say']}
                   placeholder="Select Gender"
-                  className="w-full text-sm sm:text-base"
                   optionLabels={{
                     '': 'Select Gender',
                     'male': 'Male',
