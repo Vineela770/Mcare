@@ -195,7 +195,7 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="px-5 py-2 text-gray-700 hover:text-emerald-700 font-medium rounded-lg hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200"
+                  className="px-5 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white font-medium rounded-lg hover:from-teal-800 hover:to-emerald-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                 >
                   Sign In
                 </Link>
@@ -275,7 +275,7 @@ const Navbar = () => {
                     <Link
                       to="/login"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block w-full px-4 py-3 text-center text-gray-700 hover:text-emerald-700 font-medium rounded-lg hover:bg-gray-50 border border-gray-200"
+                      className="block w-full px-4 py-3 text-center bg-gradient-to-r from-teal-700 to-emerald-500 text-white font-medium rounded-lg hover:from-teal-800 hover:to-emerald-600 shadow-md"
                     >
                       Sign In
                     </Link>
