@@ -47,7 +47,7 @@ const CustomSelect = ({
   const displayValue = value === 'all' ? placeholder : getLabel(value);
 
   return (
-    <div ref={selectRef} className={`relative ${className}`}>
+    <div ref={selectRef} className={`relative ${isOpen ? 'z-[100]' : 'z-10'} ${className}`}>
       {/* Select Button */}
       <button
         type="button"
@@ -67,7 +67,7 @@ const CustomSelect = ({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+        <div className="absolute z-[110] w-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden max-h-64 overflow-y-auto">
           {/* Search Input (optional - only show if many options) */}
           {options.length > 8 && (
             <div className="p-2 border-b border-gray-200">
