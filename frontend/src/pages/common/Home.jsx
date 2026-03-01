@@ -1772,18 +1772,20 @@ const Home = () => {
       {filteredJobs.map((job) => (
         <div
           key={job.id}
-          className="min-w-[85%] bg-white rounded-2xl shadow-lg border p-4 flex-shrink-0"
+          className="min-w-[85%] bg-white rounded-xl shadow-lg border border-gray-100 p-6 flex-shrink-0"
         >
-          <h3 className="font-bold text-base">
+          <h3 className="font-bold text-lg text-gray-900 mb-2 leading-tight">
             {job.title}
           </h3>
-          <p className="text-sm text-gray-600">{job.company}</p>
-          <p className="text-sm">{job.location}</p>
-          <p className="font-semibold mt-2">{job.salary}</p>
+          <p className="text-sm text-gray-600 mb-2">{job.category}</p>
+          <p className="text-sm text-gray-700 mb-3 flex items-center">
+            <span className="mr-1">📍</span> {job.city}
+          </p>
+          <p className="font-semibold text-gray-900 mb-4">{job.salary}</p>
 
           <button
             onClick={() => handleApply(job)}
-            className="mt-4 bg-emerald-600 text-white px-4 py-2 rounded text-sm"
+            className="w-full bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200"
           >
             Apply Now
           </button>
@@ -1824,18 +1826,20 @@ const Home = () => {
               .map((job) => (
                 <div
                   key={job.id}
-                  className="bg-white rounded-2xl shadow-lg border p-6"
+                  className="bg-white rounded-xl shadow-lg border border-gray-100 p-6"
                 >
-                  <h3 className="font-bold text-lg">
+                  <h3 className="font-bold text-lg text-gray-900 mb-2 leading-tight">
                     {job.title}
                   </h3>
-                  <p className="text-sm text-gray-600">{job.company}</p>
-                  <p className="text-sm">{job.location}</p>
-                  <p className="font-semibold mt-2">{job.salary}</p>
+                  <p className="text-sm text-gray-600 mb-2">{job.category}</p>
+                  <p className="text-sm text-gray-700 mb-3 flex items-center">
+                    <span className="mr-1">📍</span> {job.city}
+                  </p>
+                  <p className="font-semibold text-gray-900 mb-4">{job.salary}</p>
 
                   <button
                     onClick={() => handleApply(job)}
-                    className="mt-4 bg-emerald-600 text-white px-4 py-2 rounded"
+                    className="w-full bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200"
                   >
                     Apply Now
                   </button>
@@ -1855,8 +1859,8 @@ const Home = () => {
               <button
                 key={dot}
                 onClick={() => setActiveDot(dot)}
-                className={`w-3 h-3 rounded-full ${
-                  activeDot === dot ? 'bg-emerald-600' : 'bg-gray-300'
+                className={`w-3 h-3 rounded-full transition-colors ${
+                  activeDot === dot ? 'bg-cyan-500' : 'bg-gray-300'
                 }`}
               />
             ))}

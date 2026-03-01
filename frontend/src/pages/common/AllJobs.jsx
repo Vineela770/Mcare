@@ -743,40 +743,41 @@ const AllJobs = () => {
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{job.title}</h3>
 
                   <div className="flex items-center space-x-2 text-gray-600 mb-2">
-                    <Building2 className="w-4 h-4" />
-                    <span className="text-sm">{job.company}</span>
+                    <span className="text-sm">{job.category}</span>
                   </div>
 
                   <div className="flex items-center space-x-2 text-gray-600 mb-4">
                     <MapPin className="w-4 h-4" />
-                    <span className="text-sm">{job.location}</span>
+                    <span className="text-sm">{job.city}</span>
                   </div>
 
                   <div className="flex items-center justify-between mb-4">
                     <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
                       {job.type}
                     </span>
-                    <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                      <DollarSign className="w-4 h-4" />
-                      <span>{job.salary?.split(' - ')[0] || 'Not disclosed'}</span>
+                    <div className="flex items-center space-x-1 text-gray-600 text-sm font-semibold">
+                      <span>{job.salary}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                      <Clock className="w-4 h-4" />
-                      <span>{job.posted}</span>
-                    </div>
-
+                  <div className="flex items-center justify-between gap-2">
                     <button
                       type="button"
                       onClick={() => {
                         setSelectedJob(job);
                         setShowDetailsModal(true);
                       }}
-                      className="text-emerald-700 hover:text-emerald-700 font-medium text-sm"
+                      className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium transition-colors"
                     >
-                      View Details →
+                      View Details
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleApplyNow(job)}
+                      className="flex-1 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Apply Now
                     </button>
                   </div>
                 </div>
