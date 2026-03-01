@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
+// eslint-disable-next-line no-unused-vars
 import { jobService } from '../../api/jobService';
 import { useAuth } from '../../context/useAuth';
 
@@ -166,9 +167,12 @@ const AllJobs = () => {
 
   // ✅ jobs in state (so we can toggle saved)
   const [jobs, setJobs] = useState(DUMMY_JOBS); // Initialize with dummy data
-  const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line no-unused-vars
+  const [loading, setLoading] = useState(false); // Set to false since we're not fetching
 
-  // ✅ Fetch jobs from backend
+  // ✅ Fetch jobs from backend - DISABLED to show dummy data
+  // Uncomment when backend has sufficient jobs (50+)
+  /*
   useEffect(() => {
     const fetchJobs = async () => {
       setLoading(true);
@@ -176,12 +180,12 @@ const AllJobs = () => {
         const jobsData = await jobService.getJobs();
         // Ensure jobsData is an array
         const jobsArray = Array.isArray(jobsData) ? jobsData : [];
-        // Use backend jobs if available, otherwise keep dummy data
-        if (jobsArray.length > 0) {
+        // Use backend jobs only if there are many (to avoid overriding 87 dummy jobs)
+        if (jobsArray.length >= 50) {
           setJobs(jobsArray);
           console.log('✅ Using backend jobs:', jobsArray.length);
         } else {
-          console.log('⚠️ No backend jobs, using dummy data:', DUMMY_JOBS.length);
+          console.log('⚠️ Backend has only', jobsArray.length, 'jobs - keeping dummy data (87 jobs)');
         }
       } catch (error) {
         console.error('❌ Failed to fetch jobs:', error);
@@ -194,7 +198,7 @@ const AllJobs = () => {
 
     fetchJobs();
   }, []);
-
+  */
 
   const cities = [
     'All Locations',
