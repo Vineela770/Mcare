@@ -28,7 +28,7 @@ const Packages = () => {
                 {/* Section 1 */}
                 <div>
                 <h3 className="font-semibold text-gray-800 mb-3">Home</h3>
-                <ul className="space-y-2 text-sky-600">
+                <ul className="space-y-2 text-emerald-600">
                     <li>
                     <a href="/" className="hover:underline">Home</a>
                     </li>
@@ -47,7 +47,7 @@ const Packages = () => {
                 {/* Section 2 */}
                 <div>
                 <h3 className="font-semibold text-gray-800 mb-3">Call us</h3>
-                <p className="text-sky-600 mb-2 break-words">
+                <p className="text-emerald-600 mb-2 break-words">
                     +91-9347118061
                 </p>
                 </div>
