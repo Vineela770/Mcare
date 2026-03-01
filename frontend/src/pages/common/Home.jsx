@@ -1089,8 +1089,29 @@ const Home = () => {
       ? Object.keys(categorySpecializations[activeTab])
       : [];
 
-  const specializations =
-    categorySpecializations[activeTab]?.[selectedDegree] || [];
+  // ✅ Get specializations based on selected degree
+  const specializations = (() => {
+    if (!selectedDegree) return [];
+    
+    if (activeTab === 'latest') {
+      // For "Latest Jobs", search through all categories to find the degree
+      for (const categoryKey in categorySpecializations) {
+        if (categorySpecializations[categoryKey][selectedDegree]) {
+          return categorySpecializations[categoryKey][selectedDegree];
+        }
+      }
+      return [];
+    } else {
+      // For specific category tabs, get specializations directly
+      return categorySpecializations[activeTab]?.[selectedDegree] || [];
+    }
+  })();
+
+  console.log('🎓 Selected degree:', selectedDegree);
+  console.log('📋 Available specializations:', specializations.length);
+  if (specializations.length > 0) {
+    console.log('📋 Sample specializations:', specializations.slice(0, 3));
+  }
 
   const getSalaryValue = (salaryString) => {
     const numbers = salaryString?.match(/\d+/g);
