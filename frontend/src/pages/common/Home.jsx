@@ -1525,7 +1525,7 @@ const Home = () => {
 
             <button
               onClick={() => setShowQuickPostModal(true)}
-              className="border-2 border-white text-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-emerald-700 transition"
+              className="bg-white text-emerald-700 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition"
             >
               Quick Post Job
             </button>
