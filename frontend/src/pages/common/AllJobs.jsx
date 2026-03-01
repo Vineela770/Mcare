@@ -87,21 +87,184 @@ const AllJobs = () => {
 
   const cities = [
     'All Locations',
-    'Bangalore',
-    'Delhi',
+    // Major Metros
     'Mumbai',
+    'Delhi',
+    'Bangalore',
     'Hyderabad',
-    'Pune',
-    'Kolkata',
     'Chennai',
+    'Kolkata',
+    'Pune',
     'Ahmedabad',
+    
+    // Tier 1 Cities
     'Jaipur',
-    'Vizag',
-    'Kurnool',
+    'Lucknow',
+    'Kanpur',
+    'Nagpur',
+    'Indore',
+    'Thane',
+    'Bhopal',
+    'Visakhapatnam',
+    'Vadodara',
+    'Patna',
+    'Ludhiana',
+    
+    // Healthcare Hubs
+    'Vellore',
+    'Manipal',
+    'Mysore',
     'Coimbatore',
-    'Guntur',
+    'Kochi',
+    'Trivandrum',
+    'Mangalore',
+    'Puducherry',
+    
+    // Tier 2 Cities
+    'Chandigarh',
+    'Gurgaon',
+    'Noida',
+    'Ghaziabad',
+    'Faridabad',
+    'Rajkot',
+    'Surat',
+    'Nashik',
+    'Aurangabad',
+    'Amritsar',
+    'Jalandhar',
+    'Ranchi',
+    'Guwahati',
+    'Bhubaneswar',
+    'Raipur',
+    'Dehradun',
+    'Jammu',
     'Vijayawada',
-    'Secunderabad',
+    'Guntur',
+    'Warangal',
+    'Tirupati',
+    'Madurai',
+  ];
+
+  const popularJobTitles = [
+    // Doctors (20)
+    'Cardiologist',
+    'General Physician',
+    'Pediatrician',
+    'Orthopedic Surgeon',
+    'Gynecologist',
+    'Neurologist',
+    'Dermatologist',
+    'Radiologist',
+    'Anesthesiologist',
+    'Emergency Medicine Doctor',
+    'Psychiatrist',
+    'Ophthalmologist',
+    'ENT Specialist',
+    'Urologist',
+    'Gastroenterologist',
+    'Pulmonologist',
+    'Nephrologist',
+    'Oncologist',
+    'General Surgeon',
+    'Medical Officer',
+    
+    // Nursing (15)
+    'Staff Nurse',
+    'ICU Nurse',
+    'OT Nurse',
+    'Emergency Nurse',
+    'Nursing Supervisor',
+    'Ward In-charge',
+    'Clinical Nurse',
+    'Pediatric Nurse',
+    'Cardiac Nurse',
+    'Dialysis Nurse',
+    'Operation Theatre Nurse',
+    'Community Health Nurse',
+    'Nursing Officer',
+    'Critical Care Nurse',
+    'Nurse Practitioner',
+    
+    // Allied Health (15)
+    'Physiotherapist',
+    'Medical Lab Technician',
+    'Radiographer',
+    'CT Scan Technician',
+    'MRI Technician',
+    'X-Ray Technician',
+    'Dietitian',
+    'Nutritionist',
+    'Pharmacist',
+    'Clinical Pharmacist',
+    'Optometrist',
+    'Occupational Therapist',
+    'Speech Therapist',
+    'Respiratory Therapist',
+    'Dialysis Technician',
+    
+    // Hospital Management (20)
+    'Hospital Administrator',
+    'Medical Superintendent',
+    'Hospital Manager',
+    'Front Office Executive',
+    'Receptionist',
+    'Patient Relations Executive',
+    'HR Manager',
+    'Accounts Manager',
+    'Operations Manager',
+    'Quality Manager',
+    'Facility Manager',
+    'Finance Manager',
+    'Administrative Officer',
+    'Billing Executive',
+    'Medical Records Officer',
+    'IT Manager',
+    'Biomedical Engineer',
+    'Housekeeping Supervisor',
+    'Security Supervisor',
+    'Customer Service Executive',
+    
+    // Dental (8)
+    'Dentist',
+    'Dental Surgeon',
+    'Orthodontist',
+    'Endodontist',
+    'Oral Surgeon',
+    'Pediatric Dentist',
+    'Periodontist',
+    'Prosthodontist',
+    
+    // Alternative Medicine (8)
+    'Ayurvedic Doctor',
+    'Homeopathic Doctor',
+    'Unani Doctor',
+    'Naturopath',
+    'Yoga Therapist',
+    'Acupuncturist',
+    'Ayurvedic Consultant',
+    'Homeopathic Consultant',
+    
+    // Medical Colleges (8)
+    'Professor',
+    'Associate Professor',
+    'Assistant Professor',
+    'Junior Resident',
+    'Senior Resident',
+    'Medical Faculty',
+    'Tutor',
+    'Demonstrator',
+    
+    // Paramedical & Other (10)
+    'Paramedic',
+    'Emergency Medical Technician',
+    'Ambulance Driver',
+    'Medical Social Worker',
+    'Counselor',
+    'Clinical Psychologist',
+    'Medical Transcriptionist',
+    'Health Inspector',
+    'Public Health Officer',
+    'Clinical Research Coordinator',
   ];
 
   // ✅ Load More state
@@ -331,11 +494,17 @@ const AllJobs = () => {
                 <Search className="w-5 h-5 text-gray-400" />
                 <input
                   type="text"
+                  list="all-job-titles"
                   placeholder="Job title or keyword"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="bg-transparent border-none outline-none w-full text-gray-700"
                 />
+                <datalist id="all-job-titles">
+                  {popularJobTitles.map((title, idx) => (
+                    <option key={idx} value={title} />
+                  ))}
+                </datalist>
               </div>
 
               <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-lg">
