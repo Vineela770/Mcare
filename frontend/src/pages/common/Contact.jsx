@@ -27,12 +27,12 @@ const Contact = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="py-8 md:py-12 px-4 bg-gradient-to-r from-teal-700 to-emerald-500">
+      <section className="py-8 md:py-12 px-4 bg-gradient-to-r from-emerald-500 to-teal-600">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4">
             Get In Touch
           </h1>
-          <p className="text-sm md:text-lg text-emerald-100">
+          <p className="text-sm md:text-lg text-white/90">
             Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
           </p>
         </div>
@@ -190,7 +190,7 @@ const Contact = () => {
                 How do I create an account?
               </h3>
               <p className="text-sm md:text-base text-gray-600">
-                Click on the "Get Started" button in the navigation bar and fill out the registration form.
+                Click on the "Register" button in the navigation bar and fill out the registration form.
               </p>
             </div>
 
