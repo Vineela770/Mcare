@@ -394,13 +394,13 @@ const Home = () => {
   };
 
   const categories = [
-    { id: 1, title: 'Hospital Jobs – Doctors', Icon: Stethoscope, bg: 'bg-emerald-100',    iconColor: 'text-emerald-700',    positions: getJobCountByCategory('doctors'),     key: 'doctors' },
-    { id: 2, title: 'Hospital Management',    Icon: Building2,   bg: 'bg-teal-100',    iconColor: 'text-teal-700',    positions: getJobCountByCategory('management'), key: 'management' },
-    { id: 3, title: 'Medical Colleges',        Icon: GraduationCap, bg: 'bg-purple-100', iconColor: 'text-purple-600', positions: getJobCountByCategory('colleges'),    key: 'colleges' },
-    { id: 4, title: 'Allied Health',           Icon: Activity,    bg: 'bg-green-100',  iconColor: 'text-green-600',   positions: getJobCountByCategory('allied'),      key: 'allied' },
-    { id: 5, title: 'Nursing',                 Icon: Heart,       bg: 'bg-pink-100',   iconColor: 'text-pink-600',    positions: getJobCountByCategory('nursing'),     key: 'nursing' },
-    { id: 6, title: 'Alternative Medicine',    Icon: Leaf,        bg: 'bg-emerald-100',iconColor: 'text-emerald-600', positions: getJobCountByCategory('alternative'), key: 'alternative' },
-    { id: 7, title: 'Dental',                  Icon: Smile,       bg: 'bg-orange-100', iconColor: 'text-orange-600',  positions: getJobCountByCategory('dental'),      key: 'dental' },
+    { id: 1, title: 'Hospital Jobs – Doctors', Icon: Stethoscope, bg: 'bg-gradient-to-br from-emerald-400 to-teal-600',    positions: getJobCountByCategory('doctors'),     key: 'doctors' },
+    { id: 2, title: 'Hospital Management',    Icon: Building2,   bg: 'bg-gradient-to-br from-cyan-400 to-blue-600',    positions: getJobCountByCategory('management'), key: 'management' },
+    { id: 3, title: 'Medical Colleges',        Icon: GraduationCap, bg: 'bg-gradient-to-br from-purple-400 to-indigo-600', positions: getJobCountByCategory('colleges'),    key: 'colleges' },
+    { id: 4, title: 'Allied Health',           Icon: Activity,    bg: 'bg-gradient-to-br from-green-400 to-emerald-600',   positions: getJobCountByCategory('allied'),      key: 'allied' },
+    { id: 5, title: 'Nursing',                 Icon: Heart,       bg: 'bg-gradient-to-br from-pink-400 to-rose-600',    positions: getJobCountByCategory('nursing'),     key: 'nursing' },
+    { id: 6, title: 'Alternative Medicine',    Icon: Leaf,        bg: 'bg-gradient-to-br from-lime-400 to-green-600', positions: getJobCountByCategory('alternative'), key: 'alternative' },
+    { id: 7, title: 'Dental',                  Icon: Smile,       bg: 'bg-gradient-to-br from-orange-400 to-red-600',  positions: getJobCountByCategory('dental'),      key: 'dental' },
   ];
 
   const tabs = [
@@ -1505,7 +1505,7 @@ const Home = () => {
               >
                 <div className="flex items-center gap-4">
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${category.bg} group-hover:scale-110 transition-transform duration-300`}>
-                    <category.Icon className={`w-7 h-7 ${category.iconColor}`} />
+                    <category.Icon className="w-7 h-7 text-white" />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-base font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">
