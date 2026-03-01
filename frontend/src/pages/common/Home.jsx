@@ -318,7 +318,30 @@ const Home = () => {
     // 🏥 DOCTORS
     doctors: {
       MBBS: [
-        'MBBS',
+        'General Physician / Medical Officer',
+        'Casualty Medical Officer',
+        'Emergency Medical Officer',
+        'Resident Medical Officer (RMO)',
+        'Junior Medical Officer',
+        'Senior Medical Officer',
+        'Consultant General Practitioner',
+        'Primary Care Physician',
+        'Family Medicine Practitioner',
+        'Occupational Health Physician',
+        'Medical Officer – Government',
+        'Medical Officer – Armed Forces',
+        'Medical Officer – Railways',
+        'Medical Officer – ESI',
+        'Medical Superintendent (MBBS)',
+        'Medical Advisor',
+        'Clinical Research Associate',
+        'Medical Writer',
+        'Medical Coding Specialist',
+        'Insurance Medical Officer',
+        'Aviation Medical Examiner',
+        'Sports Medicine Physician',
+        'Community Health Officer',
+        'Public Health Officer',
       ],
 
       MD: [
@@ -493,163 +516,355 @@ const Home = () => {
 
     // 📊 HOSPITAL MANAGEMENT
     management: {
-      Administration: [
+      'MHA / MBA Healthcare': [
         'Hospital Director / Chief Executive Officer',
         'Chief Operating Officer',
-        'General Manager',
-        'Medical Superintendent',
         'Hospital Administrator / Manager',
         'Assistant Hospital Administrator',
-        'Administrative Officers',
+        'General Manager',
+        'Operations Manager',
+        'Quality Manager',
+        'Facility Manager',
       ],
 
-      FrontOffice: [
-        'Front Office Executive - Hospitals',
-        'Opening For Front Office Executive',
+      'MBBS + MHA': [
+        'Medical Superintendent',
+        'Medical Director',
+        'Chief Medical Officer',
+        'Medical Administrator',
+      ],
+
+      'MBA / PGDM': [
+        'Business Development Manager',
+        'Marketing Manager',
+        'Strategy Manager',
+        'Project Manager',
+        'General Manager – Operations',
+      ],
+
+      'BBA / B.Com / BHM': [
+        'Administrative Officers',
         'Front Office Manager',
+        'Assistant Manager',
+        'Management Trainee',
+        'Executive Assistant',
+      ],
+
+      'Any Graduate': [
+        'Front Office Executive',
         'Receptionist / Front Desk Staff',
         'Patient Relation Executive',
-        'Patient Relations Executive',
-        'Public Relations Officer',
         'Customer Service Representative',
-        'Voice & Non Voice Process Customer Care Executives',
-        'Service Desk Associate',
+        'Data Entry Operator',
       ],
 
-      HumanResources: [
+      'MBA HR / MSW': [
         'HR Manager',
-        'HR Dept',
+        'HR Business Partner',
         'Recruitment Officer',
-        'Payroll Officer',
         'Training & Development Officer',
+        'Payroll Officer',
+        'Employee Relations Manager',
       ],
 
-      FinanceAccounts: [
-        'Assistant Manager F&A',
-        'Senior Accountant',
-        'Accounting and Finance Manager',
-        'Junior Finance Executive',
+      'M.Com / CA / ICWA': [
         'Chief Financial Officer',
+        'Finance Manager',
         'Accounts Manager',
+        'Senior Accountant',
         'Billing Supervisor',
-        'Cashier / Billing Clerks',
+        'Internal Auditor',
         'Insurance Coordinator',
       ],
 
-      Operations: [
-        'Operations Manager',
-        'Facility Manager',
+      'B.Com / BBA Finance': [
+        'Assistant Manager F&A',
+        'Junior Finance Executive',
+        'Accountant',
+        'Cashier / Billing Clerks',
+        'Accounts Executive',
+      ],
+
+      'B.Tech / B.E.': [
+        'IT Manager / System Administrator',
+        'Network Engineer',
+        'Biomedical Engineer',
+        'Software Support Technician',
+        'Technical Support Engineer',
+        'Maintenance Engineer',
+      ],
+
+      'Diploma / ITI': [
+        'Support Engineer',
+        'Diagnostic Technician / Engineer',
         'Maintenance Supervisor',
+        'Automobile Technician',
+        'Electrician',
+        'Plumber',
+      ],
+
+      'Any Degree': [
+        'Medical Records Officer',
+        'Quality Executive',
+        'Quality & Compliance Officer',
         'Transport & Ambulance Coordinator',
         'Housekeeping Manager',
         'Security Supervisor',
         'Canteen Supervisor',
         'Laundry Supervisor',
-        'Waste Management Supervisor',
+        'Public Relations Officer',
       ],
 
-      QualityCompliance: [
-        'Quality Executive',
-        'Quality Manager',
-        'Quality & Compliance Officer',
-        'Internal Auditor',
+      'LLB / Company Secretary': [
         'Legal Advisor',
+        'Compliance Officer',
+        'Legal Counsel',
       ],
 
-      ITTechnical: [
-        'IT Manager / System Administrator',
-        'Network Engineer',
-        'Software Support Technician',
-        'Technical Support Engineer',
-        'Support Engineer',
-        'Data Entry Operators',
-      ],
-
-      EngineeringSupport: [
-        'Biomedical Engineer',
-        'Diagnostic Technician/Engineer',
-        'Automobile Technician',
-      ],
-
-      MedicalRecords: [
-        'Medical Records Officer',
-      ],
-
-      Marketing: [
-        'Marketing',
+      'Marketing / PR Degree': [
+        'Marketing Manager',
+        'Brand Manager',
+        'Digital Marketing Manager',
+        'Public Relations Officer',
       ],
     },
 
 
     // 🎓 MEDICAL COLLEGES
     colleges: {
-      Administration: [
-        'Principal',
-        'Academic Coordinator',
-        'Senior Assistant',
-      ],
-
-      Faculty: [
-        'Professor',
-        'Associate Professor',
-        'Assistant Professor',
-        'Academic Positions',
-      ],
-
-      Residency: [
-        'Senior Resident',
-        'Junior Resident',
-      ],
-
-      Training: [
+      'MBBS': [
         'Tutor / Demonstrator',
+        'Junior Resident',
+        'Teaching Assistant',
+        'Clinical Instructor',
+      ],
+
+      'MD': [
+        'Assistant Professor',
+        'Associate Professor',
+        'Professor',
+        'Senior Resident',
+        'Academic Consultant',
+        'Medical Faculty',
+      ],
+
+      'MS': [
+        'Assistant Professor – Surgery',
+        'Associate Professor – Surgery',
+        'Professor – Surgery',
+        'Senior Resident – Surgery',
+        'Surgical Faculty',
+      ],
+
+      'DM': [
+        'Associate Professor – Super Specialty',
+        'Professor – Super Specialty',
+        'Senior Faculty – Super Specialty',
+      ],
+
+      'MCh': [
+        'Assistant Professor – Surgical Super Specialty',
+        'Associate Professor – Surgical Super Specialty',
+        'Professor – Surgical Super Specialty',
+      ],
+
+      'PhD': [
+        'Professor & Head',
+        'Dean',
+        'Research Director',
+        'Principal',
+        'Vice Chancellor',
+        'Research Faculty',
+      ],
+
+      'MHA / MBA Healthcare': [
+        'Academic Coordinator',
+        'Administrative Officer',
+        'Assistant Registrar',
+        'Deputy Registrar',
+        'College Administrator',
+      ],
+
+      'Others': [
+        'Senior Assistant',
+        'Administrative Staff',
+        'Support Staff',
       ],
     },
 
     // 🩺 ALLIED HEALTH
     allied: {
-      Physiotherapy: [
-        'BPT – Bachelor of Physiotherapy',
-        'MPT – Master of Physiotherapy',
+      'BPT': [
+        'Physiotherapist – General',
+        'Physiotherapist – Orthopaedics',
+        'Physiotherapist – Neurology',
+        'Physiotherapist – Cardiopulmonary',
+        'Physiotherapist – Paediatrics',
+        'Physiotherapist – Sports Medicine',
+        'Physiotherapist – ICU',
+        'Rehabilitation Specialist',
+        'Occupational Therapist',
       ],
 
-      Technology: [
-        'B.Sc – Anaesthesia & Operation Theatre Technology',
-        'B.Sc – Cardio Vascular Technology',
-        'B.Sc – Dialysis Technology',
-        'B.Sc – Medical Lab Technology',
-        'B.Sc – Radiology & Imaging Technology',
-        'B.Sc – Respiratory Therapy',
-        'B.Sc – Optometry',
-        'B.Sc – Emergency & Critical Care Technology',
+      'MPT': [
+        'Senior Physiotherapist',
+        'Consultant Physiotherapist',
+        'Physiotherapy Supervisor',
+        'Head of Physiotherapy Department',
+        'Clinical Specialist – Physiotherapy',
+        'Rehabilitation Manager',
       ],
 
-      Nutrition: [
-        'B.Sc – Clinical Nutrition & Dietetics',
+      'B.Sc Medical Lab Technology': [
+        'Medical Lab Technician',
+        'Lab Technologist',
+        'Pathology Lab Technician',
+        'Microbiology Lab Technician',
+        'Biochemistry Lab Technician',
+        'Haematology Technician',
+        'Clinical Lab Technologist',
+        'Lab Supervisor',
+        'Quality Control Technician',
       ],
 
-      Biotechnology: [
-        'B.Sc – Medical Biotechnology',
-        'Medical Biotechnology & Bioinformatics',
+      'B.Sc Radiology & Imaging Technology': [
+        'Radiographer',
+        'CT Scan Technician',
+        'MRI Technician',
+        'X-Ray Technician',
+        'Ultrasound Technician',
+        'Mammography Technician',
+        'Interventional Radiology Technician',
+        'Nuclear Medicine Technologist',
+        'Radiology Supervisor',
       ],
 
-      ClinicalSciences: [
-        'Clinical Biochemistry',
-        'Clinical Microbiology',
-        'Clinical Research',
+      'B.Sc Anaesthesia & OT Technology': [
+        'Anaesthesia Technician',
+        'Operation Theatre Technician',
+        'OT Assistant',
+        'CSSD Technician',
+        'Surgical Technologist',
+        'Anaesthesia Technologist',
+      ],
+
+      'B.Sc Dialysis Technology': [
+        'Dialysis Technician',
+        'Haemodialysis Technician',
+        'Peritoneal Dialysis Technician',
+        'Dialysis Supervisor',
+        'Renal Care Technician',
+      ],
+
+      'B.Sc Cardio Vascular Technology': [
+        'Cardiac Technician',
+        'ECG Technician',
+        'Echo Technician',
+        'Cath Lab Technician',
+        'Cardiology Technologist',
+        'Cardiovascular Technologist',
+      ],
+
+      'B.Sc Respiratory Therapy': [
+        'Respiratory Therapist',
+        'Pulmonary Function Technician',
+        'Ventilator Specialist',
+        'Sleep Lab Technician',
+        'Critical Care Respiratory Therapist',
+      ],
+
+      'B.Sc Optometry': [
+        'Optometrist',
+        'Clinical Optometrist',
+        'Refractive Optometrist',
+        'Contact Lens Specialist',
+        'Low Vision Specialist',
+        'Paediatric Optometrist',
+      ],
+
+      'B.Sc Emergency & Critical Care Technology': [
+        'Emergency Medical Technician',
+        'Critical Care Technician',
+        'Trauma Care Specialist',
+        'Emergency Room Technician',
+        'ICU Technician',
+      ],
+
+      'B.Sc Clinical Nutrition & Dietetics': [
+        'Clinical Dietitian',
+        'Nutritionist',
+        'Therapeutic Dietitian',
+        'Paediatric Nutritionist',
+        'Sports Nutritionist',
+        'Community Nutritionist',
+        'Food Service Manager',
+      ],
+
+      'B.Sc Medical Biotechnology': [
+        'Medical Biotechnologist',
+        'Clinical Research Associate',
+        'Lab Research Assistant',
+        'Quality Control Analyst',
+        'Bioinformatics Specialist',
+      ],
+
+      'Clinical Biochemistry': [
+        'Clinical Biochemist',
+        'Lab Biochemist',
+        'Research Biochemist',
+      ],
+
+      'Clinical Microbiology': [
+        'Clinical Microbiologist',
+        'Infection Control Officer',
+        'Microbiology Lab Supervisor',
+      ],
+
+      'Clinical Research': [
+        'Clinical Research Coordinator',
+        'Clinical Data Manager',
+        'Clinical Trial Associate',
+        'Study Coordinator',
       ],
     },
 
     // 🌿 ALTERNATIVE MEDICINE
     alternative: {
-      Undergraduate: [
-        'BAMS – Ayurveda',
-        'BHMS – Homeopathy',
-        'BNYS – Bachelor of Naturopathy and Yogic Sciences',
-        'BUMS – Unani',
+      'BAMS': [
+        'Ayurvedic Practitioner',
+        'Ayurvedic Consultant',
+        'Ayurvedic Medical Officer',
+        'Panchakarma Specialist',
+        'Ayurvedic Physician – General Practice',
+        'Clinical Ayurvedic Doctor',
+        'Wellness Consultant – Ayurveda',
       ],
 
-      Ayurveda: [
+      'BHMS': [
+        'Homeopathic Practitioner',
+        'Homeopathic Consultant',
+        'Homeopathic Medical Officer',
+        'Clinical Homeopath',
+        'General Homeopathic Physician',
+      ],
+
+      'BUMS': [
+        'Unani Practitioner',
+        'Unani Medical Officer',
+        'Unani Consultant',
+        'Clinical Unani Physician',
+        'General Unani Doctor',
+      ],
+
+      'BNYS': [
+        'Naturopath',
+        'Yoga Therapist',
+        'Naturopathy & Yoga Consultant',
+        'Wellness & Lifestyle Consultant',
+        'Alternative Medicine Practitioner',
+      ],
+
+      'MD Ayurveda': [
         'MD (Ayurveda) – Dravyaguna',
         'MD (Ayurveda) – Panchakarma',
         'MD (Ayurveda) – Prasuti & Streeroga',
@@ -662,7 +877,7 @@ const Home = () => {
         'MD (Ayurveda) – Pathology, Bacteriology & Parasitology',
       ],
 
-      Homeopathy: [
+      'MD Homeopathy': [
         'MD (Homeopathy) – Homeopathic Materia Medica',
         'MD (Homeopathy) – Homeopathic Pharmacy',
         'MD (Homeopathy) – Organon of Medicine & Philosophy',
@@ -672,7 +887,7 @@ const Home = () => {
         'MD (Homeopathy) – General',
       ],
 
-      Naturopathy: [
+      'MD Naturopathy': [
         'MD (Naturopathy) – Anatomy',
         'MD (Naturopathy) – Biochemistry',
         'MD (Naturopathy) – Diagnosis',
@@ -683,11 +898,17 @@ const Home = () => {
         'MD (Naturopathy) – Yoga Therapy',
         'MD (Naturopathy) – Acupuncture',
         'MD (Naturopathy) – General',
-        'MSc – Yoga & Naturopathy',
-        'MSc – Naturopathy',
       ],
 
-      Unani: [
+      'MSc Naturopathy': [
+        'MSc – Yoga & Naturopathy',
+        'MSc – Naturopathy',
+        'Senior Naturopathy Consultant',
+        'Yoga Therapy Specialist',
+        'Wellness Program Director',
+      ],
+
+      'MD Unani': [
         'MD (Unani) – Ain, Uzn, Anaf, Halaq wa Asnan',
         'MD (Unani) – Amraz-e-Atfal (Paediatrics)',
         'MD (Unani) – Ilmul Advia (Pharmacology)',
@@ -705,56 +926,116 @@ const Home = () => {
 
     // 🩺 NURSING
     nursing: {
-      EntryLevel: [
-        'ANM – Auxiliary Nurse Midwife',
-        'GNM – General Nursing and Midwifery',
-        'Auxiliary Nurse & Midwife (ANM)',
-        'General Nursing & Midwifery (GNM)',
+      'ANM': [
+        'Staff Nurse – ANM',
+        'Community Health Nurse',
+        'Village Health Nurse',
+        'School Health Nurse',
+        'Home Healthcare Nurse',
+        'Midwife',
+        'Maternal & Child Health Nurse',
+        'Primary Health Centre Nurse',
+        'Auxiliary Nurse',
       ],
 
-      Undergraduate: [
-        'B.Sc Nursing',
-        'Post Basic B.Sc Nursing',
+      'GNM': [
+        'Staff Nurse – General Ward',
+        'Staff Nurse – ICU',
+        'Staff Nurse – Emergency',
+        'Staff Nurse – OT',
+        'Staff Nurse – Paediatric Ward',
+        'Staff Nurse – Maternity Ward',
+        'Staff Nurse – Geriatric Ward',
+        'Infection Control Nurse',
+        'Ward In-charge',
+        'Nursing Supervisor',
+        'Clinical Nurse',
+        'Occupational Health Nurse',
       ],
 
-      Postgraduate: [
-        'M.Sc Nursing',
-        'M.Phil – Nursing',
-        'PhD – Nursing',
+      'B.Sc Nursing': [
+        'Registered Nurse – ICU',
+        'Registered Nurse – NICU',
+        'Registered Nurse – CCU',
+        'Registered Nurse – Emergency/Casualty',
+        'Registered Nurse – Operation Theatre',
+        'Registered Nurse – Dialysis',
+        'Registered Nurse – Oncology',
+        'Registered Nurse – Cardiology',
+        'Registered Nurse – Neurology',
+        'Registered Nurse – Orthopaedics',
+        'Registered Nurse – Paediatrics',
+        'Registered Nurse – Psychiatry',
+        'Registered Nurse – Labour Room',
+        'Clinical Coordinator',
+        'Nursing Instructor',
+        'Nursing Tutor',
+        'Quality Assurance Nurse',
+        'Patient Safety Officer',
       ],
 
-      Diplomas: [
-        'Diploma in Midwifery Nursing',
-        'Diploma in Critical Care Nursing',
-        'Diploma in Emergency & Disaster Nursing',
-        'Diploma in Neonatal Nursing',
-        'Diploma in Oncology Nursing',
-        'Diploma in Psychiatric Nursing',
-        'Diploma in Operation Room Nursing',
-        'Diploma in Geriatric Nursing',
-        'Diploma in Forensic Nursing',
+      'Post Basic B.Sc Nursing': [
+        'Senior Staff Nurse',
+        'Critical Care Specialist Nurse',
+        'Nursing Officer',
+        'Deputy Nursing Superintendent',
+        'Ward Manager',
+        'Nursing Supervisor – Specialized Units',
+        'Clinical Nurse Specialist',
+        'Nursing Educator',
       ],
 
-      PractitionerPrograms: [
-        'Nurse Practitioner in Critical Care',
+      'M.Sc Nursing': [
+        'Nursing Superintendent',
+        'Assistant Director of Nursing',
+        'Deputy Director of Nursing',
+        'Director of Nursing',
+        'Principal – Nursing College',
+        'Vice Principal – Nursing College',
+        'Professor of Nursing',
+        'Associate Professor of Nursing',
+        'Assistant Professor of Nursing',
+        'Nursing Research Coordinator',
+        'Clinical Nurse Specialist – Advanced Practice',
+        'Nurse Practitioner',
+        'Quality Manager – Nursing',
       ],
 
-      Specializations: [
-        'MSc – Medical Surgical Nursing',
-        'MSc – Child Health (Paediatric) Nursing',
-        'MSc – Community Health Nursing',
-        'MSc – Psychiatric Nursing',
-        'MSc – Obstetrics & Gynaecological Nursing',
+      'M.Phil Nursing': [
+        'Nursing Research Scientist',
+        'Clinical Research Nurse',
+        'Nurse Educator – Advanced',
+        'Director of Nursing Education',
+      ],
+
+      'PhD Nursing': [
+        'Professor & Head – Nursing',
+        'Dean – College of Nursing',
+        'Research Director – Nursing',
+        'Principal Scientist – Nursing Research',
+        'Chief Nursing Officer',
       ],
     },
 
     // 🦷 DENTAL
     dental: {
-      Undergraduate: [
-        'BDS – Bachelor of Dental Surgery',
+      BDS: [
+        'General Dental Practitioner',
+        'Dental Surgeon',
+        'Dental Officer',
+        'Clinical Dentist',
+        'Oral Health Consultant',
+        'Dental Consultant – General Practice',
+        'Community Dental Officer',
+        'Public Health Dentist',
+        'Oral Hygiene Specialist',
+        'Dental Clinical Associate',
+        'Emergency Dental Services',
+        'Mobile Dental Clinic Dentist',
+        'Dental Insurance Consultant',
       ],
 
-      Postgraduate: [
+      MDS: [
         'MDS – Conservative Dentistry & Endodontics',
         'MDS – Oral & Maxillofacial Surgery',
         'MDS – Oral Medicine & Radiology',
@@ -762,7 +1043,9 @@ const Home = () => {
         'MDS – Orthodontics',
         'MDS – Pedodontics',
         'MDS – Periodontology',
+        'MDS – Prosthodontics',
         'MDS – Public Health Dentistry',
+        'MDS – Oral & Maxillofacial Pathology',
       ],
     },
   };
