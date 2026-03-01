@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --color-primary: #0891b2;
-  --color-secondary: #1e3a8a;
+  --color-primary: #10b981;
+  --color-secondary: #059669;
+  accent-color: #10b981;
 }
 
 * {
@@ -15,6 +16,7 @@
 
 html {
   scroll-behavior: smooth;
+  accent-color: #10b981;
 }
 
 body {
@@ -25,6 +27,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;
   color: #0f172a;
+  accent-color: #10b981;
 }
 
 a {
