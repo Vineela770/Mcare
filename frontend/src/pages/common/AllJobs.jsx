@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
+import CustomSelect from '../../components/common/CustomSelect';
 // eslint-disable-next-line no-unused-vars
 import { jobService } from '../../api/jobService';
 import { useAuth } from '../../context/useAuth';
@@ -622,31 +623,21 @@ const AllJobs = () => {
                 </datalist>
               </div>
 
-              <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-lg">
-                <MapPin className="w-5 h-5 text-gray-400" />
-                <select
-                  value={selectedLocation}
-                  onChange={(e) => setSelectedLocation(e.target.value)}
-                  className="bg-transparent border-none outline-none w-full text-gray-700"
-                >
-                  {cities.map((city, index) => (
-                    <option key={index} value={city}>
-                      {city}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <CustomSelect
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                options={cities}
+                placeholder="✔ All Locations"
+                icon={MapPin}
+              />
 
-              <select
+              <CustomSelect
                 value={jobType}
                 onChange={(e) => setJobType(e.target.value)}
-                className="px-4 py-3 bg-gray-50 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-emerald-600"
-              >
-                <option value="all">All Types</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Contract">Contract</option>
-              </select>
+                options={['all', 'Full-time', 'Part-time', 'Contract']}
+                placeholder="All Types"
+                className="min-w-[150px]"
+              />
 
               <button
                 type="button"
@@ -824,17 +815,21 @@ const AllJobs = () => {
           <div className="space-y-6">
             <div>
               <label className="block font-medium text-gray-700 mb-2">Posted within</label>
-              <select
+              <CustomSelect
                 value={moreFilters.postedWithin}
                 onChange={(e) => setMoreFilters((p) => ({ ...p, postedWithin: e.target.value }))}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-600 outline-none"
-              >
-                <option value="any">Any time</option>
-                <option value="1">Last 1 day</option>
-                <option value="3">Last 3 days</option>
-                <option value="7">Last 7 days</option>
-                <option value="14">Last 14 days</option>
-              </select>
+                options={['any', '1', '3', '7', '14']}
+                optionLabels={{
+                  'any': 'Any time',
+                  '1': 'Last 1 day',
+                  '3': 'Last 3 days',
+                  '7': 'Last 7 days',
+                  '14': 'Last 14 days'
+                }}
+                placeholder="Any time"
+                showCheckmark={false}
+                className="w-full"
+              />
             </div>
 
             <div>
