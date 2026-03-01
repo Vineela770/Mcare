@@ -395,12 +395,12 @@ const Home = () => {
 
   const categories = [
     { id: 1, title: 'Hospital Jobs – Doctors', Icon: Stethoscope, bg: 'bg-gradient-to-br from-emerald-400 to-teal-600',    positions: getJobCountByCategory('doctors'),     key: 'doctors' },
-    { id: 2, title: 'Hospital Management',    Icon: Building2,   bg: 'bg-gradient-to-br from-cyan-400 to-blue-600',    positions: getJobCountByCategory('management'), key: 'management' },
-    { id: 3, title: 'Medical Colleges',        Icon: GraduationCap, bg: 'bg-gradient-to-br from-purple-400 to-indigo-600', positions: getJobCountByCategory('colleges'),    key: 'colleges' },
-    { id: 4, title: 'Allied Health',           Icon: Activity,    bg: 'bg-gradient-to-br from-green-400 to-emerald-600',   positions: getJobCountByCategory('allied'),      key: 'allied' },
-    { id: 5, title: 'Nursing',                 Icon: Heart,       bg: 'bg-gradient-to-br from-pink-400 to-rose-600',    positions: getJobCountByCategory('nursing'),     key: 'nursing' },
-    { id: 6, title: 'Alternative Medicine',    Icon: Leaf,        bg: 'bg-gradient-to-br from-lime-400 to-green-600', positions: getJobCountByCategory('alternative'), key: 'alternative' },
-    { id: 7, title: 'Dental',                  Icon: Smile,       bg: 'bg-gradient-to-br from-orange-400 to-red-600',  positions: getJobCountByCategory('dental'),      key: 'dental' },
+    { id: 2, title: 'Hospital Management',    Icon: Building2,   bg: 'bg-gradient-to-br from-emerald-400 to-teal-600',    positions: getJobCountByCategory('management'), key: 'management' },
+    { id: 3, title: 'Medical Colleges',        Icon: GraduationCap, bg: 'bg-gradient-to-br from-emerald-400 to-teal-600', positions: getJobCountByCategory('colleges'),    key: 'colleges' },
+    { id: 4, title: 'Allied Health',           Icon: Activity,    bg: 'bg-gradient-to-br from-emerald-400 to-teal-600',   positions: getJobCountByCategory('allied'),      key: 'allied' },
+    { id: 5, title: 'Nursing',                 Icon: Heart,       bg: 'bg-gradient-to-br from-emerald-400 to-teal-600',    positions: getJobCountByCategory('nursing'),     key: 'nursing' },
+    { id: 6, title: 'Alternative Medicine',    Icon: Leaf,        bg: 'bg-gradient-to-br from-emerald-400 to-teal-600', positions: getJobCountByCategory('alternative'), key: 'alternative' },
+    { id: 7, title: 'Dental',                  Icon: Smile,       bg: 'bg-gradient-to-br from-emerald-400 to-teal-600',  positions: getJobCountByCategory('dental'),      key: 'dental' },
   ];
 
   const tabs = [
