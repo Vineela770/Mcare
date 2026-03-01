@@ -93,7 +93,10 @@ const Home = () => {
         return allTabIds[(idx + 1) % allTabIds.length];
       });
       setActiveDot(0);
+      setSelectedDegree('');
       setFilterSpecialization('');
+      setFilterCity('');
+      setFilterSalary('');
     }, 4000);
     return () => clearInterval(timer);
   }, []);
@@ -1061,7 +1064,10 @@ const Home = () => {
                     key={tab.id}
                     onClick={() => {
                       setActiveTab(tab.id);
+                      setSelectedDegree('');
                       setFilterSpecialization('');
+                      setFilterCity('');
+                      setFilterSalary('');
                       setActiveDot(0);
                     }}
                     className={`flex-shrink-0 px-4 py-2 rounded-full border whitespace-nowrap transition ${
@@ -1082,7 +1088,10 @@ const Home = () => {
                     key={tab.id}
                     onClick={() => {
                       setActiveTab(tab.id);
+                      setSelectedDegree('');
                       setFilterSpecialization('');
+                      setFilterCity('');
+                      setFilterSalary('');
                       setActiveDot(0);
                     }}
                     className={`px-5 py-2 rounded-full border whitespace-nowrap transition ${
