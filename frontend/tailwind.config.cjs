@@ -20,6 +20,9 @@ module.exports = {
         'safe-left': 'env(safe-area-inset-left)',
         'safe-right': 'env(safe-area-inset-right)',
       },
+      accentColor: {
+        DEFAULT: '#10b981',
+      },
     },
   },
   plugins: [],

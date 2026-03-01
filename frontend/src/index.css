@@ -6,12 +6,14 @@
   --color-primary: #10b981;
   --color-secondary: #059669;
   accent-color: #10b981;
+  color-scheme: light;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  accent-color: #10b981;
 }
 
 html {
@@ -83,24 +85,42 @@ input[type="password"]::-webkit-textfield-decoration-container {
 /* Select and Option Elements - Force Green Theme */
 select {
   accent-color: #10b981 !important;
+  color-scheme: light;
 }
 
 select option {
-  background-color: white;
-  color: #0f172a;
+  background-color: white !important;
+  color: #0f172a !important;
+  padding: 8px !important;
 }
 
 select option:checked,
 select option:hover,
-select option:focus {
+select option:focus,
+select option:active {
   background-color: #10b981 !important;
   background: #10b981 !important;
+  background-image: none !important;
+  color: white !important;
+  font-weight: normal !important;
+}
+
+select option[selected] {
+  background-color: #10b981 !important;
+  background: linear-gradient(0deg, #10b981 0%, #10b981 100%) !important;
   color: white !important;
 }
 
 /* Webkit specific for select dropdowns */
 select option:checked {
   background: linear-gradient(0deg, #10b981 0%, #10b981 100%) !important;
+  color: white !important;
+  box-shadow: 0 0 10px 100px #10b981 inset !important;
+}
+
+select:focus option:checked,
+select:focus option:hover {
+  background: #10b981 !important;
   color: white !important;
 }
 
@@ -109,6 +129,20 @@ select option:checked {
   select option:checked {
     background-color: #10b981 !important;
     color: white !important;
+  }
+  select option:hover {
+    background-color: #10b981 !important;
+    color: white !important;
+  }
+}
+
+/* Safari/Chrome specific */
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) {
+    select option:checked {
+      background: #10b981 !important;
+      color: white !important;
+    }
   }
 }
 
