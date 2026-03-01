@@ -51,6 +51,7 @@ const Home = () => {
 
   const [jobTitle, setJobTitle] = useState('');
   const [city, setCity] = useState('');
+  const [searchCategory, setSearchCategory] = useState('');
   const [activeTab, setActiveTab] = useState('latest');
   const [activeDot, setActiveDot] = useState(0);
   const [categoryIndex, setCategoryIndex] = useState(0);
@@ -223,6 +224,128 @@ const Home = () => {
     'Madurai',
   ];
 
+  const popularJobTitles = [
+    // Doctors (20)
+    'Cardiologist',
+    'General Physician',
+    'Pediatrician',
+    'Orthopedic Surgeon',
+    'Gynecologist',
+    'Neurologist',
+    'Dermatologist',
+    'Radiologist',
+    'Anesthesiologist',
+    'Emergency Medicine Doctor',
+    'Psychiatrist',
+    'Ophthalmologist',
+    'ENT Specialist',
+    'Urologist',
+    'Gastroenterologist',
+    'Pulmonologist',
+    'Nephrologist',
+    'Oncologist',
+    'General Surgeon',
+    'Medical Officer',
+    
+    // Nursing (15)
+    'Staff Nurse',
+    'ICU Nurse',
+    'OT Nurse',
+    'Emergency Nurse',
+    'Nursing Supervisor',
+    'Ward In-charge',
+    'Clinical Nurse',
+    'Pediatric Nurse',
+    'Cardiac Nurse',
+    'Dialysis Nurse',
+    'Operation Theatre Nurse',
+    'Community Health Nurse',
+    'Nursing Officer',
+    'Critical Care Nurse',
+    'Nurse Practitioner',
+    
+    // Allied Health (15)
+    'Physiotherapist',
+    'Medical Lab Technician',
+    'Radiographer',
+    'CT Scan Technician',
+    'MRI Technician',
+    'X-Ray Technician',
+    'Dietitian',
+    'Nutritionist',
+    'Pharmacist',
+    'Clinical Pharmacist',
+    'Optometrist',
+    'Occupational Therapist',
+    'Speech Therapist',
+    'Respiratory Therapist',
+    'Dialysis Technician',
+    
+    // Hospital Management (20)
+    'Hospital Administrator',
+    'Medical Superintendent',
+    'Hospital Manager',
+    'Front Office Executive',
+    'Receptionist',
+    'Patient Relations Executive',
+    'HR Manager',
+    'Accounts Manager',
+    'Operations Manager',
+    'Quality Manager',
+    'Facility Manager',
+    'Finance Manager',
+    'Administrative Officer',
+    'Billing Executive',
+    'Medical Records Officer',
+    'IT Manager',
+    'Biomedical Engineer',
+    'Housekeeping Supervisor',
+    'Security Supervisor',
+    'Customer Service Executive',
+    
+    // Dental (8)
+    'Dentist',
+    'Dental Surgeon',
+    'Orthodontist',
+    'Endodontist',
+    'Oral Surgeon',
+    'Pediatric Dentist',
+    'Periodontist',
+    'Prosthodontist',
+    
+    // Alternative Medicine (8)
+    'Ayurvedic Doctor',
+    'Homeopathic Doctor',
+    'Unani Doctor',
+    'Naturopath',
+    'Yoga Therapist',
+    'Acupuncturist',
+    'Ayurvedic Consultant',
+    'Homeopathic Consultant',
+    
+    // Medical Colleges (8)
+    'Professor',
+    'Associate Professor',
+    'Assistant Professor',
+    'Junior Resident',
+    'Senior Resident',
+    'Medical Faculty',
+    'Tutor',
+    'Demonstrator',
+    
+    // Paramedical & Other (10)
+    'Paramedic',
+    'Emergency Medical Technician',
+    'Ambulance Driver',
+    'Medical Social Worker',
+    'Counselor',
+    'Clinical Psychologist',
+    'Medical Transcriptionist',
+    'Health Inspector',
+    'Public Health Officer',
+    'Clinical Research Coordinator',
+  ];
+
   const handleApply = (job) => {
     setSelectedJob(job);
     setShowApplyModal(true);
@@ -240,6 +363,7 @@ const Home = () => {
     const params = new URLSearchParams();
     if (jobTitle) params.append('search', jobTitle);
     if (city) params.append('location', city);
+    if (searchCategory) params.append('category', searchCategory);
     navigate(`/jobs?${params.toString()}`);
   };
 
@@ -1263,11 +1387,17 @@ const Home = () => {
     <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
       <input
         type="text"
+        list="job-titles-list"
         placeholder="Job title, keywords..."
         value={jobTitle}
         onChange={(e) => setJobTitle(e.target.value)}
         className="w-full outline-none text-gray-700 text-sm md:text-base"
       />
+      <datalist id="job-titles-list">
+        {popularJobTitles.map((title, idx) => (
+          <option key={idx} value={title} />
+        ))}
+      </datalist>
     </div>
 
     {/* City */}
@@ -1288,12 +1418,19 @@ const Home = () => {
 
     {/* Category */}
     <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
-      <select className="w-full outline-none bg-transparent text-gray-700 text-sm md:text-base">
-        <option>All Categories</option>
-        <option>Doctors</option>
-        <option>Nursing</option>
-        <option>Hospital Management</option>
-        <option>Dental</option>
+      <select 
+        value={searchCategory}
+        onChange={(e) => setSearchCategory(e.target.value)}
+        className="w-full outline-none bg-transparent text-gray-700 text-sm md:text-base cursor-pointer"
+      >
+        <option value="">All Categories</option>
+        <option value="doctors">Hospital Jobs – Doctors</option>
+        <option value="nursing">Nursing</option>
+        <option value="management">Hospital Management</option>
+        <option value="allied">Allied Health</option>
+        <option value="dental">Dental</option>
+        <option value="alternative">Alternative Medicine</option>
+        <option value="colleges">Medical Colleges</option>
       </select>
     </div>
 
