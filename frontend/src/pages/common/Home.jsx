@@ -109,22 +109,7 @@ const Home = () => {
     fetchLiveJobs();
   }, []);
 
-  // Auto-scroll category tabs
-  useEffect(() => {
-    const allTabIds = ['latest', 'doctors', 'management', 'colleges', 'allied', 'alternative', 'nursing', 'dental'];
-    const timer = setInterval(() => {
-      setActiveTab(prev => {
-        const idx = allTabIds.indexOf(prev);
-        return allTabIds[(idx + 1) % allTabIds.length];
-      });
-      setActiveDot(0);
-      setSelectedDegree('');
-      setFilterSpecialization('');
-      setFilterCity('');
-      setFilterSalary('');
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
+  // Removed auto-scroll - user wants manual tab selection only
 
   // Auto-scroll hospital logos
   useEffect(() => {
@@ -758,6 +743,7 @@ const Home = () => {
   console.log('🔍 Top category keys:', topCategoryKeys);
   console.log('📊 Total jobs available:', jobs.length);
   console.log('🎯 Active tab:', activeTab);
+  console.log('🎯 All job categoryKeys:', jobs.map(j => j.categoryKey));
 
   // ✅ Get degrees based on active tab
   const degrees =
@@ -791,6 +777,9 @@ const Home = () => {
       : jobs.filter((job) => job.categoryKey === activeTab);
 
   console.log('📋 Base jobs after category filter:', baseJobs.length);
+  if (baseJobs.length > 0) {
+    console.log('📋 Sample base job:', baseJobs[0]);
+  }
 
   const filteredJobs = baseJobs.filter((job) => {
     const specializationMatch = filterSpecialization
@@ -1057,7 +1046,7 @@ const Home = () => {
             </h2>
 
             <p className="text-sm sm:text-base md:text-lg text-gray-600">
-              Discover the most in-demand medical job openings across India.
+              Discover the most in-demand medical job openings across India. ({jobs.length} positions available)
             </p>
 
             <p className="text-xs sm:text-sm md:text-base text-gray-500 mt-2 max-w-3xl mx-auto px-2 md:px-0">
@@ -1204,8 +1193,22 @@ const Home = () => {
 
           {/* Jobs Section */}
 {filteredJobs.length === 0 ? (
-  <div className="text-center py-10 text-gray-500">
-    No jobs found for selected filters.
+  <div className="text-center py-10">
+    <p className="text-gray-500 text-lg">No jobs found for selected filters.</p>
+    <p className="text-gray-400 text-sm mt-2">
+      Total jobs: {jobs.length} | Base jobs for this category: {baseJobs.length} | Filtered: {filteredJobs.length}
+    </p>
+    <button 
+      onClick={() => { 
+        setSelectedDegree(''); 
+        setFilterSpecialization(''); 
+        setFilterCity(''); 
+        setFilterSalary(''); 
+      }}
+      className="mt-4 px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full"
+    >
+      Clear All Filters
+    </button>
   </div>
 ) : (
   <div className="relative">
