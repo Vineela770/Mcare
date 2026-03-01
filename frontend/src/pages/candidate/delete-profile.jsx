@@ -59,7 +59,7 @@ const DeleteProfile = () => {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full bg-gray-100 px-4 py-3 rounded-lg pr-12 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-sky-400"
+                        className="w-full bg-gray-100 px-4 py-3 rounded-lg pr-12 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
 
                     <button
@@ -84,7 +84,7 @@ const DeleteProfile = () => {
                     {!success && (
                       <button
                       type="submit"
-                      className="mt-6 w-full sm:w-auto bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-lg transition text-sm md:text-base"
+                      className="mt-6 w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-3 rounded-lg transition text-sm md:text-base"
                       >
                       Delete Profile
                       </button>
@@ -95,7 +95,7 @@ const DeleteProfile = () => {
             </div>
 
             {/* ✅ Footer */}
-            <footer className="bg-sky-500 text-white text-center py-5 md:py-6 px-4">
+            <footer className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-center py-5 md:py-6 px-4">
             <p className="text-xs md:text-sm">© 2025 Mcare Jobs. All Right Reserved.</p>
             <p className="text-xs md:text-sm mt-1">Privacy policy, Terms & Conditions.</p>
             <p className="text-xs md:text-sm mt-2">Developed By – MerQ Digisol</p>

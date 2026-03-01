@@ -25,7 +25,7 @@ const Employers = () => {
                 <input
                   type="text"
                   placeholder="Search ..."
-                  className="w-full pl-10 pr-4 py-2 sm:py-3 rounded-lg bg-gray-100 text-gray-600 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                  className="w-full pl-10 pr-4 py-2 sm:py-3 rounded-lg bg-gray-100 text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
                 <span className="absolute left-3 top-2 sm:top-3 text-gray-400">
                   🔍
@@ -37,7 +37,7 @@ const Employers = () => {
                 <span className="text-gray-700 font-medium text-sm sm:text-base">
                   Sort by:
                 </span>
-                <select className="w-full sm:w-auto px-3 sm:px-5 py-2 sm:py-3 border border-sky-400 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-sky-400 text-sm sm:text-base">
+                <select className="w-full sm:w-auto px-3 sm:px-5 py-2 sm:py-3 border border-emerald-500 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm sm:text-base">
                   <option>Default</option>
                   <option selected>Newest</option>
                   <option>Oldest</option>
@@ -53,7 +53,7 @@ const Employers = () => {
         </main>
 
         {/* Footer */}
-        <footer className="w-full bg-sky-500 text-white text-center py-6 mt-6 sm:mt-10">
+        <footer className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-center py-6 mt-6 sm:mt-10">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-6 text-sm">
             <p>© 2025 Mcare Jobs. All Rights Reserved.</p>
             <p>Privacy Policy, Terms & Conditions.</p>

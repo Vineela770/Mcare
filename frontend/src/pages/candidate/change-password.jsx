@@ -146,7 +146,7 @@ const ChangePassword = () => {
 
                 <button
                   type="submit"
-                  className="w-full sm:w-auto bg-sky-500 text-white px-8 py-3 rounded-lg hover:bg-sky-600 transition text-sm md:text-base"
+                  className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3 rounded-lg transition text-sm md:text-base"
                 >
                   Change Password
                 </button>
@@ -156,7 +156,7 @@ const ChangePassword = () => {
         </div>
 
         {/* ✅ Footer */}
-        <footer className="bg-sky-500 text-white text-center py-5 md:py-6 px-4">
+        <footer className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-center py-5 md:py-6 px-4">
           <p className="text-xs md:text-sm">©️ 2025 Mcare Jobs. All Right Reserved.</p>
           <p className="text-xs md:text-sm mt-1">Privacy policy, Terms & Conditions.</p>
           <p className="text-xs md:text-sm mt-2">Developed By – MerQ Digisol</p>
@@ -175,7 +175,7 @@ const ChangePassword = () => {
             </p>
             <button
               onClick={() => setShowSuccess(false)}
-              className="w-full sm:w-auto bg-sky-500 text-white px-6 py-2 rounded-lg hover:bg-sky-600 transition text-sm md:text-base"
+              className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-2 rounded-lg transition text-sm md:text-base"
             >
               OK
             </button>
