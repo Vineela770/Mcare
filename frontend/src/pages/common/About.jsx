@@ -34,8 +34,8 @@ const About = () => {
             </div>
 
             <div className="bg-white rounded-xl p-6 md:p-8 shadow-lg text-center border border-gray-100">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
-                <Users className="w-7 h-7 md:w-8 md:h-8 text-teal-700" />
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                <Users className="w-7 h-7 md:w-8 md:h-8 text-emerald-700" />
               </div>
               <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-2 md:mb-4">Our Vision</h3>
               <p className="text-sm md:text-base text-gray-600">
@@ -44,8 +44,8 @@ const About = () => {
             </div>
 
             <div className="bg-white rounded-xl p-6 md:p-8 shadow-lg text-center border border-gray-100">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
-                <Heart className="w-7 h-7 md:w-8 md:h-8 text-green-600" />
+              <div className="w-14 h-14 md:w-16 md:h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                <Heart className="w-7 h-7 md:w-8 md:h-8 text-emerald-700" />
               </div>
               <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-2 md:mb-4">Our Values</h3>
               <p className="text-sm md:text-base text-gray-600">
@@ -69,15 +69,15 @@ const About = () => {
               <div className="text-xs md:text-base text-gray-600 font-medium">Active Jobs</div>
             </div>
             <div className="text-center">
-              <div className="text-xl md:text-4xl font-bold text-teal-700 mb-1 md:mb-2">850+</div>
+              <div className="text-xl md:text-4xl font-bold text-emerald-700 mb-1 md:mb-2">850+</div>
               <div className="text-xs md:text-base text-gray-600 font-medium">Healthcare Facilities</div>
             </div>
             <div className="text-center">
-              <div className="text-xl md:text-4xl font-bold text-green-600 mb-1 md:mb-2">12,000+</div>
+              <div className="text-xl md:text-4xl font-bold text-emerald-700 mb-1 md:mb-2">12,000+</div>
               <div className="text-xs md:text-base text-gray-600 font-medium">Successful Placements</div>
             </div>
             <div className="text-center">
-              <div className="text-xl md:text-4xl font-bold text-purple-600 mb-1 md:mb-2">150+</div>
+              <div className="text-xl md:text-4xl font-bold text-emerald-700 mb-1 md:mb-2">150+</div>
               <div className="text-xs md:text-base text-gray-600 font-medium">Cities Covered</div>
             </div>
           </div>
