@@ -748,3 +748,32 @@ exports.updateBasicProfile = async (req, res) => {
         res.status(500).json({ success: false, message: err.message });
     }
 };
+
+/**
+ * 📸 Upload Profile Photo
+ */
+exports.uploadProfilePhoto = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: "No file uploaded" });
+        }
+
+        const userId = req.user.id;
+        const photoUrl = `/uploads/profile_photos/${req.file.filename}`;
+
+        // Update users table with new profile photo URL
+        await pool.query(
+            "UPDATE users SET profile_photo_url = $1 WHERE id = $2",
+            [photoUrl, userId]
+        );
+
+        res.json({ 
+            success: true, 
+            photoUrl: photoUrl,
+            message: "Profile photo updated successfully" 
+        });
+    } catch (err) {
+        console.error("❌ uploadProfilePhoto Error:", err.message);
+        res.status(500).json({ success: false, message: err.message });
+    }
+};

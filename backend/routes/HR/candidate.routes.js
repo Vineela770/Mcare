@@ -29,9 +29,11 @@ router.put("/profile", candidateController.updateBasicProfile);
 router.post("/upload-resume", candidateController.uploadCV.single("resume"), (req, res) => {
   res.json({ success: true, resumeUrl: `/uploads/resumes/${req.file.filename}` });
 });
-router.post("/upload-photo", candidateController.uploadPhoto.single("photo"), (req, res) => {
-  res.json({ success: true, photoUrl: `/uploads/profile_photos/${req.file.filename}` });
-});
+
+router.post("/upload-photo", 
+  candidateController.uploadPhoto.single("photo"), 
+  candidateController.uploadProfilePhoto
+);
 
 // Saved Jobs
 router.post("/saved-jobs", candidateController.saveJob);

@@ -7,6 +7,9 @@ import CustomSelect from '../../components/common/CustomSelect';
 import { useAuth } from '../../context/useAuth';
 import axios from '../../api/axios';
 
+// Get API URL for displaying uploaded images
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 const Profile = () => {
   const { user } = useAuth();
 
@@ -69,7 +72,8 @@ const Profile = () => {
         
         // Set profile photo URL if available
         if (p.profile_photo_url) {
-          setProfilePhotoUrl(p.profile_photo_url);
+          // Construct full URL with API base URL
+          setProfilePhotoUrl(`${API_URL}${p.profile_photo_url}`);
         }
         
         setFormData((prev) => ({
@@ -118,8 +122,8 @@ const Profile = () => {
       });
       
       if (response.data.success) {
-        // Update profile photo URL in state
-        setProfilePhotoUrl(response.data.photoUrl);
+        // Update profile photo URL in state with full API URL
+        setProfilePhotoUrl(`${API_URL}${response.data.photoUrl}`);
         setSuccessMessage('Profile picture updated successfully!');
         setShowSuccessModal(true);
         setShowPhotoModal(false);
