@@ -13,7 +13,34 @@ const CustomSelect = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const selectRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  // Update dropdown position when opened
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const updatePosition = () => {
+        const rect = buttonRef.current.getBoundingClientRect();
+        setDropdownPosition({
+          top: rect.bottom + window.scrollY + 8,
+          left: rect.left + window.scrollX,
+          width: rect.width
+        });
+      };
+
+      updatePosition();
+
+      // Update position on scroll and resize
+      window.addEventListener('scroll', updatePosition, true);
+      window.addEventListener('resize', updatePosition);
+
+      return () => {
+        window.removeEventListener('scroll', updatePosition, true);
+        window.removeEventListener('resize', updatePosition);
+      };
+    }
+  }, [isOpen]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -47,9 +74,10 @@ const CustomSelect = ({
   const displayValue = value === 'all' ? placeholder : getLabel(value);
 
   return (
-    <div ref={selectRef} className={`relative ${isOpen ? 'z-[100]' : 'z-10'} ${className}`}>
+    <div ref={selectRef} className={`relative ${className}`}>
       {/* Select Button */}
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -65,9 +93,16 @@ const CustomSelect = ({
         />
       </button>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Menu - Fixed positioning to avoid parent overflow clipping */}
       {isOpen && (
-        <div className="absolute z-[110] w-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden max-h-64 overflow-y-auto">
+        <div 
+          className="fixed z-[9999] bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden max-h-64 overflow-y-auto"
+          style={{
+            top: `${dropdownPosition.top}px`,
+            left: `${dropdownPosition.left}px`,
+            width: `${dropdownPosition.width}px`
+          }}
+        >
           {/* Search Input (optional - only show if many options) */}
           {options.length > 8 && (
             <div className="p-2 border-b border-gray-200">
