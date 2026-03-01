@@ -47,20 +47,20 @@ const Contact = () => {
             <div className="lg:col-span-1 space-y-4 md:space-y-5">
               {[
                 {
-                  icon: <Phone className="w-6 h-6 text-emerald-700" />,
-                  bg: "bg-emerald-100",
+                  icon: <Phone className="w-6 h-6 text-white" />,
+                  bg: "bg-gradient-to-r from-emerald-500 to-teal-600",
                   title: "Phone",
                   lines: ["+91 1800-123-4567", "Mon-Fri, 9AM-6PM"],
                 },
                 {
-                  icon: <Mail className="w-6 h-6 text-teal-700" />,
-                  bg: "bg-teal-100",
+                  icon: <Mail className="w-6 h-6 text-white" />,
+                  bg: "bg-gradient-to-r from-emerald-500 to-teal-600",
                   title: "Email",
                   lines: ["support@mcare.com", "careers@mcare.com"],
                 },
                 {
-                  icon: <MapPin className="w-6 h-6 text-green-600" />,
-                  bg: "bg-green-100",
+                  icon: <MapPin className="w-6 h-6 text-white" />,
+                  bg: "bg-gradient-to-r from-emerald-500 to-teal-600",
                   title: "Office",
                   lines: ["123 Healthcare Plaza", "Bangalore, Karnataka 560001"],
                 },
