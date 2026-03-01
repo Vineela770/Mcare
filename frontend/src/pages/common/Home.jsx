@@ -5,6 +5,22 @@ import Modal from '../../components/common/Modal';
 import { CheckCircle, Stethoscope, Building2, GraduationCap, Activity, Heart, Leaf, Smile, UserPlus, Search, FileCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 import jobService from '../../api/jobService';
 
+// ✅ Dummy Jobs Data (Fallback when backend is empty)
+const DUMMY_JOBS = [
+  { id: 1, title: 'Senior Cardiologist', company: 'Apollo Hospitals', location: 'Hyderabad', city: 'Hyderabad', salary: '₹35,00,000 – ₹55,00,000', categoryKey: 'doctors', category: 'Cardiology', specialization: 'DM – Cardiology', description: 'Seeking experienced cardiologist for interventional procedures', requirements: 'DM Cardiology, 5+ years experience', is_active: true },
+  { id: 2, title: 'General Surgeon', company: 'Apollo Hospitals', location: 'Hyderabad', city: 'Hyderabad', salary: '₹20,00,000 – ₹30,00,000', categoryKey: 'doctors', category: 'Surgery', specialization: 'MS – General Surgery', description: 'Skilled general surgeon for elective and emergency procedures', requirements: 'MS General Surgery, 3+ years', is_active: true },
+  { id: 3, title: 'Paediatric Consultant', company: 'Fortis Healthcare', location: 'Bangalore', city: 'Bangalore', salary: '₹18,00,000 – ₹26,00,000', categoryKey: 'doctors', category: 'Paediatrics', specialization: 'MD – Paediatrics', description: 'Manage inpatient and outpatient paediatric cases', requirements: 'MD Paediatrics, 3+ years clinical experience', is_active: true },
+  { id: 4, title: 'Orthopaedic Surgeon', company: 'Fortis Healthcare', location: 'Bangalore', city: 'Bangalore', salary: '₹28,00,000 – ₹40,00,000', categoryKey: 'doctors', category: 'Orthopaedics', specialization: 'MS – Orthopaedics', description: 'Joint replacement and sports medicine specialist needed', requirements: 'MS Orthopaedics, 5+ years experience', is_active: true },
+  { id: 5, title: 'Neurosurgeon', company: 'Manipal Hospitals', location: 'Hyderabad', city: 'Hyderabad', salary: '₹45,00,000 – ₹70,00,000', categoryKey: 'doctors', category: 'Neurosurgery', specialization: 'MCh – Neurosurgery', description: 'Lead complex brain and spine surgical programmes', requirements: 'MCh Neurosurgery, 7+ years experience', is_active: true },
+  { id: 6, title: 'Radiologist', company: 'Manipal Hospitals', location: 'Hyderabad', city: 'Hyderabad', salary: '₹22,00,000 – ₹32,00,000', categoryKey: 'doctors', category: 'Radiology', specialization: 'MD – Radiodiagnosis', description: 'Expert diagnostic radiologist for imaging department', requirements: 'MD Radiology, 3+ years experience', is_active: true },
+  { id: 7, title: 'Junior Resident – General Medicine', company: 'AIIMS Hyderabad', location: 'Hyderabad', city: 'Hyderabad', salary: '₹75,000 – ₹90,000', categoryKey: 'doctors', category: 'General Medicine', specialization: 'MBBS', description: 'Residential program with rotations through subspecialties', requirements: 'MBBS, MCI registration, NEET-PG cleared', is_active: true },
+  { id: 8, title: 'Senior Resident – Psychiatry', company: 'AIIMS Hyderabad', location: 'Hyderabad', city: 'Hyderabad', salary: '₹90,000 – ₹1,10,000', categoryKey: 'doctors', category: 'Psychiatry', specialization: 'MD – Psychiatry', description: 'Senior resident for mental health department', requirements: 'MD Psychiatry, NMC registration', is_active: true },
+  { id: 9, title: 'Senior Nurse – ICU', company: 'MCARE Hospitals', location: 'Hyderabad', city: 'Hyderabad', salary: '₹4,00,000 – ₹6,00,000', categoryKey: 'nursing', category: 'Nursing', specialization: 'BSc Nursing', description: 'Experienced ICU nurses for critical care', requirements: 'BSc/GNM Nursing, 3+ years ICU experience, BLS/ACLS', is_active: true },
+  { id: 10, title: 'Medical Lab Technician', company: 'MCARE Diagnostics', location: 'Bangalore', city: 'Bangalore', salary: '₹3,00,000 – ₹4,50,000', categoryKey: 'allied', category: 'Pathology', specialization: 'BMLT', description: 'Lab technician for diagnostic centre', requirements: 'BMLT/DMLT, 2+ years experience', is_active: true },
+  { id: 11, title: 'Physiotherapist', company: 'MCARE Rehab', location: 'Chennai', city: 'Chennai', salary: '₹3,50,000 – ₹5,00,000', categoryKey: 'allied', category: 'Rehabilitation', specialization: 'BPT', description: 'Rehabilitation physiotherapy specialist', requirements: 'BPT/MPT, 1+ year clinical experience', is_active: true },
+  { id: 12, title: 'Hospital Administrator', company: 'MCARE Management', location: 'Hyderabad', city: 'Hyderabad', salary: '₹8,00,000 – ₹12,00,000', categoryKey: 'management', category: 'Administration', specialization: 'MBA Healthcare', description: 'Oversee hospital operations and compliance', requirements: 'MBA Healthcare, 5+ years administration', is_active: true },
+];
+
 const Home = () => {
   const navigate = useNavigate();
 
@@ -50,10 +66,13 @@ const Home = () => {
     const fetchLiveJobs = async () => {
       try {
         const jobsData = await jobService.getJobs();
-        setLiveJobs(Array.isArray(jobsData) ? jobsData : []);
+        const jobs = Array.isArray(jobsData) ? jobsData : [];
+        // Use dummy data if no backend jobs available
+        setLiveJobs(jobs.length > 0 ? jobs : DUMMY_JOBS);
       } catch (error) {
         console.error('Error fetching jobs:', error);
-        setLiveJobs([]);
+        // Use dummy data on error
+        setLiveJobs(DUMMY_JOBS);
       }
     };
     fetchLiveJobs();
