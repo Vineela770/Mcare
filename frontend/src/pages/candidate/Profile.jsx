@@ -15,6 +15,8 @@ const Profile = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [toast, setToast] = useState(null);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   // Country codes dropdown
   const countryCodes = ['+91', '+1', '+44', '+61', '+971'];
@@ -64,6 +66,12 @@ const Profile = () => {
         const codeMatch = raw.match(/^(\+\d{1,3})/);
         const code = codeMatch ? codeMatch[1] : '+91';
         const digits = raw.replace(/^\+\d{1,3}/, '');
+        
+        // Set profile photo URL if available
+        if (p.profile_photo_url) {
+          setProfilePhotoUrl(p.profile_photo_url);
+        }
+        
         setFormData((prev) => ({
           ...prev,
           fullName: p.full_name || prev.fullName,
@@ -95,13 +103,37 @@ const Profile = () => {
     if (file) setSelectedFile(file);
   };
 
-  const handlePhotoUpload = () => {
+  const handlePhotoUpload = async () => {
     if (!selectedFile) return;
-    console.log('Uploading photo:', selectedFile);
-    setSuccessMessage('Profile picture updated successfully!');
-    setShowSuccessModal(true);
-    setShowPhotoModal(false);
-    setSelectedFile(null);
+    
+    setUploadingPhoto(true);
+    try {
+      const formData = new FormData();
+      formData.append('photo', selectedFile);
+      
+      const response = await axios.post('/api/candidate/upload-photo', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      if (response.data.success) {
+        // Update profile photo URL in state
+        setProfilePhotoUrl(response.data.photoUrl);
+        setSuccessMessage('Profile picture updated successfully!');
+        setShowSuccessModal(true);
+        setShowPhotoModal(false);
+        setSelectedFile(null);
+      }
+    } catch (error) {
+      console.error('Failed to upload photo:', error);
+      setToast({ 
+        message: error?.response?.data?.message || 'Failed to upload photo. Please try again.', 
+        type: 'error' 
+      });
+    } finally {
+      setUploadingPhoto(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -152,9 +184,17 @@ const Profile = () => {
           {/* Profile Picture */}
           <div className="p-4 sm:p-6 border-b border-gray-200 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
             <div className="relative">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
-                {user?.name?.charAt(0).toUpperCase() || 'U'}
-              </div>
+              {profilePhotoUrl ? (
+                <img 
+                  src={profilePhotoUrl} 
+                  alt="Profile" 
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-emerald-500"
+                />
+              ) : (
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-bold">
+                  {user?.name?.charAt(0).toUpperCase() || 'U'}
+                </div>
+              )}
 
               <button
                 type="button"
@@ -420,10 +460,10 @@ const Profile = () => {
                 <button
                   type="button"
                   onClick={handlePhotoUpload}
-                  disabled={!selectedFile}
+                  disabled={!selectedFile || uploadingPhoto}
                   className="px-4 sm:px-6 py-1 sm:py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
-                  Upload Photo
+                  {uploadingPhoto ? 'Uploading...' : 'Upload Photo'}
                 </button>
               </div>
             </div>
