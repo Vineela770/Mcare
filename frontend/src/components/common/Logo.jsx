@@ -29,7 +29,7 @@ const Logo = ({ size = 'md' }) => {
           xmlns="http://www.w3.org/2000/svg"
         >
           {/* Sun rays */}
-          <g fill="#0891B2" opacity="0.9">
+          <g fill="#059669" opacity="0.9">
             {/* Top ray */}
             <path d="M 50 5 L 55 25 L 45 25 Z" />
             {/* Top right rays */}
@@ -53,8 +53,8 @@ const Logo = ({ size = 'md' }) => {
           </g>
 
           {/* Center circle with M */}
-          <circle cx="50" cy="50" r="28" fill="#0891B2" />
-          <circle cx="50" cy="50" r="24" fill="#06B6D4" />
+          <circle cx="50" cy="50" r="28" fill="#059669" />
+          <circle cx="50" cy="50" r="24" fill="#10b981" />
 
           {/* M Letter */}
           <text
