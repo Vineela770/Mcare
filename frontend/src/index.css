@@ -201,3 +201,34 @@ input[type="date"]::-webkit-datetime-edit-year-field {
 input[type="date"]::-moz-calendar-picker-indicator {
   filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%);
 }
+
+/* Calendar Dropdown - Override browser default blue colors */
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-radius: 4px;
+}
+
+/* Force all date/time inputs to use green accent */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="month"],
+input[type="week"] {
+  accent-color: #10b981 !important;
+}
+
+/* Mobile-specific date picker styling */
+@media (max-width: 768px) {
+  input[type="date"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    accent-color: #10b981 !important;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%);
+    width: 20px;
+    height: 20px;
+  }
+}

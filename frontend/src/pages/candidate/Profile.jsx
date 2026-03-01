@@ -278,7 +278,8 @@ const Profile = () => {
                   name="dateOfBirth"
                   value={formData.dateOfBirth}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base [color-scheme:light] accent-emerald-500"
+                  style={{ colorScheme: 'light' }}
                 />
               </div>
 

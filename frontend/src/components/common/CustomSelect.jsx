@@ -80,16 +80,16 @@ const CustomSelect = ({
         ref={buttonRef}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        className="w-full flex items-center justify-between px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-emerald-400 hover:bg-emerald-50 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer"
       >
         <div className="flex items-center space-x-3">
           {Icon && <Icon className="w-5 h-5 text-gray-400" />}
-          <span className={value === 'all' ? 'text-gray-500' : 'text-gray-900'}>
+          <span className={value === 'all' || !value || value === '' ? 'text-gray-400' : 'text-gray-900'}>
             {displayValue}
           </span>
         </div>
         <ChevronDown 
-          className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+          className={`w-5 h-5 text-emerald-600 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
         />
       </button>
 
