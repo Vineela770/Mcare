@@ -62,14 +62,14 @@ const CandidateDashboard = () => {
     cyan: 'bg-emerald-100 text-emerald-700',
     blue: 'bg-teal-100 text-teal-700',
     green: 'bg-green-100 text-green-600',
-    purple: 'bg-purple-100 text-purple-600',
+    emerald: 'bg-emerald-100 text-emerald-600',
   };
 
   const statCards = [
     { label: 'Jobs Applied', value: stats.applied, icon: Send, color: 'cyan', link: '/candidate/applications' },
     { label: 'Shortlisted', value: stats.shortlisted, icon: FileText, color: 'blue', link: '/candidate/applications' },
     { label: 'Interviews', value: stats.interviews, icon: TrendingUp, color: 'green', link: '/candidate/applications' },
-    { label: 'Profile Views', value: stats.profileViews, icon: Eye, color: 'purple', link: '/candidate/profile' },
+    { label: 'Profile Views', value: stats.profileViews, icon: Eye, color: 'emerald', link: '/candidate/profile' },
   ];
 
   const getStatusColor = (status) => {
@@ -174,8 +174,8 @@ const CandidateDashboard = () => {
                     className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-gray-200 rounded-lg hover:border-emerald-400 transition"
                   >
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-lg flex items-center justify-center text-2xl">
-                        {app.logo}
+                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-lg flex items-center justify-center">
+                        {app.logo || <Building2 className="w-6 h-6 text-emerald-600" />}
                       </div>
 
                       <div>
@@ -253,8 +253,8 @@ const CandidateDashboard = () => {
                   to="/candidate/saved-jobs"
                   className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50"
                 >
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-purple-600" />
+                  <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-emerald-700" />
                   </div>
                   <div>
                     <div className="font-medium text-gray-900 text-sm md:text-base">
