@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
 import { CheckCircle, Stethoscope, Building2, GraduationCap, Activity, Heart, Leaf, Smile, UserPlus, Search, FileCheck, ChevronLeft, ChevronRight } from 'lucide-react';
+// eslint-disable-next-line no-unused-vars
 import jobService from '../../api/jobService';
 
 // ✅ STATIC DEMO DATA - For display purposes only
@@ -148,21 +149,24 @@ const Home = () => {
   });
 
   // ✅ Backend Jobs State - Dynamic Category Counts (Initialize with dummy data)
+  // eslint-disable-next-line no-unused-vars
   const [liveJobs, setLiveJobs] = useState(DUMMY_JOBS);
 
-  // ✅ Fetch Jobs from Backend
+  // ✅ Fetch Jobs from Backend - DISABLED to show dummy data
+  // Uncomment when backend has sufficient jobs (50+)
+  /*
   useEffect(() => {
     const fetchLiveJobs = async () => {
       try {
         const jobsData = await jobService.getJobs();
         const jobs = Array.isArray(jobsData) ? jobsData : [];
         console.log('📊 Fetched jobs from backend:', jobs.length);
-        // Use backend jobs if available, otherwise keep dummy data
-        if (jobs.length > 0) {
+        // Use backend jobs only if there are many (to avoid overriding 87 dummy jobs)
+        if (jobs.length >= 50) {
           setLiveJobs(jobs);
           console.log('✅ Using backend jobs');
         } else {
-          console.log('⚠️ No backend jobs, using dummy data');
+          console.log('⚠️ Backend has only', jobs.length, 'jobs - keeping dummy data (87 jobs)');
         }
       } catch (error) {
         console.error('❌ Error fetching jobs:', error);
@@ -172,6 +176,7 @@ const Home = () => {
     };
     fetchLiveJobs();
   }, []);
+  */
 
   // Removed auto-scroll - user wants manual tab selection only
 
