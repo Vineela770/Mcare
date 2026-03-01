@@ -815,7 +815,8 @@ const Home = () => {
     return parseInt(numbers[0], 10);
   };
 
-  const jobCities = [...new Set(jobs.map((job) => job.location))];
+  // Using predefined cities array instead of extracting from jobs
+  // const jobCities = [...new Set(jobs.map((job) => job.location))];
 
   const baseJobs =
     activeTab === 'latest'
@@ -1212,7 +1213,7 @@ const Home = () => {
                 className="w-full md:w-auto border border-gray-200 rounded-full px-3 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
               >
                 <option value="">All Cities</option>
-                {jobCities.map((c) => (
+                {cities.map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
