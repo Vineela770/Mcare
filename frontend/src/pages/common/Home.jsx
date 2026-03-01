@@ -1178,9 +1178,9 @@ const Home = () => {
   const jobs = liveJobs;
 
   const steps = [
-    { id: 1, Icon: UserPlus,   iconBg: 'bg-emerald-600',  title: 'Register an account', description: 'Create your professional profile in minutes.' },
-    { id: 2, Icon: Search,     iconBg: 'bg-teal-600',  title: 'Search jobs',          description: 'Explore thousands of verified healthcare jobs.' },
-    { id: 3, Icon: FileCheck,  iconBg: 'bg-green-500', title: 'Apply easily',         description: 'Apply instantly and connect with recruiters.' },
+    { id: 1, Icon: UserPlus,   iconBg: 'bg-gradient-to-br from-emerald-400 to-teal-600',  title: 'Register an account', description: 'Create your professional profile in minutes.' },
+    { id: 2, Icon: Search,     iconBg: 'bg-gradient-to-br from-emerald-400 to-teal-600',  title: 'Search jobs',          description: 'Explore thousands of verified healthcare jobs.' },
+    { id: 3, Icon: FileCheck,  iconBg: 'bg-gradient-to-br from-emerald-400 to-teal-600', title: 'Apply easily',         description: 'Apply instantly and connect with recruiters.' },
   ];
 
   const TOP_CATEGORIES_LIMIT = 5;
