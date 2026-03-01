@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
+import CustomSelect from '../../components/common/CustomSelect';
 import { CheckCircle, Stethoscope, Building2, GraduationCap, Activity, Heart, Leaf, Smile, UserPlus, Search, FileCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 // eslint-disable-next-line no-unused-vars
 import jobService from '../../api/jobService';
@@ -1470,36 +1471,35 @@ const Home = () => {
 
     {/* City */}
     <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
-      <select
+      <CustomSelect
         value={city}
         onChange={(e) => setCity(e.target.value)}
-        className="w-full outline-none bg-transparent text-gray-700 text-sm md:text-base"
-      >
-        <option value="">City</option>
-        {cities.map((c) => (
-          <option key={c} value={c}>
-            {c}
-          </option>
-        ))}
-      </select>
+        options={['', ...cities]}
+        placeholder="City"
+        className="w-full text-sm md:text-base"
+        optionLabels={{'': 'City'}}
+      />
     </div>
 
     {/* Category */}
     <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
-      <select 
+      <CustomSelect
         value={searchCategory}
         onChange={(e) => setSearchCategory(e.target.value)}
-        className="w-full outline-none bg-transparent text-gray-700 text-sm md:text-base cursor-pointer"
-      >
-        <option value="">All Categories</option>
-        <option value="doctors">Hospital Jobs – Doctors</option>
-        <option value="nursing">Nursing</option>
-        <option value="management">Hospital Management</option>
-        <option value="allied">Allied Health</option>
-        <option value="dental">Dental</option>
-        <option value="alternative">Alternative Medicine</option>
-        <option value="colleges">Medical Colleges</option>
-      </select>
+        options={['', 'doctors', 'nursing', 'management', 'allied', 'dental', 'alternative', 'colleges']}
+        placeholder="All Categories"
+        className="w-full text-sm md:text-base"
+        optionLabels={{
+          '': 'All Categories',
+          'doctors': 'Hospital Jobs – Doctors',
+          'nursing': 'Nursing',
+          'management': 'Hospital Management',
+          'allied': 'Allied Health',
+          'dental': 'Dental',
+          'alternative': 'Alternative Medicine',
+          'colleges': 'Medical Colleges'
+        }}
+      />
     </div>
 
     {/* Button */}
@@ -1693,49 +1693,41 @@ const Home = () => {
           <div className="mb-8 px-2">
             {/* 2-col grid on mobile, single row on desktop */}
             <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-center md:gap-3">
-              <select
+              <CustomSelect
                 value={selectedDegree}
                 onChange={(e) => { setSelectedDegree(e.target.value); setFilterSpecialization(''); }}
-                className="w-full md:w-auto border border-gray-200 rounded-full px-3 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
-              >
-                <option value="">Select Degree</option>
-                {degrees.map((deg) => (
-                  <option key={deg} value={deg}>{deg}</option>
-                ))}
-              </select>
+                options={['', ...degrees]}
+                placeholder="Select Degree"
+                className="w-full md:w-auto text-sm"
+                optionLabels={{'': 'Select Degree'}}
+              />
 
-              <select
+              <CustomSelect
                 value={filterSpecialization}
                 onChange={(e) => setFilterSpecialization(e.target.value)}
-                disabled={!selectedDegree}
-                className="w-full md:w-auto border border-gray-200 rounded-full px-3 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <option value="">Select Specialization</option>
-                {specializations.map((spec) => (
-                  <option key={spec} value={spec}>{spec}</option>
-                ))}
-              </select>
+                options={['', ...specializations]}
+                placeholder="Select Specialization"
+                className="w-full md:w-auto text-sm"
+                optionLabels={{'': 'Select Specialization'}}
+              />
 
-              <select
+              <CustomSelect
                 value={filterCity}
                 onChange={(e) => { setFilterCity(e.target.value); setActiveDot(0); }}
-                className="w-full md:w-auto border border-gray-200 rounded-full px-3 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
-              >
-                <option value="">All Cities</option>
-                {cities.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
+                options={['', ...cities]}
+                placeholder="All Cities"
+                className="w-full md:w-auto text-sm"
+                optionLabels={{'': 'All Cities'}}
+              />
 
-              <select
+              <CustomSelect
                 value={filterSalary}
                 onChange={(e) => { setFilterSalary(e.target.value); setActiveDot(0); }}
-                className="w-full md:w-auto border border-gray-200 rounded-full px-3 py-2 text-sm bg-white text-gray-700 hover:border-emerald-400 focus:outline-none focus:border-emerald-500 cursor-pointer"
-              >
-                {salaryRanges.map((range) => (
-                  <option key={range.value || 'all'} value={range.value}>{range.label}</option>
-                ))}
-              </select>
+                options={salaryRanges.map(r => r.value)}
+                placeholder="Salary Range"
+                className="w-full md:w-auto text-sm"
+                optionLabels={Object.fromEntries(salaryRanges.map(r => [r.value, r.label]))}
+              />
             </div>
 
             {/* Clear Filters — full width on mobile, inline on desktop */}
@@ -2184,17 +2176,14 @@ const Home = () => {
               </label>
 
               <div className="flex gap-2">
-                <select
+                <CustomSelect
                   value={quickApplyData.countryCode}
                   onChange={(e) => setQuickApplyData({ ...quickApplyData, countryCode: e.target.value })}
-                  className="w-32 px-3 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
-                >
-                  {countryCodes.map((country) => (
-                    <option key={country.code} value={country.code}>
-                      {country.label}
-                    </option>
-                  ))}
-                </select>
+                  options={countryCodes.map(c => c.code)}
+                  optionLabels={Object.fromEntries(countryCodes.map(c => [c.code, c.label]))}
+                  placeholder="+91"
+                  className="w-32"
+                />
 
                 <input
                   type="tel"
@@ -2310,17 +2299,14 @@ const Home = () => {
               </label>
 
               <div className="flex gap-2">
-                <select
+                <CustomSelect
                   value={quickPostData.countryCode}
                   onChange={(e) => setQuickPostData({ ...quickPostData, countryCode: e.target.value })}
-                  className="w-32 px-3 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
-                >
-                  {countryCodes.map((country) => (
-                    <option key={country.code} value={country.code}>
-                      {country.label}
-                    </option>
-                  ))}
-                </select>
+                  options={countryCodes.map(c => c.code)}
+                  optionLabels={Object.fromEntries(countryCodes.map(c => [c.code, c.label]))}
+                  placeholder="+91"
+                  className="w-32"
+                />
 
                 <input
                   type="tel"

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Phone, MapPin } from 'lucide-react';
 import { authService } from '../api/authService';
+import CustomSelect from './common/CustomSelect';
 
 export function RegisterForm() {
   const navigate = useNavigate();
@@ -76,19 +77,15 @@ export function RegisterForm() {
       {/* Title */}
       <div>
         <label className="block text-sm font-medium mb-1">Title</label>
-        <select
+        <CustomSelect
           name="title"
           value={formData.title}
           onChange={handleChange}
-          className="w-full border rounded px-3 py-2"
-          required
-        >
-          <option value="">Select</option>
-          <option value="Dr">Dr</option>
-          <option value="Mr">Mr</option>
-          <option value="Miss">Miss</option>
-          <option value="Others">Others</option>
-        </select>
+          options={['', 'Dr', 'Mr', 'Miss', 'Others']}
+          placeholder="Select"
+          className="w-full"
+          optionLabels={{'': 'Select'}}
+        />
       </div>
 
       {/* Full Name */}
@@ -199,17 +196,19 @@ export function RegisterForm() {
       {/* Role */}
       <div>
         <label className="block text-sm font-medium mb-1">Register As</label>
-        <select
+        <CustomSelect
           name="role"
           value={formData.role}
           onChange={handleChange}
-          className="w-full border rounded px-3 py-2"
-          required
-        >
-          <option value="" disabled>Select</option>
-          <option value="candidate">Doctor</option>
-          <option value="hr">Employee</option>
-        </select>
+          options={['', 'candidate', 'hr']}
+          placeholder="Select"
+          className="w-full"
+          optionLabels={{
+            '': 'Select',
+            'candidate': 'Doctor',
+            'hr': 'Employee'
+          }}
+        />
       </div>
       
 
@@ -218,24 +217,15 @@ export function RegisterForm() {
       {formData.role === 'candidate' && (
         <div>
           <label className="block text-sm font-medium mb-1">Qualification</label>
-          <select
+          <CustomSelect
             name="qualification"
             value={formData.qualification}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          >
-            <option value="" disabled>Select Qualification</option>
-            <option value="MBBS">MBBS</option>
-            <option value="MD">MD</option>
-            <option value="MS">MS</option>
-            <option value="BDS">BDS</option>
-            <option value="MDS">MDS</option>
-            <option value="BHMS">BHMS</option>
-            <option value="BAMS">BAMS</option>
-            <option value="DM">DM</option>
-            <option value="MCh">MCh</option>
-          </select>
+            options={['', 'MBBS', 'MD', 'MS', 'BDS', 'MDS', 'BHMS', 'BAMS', 'DM', 'MCh']}
+            placeholder="Select Qualification"
+            className="w-full"
+            optionLabels={{'': 'Select Qualification'}}
+          />
         </div>
       )}
 
@@ -243,19 +233,15 @@ export function RegisterForm() {
       {formData.role === 'hr' && (
         <div>
           <label className="block text-sm font-medium mb-1">Designation</label>
-          <select
+          <CustomSelect
             name="designation"
             value={formData.designation}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          >
-            <option value="" disabled>Select Designation</option>
-            <option value="Nurse">Nurse</option>
-            <option value="Technician">Technician</option>
-            <option value="Receptionist">Receptionist</option>
-            <option value="Admin">Admin</option>
-          </select>
+            options={['', 'Nurse', 'Technician', 'Receptionist', 'Admin']}
+            placeholder="Select Designation"
+            className="w-full"
+            optionLabels={{'': 'Select Designation'}}
+          />
         </div>
       )}
       {/* Employer – Organization Information */}
@@ -278,33 +264,31 @@ export function RegisterForm() {
             required
           />
 
-          <select
+          <CustomSelect
             name="organizationCategory"
             value={formData.organizationCategory}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          >
-            <option value="" disabled>Select Category</option>
-            <option value="Hospital">Hospital</option>
-            <option value="Clinic">Clinic</option>
-            <option value="Diagnostic Center">Diagnostic Center</option>
-            <option value="Nursing Home">Nursing Home</option>
-          </select>
+            options={['', 'Hospital', 'Clinic', 'Diagnostic Center', 'Nursing Home']}
+            placeholder="Select Category"
+            className="w-full"
+            optionLabels={{'': 'Select Category'}}
+          />
 
-          <select
+          <CustomSelect
             name="numberOfBeds"
             value={formData.numberOfBeds}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-            required
-          >
-            <option value="" disabled>Number of Beds</option>
-            <option value="1-10">1–10</option>
-            <option value="11-50">11–50</option>
-            <option value="51-100">51–100</option>
-            <option value="100+">100+</option>
-          </select>
+            options={['', '1-10', '11-50', '51-100', '100+']}
+            placeholder="Number of Beds"
+            className="w-full"
+            optionLabels={{
+              '': 'Number of Beds',
+              '1-10': '1–10',
+              '11-50': '11–50',
+              '51-100': '51–100',
+              '100+': '100+'
+            }}
+          />
 
           <input
             type="text"

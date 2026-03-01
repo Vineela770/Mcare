@@ -3,6 +3,7 @@ import { User, Mail, Phone, MapPin, Calendar, Save, Camera, Upload, CheckCircle 
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
 import Toast from '../../components/common/Toast';
+import CustomSelect from '../../components/common/CustomSelect';
 import { useAuth } from '../../context/useAuth';
 import axios from '../../api/axios';
 
@@ -227,16 +228,13 @@ const Profile = () => {
                 <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-emerald-600">
                   <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 bg-gray-50 border-r border-gray-200 text-xs sm:text-sm">
                     <Phone className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-                    <select
+                    <CustomSelect
                       name="countryCode"
                       value={formData.countryCode}
                       onChange={handleChange}
-                      className="bg-transparent outline-none text-gray-700 font-medium cursor-pointer"
-                    >
-                      {countryCodes.map((code) => (
-                        <option key={code} value={code}>{code}</option>
-                      ))}
-                    </select>
+                      options={countryCodes}
+                      className="bg-transparent text-xs sm:text-sm"
+                    />
                   </div>
 
                   <input
@@ -289,23 +287,15 @@ const Profile = () => {
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                   Highest Qualification
                 </label>
-                <select
+                <CustomSelect
                   name="highestQualification"
                   value={formData.highestQualification}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
-                >
-                  <option value="">Select Qualification</option>
-                  <option value="MBBS">MBBS</option>
-                  <option value="MD">MD</option>
-                  <option value="MS">MS</option>
-                  <option value="BDS">BDS</option>
-                  <option value="MDS">MDS</option>
-                  <option value="BHMS">BHMS</option>
-                  <option value="BAMS">BAMS</option>
-                  <option value="DM">DM</option>
-                  <option value="MCh">MCh</option>
-                </select>
+                  options={['', 'MBBS', 'MD', 'MS', 'BDS', 'MDS', 'BHMS', 'BAMS', 'DM', 'MCh']}
+                  placeholder="Select Qualification"
+                  className="w-full text-sm sm:text-base"
+                  optionLabels={{'': 'Select Qualification'}}
+                />
               </div>
 
               {/* Additional Qualification */}
@@ -328,18 +318,21 @@ const Profile = () => {
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                   Gender
                 </label>
-                <select
+                <CustomSelect
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
-                >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                  <option value="prefer-not-to-say">Prefer not to say</option>
-                </select>
+                  options={['', 'male', 'female', 'other', 'prefer-not-to-say']}
+                  placeholder="Select Gender"
+                  className="w-full text-sm sm:text-base"
+                  optionLabels={{
+                    '': 'Select Gender',
+                    'male': 'Male',
+                    'female': 'Female',
+                    'other': 'Other',
+                    'prefer-not-to-say': 'Prefer not to say'
+                  }}
+                />
               </div>
 
               {/* Professional Info Header */}

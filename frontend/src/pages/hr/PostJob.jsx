@@ -4,6 +4,7 @@ import { Briefcase, MapPin, Clock, Users, Phone, Send, CheckCircle, Type, Buildi
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
 import Toast from '../../components/common/Toast';
+import CustomSelect from '../../components/common/CustomSelect';
 import { employerService } from '../../api/employerService';
 
 const safeText = (val) => (val && String(val).trim() ? String(val).trim() : '—');
@@ -147,22 +148,24 @@ const PostJob = () => {
                 <Building2 className="w-4 h-4 inline mr-1" />
                 Department *
               </label>
-              <select
+              <CustomSelect
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
-                required
-              >
-                <option value="">Select Department</option>
-                <option value="doctors">Hospital Jobs – Doctors</option>
-                <option value="management">Hospital Management</option>
-                <option value="colleges">Medical Colleges</option>
-                <option value="allied">Allied Health</option>
-                <option value="nursing">Nursing</option>
-                <option value="alternative">Alternative Medicine</option>
-                <option value="dental">Dental</option>
-              </select>
+                options={['', 'doctors', 'management', 'colleges', 'allied', 'nursing', 'alternative', 'dental']}
+                placeholder="Select Department"
+                className="w-full"
+                optionLabels={{
+                  '': 'Select Department',
+                  'doctors': 'Hospital Jobs – Doctors',
+                  'management': 'Hospital Management',
+                  'colleges': 'Medical Colleges',
+                  'allied': 'Allied Health',
+                  'nursing': 'Nursing',
+                  'alternative': 'Alternative Medicine',
+                  'dental': 'Dental'
+                }}
+              />
             </div>
 
             {/* Location */}
@@ -194,18 +197,13 @@ const PostJob = () => {
               <div className="flex flex-col sm:flex-row sm:items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-emerald-600">
                 <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b sm:border-b-0 sm:border-r border-gray-300">
                   <Phone className="text-gray-400 w-5 h-5" />
-                  <select
+                  <CustomSelect
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleChange}
-                    className="bg-transparent outline-none text-gray-700 font-medium cursor-pointer"
-                  >
-                    {countryCodes.map((code) => (
-                      <option key={code} value={code}>
-                        {code}
-                      </option>
-                    ))}
-                  </select>
+                    options={countryCodes}
+                    className="bg-transparent"
+                  />
                 </div>
 
                 <input
@@ -231,18 +229,20 @@ const PostJob = () => {
                 <Briefcase className="w-4 h-4 inline mr-1" />
                 Job Type *
               </label>
-              <select
+              <CustomSelect
                 name="jobType"
                 value={formData.jobType}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
-                required
-              >
-                <option value="full-time">Full-time</option>
-                <option value="part-time">Part-time</option>
-                <option value="contract">Contract</option>
-                <option value="temporary">Temporary</option>
-              </select>
+                options={['full-time', 'part-time', 'contract', 'temporary']}
+                placeholder="Select Job Type"
+                className="w-full"
+                optionLabels={{
+                  'full-time': 'Full-time',
+                  'part-time': 'Part-time',
+                  'contract': 'Contract',
+                  'temporary': 'Temporary'
+                }}
+              />
             </div>
 
             {/* Experience */}
@@ -251,20 +251,15 @@ const PostJob = () => {
                 <Clock className="w-4 h-4 inline mr-1" />
                 Experience Required *
               </label>
-              <select
+              <CustomSelect
                 name="experience"
                 value={formData.experience}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
-                required
-              >
-                <option value="">Select Experience</option>
-                {experienceOptions.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
+                options={['', ...experienceOptions]}
+                placeholder="Select Experience"
+                className="w-full"
+                optionLabels={{'': 'Select Experience'}}
+              />
             </div>
 
             {/* Salary */}
@@ -273,20 +268,15 @@ const PostJob = () => {
                 <IndianRupee className="w-4 h-4 inline mr-1" />
                 Salary Range *
               </label>
-              <select
+              <CustomSelect
                 name="salary"
                 value={formData.salary}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
-                required
-              >
-                <option value="">Select Salary Range</option>
-                {salaryOptions.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
+                options={['', ...salaryOptions]}
+                placeholder="Select Salary Range"
+                className="w-full"
+                optionLabels={{'': 'Select Salary Range'}}
+              />
             </div>
 
             {/* Positions */}

@@ -15,6 +15,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import CustomSelect from '../../components/common/CustomSelect';
 import employerService from '../../api/employerService';
 
 const Candidates = () => {
@@ -179,17 +180,14 @@ const Candidates = () => {
 
             <div className="flex items-center gap-3 w-full lg:w-auto">
               <Filter className="w-5 h-5 text-gray-400 shrink-0" />
-              <select
+              <CustomSelect
                 value={filterSpecialization}
                 onChange={(e) => setFilterSpecialization(e.target.value)}
-                className="w-full lg:w-72 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
-              >
-                <option value="all">All Specializations</option>
-                <option value="Registered Nurse">Registered Nurse</option>
-                <option value="Physical Therapist">Physical Therapist</option>
-                <option value="Lab Technician">Lab Technician</option>
-                <option value="Pharmacist">Pharmacist</option>
-              </select>
+                options={['all', 'Registered Nurse', 'Physical Therapist', 'Lab Technician', 'Pharmacist']}
+                placeholder="All Specializations"
+                className="w-full lg:w-72"
+                optionLabels={{'all': 'All Specializations'}}
+              />
             </div>
           </div>
         </div>

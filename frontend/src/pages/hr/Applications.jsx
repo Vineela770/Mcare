@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
+import CustomSelect from '../../components/common/CustomSelect';
 import { employerService } from '../../api/employerService';
 
 const Applications = () => {
@@ -299,17 +300,14 @@ const Applications = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Job Position
               </label>
-              <select
+              <CustomSelect
                 value={selectedJob}
                 onChange={(e) => setSelectedJob(e.target.value)}
-                className="w-full lg:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-600"
-              >
-                {jobs.map((job) => (
-                  <option key={job.id} value={job.id}>
-                    {job.title}
-                  </option>
-                ))}
-              </select>
+                options={jobs.map(j => j.id)}
+                optionLabels={Object.fromEntries(jobs.map(j => [j.id, j.title]))}
+                placeholder="Select Job"
+                className="w-full lg:w-auto"
+              />
             </div>
 
             {/* Status Filter buttons */}

@@ -1,5 +1,6 @@
 import React from "react";
 import Sidebar from "../../components/common/Sidebar";
+import CustomSelect from "../../components/common/CustomSelect";
 
 const Employers = () => {
   return (
@@ -37,11 +38,11 @@ const Employers = () => {
                 <span className="text-gray-700 font-medium text-sm sm:text-base">
                   Sort by:
                 </span>
-                <select className="w-full sm:w-auto px-3 sm:px-5 py-2 sm:py-3 border border-emerald-500 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm sm:text-base">
-                  <option>Default</option>
-                  <option selected>Newest</option>
-                  <option>Oldest</option>
-                </select>
+                <CustomSelect
+                  options={['Default', 'Newest', 'Oldest']}
+                  placeholder="Newest"
+                  className="w-full sm:w-auto text-sm sm:text-base"
+                />
               </div>
             </div>
 

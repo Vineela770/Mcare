@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Bell, Plus, Briefcase, Trash2, Edit2, CheckCircle, X, AlertCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import CustomSelect from '../../components/common/CustomSelect';
 import { alertService } from '../../api/alertService';
 
 const Alerts = () => {
@@ -353,29 +354,26 @@ const Alerts = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
-                    <select
+                    <CustomSelect
                       name="jobType"
                       value={formData.jobType}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
-                    >
-                      <option value="Full-time">Full-time</option>
-                      <option value="Part-time">Part-time</option>
-                      <option value="Remote">Remote</option>
-                    </select>
+                      options={['Full-time', 'Part-time', 'Remote']}
+                      placeholder="Job Type"
+                      className="w-full"
+                    />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
-                    <select
+                    <CustomSelect
                       name="frequency"
                       value={formData.frequency}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
-                    >
-                      <option value="Daily">Daily</option>
-                      <option value="Weekly">Weekly</option>
-                    </select>
+                      options={['Daily', 'Weekly']}
+                      placeholder="Frequency"
+                      className="w-full"
+                    />
                   </div>
                 </div>
 
@@ -460,29 +458,26 @@ const Alerts = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
-                    <select
+                    <CustomSelect
                       name="jobType"
                       value={formData.jobType}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
-                    >
-                      <option value="Full-time">Full-time</option>
-                      <option value="Part-time">Part-time</option>
-                      <option value="Remote">Remote</option>
-                    </select>
+                      options={['Full-time', 'Part-time', 'Remote']}
+                      placeholder="Job Type"
+                      className="w-full"
+                    />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
-                    <select
+                    <CustomSelect
                       name="frequency"
                       value={formData.frequency}
                       onChange={handleChange}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600"
-                    >
-                      <option value="Daily">Daily</option>
-                      <option value="Weekly">Weekly</option>
-                    </select>
+                      options={['Daily', 'Weekly']}
+                      placeholder="Frequency"
+                      className="w-full"
+                    />
                   </div>
                 </div>
 

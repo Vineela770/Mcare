@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Search, MapPin, Briefcase, DollarSign, Clock, Star, X, FileText, Building2, Calendar, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
+import CustomSelect from '../../components/common/CustomSelect';
 import { jobService } from '../../api/jobService';
 
 
@@ -365,29 +366,28 @@ const BrowseJobs = () => {
             </div>
             <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-lg">
               <MapPin className="w-5 h-5 text-gray-400" />
-              <select
+              <CustomSelect
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="bg-transparent border-none outline-none w-full text-gray-700"
-              >
-                {cities.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
-                  </option>
-                ))}
-              </select>
+                options={cities}
+                placeholder="Location"
+                className="w-full"
+              />
             </div>
 
-            <select
+            <CustomSelect
               value={jobType}
               onChange={(e) => setJobType(e.target.value)}
-              className="px-4 py-3 bg-gray-50 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-emerald-600"
-            >
-              <option value="all">All Types</option>
-              <option value="full-time">Full-time</option>
-              <option value="part-time">Part-time</option>
-              <option value="contract">Contract</option>
-            </select>
+              options={['all', 'full-time', 'part-time', 'contract']}
+              placeholder="All Types"
+              className="px-4 py-3"
+              optionLabels={{
+                'all': 'All Types',
+                'full-time': 'Full-time',
+                'part-time': 'Part-time',
+                'contract': 'Contract'
+              }}
+            />
             <button
               onClick={handleSearch}
               className="bg-gradient-to-r from-teal-700 to-emerald-500 text-white px-6 py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium flex items-center justify-center space-x-2"

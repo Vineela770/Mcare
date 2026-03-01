@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Calendar, Clock, MapPin, User, Video, Phone, X, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
+import CustomSelect from '../../components/common/CustomSelect';
 import employerService from '../../api/employerService';
 
 const Interviews = () => {
@@ -453,16 +454,14 @@ const Interviews = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Interview Type</label>
-                      <select
+                      <CustomSelect
                         name="type"
                         value={formData.type}
                         onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
-                      >
-                        <option value="Video Call">Video Call</option>
-                        <option value="Phone">Phone</option>
-                        <option value="In-Person">In-Person</option>
-                      </select>
+                        options={['Video Call', 'Phone', 'In-Person']}
+                        placeholder="Video Call"
+                        className="w-full"
+                      />
                     </div>
 
                     <div>

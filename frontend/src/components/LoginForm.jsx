@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { authService } from '../api/authService';
+import CustomSelect from './common/CustomSelect';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -33,19 +34,19 @@ export function LoginForm() {
       {error && <div className="text-red-500 text-sm">{error}</div>}
       <div>
         <label className="block text-sm font-medium mb-1">Login As</label>
-        <select
+        <CustomSelect
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="w-full border rounded px-3 py-2"
-          required
-        >
-          <option value="" disabled>
-            Select Role
-          </option>
-          <option value="candidate">Doctor</option>
-          <option value="hr">Employer</option>
-          <option value="admin">Administrator</option>
-        </select>
+          options={['', 'candidate', 'hr', 'admin']}
+          placeholder="Select Role"
+          className="w-full"
+          optionLabels={{
+            '': 'Select Role',
+            'candidate': 'Doctor',
+            'hr': 'Employer',
+            'admin': 'Administrator'
+          }}
+        />
       </div>
 
       <div>
