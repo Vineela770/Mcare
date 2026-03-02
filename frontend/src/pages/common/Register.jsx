@@ -307,16 +307,17 @@ const Register = () => {
                   Phone Number
                 </label>
 
-                <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-emerald-600">
-                  <div className="flex items-center gap-2 px-3 py-3 bg-gray-50 border-r border-gray-300 relative">
+                <div className="flex items-stretch border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-emerald-600">
+                  <div className="relative flex items-center gap-2 px-3 py-3 bg-gray-50 border-r border-gray-300 min-w-[120px]">
                     <Phone className="text-gray-400 w-5 h-5" />
                     <CustomDropdown
                       value={countryCode}
                       onChange={(e) => setCountryCode(e.target.value)}
                       options={countryCodes.map(code => ({ label: code, value: code }))}
                       placeholder="+91"
-                      className="min-w-[80px]"
+                      className="min-w-[70px]"
                       compact={true}
+                      greenTheme={true}
                     />
                   </div>
 
