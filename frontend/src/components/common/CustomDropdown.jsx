@@ -12,48 +12,18 @@ const CustomDropdown = ({
   compact = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [menuStyle, setMenuStyle] = useState({});
-  const buttonRef = useRef(null);
-  const dropdownRef = useRef(null);
-
-  // Compute fixed position from button rect whenever opening
-  useEffect(() => {
-    if (isOpen && buttonRef.current) {
-      const updatePosition = () => {
-        const rect = buttonRef.current.getBoundingClientRect();
-        setMenuStyle({
-          position: 'fixed',
-          top: rect.bottom + 4,
-          left: rect.left,
-          width: rect.width,
-          zIndex: 99999,
-        });
-      };
-      updatePosition();
-      window.addEventListener('scroll', updatePosition, true);
-      window.addEventListener('resize', updatePosition);
-      return () => {
-        window.removeEventListener('scroll', updatePosition, true);
-        window.removeEventListener('resize', updatePosition);
-      };
-    }
-  }, [isOpen]);
+  const wrapperRef = useRef(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        buttonRef.current && !buttonRef.current.contains(event.target) &&
-        dropdownRef.current && !dropdownRef.current.contains(event.target)
-      ) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isOpen]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleSelect = (selectedValue) => {
     onChange({ target: { name, value: selectedValue } });
@@ -69,10 +39,9 @@ const CustomDropdown = ({
   const showPlaceholder = !value || value === '';
 
   return (
-    <div className={`relative ${className}`}>
+    <div ref={wrapperRef} className={`relative ${className}`}>
       {/* Dropdown Button */}
       <button
-        ref={buttonRef}
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
@@ -90,12 +59,11 @@ const CustomDropdown = ({
         <ChevronDown className={`w-4 h-4 text-emerald-600 transition-transform ml-1 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      {/* Dropdown Menu — fixed positioned so it always renders above all content */}
+      {/* Dropdown Menu — absolute so it aligns directly under the button */}
       {isOpen && !disabled && (
         <div
-          ref={dropdownRef}
-          style={menuStyle}
-          className="bg-white border border-emerald-200 rounded-lg shadow-2xl max-h-60 overflow-y-auto"
+          className="absolute left-0 right-0 top-full mt-1 bg-white border border-emerald-200 rounded-lg shadow-2xl max-h-60 overflow-y-auto"
+          style={{ zIndex: 9999 }}
         >
           {options.map((option, index) => (
             <div
