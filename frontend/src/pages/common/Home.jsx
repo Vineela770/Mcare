@@ -1436,14 +1436,21 @@ const Home = () => {
     <div className="min-h-screen bg-white">
       <style>
         {`
+          select {
+            accent-color: #10b981;
+          }
           select option:checked,
           select option:hover {
+            background: linear-gradient(0deg, #10b981 0%, #10b981 100%) !important;
             background-color: #10b981 !important;
             color: white !important;
           }
           select option {
-            background-color: white;
-            color: #374151;
+            background-color: white !important;
+            color: #374151 !important;
+          }
+          select::-webkit-scrollbar-thumb {
+            background-color: #10b981;
           }
         `}
       </style>
