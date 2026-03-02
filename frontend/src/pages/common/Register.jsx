@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, UserPlus } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
 import { authService } from '../../api/authService';
+import CustomDropdown from '../../components/common/CustomDropdown';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -209,43 +210,6 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-800 via-emerald-700 to-emerald-500 flex items-center justify-center px-4 py-12">
-      <style>
-        {`
-          select {
-            accent-color: #10b981 !important;
-          }
-          select option {
-            background-color: white;
-            color: #1f2937;
-            padding: 10px;
-          }
-          select option:checked {
-            background: #10b981 !important;
-            background-color: #10b981 !important;
-            color: white !important;
-          }
-          select option:hover {
-            background: #059669 !important;
-            background-color: #059669 !important;
-            color: white !important;
-          }
-          select option[value=""]:disabled {
-            color: #9ca3af;
-          }
-          /* Firefox specific */
-          @-moz-document url-prefix() {
-            select option:checked {
-              background-color: #10b981 !important;
-              color: white !important;
-            }
-          }
-          /* Webkit/Chrome specific */
-          select option:checked {
-            background: linear-gradient(#10b981, #10b981);
-            color: white;
-          }
-        `}
-      </style>
       <div className="max-w-2xl w-full">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -286,38 +250,38 @@ const Register = () => {
             )}
 
             {/* Role Selection */}
-            <select
+            <CustomDropdown
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+              options={[
+                { label: 'Select', value: '' },
+                { label: 'Doctor', value: 'candidate' },
+                { label: 'Employer', value: 'hr' }
+              ]}
+              placeholder="Select"
               required
-            >
-              <option value="" disabled>
-                Select
-              </option>
-              <option value="candidate">Doctor</option>
-              <option value="hr">Employer</option>
-            </select>
+            />
 
             {/* Two Column Layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Title */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                <select
+                <CustomDropdown
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  options={[
+                    { label: 'Select', value: '' },
+                    { label: 'Dr', value: 'Dr' },
+                    { label: 'Mr', value: 'Mr' },
+                    { label: 'Miss', value: 'Miss' },
+                    { label: 'Others', value: 'Others' }
+                  ]}
+                  placeholder="Select"
                   required
-                >
-                  <option value="">Select</option>
-                  <option value="Dr">Dr</option>
-                  <option value="Mr">Mr</option>
-                  <option value="Miss">Miss</option>
-                  <option value="Others">Others</option>
-                </select>
+                />
               </div>
 
               {/* Full Name */}
@@ -344,19 +308,16 @@ const Register = () => {
                 </label>
 
                 <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-emerald-600">
-                  <div className="flex items-center gap-2 px-3 py-3 bg-gray-50 border-r border-gray-300">
+                  <div className="flex items-center gap-2 px-3 py-3 bg-gray-50 border-r border-gray-300 relative">
                     <Phone className="text-gray-400 w-5 h-5" />
-                    <select
+                    <CustomDropdown
                       value={countryCode}
                       onChange={(e) => setCountryCode(e.target.value)}
-                      className="bg-transparent outline-none text-gray-700 font-medium cursor-pointer"
-                    >
-                      {countryCodes.map((code) => (
-                        <option key={code} value={code}>
-                          {code}
-                        </option>
-                      ))}
-                    </select>
+                      options={countryCodes.map(code => ({ label: code, value: code }))}
+                      placeholder="+91"
+                      className="min-w-[80px]"
+                      compact={true}
+                    />
                   </div>
 
                   <input
@@ -394,26 +355,25 @@ const Register = () => {
                 <>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Qualification</label>
-                    <select
+                    <CustomDropdown
                       name="qualification"
                       value={formData.qualification}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                      options={[
+                        { label: 'Select Qualification', value: '' },
+                        { label: 'MBBS', value: 'MBBS' },
+                        { label: 'MD', value: 'MD' },
+                        { label: 'MS', value: 'MS' },
+                        { label: 'BDS', value: 'BDS' },
+                        { label: 'MDS', value: 'MDS' },
+                        { label: 'BHMS', value: 'BHMS' },
+                        { label: 'BAMS', value: 'BAMS' },
+                        { label: 'DM', value: 'DM' },
+                        { label: 'MCh', value: 'MCh' }
+                      ]}
+                      placeholder="Select Qualification"
                       required
-                    >
-                      <option value="" disabled>
-                        Select Qualification
-                      </option>
-                      <option value="MBBS">MBBS</option>
-                      <option value="MD">MD</option>
-                      <option value="MS">MS</option>
-                      <option value="BDS">BDS</option>
-                      <option value="MDS">MDS</option>
-                      <option value="BHMS">BHMS</option>
-                      <option value="BAMS">BAMS</option>
-                      <option value="DM">DM</option>
-                      <option value="MCh">MCh</option>
-                    </select>
+                    />
                   </div>
 
                   <div>
