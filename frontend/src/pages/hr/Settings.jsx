@@ -322,7 +322,7 @@ const Settings = () => {
                   value={formData.designation}
                   onChange={handleChange}
                   placeholder="e.g. HR Manager, Medical Director"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                 />
               </div>
 
@@ -355,7 +355,7 @@ const Settings = () => {
                   onChange={handleChange}
                   placeholder="e.g. 100"
                   min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                 />
               </div>
 
@@ -367,7 +367,7 @@ const Settings = () => {
                   value={formData.website}
                   onChange={handleChange}
                   placeholder="https://yourhospital.com"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                 />
               </div>
 
@@ -379,7 +379,7 @@ const Settings = () => {
                   value={formData.organization_address}
                   onChange={handleChange}
                   placeholder="Street, Area, Pin code"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                 />
               </div>
 
@@ -391,7 +391,7 @@ const Settings = () => {
                   onChange={handleChange}
                   rows="4"
                   placeholder="Describe your organization (50–200 words)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                 />
                 {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
               </div>
