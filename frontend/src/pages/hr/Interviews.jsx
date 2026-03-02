@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Calendar, Clock, MapPin, User, Video, Phone, X, CheckCircle } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Video, Phone, X, CheckCircle, Trash2 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import CustomSelect from '../../components/common/CustomSelect';
 import CustomDropdown from '../../components/common/CustomDropdown';
@@ -134,6 +134,12 @@ const Interviews = () => {
     showNotification(`Interview rescheduled for ${formData.candidateName}`);
   };
 
+  const handleDeleteInterview = (interview) => {
+    if (!window.confirm(`Delete interview with ${interview.candidateName}?`)) return;
+    setInterviews((prev) => prev.filter((i) => i.id !== interview.id));
+    showNotification(`Interview with ${interview.candidateName} deleted.`, 'error');
+  };
+
   return (
     <div>
       <Sidebar />
@@ -222,7 +228,7 @@ const Interviews = () => {
                 <div className="flex flex-col sm:flex-row md:flex-col gap-2 md:ml-4">
                   <button
                     onClick={() => handleJoinInterview(interview)}
-                    className="w-full md:w-auto px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-700 text-sm"
+                    className="w-full md:w-auto px-4 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800 text-sm"
                   >
                     Join Interview
                   </button>
@@ -231,6 +237,13 @@ const Interviews = () => {
                     className="w-full md:w-auto px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm"
                   >
                     Reschedule
+                  </button>
+                  <button
+                    onClick={() => handleDeleteInterview(interview)}
+                    className="w-full md:w-auto px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 text-sm flex items-center justify-center gap-1"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
                   </button>
                 </div>
               </div>

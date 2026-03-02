@@ -317,16 +317,19 @@ const Applications = () => {
 
           <div className="flex flex-col lg:flex-row lg:items-end gap-4">
             {/* Job Filter */}
-            <div className="w-full lg:w-80">
+            <div className="w-full lg:w-52">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Job Position
               </label>
-              <CustomDropdown
-                options={jobs.map(j => ({ label: j.title, value: j.id }))}
+              <select
                 value={selectedJob}
                 onChange={(e) => setSelectedJob(e.target.value)}
-                placeholder="Select Job"
-              />
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white text-gray-700 text-sm"
+              >
+                {jobs.map(j => (
+                  <option key={j.id} value={j.id}>{j.title}</option>
+                ))}
+              </select>
             </div>
 
             {/* Status Filter buttons */}

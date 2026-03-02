@@ -107,15 +107,29 @@ const PostJob = () => {
   };
 
   const handleSaveDraft = () => {
-    // Check if at least basic fields are filled
-    if (!formData.title.trim() || !formData.department || !formData.location.trim()) {
-      setToast({ message: 'Please fill in Job Title, Department, and Location before saving as draft.', type: 'error' });
+    const missing = [];
+    if (!formData.title.trim())       missing.push('Job Title');
+    if (!formData.department)         missing.push('Department');
+    if (!formData.location.trim())    missing.push('Location');
+    if (!formData.phone.trim())       missing.push('Phone Number');
+    if (!formData.jobType)            missing.push('Job Type');
+    if (!formData.experience)         missing.push('Experience Required');
+    if (!formData.salary)             missing.push('Salary Range');
+    if (!formData.positions)          missing.push('Number of Positions');
+    if (!formData.deadline)           missing.push('Application Deadline');
+    if (!formData.description.trim()) missing.push('Job Description');
+    if (!formData.requirements.trim()) missing.push('Requirements & Qualifications');
+
+    if (missing.length > 0) {
+      setToast({
+        message: `Please fill in: ${missing.join(', ')}.`,
+        type: 'error',
+      });
       return;
     }
-    
+
     console.log('Job Saved as Draft:', formData);
     setToast({ message: 'Job saved as draft.', type: 'info' });
-    // Don't reset form data when saving draft
   };
 
   const handleReview = () => {
