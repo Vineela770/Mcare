@@ -9,7 +9,6 @@ const CustomDropdown = ({
   placeholder = 'Select',
   disabled = false,
   className = '',
-  required = false,
   compact = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,7 +65,7 @@ const CustomDropdown = ({
 
       {/* Dropdown Menu */}
       {isOpen && !disabled && (
-        <div className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto" style={{ zIndex: 9999 }}>
           {options.map((option, index) => (
             <div
               key={index}

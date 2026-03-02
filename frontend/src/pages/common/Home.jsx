@@ -1438,7 +1438,7 @@ const Home = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <div className="relative min-h-[70vh] md:min-h-[75vh] lg:min-h-[50vh] w-full flex items-center justify-center overflow-hidden">
+      <div className="relative min-h-[70vh] md:min-h-[75vh] lg:min-h-[50vh] w-full flex items-center justify-center overflow-x-hidden">
 
         {/* Background Image */}
         <img
@@ -1451,7 +1451,7 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-teal-900/80 via-teal-800/75 to-emerald-700/70" />
 
         {/* Content */}
-        <div className="relative z-10 w-full max-w-6xl px-4 py-12 md:py-20 text-center">
+        <div className="relative z-10 w-full max-w-6xl px-4 py-12 md:py-20 text-center overflow-visible">
 
           {/* Heading */}
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6">
@@ -1461,9 +1461,9 @@ const Home = () => {
           {/* Search Form */}
 <form
   onSubmit={handleSearch}
-  className="w-full bg-white rounded-2xl md:rounded-full shadow-2xl p-4 md:p-1.5"
+  className="w-full bg-white rounded-2xl md:rounded-full shadow-2xl p-4 md:p-1.5 overflow-visible"
 >
-  <div className="flex flex-col md:flex-row items-stretch md:items-center">
+  <div className="flex flex-col md:flex-row items-stretch md:items-center overflow-visible">
 
     {/* Job Title */}
     <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
@@ -1483,7 +1483,7 @@ const Home = () => {
     </div>
 
     {/* City */}
-    <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
+    <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200 overflow-visible">
       <CustomDropdown
         options={[{ label: 'City', value: '' }, ...cities.map(c => ({ label: c, value: c }))]}
         value={city}
@@ -1493,7 +1493,7 @@ const Home = () => {
     </div>
 
     {/* Category */}
-    <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
+    <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200 overflow-visible">
       <CustomDropdown
         options={[
           { label: 'All Categories', value: '' },
