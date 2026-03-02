@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
-import CustomSelect from '../../components/common/CustomSelect';
+import FilterDropdown from '../../components/common/FilterDropdown';
 import { CheckCircle, Stethoscope, Building2, GraduationCap, Activity, Heart, Leaf, Smile, UserPlus, Search, FileCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 // eslint-disable-next-line no-unused-vars
 import jobService from '../../api/jobService';
@@ -1434,26 +1434,6 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <style>
-        {`
-          select {
-            accent-color: #10b981;
-          }
-          select option:checked,
-          select option:hover {
-            background: linear-gradient(0deg, #10b981 0%, #10b981 100%) !important;
-            background-color: #10b981 !important;
-            color: white !important;
-          }
-          select option {
-            background-color: white !important;
-            color: #374151 !important;
-          }
-          select::-webkit-scrollbar-thumb {
-            background-color: #10b981;
-          }
-        `}
-      </style>
       <Navbar />
 
       {/* Hero Section */}
@@ -1723,79 +1703,66 @@ const Home = () => {
 
           {/* Filters */}
           <div className="mb-8 px-2">
-            {/* Debug logging */}
-            {console.log('🎨 Rendering filters - degrees:', degrees.length, 'specializations:', specializations.length, 'cities:', cities.length, 'salary ranges:', salaryRanges.length)}
-            
             {/* 2-col grid on mobile, single row on desktop */}
             <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-center md:gap-3">
               {/* Degree Filter */}
-              <select
+              <FilterDropdown
                 value={selectedDegree}
-                onChange={(e) => { 
-                  console.log('🎓 Degree changed to:', e.target.value);
-                  setSelectedDegree(e.target.value); 
+                onChange={(value) => { 
+                  setSelectedDegree(value); 
                   setFilterSpecialization(''); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto min-w-[160px] px-5 py-2 bg-white border rounded-full text-gray-700 text-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition"
-                style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.5rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
-              >
-                <option value="">Select Degree</option>
-                {degrees.map((degree, index) => (
-                  <option key={index} value={degree}>{degree}</option>
-                ))}
-              </select>
+                options={[
+                  { label: 'Select Degree', value: '' },
+                  ...degrees.map(degree => ({ label: degree, value: degree }))
+                ]}
+                placeholder="Select Degree"
+                className="w-full md:w-auto"
+              />
 
               {/* Specialization Filter */}
-              <select
+              <FilterDropdown
                 value={filterSpecialization}
-                onChange={(e) => { 
-                  console.log('📋 Specialization changed to:', e.target.value);
-                  setFilterSpecialization(e.target.value); 
+                onChange={(value) => { 
+                  setFilterSpecialization(value); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto min-w-[180px] px-5 py-2 bg-white border rounded-full text-gray-700 text-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50"
+                options={[
+                  { label: 'Select Specialization', value: '' },
+                  ...specializations.map(spec => ({ label: spec, value: spec }))
+                ]}
+                placeholder="Select Specialization"
                 disabled={!selectedDegree}
-                style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', backgroundImage: !selectedDegree ? 'none' : 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.5rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
-              >
-                <option value="">Select Specialization</option>
-                {specializations.map((spec, index) => (
-                  <option key={index} value={spec}>{spec}</option>
-                ))}
-              </select>
+                className="w-full md:w-auto"
+              />
 
               {/* City Filter */}
-              <select
+              <FilterDropdown
                 value={filterCity}
-                onChange={(e) => { 
-                  console.log('🌆 City changed to:', e.target.value);
-                  setFilterCity(e.target.value); 
+                onChange={(value) => { 
+                  setFilterCity(value); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto min-w-[140px] px-5 py-2 bg-white border rounded-full text-gray-700 text-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition"
-                style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.5rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
-              >
-                <option value="">All Cities</option>
-                {cities.sort().map((city, index) => (
-                  <option key={index} value={city}>{city}</option>
-                ))}
-              </select>
+                options={[
+                  { label: 'All Cities', value: '' },
+                  ...cities.sort().map(city => ({ label: city, value: city }))
+                ]}
+                placeholder="All Cities"
+                className="w-full md:w-auto"
+              />
 
               {/* Salary Range Filter */}
-              <select
+              <FilterDropdown
                 value={filterSalary}
-                onChange={(e) => { 
-                  console.log('💰 Salary changed to:', e.target.value);
-                  setFilterSalary(e.target.value); 
+                onChange={(value) => { 
+                  setFilterSalary(value); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto min-w-[160px] px-5 py-2 bg-white border rounded-full text-gray-700 text-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition"
-                style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.5rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
-              >
-                {salaryRanges.map((range, index) => (
-                  <option key={index} value={range.value}>{range.label}</option>
-                ))}
-              </select>
+                options={salaryRanges.map(range => ({ label: range.label, value: range.value }))}
+                placeholder="Salary Range"
+                className="w-full md:w-auto"
+              />
             </div>
 
             {/* Clear Filters — full width on mobile, inline on desktop */}
