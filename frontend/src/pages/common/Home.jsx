@@ -1434,6 +1434,19 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <style>
+        {`
+          select option:checked,
+          select option:hover {
+            background-color: #10b981 !important;
+            color: white !important;
+          }
+          select option {
+            background-color: white;
+            color: #374151;
+          }
+        `}
+      </style>
       <Navbar />
 
       {/* Hero Section */}
