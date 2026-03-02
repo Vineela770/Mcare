@@ -1717,7 +1717,7 @@ const Home = () => {
                   setFilterSpecialization(''); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer transition-all text-sm"
+                className="w-full md:w-auto px-5 py-2 bg-white border rounded-full text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition whitespace-nowrap"
               >
                 <option value="">Select Degree</option>
                 {degrees.map((degree, index) => (
@@ -1733,7 +1733,7 @@ const Home = () => {
                   setFilterSpecialization(e.target.value); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer transition-all text-sm"
+                className="w-full md:w-auto px-5 py-2 bg-white border rounded-full text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={!selectedDegree}
               >
                 <option value="">Select Specialization</option>
@@ -1750,7 +1750,7 @@ const Home = () => {
                   setFilterCity(e.target.value); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer transition-all text-sm"
+                className="w-full md:w-auto px-5 py-2 bg-white border rounded-full text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition whitespace-nowrap"
               >
                 <option value="">All Cities</option>
                 {cities.sort().map((city, index) => (
@@ -1766,7 +1766,7 @@ const Home = () => {
                   setFilterSalary(e.target.value); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer transition-all text-sm"
+                className="w-full md:w-auto px-5 py-2 bg-white border rounded-full text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition whitespace-nowrap"
               >
                 {salaryRanges.map((range, index) => (
                   <option key={index} value={range.value}>{range.label}</option>
