@@ -161,6 +161,24 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-800 via-emerald-700 to-emerald-500 flex items-center justify-center px-4 py-12">
+      <style>
+        {`
+          select {
+            accent-color: #10b981;
+          }
+          select option:checked,
+          select option:hover {
+            background: linear-gradient(90deg, #047857 0%, #10b981 100%) !important;
+            background-color: #10b981 !important;
+            color: white !important;
+          }
+          select option {
+            background-color: white !important;
+            color: #374151 !important;
+            padding: 8px;
+          }
+        `}
+      </style>
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
