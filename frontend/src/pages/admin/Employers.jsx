@@ -893,7 +893,9 @@ const Employers = () => {
         <div className="fixed top-4 right-4 z-50 animate-slide-in">
           <div
             className={`flex items-center space-x-3 px-6 py-4 rounded-lg shadow-lg ${
-              notification.type === 'success' ? 'bg-green-500' : 'bg-teal-600'
+              notification.type === 'error' ? 'bg-red-600' :
+              notification.type === 'info'  ? 'bg-teal-700' :
+              'bg-emerald-700'
             } text-white`}
           >
             <CheckCircle className="w-5 h-5" />

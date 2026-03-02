@@ -303,6 +303,17 @@ const SCHEMA_STATEMENTS = [
   `CREATE TRIGGER update_job_alerts_timestamp
      BEFORE UPDATE ON job_alerts
      FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()`,
+
+  // ── Allow 'employee' role (drop old constraint, add updated one) ───────────
+  `DO $$ BEGIN
+    ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END $$`,
+  `DO $$ BEGIN
+    ALTER TABLE users ADD CONSTRAINT users_role_check
+      CHECK (role IN ('candidate', 'employer', 'hr', 'admin', 'employee'));
+  EXCEPTION WHEN duplicate_object THEN NULL;
+  END $$`,
 ];
 
 async function runMigration() {

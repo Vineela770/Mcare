@@ -35,6 +35,11 @@ const formatDate = (dateStr) => {
   });
 };
 
+// Returns true only when the URL points to an actual file (non-empty, has an extension)
+const isValidFileUrl = (url) =>
+  url && typeof url === 'string' && url.trim() !== '' &&
+  !url.trim().endsWith('/') && url.includes('.');
+
 const UsersManagement = () => {
   const [users, setUsers] = useState([]);
   const [roleFilter, setRoleFilter] = useState('all');
@@ -854,18 +859,21 @@ const UsersManagement = () => {
                       {/* Resume */}
                       <div className="bg-teal-50 rounded-xl p-4">
                         <h4 className="font-semibold text-teal-800 mb-3 text-sm uppercase tracking-wide">Resume / CV</h4>
-                        {viewUser.resume_url ? (
+                        {isValidFileUrl(viewUser.resume_url) ? (
                           <a
                             href={`${import.meta.env.VITE_API_URL || 'https://mcare-backend-61sy.onrender.com'}${viewUser.resume_url}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-lg text-sm hover:bg-teal-700 transition-colors"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-lg text-sm hover:bg-teal-800 transition-colors"
                           >
                             <Download className="w-4 h-4" />
                             View / Download Resume
                           </a>
                         ) : (
-                          <p className="text-sm text-gray-500 italic">No resume uploaded</p>
+                          <div className="flex items-center gap-2 text-orange-600 bg-orange-50 px-3 py-2 rounded-lg">
+                            <AlertCircle className="w-4 h-4" />
+                            <span className="text-sm font-medium">Resume not uploaded</span>
+                          </div>
                         )}
                       </div>
 
@@ -1018,7 +1026,9 @@ const UsersManagement = () => {
         <div className="fixed top-4 right-4 z-50">
           <div
             className={`flex items-center space-x-3 px-5 py-4 rounded-lg shadow-lg ${
-              notification.type === 'success' ? 'bg-green-500' : 'bg-teal-600'
+              notification.type === 'error' ? 'bg-red-600' :
+              notification.type === 'info'  ? 'bg-teal-700' :
+              'bg-emerald-700'
             } text-white max-w-[92vw] md:max-w-md`}
           >
             <CheckCircle className="w-5 h-5 flex-shrink-0" />
