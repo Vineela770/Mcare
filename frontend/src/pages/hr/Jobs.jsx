@@ -134,66 +134,62 @@ const Jobs = () => {
         {/* Jobs List */}
         <div className="space-y-4">
           {filteredJobs.map(job => (
-            <div key={job.id} className="bg-white rounded-xl p-6 shadow-sm border">
-              <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+            <div key={job.id} className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between px-6 py-4 gap-4">
 
-                <div className="flex-1">
+                {/* Left: Title + Badge */}
+                <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-3 mb-3">
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-900">
-                      {job.title}
-                    </h3>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(job.status)}`}>
+                    <h3 className="text-lg font-bold text-gray-900 truncate">{job.title}</h3>
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold shrink-0 ${getStatusBadge(job.status)}`}>
                       {job.status}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
-                    <div className="flex items-center gap-2">
-                      <Briefcase className="w-4 h-4 shrink-0" />
-                      <span>{job.department}</span>
+                  {/* Meta Row */}
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500">
+                    <div className="flex items-center gap-1.5">
+                      <Briefcase className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span className="font-medium text-gray-700">{job.department}</span>
                     </div>
-
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 shrink-0" />
+                    <div className="hidden sm:block w-px h-4 bg-gray-200" />
+                    <div className="flex items-center gap-1.5">
+                      <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
                       <span>{job.location}</span>
                     </div>
-
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4 shrink-0" />
-                      <span>{Number(job.applicants) || 0} Applicants</span>
+                    <div className="hidden sm:block w-px h-4 bg-gray-200" />
+                    <div className="flex items-center gap-1.5">
+                      <Users className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span><span className="font-semibold text-gray-800">{Number(job.applicants) || 0}</span> Applicants</span>
                     </div>
-
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 shrink-0" />
-                      <span>Deadline: {job.deadline ? new Date(job.deadline).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}</span>
+                    <div className="hidden sm:block w-px h-4 bg-gray-200" />
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>Deadline: <span className="font-medium text-gray-700">{job.deadline ? new Date(job.deadline).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}</span></span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                {/* Right: Action Buttons */}
+                <div className="flex items-center gap-1 shrink-0">
                   <button
-                    onClick={() => {
-                      setSelectedJob(job);
-                      setShowJobDetails(true);
-                    }}
-                    className="p-2 text-emerald-700 hover:bg-emerald-50 rounded-lg"
+                    onClick={() => { setSelectedJob(job); setShowJobDetails(true); }}
+                    className="p-2 text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors"
                     title="View Details"
                   >
                     <Eye className="w-5 h-5" />
                   </button>
-
                   <Link
                     to={`/hr/post-job?edit=${job.id}`}
-                    className="p-2 text-teal-700 hover:bg-teal-50 rounded-lg"
+                    className="p-2 text-teal-700 hover:bg-teal-50 rounded-lg transition-colors"
                     title="Edit Job"
                   >
                     <Edit2 className="w-5 h-5" />
                   </Link>
-
                   <button
                     onClick={() => handleDelete(job.id)}
                     disabled={deletingId === job.id}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-40"
+                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-40"
                     title="Delete Job"
                   >
                     <Trash2 className="w-5 h-5" />
