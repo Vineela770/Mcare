@@ -53,9 +53,19 @@ select {
 
 input:focus,
 textarea:focus,
-select:focus {
+select:focus,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
   outline: none !important;
-  box-shadow: none !important;
+  outline-offset: 0 !important;
+}
+
+/* Override any blue ring colors */
+input:focus,
+textarea:focus,
+select:focus {
+  --tw-ring-color: #10b981 !important;
 }
 
 /* Text Selection - Green Theme */
