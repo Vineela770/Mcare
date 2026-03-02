@@ -1328,11 +1328,22 @@ const Home = () => {
   }
 
   const filteredJobs = baseJobs.filter((job) => {
+    // Degree filter - check if job's specialization contains or starts with the selected degree
+    const degreeMatch = selectedDegree
+      ? job.specialization?.includes(selectedDegree) || 
+        job.specialization?.startsWith(selectedDegree) ||
+        job.category?.includes(selectedDegree)
+      : true;
+
+    // Specialization filter - exact match
     const specializationMatch = filterSpecialization
       ? job.specialization === filterSpecialization
       : true;
+    
+    // City filter
     const cityMatch = filterCity ? job.city === filterCity : true;
 
+    // Salary filter
     let salaryMatch = true;
     if (filterSalary) {
       const [min, max] = filterSalary.split('-').map(Number);
@@ -1340,7 +1351,7 @@ const Home = () => {
       salaryMatch = jobSalary >= min && jobSalary <= max;
     }
 
-    return specializationMatch && cityMatch && salaryMatch;
+    return degreeMatch && specializationMatch && cityMatch && salaryMatch;
   });
 
   console.log('🎯 Filters applied:', { 
@@ -1695,7 +1706,11 @@ const Home = () => {
             <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-center md:gap-3">
               <CustomSelect
                 value={selectedDegree}
-                onChange={(e) => { setSelectedDegree(e.target.value); setFilterSpecialization(''); }}
+                onChange={(e) => { 
+                  setSelectedDegree(e.target.value); 
+                  setFilterSpecialization(''); 
+                  setActiveDot(0); 
+                }}
                 options={['', ...degrees]}
                 placeholder="Select Degree"
                 className="w-full md:w-auto text-sm"
@@ -1704,7 +1719,10 @@ const Home = () => {
 
               <CustomSelect
                 value={filterSpecialization}
-                onChange={(e) => setFilterSpecialization(e.target.value)}
+                onChange={(e) => { 
+                  setFilterSpecialization(e.target.value); 
+                  setActiveDot(0); 
+                }}
                 options={['', ...specializations]}
                 placeholder="Select Specialization"
                 className="w-full md:w-auto text-sm"
@@ -1733,7 +1751,13 @@ const Home = () => {
             {/* Clear Filters — full width on mobile, inline on desktop */}
             <div className="flex justify-center mt-2 md:mt-3">
               <button
-                onClick={() => { setSelectedDegree(''); setFilterSpecialization(''); setFilterCity(''); setFilterSalary(''); }}
+                onClick={() => { 
+                  setSelectedDegree(''); 
+                  setFilterSpecialization(''); 
+                  setFilterCity(''); 
+                  setFilterSalary(''); 
+                  setActiveDot(0); 
+                }}
                 className="w-full md:w-auto px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full transition text-sm font-medium border border-emerald-600"
               >
                 Clear Filters
@@ -1754,6 +1778,7 @@ const Home = () => {
         setFilterSpecialization(''); 
         setFilterCity(''); 
         setFilterSalary(''); 
+        setActiveDot(0); 
       }}
       className="mt-4 px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full"
     >
