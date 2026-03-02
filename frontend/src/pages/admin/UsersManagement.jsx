@@ -40,6 +40,24 @@ const isValidFileUrl = (url) =>
   url && typeof url === 'string' && url.trim() !== '' &&
   !url.trim().endsWith('/') && url.includes('.');
 
+const BACKEND = import.meta.env.VITE_API_URL || 'https://mcare-backend-61sy.onrender.com';
+
+// Verify file exists via HEAD request before opening (avoids blank page on missing files)
+async function openFile(relativePath, onError) {
+  const fullUrl = `${BACKEND}${relativePath}`;
+  try {
+    const res = await fetch(fullUrl, { method: 'HEAD' });
+    if (res.ok) {
+      window.open(fullUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      onError('File not found on server (may have been cleared). Please ask the user to re-upload.');
+    }
+  } catch {
+    // Network error — try opening anyway (CORS might block HEAD)
+    window.open(fullUrl, '_blank', 'noopener,noreferrer');
+  }
+}
+
 const UsersManagement = () => {
   const [users, setUsers] = useState([]);
   const [roleFilter, setRoleFilter] = useState('all');
@@ -52,6 +70,11 @@ const UsersManagement = () => {
   const [userApps, setUserApps] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [notification, setNotification] = useState(null);
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 4000);
+  };
 
   const [formData, setFormData] = useState({
     name: '',
@@ -76,11 +99,6 @@ const UsersManagement = () => {
     };
     loadData();
   }, []);
-
-  const showNotification = (message, type = 'success') => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification(null), 3000);
-  };
 
   const handleAddUser = () => {
     setFormData({
@@ -860,15 +878,13 @@ const UsersManagement = () => {
                       <div className="bg-teal-50 rounded-xl p-4">
                         <h4 className="font-semibold text-teal-800 mb-3 text-sm uppercase tracking-wide">Resume / CV</h4>
                         {isValidFileUrl(viewUser.resume_url) ? (
-                          <a
-                            href={`${import.meta.env.VITE_API_URL || 'https://mcare-backend-61sy.onrender.com'}${viewUser.resume_url}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <button
+                            onClick={() => openFile(viewUser.resume_url, (msg) => showNotification(msg, 'error'))}
                             className="inline-flex items-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-lg text-sm hover:bg-teal-800 transition-colors"
                           >
                             <Download className="w-4 h-4" />
                             View / Download Resume
-                          </a>
+                          </button>
                         ) : (
                           <div className="flex items-center gap-2 text-orange-600 bg-orange-50 px-3 py-2 rounded-lg">
                             <AlertCircle className="w-4 h-4" />

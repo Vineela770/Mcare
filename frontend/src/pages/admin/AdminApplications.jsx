@@ -51,6 +51,24 @@ const isValidFileUrl = (url) =>
   url && typeof url === 'string' && url.trim() !== '' &&
   !url.trim().endsWith('/') && url.includes('.');
 
+const APP_BACKEND = import.meta.env.VITE_API_URL || 'https://mcare-backend-61sy.onrender.com';
+
+// Verify file exists via HEAD request before opening to avoid blank page
+async function openFile(relativePath, onError) {
+  const fullUrl = `${APP_BACKEND}${relativePath}`;
+  try {
+    const res = await fetch(fullUrl, { method: 'HEAD' });
+    if (res.ok) {
+      window.open(fullUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      onError('File not found on server. It may have been cleared — please ask the user to re-upload.');
+    }
+  } catch {
+    // Network/CORS error — open anyway
+    window.open(fullUrl, '_blank', 'noopener,noreferrer');
+  }
+}
+
 const StatusPill = ({ status }) => {
   const key = (status || '').toLowerCase();
   const cls = STATUS_COLORS[key] || 'bg-gray-100 text-gray-600';
@@ -112,11 +130,22 @@ const AdminApplications = () => {
   });
 
   const BACKEND = import.meta.env.VITE_API_URL || 'https://mcare-backend-61sy.onrender.com';
+  const [fileErrMsg, setFileErrMsg] = useState('');
+
+  const handleFileOpen = (relativePath) => openFile(relativePath, (msg) => setFileErrMsg(msg));
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
       <div className="ml-0 md:ml-64 min-h-screen bg-gray-50 p-4 sm:p-6 pt-16 sm:pt-6 md:pt-6">
+
+        {/* File-not-found error banner */}
+        {fileErrMsg && (
+          <div className="fixed top-4 right-4 z-50 flex items-center gap-3 bg-red-600 text-white px-5 py-3 rounded-xl shadow-lg">
+            <span className="text-sm font-medium">{fileErrMsg}</span>
+            <button onClick={() => setFileErrMsg('')} className="ml-2 text-white hover:text-red-200 font-bold">&times;</button>
+          </div>
+        )}
 
         {/* Header */}
         <div className="mb-6 md:mb-8 flex items-start justify-between">
@@ -231,14 +260,12 @@ const AdminApplications = () => {
                       <td className="px-4 py-3"><StatusPill status={app.status} /></td>
                       <td className="px-4 py-3">
                         {isValidFileUrl(app.resume_url) ? (
-                          <a
-                            href={`${BACKEND}${app.resume_url}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <button
+                            onClick={() => handleFileOpen(app.resume_url)}
                             className="inline-flex items-center gap-1 text-xs text-teal-700 hover:text-teal-800"
                           >
                             <Download className="w-3 h-3" /> Resume
-                          </a>
+                          </button>
                         ) : (
                           <span className="text-xs text-orange-500 font-medium">Not uploaded</span>
                         )}
@@ -357,14 +384,12 @@ const AdminApplications = () => {
                     )}
                   </div>
                   {isValidFileUrl(viewApp.resume_url) ? (
-                    <a
-                      href={`${BACKEND}${viewApp.resume_url}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => handleFileOpen(viewApp.resume_url)}
                       className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-700 text-white rounded-lg text-xs hover:bg-teal-800"
                     >
                       <Download className="w-3.5 h-3.5" /> Download Resume
-                    </a>
+                    </button>
                   ) : (
                     <div className="mt-3 flex items-center gap-2 text-orange-600 bg-orange-50 px-3 py-2 rounded-lg">
                       <span className="text-xs font-medium">Resume not uploaded</span>
@@ -414,14 +439,12 @@ const AdminApplications = () => {
                     <FileText className="w-4 h-4" /> Cover Letter
                   </h4>
                   {isValidFileUrl(viewApp.cover_letter_url) ? (
-                    <a
-                      href={`${BACKEND}${viewApp.cover_letter_url}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => handleFileOpen(viewApp.cover_letter_url)}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-700 text-white rounded-lg text-xs hover:bg-gray-800"
                     >
                       <Download className="w-3.5 h-3.5" /> View Cover Letter
-                    </a>
+                    </button>
                   ) : (
                     <div className="flex items-center gap-2 text-orange-600 bg-orange-50 px-3 py-2 rounded-lg">
                       <span className="text-xs font-medium">Cover letter not uploaded</span>
