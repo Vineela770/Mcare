@@ -216,15 +216,16 @@ const Settings = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
 
                 <div className="flex gap-2">
-                  <div className="w-36">
-                    <CustomDropdown
-                      options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
-                      value={formData.phoneCountryCode}
-                      onChange={(e) => handleChange({ target: { name: 'phoneCountryCode', value: e.target.value } })}
-                      placeholder="+91"
-                      compact={true}
-                    />
-                  </div>
+                  <select
+                    name="phoneCountryCode"
+                    value={formData.phoneCountryCode}
+                    onChange={handleChange}
+                    className="w-24 px-2 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none bg-white text-gray-700 text-sm"
+                  >
+                    {countryCodes.map(c => (
+                      <option key={c.code} value={c.code}>{c.code}</option>
+                    ))}
+                  </select>
 
                   <input
                     type="tel"
@@ -244,15 +245,16 @@ const Settings = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Alternate Phone (Optional)</label>
 
                 <div className="flex gap-2">
-                  <div className="w-36">
-                    <CustomDropdown
-                      options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
-                      value={formData.alternatePhoneCountryCode}
-                      onChange={(e) => handleChange({ target: { name: 'alternatePhoneCountryCode', value: e.target.value } })}
-                      placeholder="+91"
-                      compact={true}
-                    />
-                  </div>
+                  <select
+                    name="alternatePhoneCountryCode"
+                    value={formData.alternatePhoneCountryCode}
+                    onChange={handleChange}
+                    className="w-24 px-2 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none bg-white text-gray-700 text-sm"
+                  >
+                    {countryCodes.map(c => (
+                      <option key={c.code} value={c.code}>{c.code}</option>
+                    ))}
+                  </select>
 
                   <input
                     type="tel"

@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Briefcase, MapPin, Clock, Users, Phone, Send, CheckCircle, Type, Building2, IndianRupee, Calendar, ClipboardList, Gift } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
@@ -11,6 +11,9 @@ const safeText = (val) => (val && String(val).trim() ? String(val).trim() : '—
 
 const PostJob = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get('edit');
+  const isEditMode = Boolean(editId);
   const formRef = useRef(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -62,6 +65,35 @@ const PostJob = () => {
 
   const [formData, setFormData] = useState(initialForm);
 
+  // Load existing job data when in edit mode
+  useEffect(() => {
+    if (!editId) return;
+    const loadJob = async () => {
+      try {
+        const job = await employerService.getJobById(editId);
+        setFormData({
+          title: job.title || '',
+          department: job.department || '',
+          location: job.location || '',
+          jobType: job.job_type || job.jobType || 'full-time',
+          experience: job.experience || '',
+          salary: job.salary || '',
+          positions: String(job.positions || ''),
+          description: job.description || '',
+          requirements: job.requirements || '',
+          benefits: job.benefits || '',
+          deadline: job.deadline ? job.deadline.slice(0, 10) : '',
+          countryCode: '+91',
+          phone: '',
+        });
+      } catch (err) {
+        console.error('Failed to load job:', err);
+        setToast({ message: 'Failed to load job data. Please try again.', type: 'error' });
+      }
+    };
+    loadJob();
+  }, [editId]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -99,14 +131,23 @@ const PostJob = () => {
   const handleFinalSubmit = async () => {
     setSubmitting(true);
     try {
-      const result = await employerService.postJob(previewData);
+      let result;
+      if (isEditMode) {
+        result = await employerService.updateJob(editId, {
+          ...previewData,
+          job_type: previewData.jobType,
+          status: 'active',
+        });
+      } else {
+        result = await employerService.postJob(previewData);
+      }
       setShowReviewModal(false);
       setPostedJob(result || previewData);
       setShowSuccessModal(true);
     } catch (error) {
-      console.error('Failed to post job:', error);
+      console.error(isEditMode ? 'Failed to update job:' : 'Failed to post job:', error);
       setShowReviewModal(false);
-      setToast({ message: error?.message || 'Failed to post job. Please try again.', type: 'error' });
+      setToast({ message: error?.message || (isEditMode ? 'Failed to update job. Please try again.' : 'Failed to post job. Please try again.'), type: 'error' });
     } finally {
       setSubmitting(false);
     }
@@ -121,8 +162,8 @@ const PostJob = () => {
           ✅ Desktop: ml-64 (unchanged) */}
       <div className="min-h-screen bg-gray-50 px-4 sm:px-6 py-6 pt-16 md:pt-6 md:ml-64">
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Post New Job</h1>
-          <p className="text-gray-600 mt-2">Create a new job posting to attract candidates</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{isEditMode ? 'Edit Job' : 'Post New Job'}</h1>
+          <p className="text-gray-600 mt-2">{isEditMode ? 'Update the job posting details below' : 'Create a new job posting to attract candidates'}</p>
         </div>
 
         <form
@@ -421,7 +462,7 @@ const PostJob = () => {
                   className="w-full sm:w-auto px-5 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600 disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   <Send className="w-4 h-4" />
-                  {submitting ? 'Submitting…' : 'Submit Job'}
+                  {submitting ? (isEditMode ? 'Updating…' : 'Submitting…') : (isEditMode ? 'Update Job' : 'Submit Job')}
                 </button>
               </div>
             </div>
@@ -443,10 +484,10 @@ const PostJob = () => {
                 <CheckCircle className="w-10 h-10 text-green-600" />
               </div>
 
-              <h3 className="text-xl font-bold text-gray-900">Job Posting Complete</h3>
+              <h3 className="text-xl font-bold text-gray-900">{isEditMode ? 'Job Updated Successfully!' : 'Job Posting Complete'}</h3>
 
               <p className="text-gray-600">
-                Your job posting for <span className="font-semibold">{postedJob?.title || formData.title}</span> has been published
+                Your job posting for <span className="font-semibold">{postedJob?.title || formData.title}</span> has been {isEditMode ? 'updated' : 'published'}
                 successfully and is now visible to candidates.
               </p>
 

@@ -37,12 +37,23 @@ exports.getDashboardStats = async (req, res) => {
 // Get Recent Applications
 exports.getRecentApplications = async (req, res) => {
   try {
-    const result = await pool.query(
-      "SELECT * FROM applications ORDER BY applied_at DESC LIMIT 5"
-    );
-
+    const result = await pool.query(`
+      SELECT
+        a.id,
+        a.status,
+        a.applied_at,
+        u.full_name            AS candidate_name,
+        u.email                AS candidate_email,
+        COALESCE(cp.experience_years::text || ' yrs', 'N/A') AS experience,
+        mjp.title              AS job_title
+      FROM applications a
+      LEFT JOIN users u            ON u.id  = a.candidate_id
+      LEFT JOIN candidate_profiles cp ON cp.user_id = a.candidate_id
+      LEFT JOIN mcare_job_posts mjp ON mjp.id = a.job_id
+      ORDER BY a.applied_at DESC
+      LIMIT 5
+    `);
     res.json(result.rows);
-
   } catch (error) {
     console.error('❌ getRecentApplications Error:', error.message);
     res.status(500).json({ error: error.message });

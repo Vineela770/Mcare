@@ -51,7 +51,18 @@ const HRDashboard = () => {
         // Fetch recent applications
         const applicationsData = await employerService.getRecentApplications();
         const appsArray = Array.isArray(applicationsData) ? applicationsData : [];
-        setRecentApplications(appsArray.slice(0, 3));
+        // Normalise field names — backend returns snake_case
+        const normalised = appsArray.slice(0, 3).map(a => ({
+          id:            a.id,
+          candidateName: a.candidate_name || a.candidateName || 'Unknown',
+          jobTitle:      a.job_title      || a.jobTitle      || 'N/A',
+          experience:    a.experience     || a.experienceYears || 'N/A',
+          appliedDate:   a.applied_at
+            ? new Date(a.applied_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+            : (a.appliedDate || 'Recently'),
+          status:        a.status || 'Pending',
+        }));
+        setRecentApplications(normalised);
 
         // Fetch weekly stats
         try {

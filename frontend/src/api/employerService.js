@@ -66,6 +66,15 @@ export const employerService = {
     }
   },
 
+  updateJob: async (jobId, jobData) => {
+    try {
+      const response = await axios.put(`/api/hr/jobs/${jobId}`, jobData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update job' };
+    }
+  },
+
   // Applications
   getApplications: async () => {
     try {
