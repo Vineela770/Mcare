@@ -147,25 +147,25 @@ const Jobs = () => {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-2">
-                      <Briefcase className="w-4 h-4" />
+                      <Briefcase className="w-4 h-4 shrink-0" />
                       <span>{job.department}</span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
+                      <MapPin className="w-4 h-4 shrink-0" />
                       <span>{job.location}</span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4" />
+                      <Users className="w-4 h-4 shrink-0" />
                       <span>{Number(job.applicants) || 0} Applicants</span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>Deadline: {job.deadline}</span>
+                      <Clock className="w-4 h-4 shrink-0" />
+                      <span>Deadline: {job.deadline ? new Date(job.deadline).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}</span>
                     </div>
                   </div>
                 </div>
@@ -249,7 +249,7 @@ const Jobs = () => {
                 </div>
                 <div>
                   <span className="font-medium text-gray-900">Deadline:</span>
-                  <p className="text-gray-700">{selectedJob.deadline}</p>
+                  <p className="text-gray-700">{selectedJob.deadline ? new Date(selectedJob.deadline).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}</p>
                 </div>
               </div>
 
