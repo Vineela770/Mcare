@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Briefcase, DollarSign, Clock, Star, X, FileText, Building2, Calendar, CheckCircle } from 'lucide-react';
+import { Search, MapPin, Briefcase, Clock, Star, X, FileText, Building2, Calendar, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
 import CustomSelect from '../../components/common/CustomSelect';
@@ -431,7 +431,7 @@ const BrowseJobs = () => {
                   {job.type || 'Full-time'}
                 </span>
                 <div className="flex items-center space-x-1 text-gray-900 font-semibold text-sm">
-                  <DollarSign className="w-4 h-4" />
+
                   <span>{(job.salary || 'Negotiable').split(' - ')[0]}</span>
                 </div>
               </div>

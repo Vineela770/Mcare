@@ -334,14 +334,23 @@ const Profile = () => {
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                   Highest Qualification
                 </label>
-                <CustomSelect
+                <select
                   name="highestQualification"
                   value={formData.highestQualification || ''}
                   onChange={handleChange}
-                  options={['', 'MBBS', 'MD', 'MS', 'BDS', 'MDS', 'BHMS', 'BAMS', 'DM', 'MCh']}
-                  placeholder="Select Qualification"
-                  optionLabels={{'': 'Select Qualification'}}
-                />
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base bg-white text-gray-700"
+                >
+                  <option value="">Select Qualification</option>
+                  <option value="MBBS">MBBS</option>
+                  <option value="MD">MD</option>
+                  <option value="MS">MS</option>
+                  <option value="BDS">BDS</option>
+                  <option value="MDS">MDS</option>
+                  <option value="BHMS">BHMS</option>
+                  <option value="BAMS">BAMS</option>
+                  <option value="DM">DM</option>
+                  <option value="MCh">MCh</option>
+                </select>
               </div>
 
               {/* Additional Qualification */}
@@ -364,20 +373,18 @@ const Profile = () => {
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                   Gender
                 </label>
-                <CustomSelect
+                <select
                   name="gender"
                   value={formData.gender || ''}
                   onChange={handleChange}
-                  options={['', 'male', 'female', 'other', 'prefer-not-to-say']}
-                  placeholder="Select Gender"
-                  optionLabels={{
-                    '': 'Select Gender',
-                    'male': 'Male',
-                    'female': 'Female',
-                    'other': 'Other',
-                    'prefer-not-to-say': 'Prefer not to say'
-                  }}
-                />
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base bg-white text-gray-700"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                  <option value="prefer-not-to-say">Prefer not to say</option>
+                </select>
               </div>
 
               {/* Professional Info Header */}
