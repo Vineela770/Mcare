@@ -1277,9 +1277,9 @@ const Home = () => {
           Object.values(categorySpecializations)
             .flatMap(category => Object.keys(category))
         )
-      )
+      ).sort()
     : categorySpecializations[activeTab]
-      ? Object.keys(categorySpecializations[activeTab])
+      ? Object.keys(categorySpecializations[activeTab]).sort()
       : [];
 
   // ✅ Get specializations based on selected degree
@@ -1300,6 +1300,7 @@ const Home = () => {
     }
   })();
 
+  console.log('🎓 Available degrees:', degrees.length, degrees.slice(0, 5));
   console.log('🎓 Selected degree:', selectedDegree);
   console.log('📋 Available specializations:', specializations.length);
   if (specializations.length > 0) {
@@ -1702,11 +1703,15 @@ const Home = () => {
 
           {/* Filters */}
           <div className="mb-8 px-2">
+            {/* Debug logging */}
+            {console.log('🎨 Rendering filters - degrees:', degrees.length, 'specializations:', specializations.length, 'cities:', cities.length, 'salary ranges:', salaryRanges.length)}
+            
             {/* 2-col grid on mobile, single row on desktop */}
             <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-center md:gap-3">
               <CustomSelect
                 value={selectedDegree}
                 onChange={(e) => { 
+                  console.log('🎓 Degree changed to:', e.target.value);
                   setSelectedDegree(e.target.value); 
                   setFilterSpecialization(''); 
                   setActiveDot(0); 
@@ -1720,6 +1725,7 @@ const Home = () => {
               <CustomSelect
                 value={filterSpecialization}
                 onChange={(e) => { 
+                  console.log('📋 Specialization changed to:', e.target.value);
                   setFilterSpecialization(e.target.value); 
                   setActiveDot(0); 
                 }}
@@ -1731,8 +1737,12 @@ const Home = () => {
 
               <CustomSelect
                 value={filterCity}
-                onChange={(e) => { setFilterCity(e.target.value); setActiveDot(0); }}
-                options={['', ...cities]}
+                onChange={(e) => { 
+                  console.log('🌆 City changed to:', e.target.value);
+                  setFilterCity(e.target.value); 
+                  setActiveDot(0); 
+                }}
+                options={['', ...cities.sort()]}
                 placeholder="All Cities"
                 className="w-full md:w-auto text-sm"
                 optionLabels={{'': 'All Cities'}}
@@ -1740,7 +1750,11 @@ const Home = () => {
 
               <CustomSelect
                 value={filterSalary}
-                onChange={(e) => { setFilterSalary(e.target.value); setActiveDot(0); }}
+                onChange={(e) => { 
+                  console.log('💰 Salary changed to:', e.target.value);
+                  setFilterSalary(e.target.value); 
+                  setActiveDot(0); 
+                }}
                 options={salaryRanges.map(r => r.value)}
                 placeholder="Salary Range"
                 className="w-full md:w-auto text-sm"
