@@ -67,6 +67,7 @@ const CustomSelect = ({
   );
 
   const handleSelect = (option) => {
+    console.log('✅ Option selected:', option, 'in', placeholder);
     onChange({ target: { name, value: option } });
     setIsOpen(false);
     setSearchTerm('');
@@ -82,7 +83,10 @@ const CustomSelect = ({
       <button
         ref={buttonRef}
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          console.log('🔘 Dropdown clicked:', placeholder, 'isOpen:', isOpen, 'options:', options.length);
+          setIsOpen(!isOpen);
+        }}
         className="w-full flex items-center justify-between px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-emerald-400 hover:bg-emerald-50 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer"
       >
         <div className="flex items-center space-x-3">
@@ -106,6 +110,7 @@ const CustomSelect = ({
             width: `${dropdownPosition.width}px`
           }}
         >
+          {console.log('📋 Dropdown is open!', placeholder, 'Position:', dropdownPosition, 'Options:', filteredOptions.length)}
           {/* Search Input (optional - only show if many options) */}
           {options.length > 8 && (
             <div className="p-2 border-b border-gray-200">
