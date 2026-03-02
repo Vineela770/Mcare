@@ -4,6 +4,7 @@ import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
 import Toast from '../../components/common/Toast';
 import CustomSelect from '../../components/common/CustomSelect';
+import CustomDropdown from '../../components/common/CustomDropdown';
 import { useAuth } from '../../context/useAuth';
 import axios from '../../api/axios';
 
@@ -334,23 +335,24 @@ const Profile = () => {
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                   Highest Qualification
                 </label>
-                <select
+                <CustomDropdown
                   name="highestQualification"
                   value={formData.highestQualification || ''}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base bg-white text-gray-700"
-                >
-                  <option value="">Select Qualification</option>
-                  <option value="MBBS">MBBS</option>
-                  <option value="MD">MD</option>
-                  <option value="MS">MS</option>
-                  <option value="BDS">BDS</option>
-                  <option value="MDS">MDS</option>
-                  <option value="BHMS">BHMS</option>
-                  <option value="BAMS">BAMS</option>
-                  <option value="DM">DM</option>
-                  <option value="MCh">MCh</option>
-                </select>
+                  placeholder="Select Qualification"
+                  options={[
+                    { label: 'Select Qualification', value: '' },
+                    { label: 'MBBS', value: 'MBBS' },
+                    { label: 'MD', value: 'MD' },
+                    { label: 'MS', value: 'MS' },
+                    { label: 'BDS', value: 'BDS' },
+                    { label: 'MDS', value: 'MDS' },
+                    { label: 'BHMS', value: 'BHMS' },
+                    { label: 'BAMS', value: 'BAMS' },
+                    { label: 'DM', value: 'DM' },
+                    { label: 'MCh', value: 'MCh' },
+                  ]}
+                />
               </div>
 
               {/* Additional Qualification */}
@@ -373,18 +375,19 @@ const Profile = () => {
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                   Gender
                 </label>
-                <select
+                <CustomDropdown
                   name="gender"
                   value={formData.gender || ''}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base bg-white text-gray-700"
-                >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                  <option value="prefer-not-to-say">Prefer not to say</option>
-                </select>
+                  placeholder="Select Gender"
+                  options={[
+                    { label: 'Select Gender', value: '' },
+                    { label: 'Male', value: 'male' },
+                    { label: 'Female', value: 'female' },
+                    { label: 'Other', value: 'other' },
+                    { label: 'Prefer not to say', value: 'prefer-not-to-say' },
+                  ]}
+                />
               </div>
 
               {/* Professional Info Header */}
