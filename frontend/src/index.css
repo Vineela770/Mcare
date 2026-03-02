@@ -2,20 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force green theme at root level */
 :root {
   --color-primary: #10b981;
   --color-secondary: #059669;
-  accent-color: #10b981;
-  color-scheme: light;
+  --color-accent: #10b981;
+  accent-color: #10b981 !important;
+  color-scheme: light !important;
   /* Force native controls to use green */
   --native-control-accent: #10b981;
 }
 
-* {
+/* Apply to all elements */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  accent-color: #10b981;
+  accent-color: #10b981 !important;
 }
 
 html {
@@ -170,23 +175,32 @@ input[type="radio"]:checked {
   border-color: #10b981;
 }
 
-/* Date Picker - Green Theme */
-input[type="date"] {
+/* Date Picker - Green Theme - Aggressive Overrides */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="month"],
+input[type="week"] {
   accent-color: #10b981 !important;
-  color-scheme: light;
+  color-scheme: light !important;
 }
 
-input[type="date"]:focus {
+input[type="date"]:focus,
+input[type="datetime-local"]:focus,
+input[type="time"]:focus {
   outline: none !important;
   border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Chrome/Safari date picker calendar icon */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%);
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%) !important;
   cursor: pointer;
-  color: #10b981;
-  background-color: transparent;
+  color: #10b981 !important;
+  background-color: transparent !important;
 }
 
 /* Chrome/Safari date input */
@@ -205,48 +219,25 @@ input[type="date"]::-webkit-datetime-edit-year-field {
 }
 
 /* Firefox date picker */
-input[type="date"]::-moz-calendar-picker-indicator {
-  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%);
+input[type="date"]::-moz-calendar-picker-indicator,
+input[type="datetime-local"]::-moz-calendar-picker-indicator,
+input[type="time"]::-moz-calendar-picker-indicator {
+  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%) !important;
 }
 
 /* Calendar Dropdown - Override browser default blue colors */
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
-  background-color: rgba(16, 185, 129, 0.1);
+  background-color: rgba(16, 185, 129, 0.1) !important;
   border-radius: 4px;
-}
-
-/* Force all date/time inputs to use green accent */
-input[type="date"],
-input[type="datetime-local"],
-input[type="time"],
-input[type="month"],
-input[type="week"] {
-  accent-color: #10b981 !important;
 }
 
 /* Date picker selected state - Override blue to green */
 input[type="date"]::-webkit-datetime-edit-month-field:focus,
 input[type="date"]::-webkit-datetime-edit-day-field:focus,
 input[type="date"]::-webkit-datetime-edit-year-field:focus {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: #0f172a;
-  outline: none;
-}
-
-/* Mobile-specific date picker styling */
-@media (max-width: 768px) {
-  input[type="date"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    accent-color: #10b981 !important;
-  }
-  
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%);
-    width: 20px;
-    height: 20px;
-  }
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  color: #0f172a !important;
+  outline: none !important;
 }
 
 /* Override browser native calendar colors (best effort) */
@@ -254,15 +245,39 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
   filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%) !important;
 }
 
+/* Mobile-specific date picker styling */
+@media (max-width: 768px) {
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    accent-color: #10b981 !important;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%) !important;
+    width: 20px;
+    height: 20px;
+  }
+}
+
 /* Force green theme on all browser date pickers */
 @supports (-webkit-appearance: none) {
-  input[type="date"] {
-    accent-color: #10b981;
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"] {
+    accent-color: #10b981 !important;
   }
 }
 
 @supports (-moz-appearance: none) {
-  input[type="date"] {
-    accent-color: #10b981;
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"] {
+    accent-color: #10b981 !important;
   }
 }
