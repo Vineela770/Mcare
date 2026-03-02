@@ -1483,35 +1483,34 @@ const Home = () => {
 
     {/* City */}
     <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
-      <CustomSelect
+      <select
         value={city}
         onChange={(e) => setCity(e.target.value)}
-        options={['', ...cities]}
-        placeholder="City"
-        className="w-full text-sm md:text-base"
-        optionLabels={{'': 'City'}}
-      />
+        className="w-full text-sm md:text-base bg-transparent border-none focus:outline-none text-gray-700 cursor-pointer"
+      >
+        <option value="">City</option>
+        {cities.map((c, idx) => (
+          <option key={idx} value={c}>{c}</option>
+        ))}
+      </select>
     </div>
 
     {/* Category */}
     <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
-      <CustomSelect
+      <select
         value={searchCategory}
         onChange={(e) => setSearchCategory(e.target.value)}
-        options={['', 'doctors', 'nursing', 'management', 'allied', 'dental', 'alternative', 'colleges']}
-        placeholder="All Categories"
-        className="w-full text-sm md:text-base"
-        optionLabels={{
-          '': 'All Categories',
-          'doctors': 'Hospital Jobs – Doctors',
-          'nursing': 'Nursing',
-          'management': 'Hospital Management',
-          'allied': 'Allied Health',
-          'dental': 'Dental',
-          'alternative': 'Alternative Medicine',
-          'colleges': 'Medical Colleges'
-        }}
-      />
+        className="w-full text-sm md:text-base bg-transparent border-none focus:outline-none text-gray-700 cursor-pointer"
+      >
+        <option value="">All Categories</option>
+        <option value="doctors">Hospital Jobs – Doctors</option>
+        <option value="nursing">Nursing</option>
+        <option value="management">Hospital Management</option>
+        <option value="allied">Allied Health</option>
+        <option value="dental">Dental</option>
+        <option value="alternative">Alternative Medicine</option>
+        <option value="colleges">Medical Colleges</option>
+      </select>
     </div>
 
     {/* Button */}
@@ -2218,14 +2217,15 @@ const Home = () => {
               </label>
 
               <div className="flex gap-2">
-                <CustomSelect
+                <select
                   value={quickApplyData.countryCode}
                   onChange={(e) => setQuickApplyData({ ...quickApplyData, countryCode: e.target.value })}
-                  options={countryCodes.map(c => c.code)}
-                  optionLabels={Object.fromEntries(countryCodes.map(c => [c.code, c.label]))}
-                  placeholder="+91"
-                  className="w-32"
-                />
+                  className="w-32 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600 bg-white cursor-pointer"
+                >
+                  {countryCodes.map((c, idx) => (
+                    <option key={idx} value={c.code}>{c.label}</option>
+                  ))}
+                </select>
 
                 <input
                   type="tel"
@@ -2341,14 +2341,15 @@ const Home = () => {
               </label>
 
               <div className="flex gap-2">
-                <CustomSelect
+                <select
                   value={quickPostData.countryCode}
                   onChange={(e) => setQuickPostData({ ...quickPostData, countryCode: e.target.value })}
-                  options={countryCodes.map(c => c.code)}
-                  optionLabels={Object.fromEntries(countryCodes.map(c => [c.code, c.label]))}
-                  placeholder="+91"
-                  className="w-32"
-                />
+                  className="w-32 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600 bg-white cursor-pointer"
+                >
+                  {countryCodes.map((c, idx) => (
+                    <option key={idx} value={c.code}>{c.label}</option>
+                  ))}
+                </select>
 
                 <input
                   type="tel"
