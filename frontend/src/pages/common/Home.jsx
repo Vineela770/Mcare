@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
 import FilterDropdown from '../../components/common/FilterDropdown';
+import CustomDropdown from '../../components/common/CustomDropdown';
 import { CheckCircle, Stethoscope, Building2, GraduationCap, Activity, Heart, Leaf, Smile, UserPlus, Search, FileCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 // eslint-disable-next-line no-unused-vars
 import jobService from '../../api/jobService';
@@ -1483,34 +1484,31 @@ const Home = () => {
 
     {/* City */}
     <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
-      <select
+      <CustomDropdown
+        options={[{ label: 'City', value: '' }, ...cities.map(c => ({ label: c, value: c }))]}
         value={city}
-        onChange={(e) => setCity(e.target.value)}
-        className="w-full text-sm md:text-base bg-transparent border-none focus:outline-none text-gray-700 cursor-pointer"
-      >
-        <option value="">City</option>
-        {cities.map((c, idx) => (
-          <option key={idx} value={c}>{c}</option>
-        ))}
-      </select>
+        onChange={(val) => setCity(val)}
+        placeholder="City"
+      />
     </div>
 
     {/* Category */}
     <div className="flex-1 px-3 py-2 md:px-5 md:py-1.5 md:border-r border-gray-200">
-      <select
+      <CustomDropdown
+        options={[
+          { label: 'All Categories', value: '' },
+          { label: 'Hospital Jobs – Doctors', value: 'doctors' },
+          { label: 'Nursing', value: 'nursing' },
+          { label: 'Hospital Management', value: 'management' },
+          { label: 'Allied Health', value: 'allied' },
+          { label: 'Dental', value: 'dental' },
+          { label: 'Alternative Medicine', value: 'alternative' },
+          { label: 'Medical Colleges', value: 'colleges' }
+        ]}
         value={searchCategory}
-        onChange={(e) => setSearchCategory(e.target.value)}
-        className="w-full text-sm md:text-base bg-transparent border-none focus:outline-none text-gray-700 cursor-pointer"
-      >
-        <option value="">All Categories</option>
-        <option value="doctors">Hospital Jobs – Doctors</option>
-        <option value="nursing">Nursing</option>
-        <option value="management">Hospital Management</option>
-        <option value="allied">Allied Health</option>
-        <option value="dental">Dental</option>
-        <option value="alternative">Alternative Medicine</option>
-        <option value="colleges">Medical Colleges</option>
-      </select>
+        onChange={(val) => setSearchCategory(val)}
+        placeholder="All Categories"
+      />
     </div>
 
     {/* Button */}
@@ -2217,15 +2215,15 @@ const Home = () => {
               </label>
 
               <div className="flex gap-2">
-                <select
-                  value={quickApplyData.countryCode}
-                  onChange={(e) => setQuickApplyData({ ...quickApplyData, countryCode: e.target.value })}
-                  className="w-32 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600 bg-white cursor-pointer"
-                >
-                  {countryCodes.map((c, idx) => (
-                    <option key={idx} value={c.code}>{c.label}</option>
-                  ))}
-                </select>
+                <div className="w-32">
+                  <CustomDropdown
+                    options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
+                    value={quickApplyData.countryCode}
+                    onChange={(val) => setQuickApplyData({ ...quickApplyData, countryCode: val })}
+                    placeholder="Code"
+                    compact={true}
+                  />
+                </div>
 
                 <input
                   type="tel"
@@ -2341,15 +2339,15 @@ const Home = () => {
               </label>
 
               <div className="flex gap-2">
-                <select
-                  value={quickPostData.countryCode}
-                  onChange={(e) => setQuickPostData({ ...quickPostData, countryCode: e.target.value })}
-                  className="w-32 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600 bg-white cursor-pointer"
-                >
-                  {countryCodes.map((c, idx) => (
-                    <option key={idx} value={c.code}>{c.label}</option>
-                  ))}
-                </select>
+                <div className="w-32">
+                  <CustomDropdown
+                    options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
+                    value={quickPostData.countryCode}
+                    onChange={(val) => setQuickPostData({ ...quickPostData, countryCode: val })}
+                    placeholder="Code"
+                    compact={true}
+                  />
+                </div>
 
                 <input
                   type="tel"
