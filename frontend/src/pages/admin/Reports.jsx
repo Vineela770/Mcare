@@ -50,6 +50,70 @@ const Reports = () => {
   };
 
   // ── CSV Download ────────────────────────────────────────────────────────────
+  // Core download logic (no guard) — called by both handleDownloadReport and handleDownloadAll
+  const performDownload = async (reportTitle) => {
+    setDownloading(reportTitle);
+    try {
+      let headers = [], rows = [], filename = '';
+      if (reportTitle.includes('User')) {
+        const data = await adminService.getUsers();
+        headers = ['Name','Email','Role','Status','Joined'];
+        rows = data.map(u => [u.name,u.email,u.role,u.status,u.joined?new Date(u.joined).toLocaleDateString('en-IN'):'']);
+        filename = 'users_report.csv';
+      } else if (reportTitle.includes('Job')) {
+        const data = await adminService.getJobs();
+        headers = ['Title','Company','Location','Status','Created'];
+        rows = data.map(j => [j.title,j.company_name||j.employer_name||'',j.location||'',j.status||(j.is_active?'Active':'Inactive'),j.created_at?new Date(j.created_at).toLocaleDateString('en-IN'):'' ]);
+        filename = 'jobs_report.csv';
+      } else if (reportTitle.includes('Employer')) {
+        const data = await adminService.getEmployers();
+        headers = ['Organization','Email','Location','Status','Active Jobs'];
+        rows = data.map(e => [e.name,e.email,e.location||'',e.status,e.activeJobs||0]);
+        filename = 'employers_report.csv';
+      } else if (reportTitle.includes('Candidate')) {
+        const data = await adminService.getUsers();
+        const candidates = data.filter(u => u.role === 'candidate');
+        headers = ['Name','Email','Qualification','Location','Status','Joined'];
+        rows = candidates.map(u => [u.name,u.email,u.qualification||'',u.location||'',u.status,u.joined?new Date(u.joined).toLocaleDateString('en-IN'):'' ]);
+        filename = 'candidates_report.csv';
+      } else {
+        const data = await adminService.getAllApplications();
+        headers = ['Candidate','Email','Job','Employer','Applied On','Status'];
+        rows = data.map(a => [a.candidate_name||'',a.candidate_email||'',a.job_title||'',a.employer_name||'',a.applied_at?new Date(a.applied_at).toLocaleDateString('en-IN'):'',a.status||'']);
+        filename = 'applications_report.csv';
+      }
+      const esc = v => '"'+String(v??'').replace(/"/g,'""')+'"';
+      const csv = [headers.map(esc).join(','),...rows.map(r=>r.map(esc).join(','))].join('\n');
+      const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.download = filename;
+      document.body.appendChild(link); link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showNotification(reportTitle+' downloaded — '+rows.length+' records');
+    } catch (e) {
+      console.error(e);
+      showNotification('Download failed: '+(e?.message||'error'),'error');
+    } finally {
+      setDownloading(null);
+    }
+  };
+
+  const handleDownloadReport = async (reportTitle) => {
+    if (downloading) return;
+    await performDownload(reportTitle);
+  };
+
+  // Sequential download of all reports with a short pause between each
+  const handleDownloadAll = async () => {
+    if (downloading) return;
+    for (const r of reportTypes) {
+      await performDownload(r.title);
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+  };
+
   const handleGenerateReport = async (reportTitle) => {
     if (generating) return;
     setGenerating(reportTitle);
@@ -116,57 +180,6 @@ const Reports = () => {
       setGenerating(null);
     }
   };
-
-  const handleDownloadReport = async (reportTitle) => {
-    if (downloading) return;
-    setDownloading(reportTitle);
-    try {
-      let headers = [], rows = [], filename = '';
-      if (reportTitle.includes('User')) {
-        const data = await adminService.getUsers();
-        headers = ['Name','Email','Role','Status','Joined'];
-        rows = data.map(u => [u.name,u.email,u.role,u.status,u.joined?new Date(u.joined).toLocaleDateString('en-IN'):'']);
-        filename = 'users_report.csv';
-      } else if (reportTitle.includes('Job')) {
-        const data = await adminService.getJobs();
-        headers = ['Title','Company','Location','Status','Created'];
-        rows = data.map(j => [j.title,j.company_name||j.employer_name||'',j.location||'',j.status||(j.is_active?'Active':'Inactive'),j.created_at?new Date(j.created_at).toLocaleDateString('en-IN'):'' ]);
-        filename = 'jobs_report.csv';
-      } else if (reportTitle.includes('Employer')) {
-        const data = await adminService.getEmployers();
-        headers = ['Organization','Email','Location','Status','Active Jobs'];
-        rows = data.map(e => [e.name,e.email,e.location||'',e.status,e.activeJobs||0]);
-        filename = 'employers_report.csv';
-      } else if (reportTitle.includes('Candidate')) {
-        const data = await adminService.getUsers();
-        const candidates = data.filter(u => u.role === 'candidate');
-        headers = ['Name','Email','Qualification','Location','Status','Joined'];
-        rows = candidates.map(u => [u.name,u.email,u.qualification||'',u.location||'',u.status,u.joined?new Date(u.joined).toLocaleDateString('en-IN'):'' ]);
-        filename = 'candidates_report.csv';
-      } else {
-        const data = await adminService.getAllApplications();
-        headers = ['Candidate','Email','Job','Employer','Applied On','Status'];
-        rows = data.map(a => [a.candidate_name||'',a.candidate_email||'',a.job_title||'',a.employer_name||'',a.applied_at?new Date(a.applied_at).toLocaleDateString('en-IN'):'',a.status||'']);
-        filename = 'applications_report.csv';
-      }
-      const esc = v => '"'+String(v??'').replace(/"/g,'""')+'"';
-      const csv = [headers.map(esc).join(','),...rows.map(r=>r.map(esc).join(','))].join('\n');
-      const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url; link.download = filename;
-      document.body.appendChild(link); link.click();
-      document.body.removeChild(link); URL.revokeObjectURL(url);
-      showNotification(reportTitle+' downloaded — '+rows.length+' records');
-    } catch (e) {
-      console.error(e);
-      showNotification('Download failed: '+(e?.message||'error'),'error');
-    } finally {
-      setDownloading(null);
-    }
-  };
-
-  const handleDownloadAll = () => { reportTypes.forEach(r => handleDownloadReport(r.title)); };
 
   const reportTypes = [
     {

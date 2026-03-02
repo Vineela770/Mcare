@@ -53,19 +53,22 @@ const isValidFileUrl = (url) =>
 
 const APP_BACKEND = import.meta.env.VITE_API_URL || 'https://mcare-backend-61sy.onrender.com';
 
-// Verify file exists via HEAD request before opening to avoid blank page
+// Verify file exists via HEAD request; open blank tab synchronously first to bypass popup blocker
 async function openFile(relativePath, onError) {
   const fullUrl = `${APP_BACKEND}${relativePath}`;
+  // Must open synchronously in the click handler — async window.open gets blocked by popup blockers
+  const newWin = window.open('', '_blank', 'noopener,noreferrer');
   try {
     const res = await fetch(fullUrl, { method: 'HEAD' });
     if (res.ok) {
-      window.open(fullUrl, '_blank', 'noopener,noreferrer');
+      if (newWin) newWin.location.href = fullUrl;
     } else {
-      onError('File not found on server. It may have been cleared — please ask the user to re-upload.');
+      if (newWin) newWin.close();
+      onError('File not found on server — it may have been cleared. Please ask the user to re-upload.');
     }
   } catch {
-    // Network/CORS error — open anyway
-    window.open(fullUrl, '_blank', 'noopener,noreferrer');
+    // CORS/network error — navigate the already-opened window
+    if (newWin) newWin.location.href = fullUrl;
   }
 }
 

@@ -111,34 +111,45 @@ exports.addEmployer = async (req, res) => {
   }
 };
 
-// ================= UPDATE EMPLOYER STATUS =================
+// ================= UPDATE EMPLOYER =================
 exports.updateEmployer = async (req, res) => {
   const { id } = req.params;
-  const { status, organization_name, organization_city } = req.body;
+  const { name, contactPerson, email, phone, location, status, organization_name, organization_city } = req.body;
 
   try {
     const isVerified = status === 'Active';
-    // Update user verification status
+
+    // Update core user fields
     await pool.query(
-      "UPDATE users SET is_verified=$1, updated_at=NOW() WHERE id=$2 AND role='hr'",
-      [isVerified, id]
+      `UPDATE users
+       SET full_name   = COALESCE($1, full_name),
+           email       = COALESCE($2, email),
+           phone_number= COALESCE($3, phone_number),
+           location    = COALESCE($4, location),
+           is_verified = $5,
+           updated_at  = NOW()
+       WHERE id = $6 AND role = 'hr'`,
+      [name || null, email || null, phone || null, location || null, isVerified, id]
     );
 
-    // Update employer profile if organization fields provided
-    if (organization_name || organization_city) {
-      await pool.query(
-        `UPDATE employer_profiles 
-         SET organization_name=COALESCE($1, organization_name),
-             organization_city=COALESCE($2, organization_city),
-             updated_at=NOW()
-         WHERE user_id=$3`,
-        [organization_name, organization_city, id]
-      );
-    }
+    // Update employer profile fields
+    const orgName = organization_name || name || null;
+    const orgCity = organization_city || location || null;
+    await pool.query(
+      `UPDATE employer_profiles
+       SET designation       = COALESCE($1, designation),
+           organization_name = COALESCE($2, organization_name),
+           organization_city = COALESCE($3, organization_city),
+           updated_at        = NOW()
+       WHERE user_id = $4`,
+      [contactPerson || null, orgName, orgCity, id]
+    );
 
     const updated = await pool.query(`
-      SELECT u.id, u.full_name AS name, u.email, u.is_verified,
+      SELECT u.id, u.full_name AS name, u.email,
+             u.phone_number AS phone, u.location, u.is_verified,
              CASE WHEN u.is_verified THEN 'Active' ELSE 'Inactive' END AS status,
+             ep.designation AS "contactPerson",
              ep.organization_name AS "organizationName",
              ep.organization_city AS "organizationCity"
       FROM users u
@@ -168,73 +179,4 @@ exports.deleteEmployer = async (req, res) => {
 
 
 
-// ================= GET SINGLE EMPLOYER =================
-exports.getEmployerById = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const result = await pool.query(
-      "SELECT * FROM employers WHERE id = $1",
-      [id]
-    );
-
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to fetch employer" });
-  }
-};
-
-
-// ================= ADD EMPLOYER =================
-exports.addEmployer = async (req, res) => {
-  const { name, contactPerson, email, phone, location, status } = req.body;
-
-  try {
-    const result = await pool.query(
-      `INSERT INTO employers (name, contact_person, email, phone, location, status)
-       VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
-      [name, contactPerson, email, phone, location, status]
-    );
-
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to add employer" });
-  }
-};
-
-
-// ================= UPDATE EMPLOYER =================
-exports.updateEmployer = async (req, res) => {
-  const { id } = req.params;
-  const { name, contactPerson, email, phone, location, status } = req.body;
-
-  try {
-    const result = await pool.query(
-      `UPDATE employers 
-       SET name=$1, contact_person=$2, email=$3, phone=$4, location=$5, status=$6
-       WHERE id=$7 RETURNING *`,
-      [name, contactPerson, email, phone, location, status, id]
-    );
-
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to update employer" });
-  }
-};
-
-
-// ================= DELETE EMPLOYER =================
-exports.deleteEmployer = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    await pool.query("DELETE FROM employers WHERE id=$1", [id]);
-    res.json({ message: "Employer deleted" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to delete employer" });
-  }
-};
+// (duplicate stubs removed — correct implementations above)
