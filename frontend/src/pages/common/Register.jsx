@@ -253,7 +253,7 @@ const Register = () => {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
               required
             >
               <option value="" disabled>
@@ -272,7 +272,7 @@ const Register = () => {
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border rounded-lg"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
                   required
                 >
                   <option value="">Select</option>
@@ -294,7 +294,7 @@ const Register = () => {
                     value={formData.fullName}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -346,7 +346,7 @@ const Register = () => {
                     value={formData.location}
                     onChange={handleChange}
                     placeholder="City, State"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -361,7 +361,7 @@ const Register = () => {
                       name="qualification"
                       value={formData.qualification}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       required
                     >
                       <option value="" disabled>
@@ -404,7 +404,7 @@ const Register = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -422,7 +422,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder={isEmailTyped ? 're-enter your email' : 'Enter email first'}
                     disabled={!isEmailTyped}
-                    className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent
+                    className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent
                       ${!isEmailTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     required={isEmailTyped}
                   />
@@ -440,7 +440,7 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Enter your password"
-                    className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900"
+                    className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900"
                     style={showPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                     required
                   />
@@ -466,7 +466,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder={isPasswordTyped ? 'Re-enter password' : 'Enter password first'}
                     disabled={!isPasswordTyped}
-                    className={`w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900
+                    className={`w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900
                       ${!isPasswordTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     style={showConfirmPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                     required={isPasswordTyped}
@@ -495,7 +495,7 @@ const Register = () => {
                 name="agreeTerms"
                 checked={formData.agreeTerms}
                 onChange={handleChange}
-                className="w-4 h-4 mt-1 text-emerald-700 border-gray-300 rounded focus:ring-emerald-600"
+                className="w-4 h-4 mt-1 text-emerald-700 border-gray-300 rounded focus:outline-none focus:ring-emerald-600"
               />
               <div className="ml-2 text-sm text-gray-600">
                 I agree to the{' '}
