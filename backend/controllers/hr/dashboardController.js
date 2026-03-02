@@ -3,20 +3,22 @@ const pool = require("../../config/db");
 // Get Dashboard Statistics
 exports.getDashboardStats = async (req, res) => {
   try {
+    // HR jobs are stored in mcare_job_posts with status column
     const activeJobs = await pool.query(
-      "SELECT COUNT(*) FROM jobs WHERE is_active = true"
+      "SELECT COUNT(*) FROM mcare_job_posts WHERE status = 'active'"
     );
 
+    // Total applications linked to HR job posts
     const totalApplications = await pool.query(
-      "SELECT COUNT(*) FROM applications"
+      "SELECT COUNT(*) FROM applications WHERE job_id IN (SELECT id FROM mcare_job_posts)"
     );
 
     const interviewed = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE status = 'Interview'"
+      "SELECT COUNT(*) FROM applications WHERE status = 'Interview' AND job_id IN (SELECT id FROM mcare_job_posts)"
     );
 
     const hired = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE status = 'Hired'"
+      "SELECT COUNT(*) FROM applications WHERE status = 'Hired' AND job_id IN (SELECT id FROM mcare_job_posts)"
     );
 
     res.json({
@@ -55,19 +57,19 @@ exports.getWeeklyStats = async (req, res) => {
     const weekStartISO = weekStart.toISOString();
 
     const newApps = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE applied_at >= $1",
+      "SELECT COUNT(*) FROM applications WHERE applied_at >= $1 AND job_id IN (SELECT id FROM mcare_job_posts)",
       [weekStartISO]
     );
     const shortlisted = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE status = 'Shortlisted' AND applied_at >= $1",
+      "SELECT COUNT(*) FROM applications WHERE status = 'Shortlisted' AND applied_at >= $1 AND job_id IN (SELECT id FROM mcare_job_posts)",
       [weekStartISO]
     );
     const interviews = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE status = 'Interview' AND applied_at >= $1",
+      "SELECT COUNT(*) FROM applications WHERE status = 'Interview' AND applied_at >= $1 AND job_id IN (SELECT id FROM mcare_job_posts)",
       [weekStartISO]
     );
     const rejected = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE status = 'Rejected' AND applied_at >= $1",
+      "SELECT COUNT(*) FROM applications WHERE status = 'Rejected' AND applied_at >= $1 AND job_id IN (SELECT id FROM mcare_job_posts)",
       [weekStartISO]
     );
 
