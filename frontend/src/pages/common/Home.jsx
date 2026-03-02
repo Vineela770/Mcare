@@ -1708,7 +1708,8 @@ const Home = () => {
             
             {/* 2-col grid on mobile, single row on desktop */}
             <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-center md:gap-3">
-              <CustomSelect
+              {/* Degree Filter */}
+              <select
                 value={selectedDegree}
                 onChange={(e) => { 
                   console.log('🎓 Degree changed to:', e.target.value);
@@ -1716,50 +1717,61 @@ const Home = () => {
                   setFilterSpecialization(''); 
                   setActiveDot(0); 
                 }}
-                options={['', ...degrees]}
-                placeholder="Select Degree"
-                className="w-full md:w-auto text-sm"
-                optionLabels={{'': 'Select Degree'}}
-              />
+                className="w-full md:w-auto px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer transition-all text-sm"
+              >
+                <option value="">Select Degree</option>
+                {degrees.map((degree, index) => (
+                  <option key={index} value={degree}>{degree}</option>
+                ))}
+              </select>
 
-              <CustomSelect
+              {/* Specialization Filter */}
+              <select
                 value={filterSpecialization}
                 onChange={(e) => { 
                   console.log('📋 Specialization changed to:', e.target.value);
                   setFilterSpecialization(e.target.value); 
                   setActiveDot(0); 
                 }}
-                options={['', ...specializations]}
-                placeholder="Select Specialization"
-                className="w-full md:w-auto text-sm"
-                optionLabels={{'': 'Select Specialization'}}
-              />
+                className="w-full md:w-auto px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer transition-all text-sm"
+                disabled={!selectedDegree}
+              >
+                <option value="">Select Specialization</option>
+                {specializations.map((spec, index) => (
+                  <option key={index} value={spec}>{spec}</option>
+                ))}
+              </select>
 
-              <CustomSelect
+              {/* City Filter */}
+              <select
                 value={filterCity}
                 onChange={(e) => { 
                   console.log('🌆 City changed to:', e.target.value);
                   setFilterCity(e.target.value); 
                   setActiveDot(0); 
                 }}
-                options={['', ...cities.sort()]}
-                placeholder="All Cities"
-                className="w-full md:w-auto text-sm"
-                optionLabels={{'': 'All Cities'}}
-              />
+                className="w-full md:w-auto px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer transition-all text-sm"
+              >
+                <option value="">All Cities</option>
+                {cities.sort().map((city, index) => (
+                  <option key={index} value={city}>{city}</option>
+                ))}
+              </select>
 
-              <CustomSelect
+              {/* Salary Range Filter */}
+              <select
                 value={filterSalary}
                 onChange={(e) => { 
                   console.log('💰 Salary changed to:', e.target.value);
                   setFilterSalary(e.target.value); 
                   setActiveDot(0); 
                 }}
-                options={salaryRanges.map(r => r.value)}
-                placeholder="Salary Range"
-                className="w-full md:w-auto text-sm"
-                optionLabels={Object.fromEntries(salaryRanges.map(r => [r.value, r.label]))}
-              />
+                className="w-full md:w-auto px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer transition-all text-sm"
+              >
+                {salaryRanges.map((range, index) => (
+                  <option key={index} value={range.value}>{range.label}</option>
+                ))}
+              </select>
             </div>
 
             {/* Clear Filters — full width on mobile, inline on desktop */}
