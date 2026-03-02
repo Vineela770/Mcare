@@ -1717,7 +1717,8 @@ const Home = () => {
                   setFilterSpecialization(''); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto px-5 py-2 bg-white border rounded-full text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition whitespace-nowrap"
+                className="w-full md:w-auto min-w-[160px] px-5 py-2 bg-white border rounded-full text-gray-700 text-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition"
+                style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.5rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
               >
                 <option value="">Select Degree</option>
                 {degrees.map((degree, index) => (
@@ -1733,8 +1734,9 @@ const Home = () => {
                   setFilterSpecialization(e.target.value); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto px-5 py-2 bg-white border rounded-full text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full md:w-auto min-w-[180px] px-5 py-2 bg-white border rounded-full text-gray-700 text-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50"
                 disabled={!selectedDegree}
+                style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', backgroundImage: !selectedDegree ? 'none' : 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.5rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
               >
                 <option value="">Select Specialization</option>
                 {specializations.map((spec, index) => (
@@ -1750,7 +1752,8 @@ const Home = () => {
                   setFilterCity(e.target.value); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto px-5 py-2 bg-white border rounded-full text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition whitespace-nowrap"
+                className="w-full md:w-auto min-w-[140px] px-5 py-2 bg-white border rounded-full text-gray-700 text-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition"
+                style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.5rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
               >
                 <option value="">All Cities</option>
                 {cities.sort().map((city, index) => (
@@ -1766,7 +1769,8 @@ const Home = () => {
                   setFilterSalary(e.target.value); 
                   setActiveDot(0); 
                 }}
-                className="w-full md:w-auto px-5 py-2 bg-white border rounded-full text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition whitespace-nowrap"
+                className="w-full md:w-auto min-w-[160px] px-5 py-2 bg-white border rounded-full text-gray-700 text-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer transition"
+                style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.5rem center', backgroundSize: '1.5em 1.5em', paddingRight: '2.5rem' }}
               >
                 {salaryRanges.map((range, index) => (
                   <option key={index} value={range.value}>{range.label}</option>
