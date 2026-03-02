@@ -44,6 +44,20 @@ a {
   text-decoration: none;
 }
 
+/* Remove all blue borders from inputs and textareas */
+input,
+textarea,
+select {
+  outline: none !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* Text Selection - Green Theme */
 ::selection {
   background-color: #10b981;
