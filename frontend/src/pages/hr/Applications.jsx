@@ -771,7 +771,7 @@ const Applications = () => {
                   value={rejectReason}
                   onChange={(e) => setRejectReason(e.target.value)}
                   rows="4"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                   placeholder="Provide feedback to the candidate..."
                 />
               </div>

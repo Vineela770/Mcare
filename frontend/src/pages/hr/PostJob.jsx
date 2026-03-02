@@ -142,7 +142,7 @@ const PostJob = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="e.g., Senior Registered Nurse"
                 required
               />
@@ -182,7 +182,7 @@ const PostJob = () => {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="e.g., Guntur, Andhra Pradesh"
                 required
               />
@@ -321,7 +321,7 @@ const PostJob = () => {
                 value={formData.description}
                 onChange={handleChange}
                 rows="6"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="Describe the job role, responsibilities, and day-to-day tasks..."
                 required
               />
@@ -337,7 +337,7 @@ const PostJob = () => {
                 value={formData.requirements}
                 onChange={handleChange}
                 rows="4"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="List the required qualifications, certifications, and skills..."
                 required
               />
@@ -354,7 +354,7 @@ const PostJob = () => {
                 value={formData.benefits}
                 onChange={handleChange}
                 rows="3"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="List benefits like health insurance, paid time off, etc..."
               />
             </div>

@@ -2112,7 +2112,7 @@ const Home = () => {
                 value={applicationData.coverLetter}
                 onChange={(e) => setApplicationData({ ...applicationData, coverLetter: e.target.value })}
                 placeholder="Tell us why you're a great fit for this role..."
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
             </div>
 
@@ -2123,7 +2123,7 @@ const Home = () => {
                 value={applicationData.expectedSalary}
                 onChange={(e) => setApplicationData({ ...applicationData, expectedSalary: e.target.value })}
                 placeholder="Rs. 50,000"
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
             </div>
 
@@ -2133,7 +2133,7 @@ const Home = () => {
                 type="date"
                 value={applicationData.availability}
                 onChange={(e) => setApplicationData({ ...applicationData, availability: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
             </div>
 
@@ -2191,7 +2191,7 @@ const Home = () => {
                 type="text"
                 value={quickApplyData.name}
                 onChange={(e) => setQuickApplyData({ ...quickApplyData, name: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
               {quickApplyErrors.name && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.name}</p>}
             </div>
@@ -2204,7 +2204,7 @@ const Home = () => {
                 type="email"
                 value={quickApplyData.email}
                 onChange={(e) => setQuickApplyData({ ...quickApplyData, email: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
               {quickApplyErrors.email && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.email}</p>}
             </div>
@@ -2229,7 +2229,7 @@ const Home = () => {
                   type="tel"
                   value={quickApplyData.phone}
                   onChange={(e) => setQuickApplyData({ ...quickApplyData, phone: e.target.value })}
-                  className="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                  className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
                   placeholder="Enter phone number"
                 />
               </div>
@@ -2245,7 +2245,7 @@ const Home = () => {
                 rows="4"
                 value={quickApplyData.coverLetter}
                 onChange={(e) => setQuickApplyData({ ...quickApplyData, coverLetter: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
               {quickApplyErrors.coverLetter && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.coverLetter}</p>}
             </div>
@@ -2256,7 +2256,7 @@ const Home = () => {
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={(e) => setQuickApplyData({ ...quickApplyData, resume: e.target.files?.[0] || null })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
               {quickApplyErrors.resume && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.resume}</p>}
             </div>
@@ -2315,7 +2315,7 @@ const Home = () => {
                 type="text"
                 value={quickPostData.companyName}
                 onChange={(e) => setQuickPostData({ ...quickPostData, companyName: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
               {quickPostErrors.companyName && <p className="text-red-500 text-sm mt-1">{quickPostErrors.companyName}</p>}
             </div>
@@ -2328,7 +2328,7 @@ const Home = () => {
                 type="email"
                 value={quickPostData.email}
                 onChange={(e) => setQuickPostData({ ...quickPostData, email: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
               {quickPostErrors.email && <p className="text-red-500 text-sm mt-1">{quickPostErrors.email}</p>}
             </div>
@@ -2353,7 +2353,7 @@ const Home = () => {
                   type="tel"
                   value={quickPostData.phone}
                   onChange={(e) => setQuickPostData({ ...quickPostData, phone: e.target.value })}
-                  className="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                  className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
                   placeholder="Enter phone number"
                 />
               </div>
@@ -2369,7 +2369,7 @@ const Home = () => {
                 type="text"
                 value={quickPostData.jobTitle}
                 onChange={(e) => setQuickPostData({ ...quickPostData, jobTitle: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
               {quickPostErrors.jobTitle && <p className="text-red-500 text-sm mt-1">{quickPostErrors.jobTitle}</p>}
             </div>
@@ -2382,7 +2382,7 @@ const Home = () => {
                 type="text"
                 value={quickPostData.location}
                 onChange={(e) => setQuickPostData({ ...quickPostData, location: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
               />
               {quickPostErrors.location && <p className="text-red-500 text-sm mt-1">{quickPostErrors.location}</p>}
             </div>
@@ -2396,7 +2396,7 @@ const Home = () => {
                 rows="4"
                 value={quickPostData.jobDescription}
                 onChange={(e) => setQuickPostData({ ...quickPostData, jobDescription: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
                 placeholder="Enter job responsibilities, required skills, experience, etc."
               />
 

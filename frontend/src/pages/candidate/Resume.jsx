@@ -568,7 +568,7 @@ const Resume = () => {
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
                   rows="6"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                   placeholder="Describe your professional background and expertise..."
                 />
                 <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
@@ -607,7 +607,7 @@ const Resume = () => {
                     onChange={(e) =>
                       setExperienceForm({ ...experienceForm, title: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., Senior Registered Nurse"
                   />
                 </div>
@@ -622,7 +622,7 @@ const Resume = () => {
                     onChange={(e) =>
                       setExperienceForm({ ...experienceForm, company: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., Manhattan Hospital"
                   />
                 </div>
@@ -637,7 +637,7 @@ const Resume = () => {
                     onChange={(e) =>
                       setExperienceForm({ ...experienceForm, location: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., New York, NY"
                   />
                 </div>
@@ -654,7 +654,7 @@ const Resume = () => {
                       onChange={(e) =>
                         setExperienceForm({ ...experienceForm, startDate: e.target.value })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       placeholder="e.g., 2020"
                     />
                   </div>
@@ -668,7 +668,7 @@ const Resume = () => {
                       onChange={(e) =>
                         setExperienceForm({ ...experienceForm, endDate: e.target.value })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       placeholder="e.g., Present"
                     />
                   </div>
@@ -684,7 +684,7 @@ const Resume = () => {
                       setExperienceForm({ ...experienceForm, description: e.target.value })
                     }
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="Describe your responsibilities and achievements..."
                   />
                 </div>
@@ -725,7 +725,7 @@ const Resume = () => {
                     onChange={(e) =>
                       setEducationForm({ ...educationForm, degree: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., Bachelor of Science in Nursing"
                   />
                 </div>
@@ -743,7 +743,7 @@ const Resume = () => {
                         institution: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., Columbia University"
                   />
                 </div>
@@ -758,7 +758,7 @@ const Resume = () => {
                     onChange={(e) =>
                       setEducationForm({ ...educationForm, location: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     placeholder="e.g., New York, NY"
                   />
                 </div>
@@ -775,7 +775,7 @@ const Resume = () => {
                       onChange={(e) =>
                         setEducationForm({ ...educationForm, startYear: e.target.value })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       placeholder="e.g., 2016"
                     />
                   </div>
@@ -789,7 +789,7 @@ const Resume = () => {
                       onChange={(e) =>
                         setEducationForm({ ...educationForm, endYear: e.target.value })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       placeholder="e.g., 2020"
                     />
                   </div>
