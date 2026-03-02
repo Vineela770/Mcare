@@ -3,6 +3,29 @@ import { UserCheck, UserX, Briefcase, FileText, Clock, Search, Menu, X } from 'l
 import Sidebar from '../../components/common/Sidebar';
 import adminService from '../../api/adminService';
 
+// Map raw backend activity row → enriched object the UI needs
+function enrichActivity(raw) {
+  const action = (raw.action || '').toLowerCase();
+  let type, icon, bg, color;
+
+  if (action.includes('job') || action.includes('post')) {
+    type  = 'job'; icon = Briefcase; bg = 'bg-green-50'; color = 'text-green-600';
+  } else if (action.includes('application') || action.includes('apply')) {
+    type  = 'application'; icon = FileText; bg = 'bg-teal-50'; color = 'text-teal-700';
+  } else {
+    type  = 'user'; icon = UserCheck; bg = 'bg-purple-50'; color = 'text-purple-600';
+  }
+
+  // Format timestamp: prefer a readable relative or absolute string
+  let timestamp = '—';
+  if (raw.time) {
+    const d = new Date(raw.time);
+    if (!isNaN(d)) timestamp = d.toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  return { ...raw, type, icon, bg, color, timestamp };
+}
+
 const ActivityLog = () => {
   const [filterType, setFilterType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,18 +41,25 @@ const ActivityLog = () => {
   const fetchActivities = async () => {
     try {
       const data = await adminService.getActivities();
-      setActivities(Array.isArray(data) ? data : []);
+      setActivities(Array.isArray(data) ? data.map(enrichActivity) : []);
     } catch (error) {
       console.error('Failed to fetch activities:', error);
       setActivities([]);
     }
   };
 
+  const todayCount = activities.filter(a => {
+    if (!a.time) return false;
+    const d = new Date(a.time);
+    const now = new Date();
+    return d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+
   const stats = [
-    { label: 'Total Activities', value: (activities.length || 0).toString(), icon: Clock, color: 'text-teal-700', bg: 'bg-teal-50' },
-    { label: 'Today', value: (activities.filter(a => a.timestamp?.includes('min') || a.timestamp?.includes('hour')).length || 0).toString(), icon: Clock, color: 'text-green-600', bg: 'bg-green-50' },
-    { label: 'This Week', value: (activities.length || 0).toString(), icon: Clock, color: 'text-emerald-700', bg: 'bg-emerald-50' },
-    { label: 'This Month', value: (activities.length || 0).toString(), icon: Clock, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { label: 'Total Activities', value: activities.length.toString(),  icon: Clock, color: 'text-teal-700',    bg: 'bg-teal-50' },
+    { label: 'Today',            value: todayCount.toString(),          icon: Clock, color: 'text-green-600',   bg: 'bg-green-50' },
+    { label: 'This Week',        value: activities.length.toString(),   icon: Clock, color: 'text-emerald-700', bg: 'bg-emerald-50' },
+    { label: 'This Month',       value: activities.length.toString(),   icon: Clock, color: 'text-purple-600',  bg: 'bg-purple-50' },
   ];
 
   const filteredActivities = useMemo(() => {
@@ -119,13 +149,18 @@ return (
       {/* ✅ Activity Timeline */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
         <div className="space-y-4">
-          {filteredActivities.map((activity) => (
+          {filteredActivities.length === 0 ? (
+            <p className="text-center text-gray-400 py-10 text-sm">No activities found.</p>
+          ) : (
+          filteredActivities.map((activity) => {
+            const Icon = activity.icon || Clock;
+            return (
             <div
               key={activity.id}
               className="flex items-start gap-3 sm:gap-4 pb-4 border-b border-gray-100 last:border-0"
             >
-              <div className={`${activity.bg} p-3 rounded-lg flex-shrink-0`}>
-                <activity.icon className={`w-5 h-5 ${activity.color}`} />
+              <div className={`${activity.bg || 'bg-gray-100'} p-3 rounded-lg flex-shrink-0`}>
+                <Icon className={`w-5 h-5 ${activity.color || 'text-gray-500'}`} />
               </div>
 
               <div className="flex-1 min-w-0">
@@ -143,7 +178,9 @@ return (
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })
+          )}
         </div>
       </div>
 

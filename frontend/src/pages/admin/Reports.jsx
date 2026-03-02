@@ -49,6 +49,22 @@ const Reports = () => {
     showNotification(`Filter applied: ${dateRange.from} to ${dateRange.to}`);
   };
 
+  // ── Reliable CSV trigger ────────────────────────────────────────────────────
+  // Uses <a> kept in DOM for 30 s before revoke so browser has time to fetch the blob
+  const triggerCsvDownload = (csvText, filename) => {
+    const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href     = url;
+    link.download = filename;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    // dispatchEvent is more reliable than .click() for repeated programmatic triggers
+    link.dispatchEvent(new MouseEvent('click', { bubbles: false, cancelable: true, view: window }));
+    // Keep alive long enough for browser download manager to pick up the blob URL
+    setTimeout(() => { document.body.removeChild(link); URL.revokeObjectURL(url); }, 30000);
+  };
+
   // ── CSV Download ────────────────────────────────────────────────────────────
   // Core download logic (no guard) — called by both handleDownloadReport and handleDownloadAll
   const performDownload = async (reportTitle) => {
@@ -84,13 +100,7 @@ const Reports = () => {
       }
       const esc = v => '"'+String(v??'').replace(/"/g,'""')+'"';
       const csv = [headers.map(esc).join(','),...rows.map(r=>r.map(esc).join(','))].join('\n');
-      const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url; link.download = filename;
-      document.body.appendChild(link); link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      triggerCsvDownload(csv, filename);
       showNotification(reportTitle+' downloaded — '+rows.length+' records');
     } catch (e) {
       console.error(e);
@@ -401,7 +411,7 @@ const Reports = () => {
               </div>
               <div className="mt-5 flex justify-end gap-3">
                 <button
-                  onClick={() => { setGeneratedReport(null); handleDownloadReport(generatedReport.title); }}
+                  onClick={() => { setGeneratedReport(null); performDownload(generatedReport.title); }}
                   className="px-4 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" /> Download CSV
