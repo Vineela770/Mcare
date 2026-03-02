@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Calendar, Clock, MapPin, User, Video, Phone, X, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import CustomSelect from '../../components/common/CustomSelect';
+import CustomDropdown from '../../components/common/CustomDropdown';
 import employerService from '../../api/employerService';
 
 const Interviews = () => {
@@ -319,16 +320,16 @@ const Interviews = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Interview Type</label>
-                      <select
-                        name="type"
+                      <CustomDropdown
+                        options={[
+                          { label: 'Video Call', value: 'Video Call' },
+                          { label: 'Phone', value: 'Phone' },
+                          { label: 'In-Person', value: 'In-Person' },
+                        ]}
                         value={formData.type}
-                        onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
-                      >
-                        <option value="Video Call">Video Call</option>
-                        <option value="Phone">Phone</option>
-                        <option value="In-Person">In-Person</option>
-                      </select>
+                        onChange={(e) => handleFormChange({ target: { name: 'type', value: e.target.value } })}
+                        placeholder="Video Call"
+                      />
                     </div>
 
                     <div>
@@ -339,7 +340,7 @@ const Interviews = () => {
                         value={formData.interviewer}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -352,7 +353,7 @@ const Interviews = () => {
                         onChange={handleFormChange}
                         required
                         placeholder="Zoom link, office location, etc."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -454,13 +455,15 @@ const Interviews = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Interview Type</label>
-                      <CustomSelect
-                        name="type"
+                      <CustomDropdown
+                        options={[
+                          { label: 'Video Call', value: 'Video Call' },
+                          { label: 'Phone', value: 'Phone' },
+                          { label: 'In-Person', value: 'In-Person' },
+                        ]}
                         value={formData.type}
-                        onChange={handleFormChange}
-                        options={['Video Call', 'Phone', 'In-Person']}
+                        onChange={(e) => handleFormChange({ target: { name: 'type', value: e.target.value } })}
                         placeholder="Video Call"
-                        className="w-full"
                       />
                     </div>
 
@@ -472,7 +475,7 @@ const Interviews = () => {
                         value={formData.interviewer}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
 
@@ -485,7 +488,7 @@ const Interviews = () => {
                         onChange={handleFormChange}
                         required
                         placeholder="Zoom link, office location, etc."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                       />
                     </div>
                   </div>
