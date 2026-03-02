@@ -1,6 +1,8 @@
 import React from 'react';
 
-export default function Modal({ title, children, onClose, footer }) {
+export default function Modal({ title, children, onClose, footer, isOpen = true }) {
+  if (!isOpen) return null;
+  
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-black bg-opacity-50 p-4">
       <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-2xl mx-auto my-8 max-h-[90vh] overflow-y-auto">

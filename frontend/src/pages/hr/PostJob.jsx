@@ -287,7 +287,7 @@ const PostJob = () => {
                 name="positions"
                 value={formData.positions}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 placeholder="e.g., 3"
                 min="1"
                 required
