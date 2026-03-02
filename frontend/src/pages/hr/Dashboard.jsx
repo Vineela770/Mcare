@@ -78,10 +78,10 @@ const HRDashboard = () => {
 
   const statCards = useMemo(
     () => [
-      { label: 'Active Jobs', value: stats.activeJobs, icon: Briefcase, color: 'cyan', link: '/hr/jobs' },
-      { label: 'Total Applications', value: stats.totalApplications, icon: FileText, color: 'blue', link: '/hr/applications' },
-      { label: 'Interviewed', value: stats.interviewed, icon: Users, color: 'green', link: '/hr/interviews' },
-      { label: 'Hired', value: stats.hired, icon: CheckCircle, color: 'purple', link: '/hr/applications' },
+      { label: 'Active Jobs', value: stats.activeJobs, icon: Briefcase, color: 'green1', link: '/hr/jobs' },
+      { label: 'Total Applications', value: stats.totalApplications, icon: FileText, color: 'green2', link: '/hr/applications' },
+      { label: 'Interviewed', value: stats.interviewed, icon: Users, color: 'green3', link: '/hr/interviews' },
+      { label: 'Hired', value: stats.hired, icon: CheckCircle, color: 'green4', link: '/hr/applications' },
     ],
     [stats]
   );
@@ -103,10 +103,10 @@ const HRDashboard = () => {
 
   // ✅ Tailwind-safe color mapping (prevents bg-${} from failing in production)
   const statStyles = {
-    cyan: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
-    blue: { bg: 'bg-teal-100', text: 'text-teal-700' },
-    green: { bg: 'bg-green-100', text: 'text-green-600' },
-    purple: { bg: 'bg-purple-100', text: 'text-purple-600' },
+    green1: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
+    green2: { bg: 'bg-teal-100', text: 'text-teal-700' },
+    green3: { bg: 'bg-green-100', text: 'text-green-700' },
+    green4: { bg: 'bg-emerald-100', text: 'text-emerald-600' },
   };
 
   return (
