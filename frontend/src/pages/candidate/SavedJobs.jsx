@@ -180,9 +180,9 @@ const SavedJobs = () => {
         {showApplyModal && selectedJob && (
           <Modal isOpen={showApplyModal} onClose={() => setShowApplyModal(false)} title={`Apply for ${selectedJob.title}`}>
             <div className="space-y-4">
-              <textarea placeholder="Cover Letter" className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
-              <input type="text" placeholder="Expected Salary" className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
-              <input type="date" className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+              <textarea placeholder="Cover Letter" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+              <input type="text" placeholder="Expected Salary" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600" />
+              <input type="date" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600" />
 
               <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
                 <button

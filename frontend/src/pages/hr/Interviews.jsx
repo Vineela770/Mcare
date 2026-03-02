@@ -277,7 +277,7 @@ const Interviews = () => {
                         value={formData.candidateName}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                       />
                     </div>
 
@@ -289,7 +289,7 @@ const Interviews = () => {
                         value={formData.position}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                       />
                     </div>
 
@@ -301,7 +301,7 @@ const Interviews = () => {
                         value={formData.date}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                       />
                     </div>
 
@@ -313,7 +313,7 @@ const Interviews = () => {
                         value={formData.time}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                       />
                     </div>
 
@@ -323,7 +323,7 @@ const Interviews = () => {
                         name="type"
                         value={formData.type}
                         onChange={handleFormChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                       >
                         <option value="Video Call">Video Call</option>
                         <option value="Phone">Phone</option>
@@ -339,7 +339,7 @@ const Interviews = () => {
                         value={formData.interviewer}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                       />
                     </div>
 
@@ -412,7 +412,7 @@ const Interviews = () => {
                         value={formData.candidateName}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                       />
                     </div>
 
@@ -424,7 +424,7 @@ const Interviews = () => {
                         value={formData.position}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                       />
                     </div>
 
@@ -436,7 +436,7 @@ const Interviews = () => {
                         value={formData.date}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                       />
                     </div>
 
@@ -448,7 +448,7 @@ const Interviews = () => {
                         value={formData.time}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                       />
                     </div>
 

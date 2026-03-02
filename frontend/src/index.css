@@ -176,10 +176,17 @@ input[type="date"] {
   color-scheme: light;
 }
 
+input[type="date"]:focus {
+  outline: none !important;
+  border-color: transparent !important;
+}
+
 /* Chrome/Safari date picker calendar icon */
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%);
   cursor: pointer;
+  color: #10b981;
+  background-color: transparent;
 }
 
 /* Chrome/Safari date input */
@@ -217,6 +224,15 @@ input[type="week"] {
   accent-color: #10b981 !important;
 }
 
+/* Date picker selected state - Override blue to green */
+input[type="date"]::-webkit-datetime-edit-month-field:focus,
+input[type="date"]::-webkit-datetime-edit-day-field:focus,
+input[type="date"]::-webkit-datetime-edit-year-field:focus {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #0f172a;
+  outline: none;
+}
+
 /* Mobile-specific date picker styling */
 @media (max-width: 768px) {
   input[type="date"] {
@@ -230,5 +246,23 @@ input[type="week"] {
     filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%);
     width: 20px;
     height: 20px;
+  }
+}
+
+/* Override browser native calendar colors (best effort) */
+::-webkit-calendar-picker-indicator {
+  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%) !important;
+}
+
+/* Force green theme on all browser date pickers */
+@supports (-webkit-appearance: none) {
+  input[type="date"] {
+    accent-color: #10b981;
+  }
+}
+
+@supports (-moz-appearance: none) {
+  input[type="date"] {
+    accent-color: #10b981;
   }
 }
