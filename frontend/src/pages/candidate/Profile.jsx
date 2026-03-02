@@ -271,18 +271,15 @@ const Profile = () => {
                 </label>
 
                 <div className="flex gap-2">
-                  <select
+                  <CustomDropdown
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleChange}
-                    className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white cursor-pointer hover:border-emerald-400"
-                  >
-                    {countryCodes.map((code) => (
-                      <option key={code} value={code}>
-                        {code}
-                      </option>
-                    ))}
-                  </select>
+                    options={countryCodes.map(code => ({ value: code, label: code }))}
+                    className="w-20 sm:w-24"
+                    compact={true}
+                    greenTheme={true}
+                  />
 
                   <input
                     type="tel"
@@ -291,7 +288,7 @@ const Profile = () => {
                     onChange={handleChange}
                     placeholder="Enter phone number"
                     inputMode="numeric"
-                    className="flex-1 px-3 sm:px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-sm sm:text-base"
+                    className="flex-1 px-3 sm:px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-500 hover:border-emerald-400 text-sm sm:text-base"
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1 sm:text-sm">

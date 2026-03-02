@@ -9,7 +9,8 @@ const CustomDropdown = ({
   placeholder = 'Select',
   disabled = false,
   className = '',
-  compact = false
+  compact = false,
+  greenTheme = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
@@ -71,9 +72,42 @@ const CustomDropdown = ({
               onMouseDown={(e) => { e.preventDefault(); handleSelect(option.value); }}
               className={`px-4 py-3 cursor-pointer transition flex items-center justify-between ${
                 value === option.value 
-                  ? 'bg-gradient-to-r from-teal-600 to-emerald-500 text-white font-medium' 
-                  : 'text-gray-700 hover:bg-gradient-to-r hover:from-teal-50 hover:to-emerald-50 hover:text-emerald-800'
+                  ? (greenTheme 
+                      ? 'text-white font-semibold' 
+                      : 'bg-gradient-to-r from-emerald-600 to-green-500 text-white font-medium')
+                  : 'text-gray-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 hover:text-emerald-800 hover:font-medium'
               }`}
+              style={{
+                background: value === option.value && greenTheme
+                  ? 'linear-gradient(135deg, #059669 0%, #10b981 50%, #047857 100%)'
+                  : value === option.value ? '#10b981' : 'transparent',
+                backgroundColor: value === option.value && !greenTheme ? '#10b981' : 'transparent',
+                color: value === option.value ? 'white' : '#374151',
+                borderRadius: greenTheme && value === option.value ? '6px' : '0',
+                margin: greenTheme && value === option.value ? '2px 4px' : '0'
+              }}
+              onMouseEnter={(e) => {
+                if (value !== option.value) {
+                  e.target.style.backgroundColor = greenTheme ? '#d1fae5' : '#ecfdf5';
+                  e.target.style.color = '#047857';
+                  if (greenTheme) {
+                    e.target.style.background = 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)';
+                    e.target.style.borderRadius = '4px';
+                    e.target.style.margin = '1px 4px';
+                  }
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (value !== option.value) {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = '#374151';
+                  if (greenTheme) {
+                    e.target.style.background = 'transparent';
+                    e.target.style.borderRadius = '0';
+                    e.target.style.margin = '0';
+                  }
+                }
+              }}
             >
               <span>{option.label}</span>
               {value === option.value && <Check className="w-4 h-4" />}

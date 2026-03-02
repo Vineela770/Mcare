@@ -128,6 +128,8 @@ const Home = () => {
   const [successMessage, setSuccessMessage] = useState('');
 
   const [logoIndex, setLogoIndex] = useState(0);
+  const [mobileLogoIndex, setMobileLogoIndex] = useState(0);
+  const [mobileCategoryIndex, setMobileCategoryIndex] = useState(0);
 
   const [filterSpecialization, setFilterSpecialization] = useState('');
   const [selectedDegree, setSelectedDegree] = useState('');
@@ -188,6 +190,23 @@ const Home = () => {
     const timer = setInterval(() => {
       setLogoIndex(prev => (prev + 1) % total);
     }, 2500);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Auto-scroll hospital logos for mobile
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setMobileLogoIndex(prev => (prev + 1) % 6); // Loop through all 6 hospital logos
+    }, 3000); // 3 second interval for mobile
+    return () => clearInterval(timer);
+  }, []);
+
+  // Auto-scroll categories for mobile
+  useEffect(() => {
+    const tabsLength = 7; // Total number of tabs (latest, doctors, nursing, allied, management, dental, technical)
+    const timer = setInterval(() => {
+      setMobileCategoryIndex(prev => (prev + 1) % tabsLength); // Loop through all tabs
+    }, 4000); // 4 second interval for categories
     return () => clearInterval(timer);
   }, []);
 
@@ -1628,30 +1647,35 @@ const Home = () => {
             )}
 
             {/* Tabs Container */}
-            <div className="flex gap-3 overflow-x-auto md:overflow-hidden px-2 md:px-10 scroll-smooth no-scrollbar">
+            <div className="flex gap-3 overflow-hidden md:overflow-hidden px-2 md:px-10 scroll-smooth no-scrollbar">
 
-              {/* Mobile → show all tabs scrollable */}
-              <div className="flex gap-3 md:hidden">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => {
-                      setActiveTab(tab.id);
-                      setSelectedDegree('');
-                      setFilterSpecialization('');
-                      setFilterCity('');
-                      setFilterSalary('');
-                      setActiveDot(0);
-                    }}
-                    className={`flex-shrink-0 px-4 py-2 rounded-full border whitespace-nowrap transition ${
-                      activeTab === tab.id
-                        ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white shadow'
-                        : 'bg-white hover:bg-gray-100'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
+              {/* Mobile → auto-scroll through tabs */}
+              <div className="md:hidden overflow-hidden w-full">
+                <div 
+                  className="flex gap-3 transition-transform duration-700 ease-in-out"
+                  style={{ transform: `translateX(-${mobileCategoryIndex * 120}px)` }} // 120px scroll distance per tab
+                >
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => {
+                        setActiveTab(tab.id);
+                        setSelectedDegree('');
+                        setFilterSpecialization('');
+                        setFilterCity('');
+                        setFilterSalary('');
+                        setActiveDot(0);
+                      }}
+                      className={`flex-shrink-0 px-4 py-2 rounded-full border whitespace-nowrap transition ${  
+                        activeTab === tab.id
+                          ? 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white shadow'
+                          : 'bg-white hover:bg-gray-100'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Desktop → sliced tabs with arrows */}
@@ -1952,13 +1976,18 @@ const Home = () => {
 
     <div className="overflow-hidden">
 
-      {/* ===== MOBILE VIEW (Swipe) ===== */}
-      <div className="flex md:hidden overflow-x-auto gap-4 no-scrollbar scroll-smooth px-2">
-        {hospitalLogos.map((logo, i) => (
-          <div key={i} className="flex-shrink-0 bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center justify-center w-36 h-24 hover:shadow-md transition">
-            <img src={logo} alt="Hospital Logo" className="h-12 max-w-full object-contain grayscale hover:grayscale-0 transition" />
-          </div>
-        ))}
+      {/* ===== MOBILE VIEW (Auto-scroll) ===== */}
+      <div className="md:hidden overflow-hidden px-2">
+        <div 
+          className="flex transition-transform duration-700 ease-in-out gap-4"
+          style={{ transform: `translateX(-${mobileLogoIndex * 160}px)` }} // 144px (w-36) + 16px (gap-4) = 160px
+        >
+          {hospitalLogos.map((logo, i) => (
+            <div key={i} className="flex-shrink-0 bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center justify-center w-36 h-24 hover:shadow-md transition">
+              <img src={logo} alt="Hospital Logo" className="h-12 max-w-full object-contain grayscale hover:grayscale-0 transition" />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ===== DESKTOP VIEW (Auto-scroll slider) ===== */}
@@ -2000,7 +2029,7 @@ const Home = () => {
     </p>
 
     {/* Buttons */}
-    <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
+    <div className="flex flex-row justify-center gap-3 md:gap-4">
 
       <Link
         to="/register"
