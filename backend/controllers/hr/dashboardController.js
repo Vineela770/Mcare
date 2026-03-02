@@ -4,7 +4,7 @@ const pool = require("../../config/db");
 exports.getDashboardStats = async (req, res) => {
   try {
     const activeJobs = await pool.query(
-      "SELECT COUNT(*) FROM jobs WHERE status='Active'"
+      "SELECT COUNT(*) FROM jobs WHERE is_active = true"
     );
 
     const totalApplications = await pool.query(
@@ -12,11 +12,11 @@ exports.getDashboardStats = async (req, res) => {
     );
 
     const interviewed = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE status='Interview'"
+      "SELECT COUNT(*) FROM applications WHERE status = 'Interview'"
     );
 
     const hired = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE status='Hired'"
+      "SELECT COUNT(*) FROM applications WHERE status = 'Hired'"
     );
 
     res.json({
@@ -27,6 +27,7 @@ exports.getDashboardStats = async (req, res) => {
     });
 
   } catch (error) {
+    console.error('❌ getDashboardStats Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -35,12 +36,13 @@ exports.getDashboardStats = async (req, res) => {
 exports.getRecentApplications = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM applications ORDER BY applied_date DESC LIMIT 5"
+      "SELECT * FROM applications ORDER BY applied_at DESC LIMIT 5"
     );
 
     res.json(result.rows);
 
   } catch (error) {
+    console.error('❌ getRecentApplications Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 };
@@ -53,19 +55,19 @@ exports.getWeeklyStats = async (req, res) => {
     const weekStartISO = weekStart.toISOString();
 
     const newApps = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE applied_date >= $1",
+      "SELECT COUNT(*) FROM applications WHERE applied_at >= $1",
       [weekStartISO]
     );
     const shortlisted = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE status='Shortlisted' AND applied_date >= $1",
+      "SELECT COUNT(*) FROM applications WHERE status = 'Shortlisted' AND applied_at >= $1",
       [weekStartISO]
     );
     const interviews = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE status='Interview' AND applied_date >= $1",
+      "SELECT COUNT(*) FROM applications WHERE status = 'Interview' AND applied_at >= $1",
       [weekStartISO]
     );
     const rejected = await pool.query(
-      "SELECT COUNT(*) FROM applications WHERE status='Rejected' AND applied_date >= $1",
+      "SELECT COUNT(*) FROM applications WHERE status = 'Rejected' AND applied_at >= $1",
       [weekStartISO]
     );
 
@@ -76,6 +78,7 @@ exports.getWeeklyStats = async (req, res) => {
       rejected: parseInt(rejected.rows[0].count),
     });
   } catch (error) {
+    console.error('❌ getWeeklyStats Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 };

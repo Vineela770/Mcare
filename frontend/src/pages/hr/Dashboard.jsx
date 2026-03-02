@@ -185,46 +185,55 @@ const HRDashboard = () => {
             </div>
 
             <div className="space-y-3 md:space-y-4">
-              {recentApplications.map((app) => (
-                <div
-                  key={app.id}
-                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border border-gray-200 rounded-lg hover:border-emerald-400 transition-colors"
-                >
-                  <div className="flex items-start sm:items-center space-x-4 min-w-0">
-                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center shrink-0">
-                      <span className="text-lg font-bold text-emerald-700">{app.candidateName.charAt(0)}</span>
-                    </div>
+              {loading ? (
+                <div className="text-center py-8 text-gray-500">Loading applications...</div>
+              ) : recentApplications && recentApplications.length > 0 ? (
+                recentApplications.map((app) => (
+                  <div
+                    key={app.id}
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border border-gray-200 rounded-lg hover:border-emerald-400 transition-colors"
+                  >
+                    <div className="flex items-start sm:items-center space-x-4 min-w-0">
+                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center shrink-0">
+                        <span className="text-lg font-bold text-emerald-700">{app.candidateName?.charAt(0) || '?'}</span>
+                      </div>
 
-                    <div className="min-w-0">
-                      <h3 className="font-semibold text-gray-900 truncate">{app.candidateName}</h3>
-                      <p className="text-sm text-gray-600 truncate">
-                        {app.jobTitle} • {app.experience} experience
-                      </p>
-                      <div className="flex items-center space-x-2 text-sm text-gray-500 mt-1">
-                        <Clock className="w-4 h-4 shrink-0" />
-                        <span className="truncate">{app.appliedDate}</span>
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-gray-900 truncate">{app.candidateName || 'Unknown'}</h3>
+                        <p className="text-sm text-gray-600 truncate">
+                          {app.jobTitle || 'N/A'} • {app.experience || 'N/A'} experience
+                        </p>
+                        <div className="flex items-center space-x-2 text-sm text-gray-500 mt-1">
+                          <Clock className="w-4 h-4 shrink-0" />
+                          <span className="truncate">{app.appliedDate || 'Recently'}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-center justify-between sm:justify-end sm:gap-3 gap-2">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(app.status)}`}>
-                      {app.status}
-                    </span>
+                    <div className="flex items-center justify-between sm:justify-end sm:gap-3 gap-2">
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(app.status)}`}>
+                        {app.status || 'Pending'}
+                      </span>
 
-                    <button
-                      onClick={() => {
-                        setSelectedApplication(app);
-                        setShowDetails(true);
-                      }}
-                      className="p-2 text-emerald-700 hover:bg-emerald-50 rounded-lg"
-                      title="View Details"
-                    >
-                      <Eye className="w-5 h-5" />
-                    </button>
+                      <button
+                        onClick={() => {
+                          setSelectedApplication(app);
+                          setShowDetails(true);
+                        }}
+                        className="p-2 text-emerald-700 hover:bg-emerald-50 rounded-lg"
+                        title="View Details"
+                      >
+                        <Eye className="w-5 h-5" />
+                      </button>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <p>No recent applications</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 

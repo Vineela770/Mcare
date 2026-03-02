@@ -51,7 +51,7 @@ const CustomDropdown = ({
         disabled={disabled}
         className={`w-full text-left focus:outline-none focus:ring-2 focus:ring-emerald-600 transition flex items-center justify-between ${
           compact 
-            ? 'bg-transparent text-gray-700 font-medium cursor-pointer py-0' 
+            ? 'px-3 py-3 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium cursor-pointer hover:border-emerald-400' 
             : 'px-4 py-3 border border-gray-300 rounded-lg hover:border-emerald-400 bg-white'
         } ${
           disabled 
