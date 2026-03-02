@@ -602,72 +602,80 @@ const Applications = () => {
             <div className="space-y-6">
               <div className="flex items-center space-x-4 pb-4 border-b">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-r from-teal-700 to-emerald-500 flex items-center justify-center text-white text-2xl font-bold">
-                  {selectedApplication.candidateAvatar}
+                  {selectedApplication.candidateAvatar || selectedApplication.candidateName?.charAt(0) || '?'}
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-gray-900">
-                    {selectedApplication.candidateName}
+                    {selectedApplication.candidateName || 'N/A'}
                   </h3>
-                  <p className="text-gray-600">{selectedApplication.jobTitle}</p>
-                  <div className="flex items-center space-x-1 mt-1">
-                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="font-medium text-gray-900">
-                      {selectedApplication.rating}
-                    </span>
-                  </div>
+                  <p className="text-gray-600">{selectedApplication.jobTitle || 'N/A'}</p>
+                  {selectedApplication.rating && (
+                    <div className="flex items-center space-x-1 mt-1">
+                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                      <span className="font-medium text-gray-900">
+                        {selectedApplication.rating}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Email</p>
-                  <p className="text-gray-900">{selectedApplication.email}</p>
+                  <p className="text-gray-900">{selectedApplication.email || 'N/A'}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Phone</p>
-                  <p className="text-gray-900">{selectedApplication.phone}</p>
+                  <p className="text-gray-900">{selectedApplication.phone || 'N/A'}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Location</p>
                   <p className="text-gray-900 flex items-center">
                     <MapPin className="w-4 h-4 mr-1" />
-                    {selectedApplication.location}
+                    {selectedApplication.location || 'N/A'}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Experience</p>
                   <p className="text-gray-900 flex items-center">
                     <Briefcase className="w-4 h-4 mr-1" />
-                    {selectedApplication.experience}
+                    {selectedApplication.experience || 'N/A'}
                   </p>
                 </div>
               </div>
 
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Qualification</h4>
-                <p className="text-gray-700">{selectedApplication.qualification}</p>
-              </div>
-
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">
-                  Professional Summary
-                </h4>
-                <p className="text-gray-700">{selectedApplication.summary}</p>
-              </div>
-
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Key Skills</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedApplication.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm"
-                    >
-                      {skill}
-                    </span>
-                  ))}
+              {selectedApplication.qualification && (
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">Qualification</h4>
+                  <p className="text-gray-700">{selectedApplication.qualification}</p>
                 </div>
-              </div>
+              )}
+
+              {selectedApplication.summary && (
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    Professional Summary
+                  </h4>
+                  <p className="text-gray-700">{selectedApplication.summary}</p>
+                </div>
+              )}
+
+              {Array.isArray(selectedApplication.skills) && selectedApplication.skills.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">Key Skills</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedApplication.skills.map((skill, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-4 border-t">
                 <button
