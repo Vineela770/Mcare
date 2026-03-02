@@ -1422,15 +1422,7 @@ const Home = () => {
   };
 
   const handleCategoryClick = (categoryKey) => {
-    setActiveTab(categoryKey);
-    setActiveDot(0);
-    setFilterSpecialization('');
-    setFilterCity('');
-    setFilterSalary('');
-
-    setTimeout(() => {
-      popularJobsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+    navigate(`/jobs?category=${categoryKey}`);
   };
 
   return (

@@ -141,6 +141,7 @@ const AllJobs = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
   const [jobType, setJobType] = useState('all');
+  const [activeCategory, setActiveCategory] = useState('');
 
   const [selectedJob, setSelectedJob] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -416,6 +417,7 @@ const AllJobs = () => {
     const qSearch = params.get('search') || params.get('q') || '';
     const qLocation = params.get('location') || params.get('city') || '';
     const qType = params.get('type') || params.get('jobType') || '';
+    const qCategory = params.get('category') || '';
     const qSaved = params.get('saved'); // "1" or "true"
     const qPostedWithin = params.get('postedWithin'); // 1/3/7/14
     const qMinSalary = params.get('minSalary');
@@ -426,6 +428,7 @@ const AllJobs = () => {
     if (qSearch) setSearchTerm(qSearch);
     if (qLocation) setSelectedLocation(qLocation);
     if (qType) setJobType(qType);
+    setActiveCategory(qCategory); // always apply (clears when not present)
 
     if (qSaved != null || qPostedWithin || qMinSalary || qMaxSalary) {
       setMoreFilters((p) => ({
@@ -476,6 +479,10 @@ const AllJobs = () => {
       moreFilters.postedWithin === 'any' ? null : Number(moreFilters.postedWithin);
 
     return jobs.filter((job) => {
+      if (activeCategory) {
+        if (normalize(job.categoryKey || '') !== normalize(activeCategory)) return false;
+      }
+
       if (term) {
         const blob = `${job.title} ${job.company_name || job.company} ${job.location || job.city}`.toLowerCase();
         if (!blob.includes(term)) return false;
@@ -504,7 +511,7 @@ const AllJobs = () => {
 
       return true;
     });
-  }, [jobs, searchTerm, selectedLocation, jobType, moreFilters, normalize, parseSalaryRange, parsePostedDays]);
+  }, [jobs, searchTerm, selectedLocation, jobType, activeCategory, moreFilters, normalize, parseSalaryRange, parsePostedDays]);
 
   // ✅ Reset pagination when filters change
   useEffect(() => {
@@ -513,6 +520,7 @@ const AllJobs = () => {
     searchTerm,
     selectedLocation,
     jobType,
+    activeCategory,
     moreFilters.postedWithin,
     moreFilters.minSalary,
     moreFilters.maxSalary,
@@ -657,6 +665,28 @@ const AllJobs = () => {
           <div className="flex justify-between items-center mb-8">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Available Positions</h2>
+              {activeCategory && (
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-800 text-sm font-medium rounded-full">
+                    {{
+                      doctors: 'Hospital Jobs – Doctors',
+                      management: 'Hospital Management',
+                      colleges: 'Medical Colleges',
+                      allied: 'Allied Health',
+                      nursing: 'Nursing',
+                      alternative: 'Alternative Medicine',
+                      dental: 'Dental',
+                    }[activeCategory] || activeCategory}
+                    <button
+                      onClick={() => setActiveCategory('')}
+                      className="ml-1 hover:text-emerald-900 font-bold leading-none"
+                      title="Clear category filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                </div>
+              )}
               <p className="text-sm text-gray-500 mt-1">
                 Showing <span className="font-semibold">{paginatedJobs.length}</span> of{' '}
                 <span className="font-semibold">{filteredJobs.length}</span> jobs
