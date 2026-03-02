@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Save, Bell, User, Mail } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Toast from '../../components/common/Toast';
-import CustomSelect from '../../components/common/CustomSelect';
+import CustomDropdown from '../../components/common/CustomDropdown';
 import employerService from '../../api/employerService';
 
 const Settings = () => {
@@ -215,18 +215,16 @@ const Settings = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
 
-                {/* ✅ Mobile: stack select + input to avoid overflow
-                    ✅ Desktop: stays in one row */}
-                <div className="flex flex-col sm:flex-row">
-                  <CustomSelect
-                    name="phoneCountryCode"
-                    value={formData.phoneCountryCode}
-                    onChange={handleChange}
-                    options={countryCodes.map(c => c.code)}
-                    optionLabels={Object.fromEntries(countryCodes.map(c => [c.code, c.label]))}
-                    placeholder="+91"
-                    className="px-3 py-2 sm:rounded-l-lg sm:rounded-r-none"
-                  />
+                <div className="flex gap-2">
+                  <div className="w-36">
+                    <CustomDropdown
+                      options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
+                      value={formData.phoneCountryCode}
+                      onChange={(e) => handleChange({ target: { name: 'phoneCountryCode', value: e.target.value } })}
+                      placeholder="+91"
+                      compact={true}
+                    />
+                  </div>
 
                   <input
                     type="tel"
@@ -234,7 +232,7 @@ const Settings = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="Enter phone number"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg sm:rounded-r-lg sm:rounded-l-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent mt-2 sm:mt-0"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                   />
                 </div>
 
@@ -245,16 +243,16 @@ const Settings = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Alternate Phone (Optional)</label>
 
-                <div className="flex flex-col sm:flex-row">
-                  <CustomSelect
-                    name="alternatePhoneCountryCode"
-                    value={formData.alternatePhoneCountryCode}
-                    onChange={handleChange}
-                    options={countryCodes.map(c => c.code)}
-                    optionLabels={Object.fromEntries(countryCodes.map(c => [c.code, c.label]))}
-                    placeholder="+91"
-                    className="px-3 py-2 sm:rounded-l-lg sm:rounded-r-none"
-                  />
+                <div className="flex gap-2">
+                  <div className="w-36">
+                    <CustomDropdown
+                      options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
+                      value={formData.alternatePhoneCountryCode}
+                      onChange={(e) => handleChange({ target: { name: 'alternatePhoneCountryCode', value: e.target.value } })}
+                      placeholder="+91"
+                      compact={true}
+                    />
+                  </div>
 
                   <input
                     type="tel"
@@ -262,7 +260,7 @@ const Settings = () => {
                     value={formData.alternatePhone}
                     onChange={handleChange}
                     placeholder="Enter alternate number"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg sm:rounded-r-lg sm:rounded-l-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent mt-2 sm:mt-0"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                   />
                 </div>
 
@@ -330,14 +328,21 @@ const Settings = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Organization Category</label>
-                <CustomSelect
-                  name="category"
+                <CustomDropdown
+                  options={[
+                    { label: 'Select Category', value: '' },
+                    { label: 'Hospital', value: 'Hospital' },
+                    { label: 'Clinic', value: 'Clinic' },
+                    { label: 'Diagnostic Lab', value: 'Diagnostic Lab' },
+                    { label: 'Pharmacy', value: 'Pharmacy' },
+                    { label: 'Nursing Home', value: 'Nursing Home' },
+                    { label: 'Medical College', value: 'Medical College' },
+                    { label: 'Research Institute', value: 'Research Institute' },
+                    { label: 'Other', value: 'Other' }
+                  ]}
                   value={formData.category}
-                  onChange={handleChange}
-                  options={['', 'Hospital', 'Clinic', 'Diagnostic Lab', 'Pharmacy', 'Nursing Home', 'Medical College', 'Research Institute', 'Other']}
+                  onChange={(e) => handleChange({ target: { name: 'category', value: e.target.value } })}
                   placeholder="Select Category"
-                  className="w-full"
-                  optionLabels={{'': 'Select Category'}}
                 />
               </div>
 

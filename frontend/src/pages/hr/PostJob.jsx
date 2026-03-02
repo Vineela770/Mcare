@@ -4,7 +4,7 @@ import { Briefcase, MapPin, Clock, Users, Phone, Send, CheckCircle, Type, Buildi
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
 import Toast from '../../components/common/Toast';
-import CustomSelect from '../../components/common/CustomSelect';
+import CustomDropdown from '../../components/common/CustomDropdown';
 import { employerService } from '../../api/employerService';
 
 const safeText = (val) => (val && String(val).trim() ? String(val).trim() : '—');
@@ -75,9 +75,15 @@ const PostJob = () => {
   };
 
   const handleSaveDraft = () => {
+    // Check if at least basic fields are filled
+    if (!formData.title.trim() || !formData.department || !formData.location.trim()) {
+      setToast({ message: 'Please fill in Job Title, Department, and Location before saving as draft.', type: 'error' });
+      return;
+    }
+    
     console.log('Job Saved as Draft:', formData);
     setToast({ message: 'Job saved as draft.', type: 'info' });
-    setFormData(initialForm);
+    // Don't reset form data when saving draft
   };
 
   const handleReview = () => {
@@ -148,23 +154,20 @@ const PostJob = () => {
                 <Building2 className="w-4 h-4 inline mr-1" />
                 Department *
               </label>
-              <CustomSelect
-                name="department"
+              <CustomDropdown
+                options={[
+                  { label: 'Select Department', value: '' },
+                  { label: 'Hospital Jobs – Doctors', value: 'doctors' },
+                  { label: 'Hospital Management', value: 'management' },
+                  { label: 'Medical Colleges', value: 'colleges' },
+                  { label: 'Allied Health', value: 'allied' },
+                  { label: 'Nursing', value: 'nursing' },
+                  { label: 'Alternative Medicine', value: 'alternative' },
+                  { label: 'Dental', value: 'dental' }
+                ]}
                 value={formData.department}
-                onChange={handleChange}
-                options={['', 'doctors', 'management', 'colleges', 'allied', 'nursing', 'alternative', 'dental']}
+                onChange={(e) => handleChange({ target: { name: 'department', value: e.target.value } })}
                 placeholder="Select Department"
-                className="w-full"
-                optionLabels={{
-                  '': 'Select Department',
-                  'doctors': 'Hospital Jobs – Doctors',
-                  'management': 'Hospital Management',
-                  'colleges': 'Medical Colleges',
-                  'allied': 'Allied Health',
-                  'nursing': 'Nursing',
-                  'alternative': 'Alternative Medicine',
-                  'dental': 'Dental'
-                }}
               />
             </div>
 
@@ -192,17 +195,14 @@ const PostJob = () => {
                 Phone Number *
               </label>
 
-              {/* ✅ Mobile: stack country code + phone (no overflow)
-                  ✅ Desktop: keep row layout */}
-              <div className="flex flex-col sm:flex-row sm:items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-emerald-600">
-                <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b sm:border-b-0 sm:border-r border-gray-300">
-                  <Phone className="text-gray-400 w-5 h-5" />
-                  <CustomSelect
-                    name="countryCode"
+              <div className="flex gap-2">
+                <div className="w-32">
+                  <CustomDropdown
+                    options={countryCodes.map(code => ({ label: code, value: code }))}
                     value={formData.countryCode}
-                    onChange={handleChange}
-                    options={countryCodes}
-                    className="bg-transparent"
+                    onChange={(e) => handleChange({ target: { name: 'countryCode', value: e.target.value } })}
+                    placeholder="+91"
+                    compact={true}
                   />
                 </div>
 
@@ -213,7 +213,7 @@ const PostJob = () => {
                   onChange={handleChange}
                   placeholder="Enter phone number"
                   inputMode="numeric"
-                  className="w-full px-4 py-2 outline-none"
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent focus:outline-none"
                   required
                 />
               </div>
@@ -229,19 +229,16 @@ const PostJob = () => {
                 <Briefcase className="w-4 h-4 inline mr-1" />
                 Job Type *
               </label>
-              <CustomSelect
-                name="jobType"
+              <CustomDropdown
+                options={[
+                  { label: 'Full-time', value: 'full-time' },
+                  { label: 'Part-time', value: 'part-time' },
+                  { label: 'Contract', value: 'contract' },
+                  { label: 'Temporary', value: 'temporary' }
+                ]}
                 value={formData.jobType}
-                onChange={handleChange}
-                options={['full-time', 'part-time', 'contract', 'temporary']}
+                onChange={(e) => handleChange({ target: { name: 'jobType', value: e.target.value } })}
                 placeholder="Select Job Type"
-                className="w-full"
-                optionLabels={{
-                  'full-time': 'Full-time',
-                  'part-time': 'Part-time',
-                  'contract': 'Contract',
-                  'temporary': 'Temporary'
-                }}
               />
             </div>
 
@@ -251,14 +248,14 @@ const PostJob = () => {
                 <Clock className="w-4 h-4 inline mr-1" />
                 Experience Required *
               </label>
-              <CustomSelect
-                name="experience"
+              <CustomDropdown
+                options={[
+                  { label: 'Select Experience', value: '' },
+                  ...experienceOptions.map(exp => ({ label: exp, value: exp }))
+                ]}
                 value={formData.experience}
-                onChange={handleChange}
-                options={['', ...experienceOptions]}
+                onChange={(e) => handleChange({ target: { name: 'experience', value: e.target.value } })}
                 placeholder="Select Experience"
-                className="w-full"
-                optionLabels={{'': 'Select Experience'}}
               />
             </div>
 
@@ -268,14 +265,14 @@ const PostJob = () => {
                 <IndianRupee className="w-4 h-4 inline mr-1" />
                 Salary Range *
               </label>
-              <CustomSelect
-                name="salary"
+              <CustomDropdown
+                options={[
+                  { label: 'Select Salary Range', value: '' },
+                  ...salaryOptions.map(sal => ({ label: sal, value: sal }))
+                ]}
                 value={formData.salary}
-                onChange={handleChange}
-                options={['', ...salaryOptions]}
+                onChange={(e) => handleChange({ target: { name: 'salary', value: e.target.value } })}
                 placeholder="Select Salary Range"
-                className="w-full"
-                optionLabels={{'': 'Select Salary Range'}}
               />
             </div>
 

@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import Sidebar from '../../components/common/Sidebar';
 import Modal from '../../components/common/Modal';
-import CustomSelect from '../../components/common/CustomSelect';
+import CustomDropdown from '../../components/common/CustomDropdown';
 import { employerService } from '../../api/employerService';
 
 const Applications = () => {
@@ -220,9 +220,30 @@ const Applications = () => {
     setShowSuccessModal(true);
   };
 
-  const handleDownloadResume = (application) => {
-    setSuccessMessage(`Downloading resume for ${application.candidateName}...`);
-    setShowSuccessModal(true);
+  const handleDownloadResume = async (application) => {
+    if (!application.resumeUrl) {
+      setSuccessMessage(`No resume available for ${application.candidateName}.`);
+      setShowSuccessModal(true);
+      return;
+    }
+
+    try {
+      // Create a temporary anchor element to trigger download
+      const link = document.createElement('a');
+      link.href = application.resumeUrl;
+      link.download = `${application.candidateName}_Resume.pdf`;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      setSuccessMessage(`Downloading resume for ${application.candidateName}...`);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error('Download failed:', error);
+      setSuccessMessage(`Failed to download resume. Please try again.`);
+      setShowSuccessModal(true);
+    }
   };
 
   const handleSendMessage = (application) => {
@@ -296,17 +317,15 @@ const Applications = () => {
 
           <div className="flex flex-col lg:flex-row lg:items-end gap-4">
             {/* Job Filter */}
-            <div className="w-full lg:w-auto">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="w-full lg:w-80">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Job Position
               </label>
-              <CustomSelect
+              <CustomDropdown
+                options={jobs.map(j => ({ label: j.title, value: j.id }))}
                 value={selectedJob}
                 onChange={(e) => setSelectedJob(e.target.value)}
-                options={jobs.map(j => j.id)}
-                optionLabels={Object.fromEntries(jobs.map(j => [j.id, j.title]))}
                 placeholder="Select Job"
-                className="w-full lg:w-auto"
               />
             </div>
 
@@ -339,6 +358,19 @@ const Applications = () => {
 
         {/* ✅ Desktop table + Mobile cards */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          {loading ? (
+            <div className="flex items-center justify-center py-16">
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading applications...</p>
+              </div>
+            </div>
+          ) : filteredApplications.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No applications found</p>
+            </div>
+          ) : (
+            <>
           {/* Desktop Table */}
           <div className="hidden md:block">
             <table className="w-full">
@@ -470,51 +502,44 @@ const Applications = () => {
           </div>
 
           {/* Mobile Cards */}
-          <div className="md:hidden divide-y divide-gray-200">
+          <div className="md:hidden space-y-4 p-4">
             {filteredApplications.map((application) => (
-              <div key={application.id} className="p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-700 to-emerald-500 flex items-center justify-center text-white font-semibold flex-shrink-0">
+              <div
+                key={application.id}
+                className="border border-gray-200 rounded-xl p-4 hover:border-emerald-400 transition-colors"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-teal-700 to-emerald-500 flex items-center justify-center text-white font-semibold flex-shrink-0">
                       {application.candidateAvatar}
                     </div>
-                    <div className="min-w-0">
-                      <p className="font-semibold text-gray-900 truncate">
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
                         {application.candidateName}
-                      </p>
-                      <p className="text-sm text-gray-600 truncate">
-                        {application.jobTitle}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Applied {application.appliedDate} • {application.location}
-                      </p>
+                      </h3>
+                      <p className="text-sm text-gray-600">{application.location}</p>
                     </div>
                   </div>
-                  <div className="flex-shrink-0">{getStatusBadge(application.status)}</div>
+                  {getStatusBadge(application.status)}
                 </div>
 
-                <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
-                  <div className="bg-gray-50 rounded-lg p-2">
-                    <p className="text-xs text-gray-500">Qualification</p>
-                    <p className="font-medium text-gray-900 truncate">
-                      {application.qualification}
-                    </p>
+                <div className="space-y-2 mb-3 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Job:</span>
+                    <span className="text-gray-900">{application.jobTitle}</span>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-2">
-                    <p className="text-xs text-gray-500">Experience</p>
-                    <p className="font-medium text-gray-900">
-                      {application.experience}
-                    </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Experience:</span>
+                    <span className="text-gray-900">{application.experience}</span>
                   </div>
-                </div>
-
-                <div className="mt-3 flex items-center justify-between">
-                  <div className="flex items-center space-x-1">
-                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="font-medium text-gray-900">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Rating:</span>
+                    <span className="flex items-center text-gray-900">
+                      <span className="text-yellow-500 mr-1">★</span>
                       {application.rating}
                     </span>
                   </div>
+                </div>
 
                   <div className="flex items-center gap-2">
                     <button
@@ -560,19 +585,12 @@ const Applications = () => {
                       </>
                     )}
                   </div>
-                </div>
               </div>
             ))}
           </div>
+          </>
+          )}
         </div>
-
-        {filteredApplications.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500">
-              No applications found matching your filters
-            </p>
-          </div>
-        )}
 
         {/* View Details Modal */}
         {showDetailsModal && selectedApplication && (

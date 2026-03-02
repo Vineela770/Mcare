@@ -177,18 +177,24 @@ const Jobs = () => {
                       setShowJobDetails(true);
                     }}
                     className="p-2 text-emerald-700 hover:bg-emerald-50 rounded-lg"
+                    title="View Details"
                   >
                     <Eye className="w-5 h-5" />
                   </button>
 
-                  <button className="p-2 text-teal-700 hover:bg-teal-50 rounded-lg">
+                  <Link
+                    to={`/hr/post-job?edit=${job.id}`}
+                    className="p-2 text-teal-700 hover:bg-teal-50 rounded-lg"
+                    title="Edit Job"
+                  >
                     <Edit2 className="w-5 h-5" />
-                  </button>
+                  </Link>
 
                   <button
                     onClick={() => handleDelete(job.id)}
                     disabled={deletingId === job.id}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-40"
+                    title="Delete Job"
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
@@ -206,6 +212,70 @@ const Jobs = () => {
           </div>
         )}
       </div>
+
+      {/* Job Details Modal */}
+      {showJobDetails && selectedJob && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white max-w-2xl w-full rounded-xl shadow-xl p-6 max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-gray-900">{selectedJob.title}</h2>
+              <button
+                onClick={() => setShowJobDetails(false)}
+                className="p-2 rounded-lg hover:bg-gray-100"
+              >
+                <span className="text-gray-600 text-xl">✕</span>
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-4 flex-wrap">
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusBadge(selectedJob.status)}`}>
+                  {selectedJob.status}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="font-medium text-gray-900">Department:</span>
+                  <p className="text-gray-700">{selectedJob.department}</p>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-900">Location:</span>
+                  <p className="text-gray-700">{selectedJob.location}</p>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-900">Applicants:</span>
+                  <p className="text-gray-700">{selectedJob.applicants || 0}</p>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-900">Deadline:</span>
+                  <p className="text-gray-700">{selectedJob.deadline}</p>
+                </div>
+              </div>
+
+              <div>
+                <span className="font-medium text-gray-900">Description:</span>
+                <p className="text-gray-700 mt-1">{selectedJob.description || 'No description available'}</p>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <Link
+                  to={`/hr/post-job?edit=${selectedJob.id}`}
+                  className="px-6 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-800"
+                >
+                  Edit Job
+                </Link>
+                <button
+                  onClick={() => setShowJobDetails(false)}
+                  className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

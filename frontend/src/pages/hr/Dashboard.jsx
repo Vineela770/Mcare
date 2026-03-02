@@ -81,7 +81,7 @@ const HRDashboard = () => {
       { label: 'Active Jobs', value: stats.activeJobs, icon: Briefcase, color: 'cyan', link: '/hr/jobs' },
       { label: 'Total Applications', value: stats.totalApplications, icon: FileText, color: 'blue', link: '/hr/applications' },
       { label: 'Interviewed', value: stats.interviewed, icon: Users, color: 'green', link: '/hr/interviews' },
-      { label: 'Hired', value: stats.hired, icon: CheckCircle, color: 'purple', link: '/hr/analytics' },
+      { label: 'Hired', value: stats.hired, icon: CheckCircle, color: 'purple', link: '/hr/applications' },
     ],
     [stats]
   );
