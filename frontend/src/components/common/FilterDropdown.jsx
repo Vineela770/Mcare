@@ -52,12 +52,12 @@ const FilterDropdown = ({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute z-50 mt-2 min-w-full w-max bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
           {options.map((option, index) => (
             <div
               key={index}
               onClick={() => handleSelect(option.value)}
-              className={`px-4 py-2.5 cursor-pointer hover:bg-emerald-50 transition ${
+              className={`px-4 py-2.5 cursor-pointer hover:bg-emerald-50 transition whitespace-nowrap ${
                 value === option.value 
                   ? 'bg-emerald-500 text-white hover:bg-emerald-600' 
                   : 'text-gray-700'
