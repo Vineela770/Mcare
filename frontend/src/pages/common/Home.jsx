@@ -519,10 +519,10 @@ const Home = () => {
 
   const salaryRanges = [
     { label: 'Salary Range', value: '' },
-    { label: 'Below ₹50,000', value: '0-50000' },
-    { label: '₹50,000 – ₹1,00,000', value: '50000-100000' },
-    { label: '₹1,00,000 – ₹5,00,000', value: '100000-500000' },
-    { label: 'Above ₹5,00,000', value: '500000-99999999' },
+    { label: 'Below 50,000', value: '0-50000' },
+    { label: '50,000 - 100,000', value: '50000-100000' },
+    { label: '100,000 - 500,000', value: '100000-500000' },
+    { label: 'Above 500,000', value: '500000-99999999' },
   ];
 
 
@@ -1765,17 +1765,33 @@ const Home = () => {
                 className="w-full md:w-auto"
               />
 
-              {/* Salary Range Filter */}
-              <FilterDropdown
-                value={filterSalary}
-                onChange={(value) => { 
-                  setFilterSalary(value); 
-                  setActiveDot(0); 
-                }}
-                options={salaryRanges.map(range => ({ label: range.label, value: range.value }))}
-                placeholder="Salary Range"
-                className="w-full md:w-auto"
-              />
+              {/* Salary Range Filter with Clear Button */}
+              <div className="w-full md:w-auto flex items-center gap-2">
+                <FilterDropdown
+                  value={filterSalary}
+                  onChange={(value) => { 
+                    setFilterSalary(value); 
+                    setActiveDot(0); 
+                  }}
+                  options={salaryRanges.map(range => ({ label: range.label, value: range.value }))}
+                  placeholder="Salary Range"
+                  className="flex-1"
+                />
+                {filterSalary && (
+                  <button
+                    onClick={() => {
+                      setFilterSalary('');
+                      setActiveDot(0);
+                    }}
+                    className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                    title="Clear salary filter"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Clear Filters — full width on mobile, inline on desktop */}
