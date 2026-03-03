@@ -519,10 +519,10 @@ const Home = () => {
 
   const salaryRanges = [
     { label: 'Salary Range', value: '' },
-    { label: 'Below 50,000', value: '0-50000' },
-    { label: '50,000 - 100,000', value: '50000-100000' },
-    { label: '100,000 - 500,000', value: '100000-500000' },
-    { label: 'Above 500,000', value: '500000-99999999' },
+    { label: 'Below ₹50,000', value: '0-50000' },
+    { label: '₹50,000 - ₹1,00,000', value: '50000-100000' },
+    { label: '₹1,00,000 - ₹5,00,000', value: '100000-500000' },
+    { label: 'Above ₹5,00,000', value: '500000-99999999' },
   ];
 
 
