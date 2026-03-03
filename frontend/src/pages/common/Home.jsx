@@ -140,6 +140,7 @@ const Home = () => {
   const [showQuickPostModal, setShowQuickPostModal] = useState(false);
   const [quickApplyErrors, setQuickApplyErrors] = useState({});
   const [quickPostErrors, setQuickPostErrors] = useState({});
+  const [showQuickApplyPreview, setShowQuickApplyPreview] = useState(false);
 
   const popularJobsRef = useRef(null);
 
@@ -2209,102 +2210,168 @@ const Home = () => {
       {showQuickApplyModal && (
         <Modal
           isOpen={showQuickApplyModal}
-          onClose={() => setShowQuickApplyModal(false)}
-          title="Quick Apply (No Registration Required)"
+          onClose={() => {
+            setShowQuickApplyModal(false);
+            setShowQuickApplyPreview(false);
+            setQuickApplyErrors({});
+          }}
+          title={showQuickApplyPreview ? "Application Preview" : "Quick Apply (No Registration Required)"}
         >
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800">Candidate Information</h3>
-              <p className="text-sm text-gray-500">Fill in your details to apply instantly</p>
-            </div>
+          {!showQuickApplyPreview ? (
+            // Form View
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">Candidate Information</h3>
+                <p className="text-sm text-gray-500">Fill in your details to apply instantly</p>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={quickApplyData.name}
-                onChange={(e) => setQuickApplyData({ ...quickApplyData, name: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-              />
-              {quickApplyErrors.name && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.name}</p>}
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={quickApplyData.name}
+                  onChange={(e) => setQuickApplyData({ ...quickApplyData, name: e.target.value })}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  placeholder="Enter your full name"
+                />
+                {quickApplyErrors.name && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.name}</p>}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                value={quickApplyData.email}
-                onChange={(e) => setQuickApplyData({ ...quickApplyData, email: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-              />
-              {quickApplyErrors.email && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.email}</p>}
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={quickApplyData.email}
+                  onChange={(e) => setQuickApplyData({ ...quickApplyData, email: e.target.value })}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  placeholder="Enter your email"
+                />
+                {quickApplyErrors.email && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.email}</p>}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Contact Number <span className="text-red-500">*</span>
-              </label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Contact Number <span className="text-red-500">*</span>
+                </label>
 
-              <div className="flex gap-2">
-                <div className="w-32">
-                  <CustomDropdown
-                    options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
-                    value={quickApplyData.countryCode}
-                    onChange={(val) => setQuickApplyData({ ...quickApplyData, countryCode: val })}
-                    placeholder="Code"
-                    compact={true}
+                <div className="flex gap-2">
+                  <div className="w-32">
+                    <CustomDropdown
+                      options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
+                      value={quickApplyData.countryCode}
+                      onChange={(val) => setQuickApplyData({ ...quickApplyData, countryCode: val })}
+                      placeholder="Code"
+                      compact={true}
+                    />
+                  </div>
+
+                  <input
+                    type="tel"
+                    value={quickApplyData.phone}
+                    onChange={(e) => setQuickApplyData({ ...quickApplyData, phone: e.target.value })}
+                    className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    placeholder="Enter phone number"
                   />
                 </div>
 
-                <input
-                  type="tel"
-                  value={quickApplyData.phone}
-                  onChange={(e) => setQuickApplyData({ ...quickApplyData, phone: e.target.value })}
-                  className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-                  placeholder="Enter phone number"
-                />
+                {quickApplyErrors.phone && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.phone}</p>}
               </div>
 
-              {quickApplyErrors.phone && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.phone}</p>}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Cover Letter <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  rows="4"
+                  value={quickApplyData.coverLetter}
+                  onChange={(e) => setQuickApplyData({ ...quickApplyData, coverLetter: e.target.value })}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  placeholder="Write your cover letter here..."
+                />
+                {quickApplyErrors.coverLetter && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.coverLetter}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Upload Resume *</label>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => setQuickApplyData({ ...quickApplyData, resume: e.target.files?.[0] || null })}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                />
+                {quickApplyErrors.resume && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.resume}</p>}
+              </div>
+
+              <div className="flex justify-between pt-4">
+                <button onClick={() => navigate('/register')} className="text-emerald-700 font-medium">
+                  Register Instead
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (validateQuickApply()) {
+                      setShowQuickApplyPreview(true);
+                    }
+                  }}
+                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
+                >
+                  Preview
+                </button>
+              </div>
             </div>
+          ) : (
+            // Preview View
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Please review your application details</h3>
+                <p className="text-sm text-gray-500">Make sure all information is correct before submitting</p>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Cover Letter <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                rows="4"
-                value={quickApplyData.coverLetter}
-                onChange={(e) => setQuickApplyData({ ...quickApplyData, coverLetter: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-              />
-              {quickApplyErrors.coverLetter && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.coverLetter}</p>}
-            </div>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Full Name:</span>
+                  <span className="text-gray-900">{quickApplyData.name}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Email:</span>
+                  <span className="text-gray-900">{quickApplyData.email}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Contact:</span>
+                  <span className="text-gray-900">{quickApplyData.countryCode} {quickApplyData.phone}</span>
+                </div>
+                
+                <div className="flex justify-between items-start">
+                  <span className="font-medium text-gray-700">Resume:</span>
+                  <span className="text-gray-900 text-right">{quickApplyData.resume?.name}</span>
+                </div>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Upload Resume *</label>
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx"
-                onChange={(e) => setQuickApplyData({ ...quickApplyData, resume: e.target.files?.[0] || null })}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-              />
-              {quickApplyErrors.resume && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.resume}</p>}
-            </div>
+              <div>
+                <h4 className="font-medium text-gray-700 mb-2">Cover Letter:</h4>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-gray-900 whitespace-pre-wrap">{quickApplyData.coverLetter}</p>
+                </div>
+              </div>
 
-            <div className="flex justify-between pt-4">
-              <button onClick={() => navigate('/register')} className="text-emerald-700 font-medium">
-                Register Instead
-              </button>
+              <div className="flex justify-between pt-4">
+                <button 
+                  onClick={() => setShowQuickApplyPreview(false)}
+                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Edit
+                </button>
 
-              <button
-                onClick={() => {
-                  if (validateQuickApply()) {
+                <button
+                  onClick={() => {
                     setShowQuickApplyModal(false);
+                    setShowQuickApplyPreview(false);
                     setSuccessMessage('Quick application submitted successfully!');
                     setShowSuccessModal(true);
 
@@ -2318,14 +2385,14 @@ const Home = () => {
                     });
 
                     setQuickApplyErrors({});
-                  }
-                }}
-                className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
-              >
-                Submit
-              </button>
+                  }}
+                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
+                >
+                  Submit
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </Modal>
       )}
 
