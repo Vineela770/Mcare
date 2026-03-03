@@ -141,6 +141,7 @@ const Home = () => {
   const [quickApplyErrors, setQuickApplyErrors] = useState({});
   const [quickPostErrors, setQuickPostErrors] = useState({});
   const [showQuickApplyPreview, setShowQuickApplyPreview] = useState(false);
+  const [showQuickPostPreview, setShowQuickPostPreview] = useState(false);
 
   const popularJobsRef = useRef(null);
 
@@ -2400,120 +2401,192 @@ const Home = () => {
       {showQuickPostModal && (
         <Modal
           isOpen={showQuickPostModal}
-          onClose={() => setShowQuickPostModal(false)}
-          title="Quick Post Job (No Registration Required)"
+          onClose={() => {
+            setShowQuickPostModal(false);
+            setShowQuickPostPreview(false);
+            setQuickPostErrors({});
+          }}
+          title={showQuickPostPreview ? "Job Posting Preview" : "Quick Post Job (No Registration Required)"}
         >
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800">Employer Information</h3>
-              <p className="text-sm text-gray-500">Post your job quickly without creating an account</p>
-            </div>
+          {!showQuickPostPreview ? (
+            // Form View
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">Employer Information</h3>
+                <p className="text-sm text-gray-500">Post your job quickly without creating an account</p>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Company Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={quickPostData.companyName}
-                onChange={(e) => setQuickPostData({ ...quickPostData, companyName: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-              />
-              {quickPostErrors.companyName && <p className="text-red-500 text-sm mt-1">{quickPostErrors.companyName}</p>}
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Company Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={quickPostData.companyName}
+                  onChange={(e) => setQuickPostData({ ...quickPostData, companyName: e.target.value })}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  placeholder="Enter company name"
+                />
+                {quickPostErrors.companyName && <p className="text-red-500 text-sm mt-1">{quickPostErrors.companyName}</p>}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Official Email <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                value={quickPostData.email}
-                onChange={(e) => setQuickPostData({ ...quickPostData, email: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-              />
-              {quickPostErrors.email && <p className="text-red-500 text-sm mt-1">{quickPostErrors.email}</p>}
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Official Email <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={quickPostData.email}
+                  onChange={(e) => setQuickPostData({ ...quickPostData, email: e.target.value })}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  placeholder="Enter official email"
+                />
+                {quickPostErrors.email && <p className="text-red-500 text-sm mt-1">{quickPostErrors.email}</p>}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Contact Number <span className="text-red-500">*</span>
-              </label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Contact Number <span className="text-red-500">*</span>
+                </label>
 
-              <div className="flex gap-2">
-                <div className="w-32">
-                  <CustomDropdown
-                    options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
-                    value={quickPostData.countryCode}
-                    onChange={(val) => setQuickPostData({ ...quickPostData, countryCode: val })}
-                    placeholder="Code"
-                    compact={true}
+                <div className="flex gap-2">
+                  <div className="w-32">
+                    <CustomDropdown
+                      options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
+                      value={quickPostData.countryCode}
+                      onChange={(val) => setQuickPostData({ ...quickPostData, countryCode: val })}
+                      placeholder="Code"
+                      compact={true}
+                    />
+                  </div>
+
+                  <input
+                    type="tel"
+                    value={quickPostData.phone}
+                    onChange={(e) => setQuickPostData({ ...quickPostData, phone: e.target.value })}
+                    className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    placeholder="Enter phone number"
                   />
                 </div>
 
-                <input
-                  type="tel"
-                  value={quickPostData.phone}
-                  onChange={(e) => setQuickPostData({ ...quickPostData, phone: e.target.value })}
-                  className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-                  placeholder="Enter phone number"
-                />
+                {quickPostErrors.phone && <p className="text-red-500 text-sm mt-1">{quickPostErrors.phone}</p>}
               </div>
 
-              {quickPostErrors.phone && <p className="text-red-500 text-sm mt-1">{quickPostErrors.phone}</p>}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Job Title <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={quickPostData.jobTitle}
+                  onChange={(e) => setQuickPostData({ ...quickPostData, jobTitle: e.target.value })}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  placeholder="Enter job title"
+                />
+                {quickPostErrors.jobTitle && <p className="text-red-500 text-sm mt-1">{quickPostErrors.jobTitle}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Job Location <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={quickPostData.location}
+                  onChange={(e) => setQuickPostData({ ...quickPostData, location: e.target.value })}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  placeholder="Enter job location"
+                />
+                {quickPostErrors.location && <p className="text-red-500 text-sm mt-1">{quickPostErrors.location}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Job Description <span className="text-red-500">*</span>
+                </label>
+
+                <textarea
+                  rows="4"
+                  value={quickPostData.jobDescription}
+                  onChange={(e) => setQuickPostData({ ...quickPostData, jobDescription: e.target.value })}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  placeholder="Enter job responsibilities, required skills, experience, etc."
+                />
+
+                {quickPostErrors.jobDescription && <p className="text-red-500 text-sm mt-1">{quickPostErrors.jobDescription}</p>}
+              </div>
+
+              <div className="flex justify-between pt-4">
+                <button onClick={() => navigate('/register')} className="text-emerald-700 font-medium">
+                  Register Instead
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (validateQuickPost()) {
+                      setShowQuickPostPreview(true);
+                    }
+                  }}
+                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
+                >
+                  Preview
+                </button>
+              </div>
             </div>
+          ) : (
+            // Preview View
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Please review your job posting details</h3>
+                <p className="text-sm text-gray-500">Make sure all information is correct before posting</p>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Job Title <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={quickPostData.jobTitle}
-                onChange={(e) => setQuickPostData({ ...quickPostData, jobTitle: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-              />
-              {quickPostErrors.jobTitle && <p className="text-red-500 text-sm mt-1">{quickPostErrors.jobTitle}</p>}
-            </div>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Company Name:</span>
+                  <span className="text-gray-900">{quickPostData.companyName}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Email:</span>
+                  <span className="text-gray-900">{quickPostData.email}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Contact:</span>
+                  <span className="text-gray-900">{quickPostData.countryCode} {quickPostData.phone}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Job Title:</span>
+                  <span className="text-gray-900 font-semibold">{quickPostData.jobTitle}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Location:</span>
+                  <span className="text-gray-900">{quickPostData.location}</span>
+                </div>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Job Location <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={quickPostData.location}
-                onChange={(e) => setQuickPostData({ ...quickPostData, location: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-              />
-              {quickPostErrors.location && <p className="text-red-500 text-sm mt-1">{quickPostErrors.location}</p>}
-            </div>
+              <div>
+                <h4 className="font-medium text-gray-700 mb-2">Job Description:</h4>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-gray-900 whitespace-pre-wrap">{quickPostData.jobDescription}</p>
+                </div>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Job Description <span className="text-red-500">*</span>
-              </label>
+              <div className="flex justify-between pt-4">
+                <button 
+                  onClick={() => setShowQuickPostPreview(false)}
+                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Edit
+                </button>
 
-              <textarea
-                rows="4"
-                value={quickPostData.jobDescription}
-                onChange={(e) => setQuickPostData({ ...quickPostData, jobDescription: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-                placeholder="Enter job responsibilities, required skills, experience, etc."
-              />
-
-              {quickPostErrors.jobDescription && <p className="text-red-500 text-sm mt-1">{quickPostErrors.jobDescription}</p>}
-            </div>
-
-            <div className="flex justify-between pt-4">
-              <button onClick={() => navigate('/register')} className="text-emerald-700 font-medium">
-                Register Instead
-              </button>
-
-              <button
-                onClick={() => {
-                  if (validateQuickPost()) {
+                <button
+                  onClick={() => {
                     setShowQuickPostModal(false);
+                    setShowQuickPostPreview(false);
                     setSuccessMessage('Job posted successfully!');
                     setShowSuccessModal(true);
 
@@ -2529,14 +2602,14 @@ const Home = () => {
                     });
 
                     setQuickPostErrors({});
-                  }
-                }}
-                className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
-              >
-                Submit Job
-              </button>
+                  }}
+                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
+                >
+                  Submit Job
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </Modal>
       )}
     </div>
