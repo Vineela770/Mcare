@@ -76,6 +76,11 @@ exports.register = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid phone number" });
     }
 
+    // ✅ SECURITY: Block admin registration - admin can only login with hardcoded credentials
+    if (role === 'admin' || role === 'administrator') {
+      return res.status(403).json({ success: false, message: "Admin accounts cannot be registered" });
+    }
+
     const normalizedRole = (role === 'candidate' || role?.toLowerCase() === 'doctor') ? 'candidate' : 'hr';
 
     const userExists = await client.query("SELECT * FROM users WHERE LOWER(email) = LOWER($1)", [email.trim()]);
