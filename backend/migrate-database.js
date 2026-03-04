@@ -304,6 +304,16 @@ const SCHEMA_STATEMENTS = [
      BEFORE UPDATE ON job_alerts
      FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()`,
 
+  // ── Soft-delete columns for users ───────────────────────────────────────────
+  `DO $$ BEGIN
+    ALTER TABLE users ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
+  EXCEPTION WHEN duplicate_column THEN NULL;
+  END $$`,
+  `DO $$ BEGIN
+    ALTER TABLE users ADD COLUMN deleted_at TIMESTAMP;
+  EXCEPTION WHEN duplicate_column THEN NULL;
+  END $$`,
+
   // ── Allow 'employee' role (drop old constraint, add updated one) ───────────
   `DO $$ BEGIN
     ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;

@@ -47,8 +47,8 @@ exports.getRecentApplications = async (req, res) => {
         COALESCE(cp.experience_years::text || ' yrs', 'N/A') AS experience,
         mjp.title              AS job_title
       FROM applications a
-      LEFT JOIN users u            ON u.id  = a.candidate_id
-      LEFT JOIN candidate_profiles cp ON cp.user_id = a.candidate_id
+      LEFT JOIN users u            ON u.id  = a.user_id
+      LEFT JOIN candidate_profiles cp ON cp.user_id = a.user_id
       LEFT JOIN mcare_job_posts mjp ON mjp.id = a.job_id
       ORDER BY a.applied_at DESC
       LIMIT 5
