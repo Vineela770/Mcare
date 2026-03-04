@@ -14,9 +14,11 @@ import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom'
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
 import CustomSelect from '../../components/common/CustomSelect';
+import FilterDropdown from '../../components/common/FilterDropdown';
 // eslint-disable-next-line no-unused-vars
 import { jobService } from '../../api/jobService';
 import { useAuth } from '../../context/useAuth';
+import { categorySpecializations, cities, salaryRanges, categoryDisplayNames } from '../../data/categoryFilters';
 
 // ✅ STATIC DUMMY JOBS - 87 positions across all categories
 const DUMMY_JOBS = [
@@ -147,6 +149,12 @@ const AllJobs = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // ✅ Category sub-filter state
+  const [selectedDegree, setSelectedDegree] = useState('');
+  const [filterSpecialization, setFilterSpecialization] = useState('');
+  const [filterCity, setFilterCity] = useState('');
+  const [filterSalary, setFilterSalary] = useState('');
 
   // ✅ More Filters modal state
   const [showFiltersModal, setShowFiltersModal] = useState(false);
@@ -279,6 +287,42 @@ const AllJobs = () => {
     setJobs((prev) => prev.map((j) => (j.id === jobId ? { ...j, saved: !j.saved } : j)));
   };
 
+  // ✅ Get degrees based on active category (or all categories if none selected)
+  const degrees = useMemo(() => {
+    if (!activeCategory) {
+      return Array.from(
+        new Set(
+          Object.values(categorySpecializations)
+            .flatMap(category => Object.keys(category))
+        )
+      ).sort();
+    }
+    return categorySpecializations[activeCategory]
+      ? Object.keys(categorySpecializations[activeCategory]).sort()
+      : [];
+  }, [activeCategory]);
+
+  // ✅ Get specializations based on selected degree
+  const specializations = useMemo(() => {
+    if (!selectedDegree) return [];
+    if (!activeCategory) {
+      for (const categoryKey in categorySpecializations) {
+        if (categorySpecializations[categoryKey][selectedDegree]) {
+          return categorySpecializations[categoryKey][selectedDegree];
+        }
+      }
+      return [];
+    }
+    return categorySpecializations[activeCategory]?.[selectedDegree] || [];
+  }, [selectedDegree, activeCategory]);
+
+  // ✅ Salary value parser for sub-filter
+  const getSalaryValue = useCallback((salaryString) => {
+    const numbers = salaryString?.match(/\d+/g);
+    if (!numbers) return 0;
+    return parseInt(numbers[0], 10);
+  }, []);
+
   // ✅ filtering
   const filteredJobs = useMemo(() => {
     // Ensure jobs is an array before filtering
@@ -327,9 +371,34 @@ const AllJobs = () => {
         if (maxSalaryFilter != null && min > maxSalaryFilter) return false;
       }
 
+      // ✅ Category sub-filters: Degree
+      if (selectedDegree) {
+        const degreeMatch = job.specialization?.includes(selectedDegree) ||
+          job.specialization?.startsWith(selectedDegree) ||
+          job.category?.includes(selectedDegree);
+        if (!degreeMatch) return false;
+      }
+
+      // ✅ Category sub-filters: Specialization
+      if (filterSpecialization) {
+        if (job.specialization !== filterSpecialization) return false;
+      }
+
+      // ✅ Category sub-filters: City
+      if (filterCity) {
+        if (job.city !== filterCity) return false;
+      }
+
+      // ✅ Category sub-filters: Salary Range
+      if (filterSalary) {
+        const [salMin, salMax] = filterSalary.split('-').map(Number);
+        const jobSalary = getSalaryValue(job.salary);
+        if (jobSalary < salMin || jobSalary > salMax) return false;
+      }
+
       return true;
     });
-  }, [jobs, searchTerm, selectedLocation, jobType, activeCategory, moreFilters, normalize, parseSalaryRange, parsePostedDays]);
+  }, [jobs, searchTerm, selectedLocation, jobType, activeCategory, moreFilters, normalize, parseSalaryRange, parsePostedDays, selectedDegree, filterSpecialization, filterCity, filterSalary, getSalaryValue]);
 
   // ✅ Reset pagination when filters change
   useEffect(() => {
@@ -343,7 +412,19 @@ const AllJobs = () => {
     moreFilters.minSalary,
     moreFilters.maxSalary,
     moreFilters.onlySaved,
+    selectedDegree,
+    filterSpecialization,
+    filterCity,
+    filterSalary,
   ]);
+
+  // ✅ Reset sub-filters when category changes
+  useEffect(() => {
+    setSelectedDegree('');
+    setFilterSpecialization('');
+    setFilterCity('');
+    setFilterSalary('');
+  }, [activeCategory]);
 
   // ✅ Paginated jobs to show
   const paginatedJobs = useMemo(
@@ -432,6 +513,79 @@ const AllJobs = () => {
         </div>
       </section>
 
+      {/* ✅ Category Sub-Filters Bar */}
+      <section className="bg-white border-b border-gray-200 py-4 px-4 shadow-sm">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-center md:gap-3">
+            {/* Degree Filter */}
+            <FilterDropdown
+              value={selectedDegree}
+              onChange={(value) => {
+                setSelectedDegree(value);
+                setFilterSpecialization('');
+              }}
+              options={[
+                { label: 'Select Degree', value: '' },
+                ...degrees.map(degree => ({ label: degree, value: degree }))
+              ]}
+              placeholder="Select Degree"
+              className="w-full md:w-auto"
+            />
+
+            {/* Specialization Filter */}
+            <FilterDropdown
+              value={filterSpecialization}
+              onChange={(value) => setFilterSpecialization(value)}
+              options={[
+                { label: 'Select Specialization', value: '' },
+                ...specializations.map(spec => ({ label: spec, value: spec }))
+              ]}
+              placeholder="Select Specialization"
+              disabled={!selectedDegree}
+              className="w-full md:w-auto"
+            />
+
+            {/* City Filter */}
+            <FilterDropdown
+              value={filterCity}
+              onChange={(value) => setFilterCity(value)}
+              options={[
+                { label: 'All Cities', value: '' },
+                ...cities.sort().map(city => ({ label: city, value: city }))
+              ]}
+              placeholder="All Cities"
+              className="w-full md:w-auto"
+            />
+
+            {/* Salary Range Filter + Clear All */}
+            <div className="w-full md:w-auto flex items-center gap-2">
+              <FilterDropdown
+                value={filterSalary}
+                onChange={(value) => setFilterSalary(value)}
+                options={salaryRanges.map(range => ({ label: range.label, value: range.value }))}
+                placeholder="Salary Range"
+                className="flex-1"
+              />
+
+              {/* Clear All Filters Button */}
+              {(selectedDegree || filterSpecialization || filterCity || filterSalary) && (
+                <button
+                  onClick={() => {
+                    setSelectedDegree('');
+                    setFilterSpecialization('');
+                    setFilterCity('');
+                    setFilterSalary('');
+                  }}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full transition text-sm font-medium border border-emerald-600 whitespace-nowrap"
+                >
+                  Clear Filters
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Jobs Grid */}
       <section className="py-12 px-4">
         <div className="max-w-7xl mx-auto">
@@ -441,15 +595,7 @@ const AllJobs = () => {
               {activeCategory && (
                 <div className="flex items-center gap-2 mt-2">
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-800 text-sm font-medium rounded-full">
-                    {{
-                      doctors: 'Hospital Jobs – Doctors',
-                      management: 'Hospital Management',
-                      colleges: 'Medical Colleges',
-                      allied: 'Allied Health',
-                      nursing: 'Nursing',
-                      alternative: 'Alternative Medicine',
-                      dental: 'Dental',
-                    }[activeCategory] || activeCategory}
+                    {categoryDisplayNames[activeCategory] || activeCategory}
                     <button
                       onClick={() => setActiveCategory('')}
                       className="ml-1 hover:text-emerald-900 font-bold leading-none"
@@ -499,6 +645,10 @@ const AllJobs = () => {
                     setSelectedLocation('');
                     setJobType('all');
                     resetMoreFilters();
+                    setSelectedDegree('');
+                    setFilterSpecialization('');
+                    setFilterCity('');
+                    setFilterSalary('');
                   }}
                   className="px-6 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-700"
                 >
