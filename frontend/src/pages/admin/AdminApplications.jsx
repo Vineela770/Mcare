@@ -92,6 +92,7 @@ const AdminApplications = () => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [viewApp, setViewApp] = useState(null);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -115,8 +116,24 @@ const AdminApplications = () => {
     setLoading(false);
   };
 
-  // eslint-disable-next-line
+  // Load on mount
   useEffect(() => { load(); }, []);
+
+  const handleStatusUpdate = async (appId, newStatus) => {
+    setUpdatingStatus(true);
+    try {
+      await adminService.updateApplicationStatus(appId, newStatus);
+      // Update local state
+      setApplications(prev => prev.map(a => a.id === appId ? { ...a, status: newStatus } : a));
+      if (viewApp && viewApp.id === appId) {
+        setViewApp(prev => ({ ...prev, status: newStatus }));
+      }
+    } catch (err) {
+      console.error('Failed to update status:', err);
+    } finally {
+      setUpdatingStatus(false);
+    }
+  };
 
   const allStatuses = ['all', ...Array.from(new Set(applications.map(a => a.status).filter(Boolean)))];
 
@@ -357,9 +374,21 @@ const AdminApplications = () => {
               </div>
 
               <div className="p-6 space-y-5 max-h-[75vh] overflow-y-auto">
-                {/* Status */}
+                {/* Status with Update */}
                 <div className="flex items-center justify-between">
-                  <StatusPill status={viewApp.status} />
+                  <div className="flex items-center gap-3">
+                    <StatusPill status={viewApp.status} />
+                    <select
+                      value={viewApp.status || ''}
+                      onChange={(e) => handleStatusUpdate(viewApp.id, e.target.value)}
+                      disabled={updatingStatus}
+                      className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      {['Pending', 'Reviewed', 'Shortlisted', 'Interview', 'Rejected', 'Hired'].map(s => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
                   <span className="text-xs text-gray-500">Applied: {formatDate(viewApp.applied_at)}</span>
                 </div>
 

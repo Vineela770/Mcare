@@ -230,10 +230,10 @@ const Reports = () => {
   ];
 
   const quickStats = [
-    { label: 'Total Reports', value: stats.totalReports.toString(), color: 'text-teal-700' },
-    { label: 'This Month', value: stats.thisMonth.toString(), color: 'text-green-600' },
-    { label: 'Total Downloads', value: stats.totalDownloads.toString(), color: 'text-emerald-700' },
-    { label: 'Scheduled', value: stats.scheduled.toString(), color: 'text-purple-600' }
+    { label: 'Total Users + Jobs', value: stats.totalReports.toString(), color: 'text-teal-700' },
+    { label: 'New This Month', value: stats.thisMonth.toString(), color: 'text-green-600' },
+    { label: 'Total Applications', value: stats.totalDownloads.toString(), color: 'text-emerald-700' },
+    { label: 'Candidates', value: stats.scheduled.toString(), color: 'text-purple-600' }
   ];
 
   return (

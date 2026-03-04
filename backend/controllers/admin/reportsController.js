@@ -4,12 +4,12 @@ const { Parser } = require("json2csv");
 // GET DASHBOARD REPORT STATS
 exports.getReportStats = async (req, res) => {
   try {
-    // Count real data from actual tables instead of non-existent reports table
-    const [usersRes, jobsRes, appsRes, candidatesRes] = await Promise.all([
+    const [usersRes, jobsRes, appsRes, candidatesRes, employersRes] = await Promise.all([
       pool.query("SELECT COUNT(*) FROM users"),
       pool.query("SELECT COUNT(*) FROM jobs"),
       pool.query("SELECT COUNT(*) FROM applications"),
       pool.query("SELECT COUNT(*) FROM users WHERE role = 'candidate'"),
+      pool.query("SELECT COUNT(*) FROM users WHERE role = 'hr'"),
     ]);
 
     const thisMonth = await pool.query(
@@ -17,6 +17,13 @@ exports.getReportStats = async (req, res) => {
     );
 
     res.json({
+      totalUsers: parseInt(usersRes.rows[0].count),
+      totalJobs: parseInt(jobsRes.rows[0].count),
+      totalApplications: parseInt(appsRes.rows[0].count),
+      totalCandidates: parseInt(candidatesRes.rows[0].count),
+      totalEmployers: parseInt(employersRes.rows[0].count),
+      newUsersThisMonth: parseInt(thisMonth.rows[0].count),
+      // Keep old keys for backward compatibility with Reports.jsx
       totalReports: parseInt(usersRes.rows[0].count) + parseInt(jobsRes.rows[0].count),
       thisMonth: parseInt(thisMonth.rows[0].count),
       totalDownloads: parseInt(appsRes.rows[0].count),

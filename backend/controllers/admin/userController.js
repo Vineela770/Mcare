@@ -163,11 +163,19 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// DELETE USER
+// DELETE USER (with cascade — removes related data first)
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Cascade: remove related records before deleting the user
+    await pool.query("DELETE FROM applications WHERE user_id=$1", [id]);
+    await pool.query("DELETE FROM candidate_profiles WHERE user_id=$1", [id]);
+    await pool.query("DELETE FROM employer_profiles WHERE user_id=$1", [id]);
+    await pool.query("DELETE FROM activity_logs WHERE user_id=$1", [id]);
+    // Delete jobs created by this employer
+    await pool.query("DELETE FROM jobs WHERE employer_id=$1", [id]);
+    // Finally delete the user
     await pool.query("DELETE FROM users WHERE id=$1", [id]);
     res.json({ message: "User deleted successfully" });
   } catch (error) {

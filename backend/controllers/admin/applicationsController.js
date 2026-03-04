@@ -119,3 +119,28 @@ exports.getApplicationStats = async (req, res) => {
     res.json({ total: 0, byStatus: [] });
   }
 };
+
+// UPDATE APPLICATION STATUS (admin)
+exports.updateApplicationStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const validStatuses = ['Pending', 'Reviewed', 'Shortlisted', 'Interview', 'Rejected', 'Hired'];
+  if (!status || !validStatuses.includes(status)) {
+    return res.status(400).json({ error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` });
+  }
+
+  try {
+    const result = await pool.query(
+      'UPDATE applications SET status = $1 WHERE id = $2 RETURNING *',
+      [status, id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Application not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Update Application Status Error:", error);
+    res.status(500).json({ error: "Failed to update application status" });
+  }
+};

@@ -125,7 +125,9 @@ const JobsManagement = () => {
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
     try {
-      await adminService.updateJob(selectedJob.id, editFormData);
+      // Include the source so backend knows which table to update
+      const payload = { ...editFormData, source: selectedJob.source };
+      await adminService.updateJob(selectedJob.id, payload, selectedJob.source);
       await fetchJobs(); // Refresh the list
       setShowEditModal(false);
       showNotification(`Job "${editFormData.title}" has been updated successfully!`);

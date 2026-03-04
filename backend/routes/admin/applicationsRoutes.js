@@ -11,4 +11,7 @@ router.get("/stats", applicationsController.getApplicationStats);
 // GET /api/admin/applications/user/:userId — applications for one user
 router.get("/user/:userId", applicationsController.getUserApplications);
 
+// PUT /api/admin/applications/:id/status — update application status
+router.put("/:id/status", applicationsController.updateApplicationStatus);
+
 module.exports = router;

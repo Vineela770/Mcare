@@ -76,9 +76,10 @@ const adminService = {
     }
   },
 
-  updateJob: async (id, jobData) => {
+  updateJob: async (id, jobData, source) => {
     try {
-      const response = await axios.put(`/api/admin/jobs/${id}`, jobData);
+      const params = source ? { source } : {};
+      const response = await axios.put(`/api/admin/jobs/${id}`, jobData, { params });
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to update job' };
@@ -223,6 +224,15 @@ const adminService = {
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to fetch user applications' };
+    }
+  },
+
+  updateApplicationStatus: async (id, status) => {
+    try {
+      const response = await axios.put(`/api/admin/applications/${id}/status`, { status });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update application status' };
     }
   },
 };

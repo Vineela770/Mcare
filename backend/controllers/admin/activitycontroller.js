@@ -27,24 +27,22 @@ exports.getActivities = async (req, res) => {
 // Get dashboard statistics
 exports.getStats = async (req, res) => {
   try {
-    const totalActivities = await pool.query(
-      "SELECT COUNT(*) FROM activity_logs"
-    );
-    const todayActivities = await pool.query(
-      "SELECT COUNT(*) FROM activity_logs WHERE DATE(created_at) = CURRENT_DATE"
-    );
-    const loginCount = await pool.query(
-      "SELECT COUNT(*) FROM activity_logs WHERE action = 'login'"
-    );
-    const registerCount = await pool.query(
-      "SELECT COUNT(*) FROM activity_logs WHERE action = 'register'"
-    );
+    const [totalResult, todayResult, weekResult, monthResult, loginResult, registerResult] = await Promise.all([
+      pool.query("SELECT COUNT(*) FROM activity_logs"),
+      pool.query("SELECT COUNT(*) FROM activity_logs WHERE DATE(created_at) = CURRENT_DATE"),
+      pool.query("SELECT COUNT(*) FROM activity_logs WHERE created_at >= CURRENT_DATE - INTERVAL '7 days'"),
+      pool.query("SELECT COUNT(*) FROM activity_logs WHERE DATE_TRUNC('month', created_at) = DATE_TRUNC('month', CURRENT_DATE)"),
+      pool.query("SELECT COUNT(*) FROM activity_logs WHERE action = 'login'"),
+      pool.query("SELECT COUNT(*) FROM activity_logs WHERE action = 'register'"),
+    ]);
 
     res.json({
-      totalActivities: parseInt(totalActivities.rows[0].count),
-      todayActivities: parseInt(todayActivities.rows[0].count),
-      loginCount: parseInt(loginCount.rows[0].count),
-      registerCount: parseInt(registerCount.rows[0].count),
+      totalActivities: parseInt(totalResult.rows[0].count),
+      todayActivities: parseInt(todayResult.rows[0].count),
+      thisWeek: parseInt(weekResult.rows[0].count),
+      thisMonth: parseInt(monthResult.rows[0].count),
+      loginCount: parseInt(loginResult.rows[0].count),
+      registerCount: parseInt(registerResult.rows[0].count),
     });
   } catch (error) {
     console.error(error);

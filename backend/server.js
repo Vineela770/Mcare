@@ -41,6 +41,9 @@ const hrProfileRoutes = require("./routes/HR/profileRoutes");
 // Candidate routes
 const candidateMessagesRoutes = require("./routes/candidate/messagesRoutes");
 
+// Auth middleware
+const { verifyToken, authorizeRole } = require("./middleware/auth.middleware");
+
 const app = express();
 
 // 2. CORS Configuration
@@ -84,15 +87,15 @@ app.use("/api/guest", guestRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/support", supportRoutes);
 
-// Admin routes
-app.use("/api/admin/users", adminUserRoutes);
-app.use("/api/admin/jobs", adminJobRoutes);
-app.use("/api/admin/employers", adminEmployerRoutes);
-app.use("/api/admin/dashboard", adminDashboardRoutes);
-app.use("/api/admin/reports", adminReportsRoutes);
-app.use("/api/admin/activity", adminActivityRoutes);
-app.use("/api/admin/settings", adminSettingsRoutes);
-app.use("/api/admin/applications", adminApplicationsRoutes);
+// Admin routes (protected — require login + admin role)
+app.use("/api/admin/users", verifyToken, authorizeRole('admin'), adminUserRoutes);
+app.use("/api/admin/jobs", verifyToken, authorizeRole('admin'), adminJobRoutes);
+app.use("/api/admin/employers", verifyToken, authorizeRole('admin'), adminEmployerRoutes);
+app.use("/api/admin/dashboard", verifyToken, authorizeRole('admin'), adminDashboardRoutes);
+app.use("/api/admin/reports", verifyToken, authorizeRole('admin'), adminReportsRoutes);
+app.use("/api/admin/activity", verifyToken, authorizeRole('admin'), adminActivityRoutes);
+app.use("/api/admin/settings", verifyToken, authorizeRole('admin'), adminSettingsRoutes);
+app.use("/api/admin/applications", verifyToken, authorizeRole('admin'), adminApplicationsRoutes);
 
 // HR/Employer routes
 app.use("/api/hr/dashboard", hrDashboardRoutes);

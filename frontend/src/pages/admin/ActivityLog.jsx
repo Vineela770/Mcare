@@ -30,12 +30,14 @@ const ActivityLog = () => {
   const [filterType, setFilterType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [activities, setActivities] = useState([]);
+  const [activityStats, setActivityStats] = useState({ totalActivities: 0, todayActivities: 0, thisWeek: 0, thisMonth: 0 });
 
   // ✅ Mobile sidebar drawer
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchActivities();
+    fetchStats();
   }, []);
 
   const fetchActivities = async () => {
@@ -48,18 +50,20 @@ const ActivityLog = () => {
     }
   };
 
-  const todayCount = activities.filter(a => {
-    if (!a.time) return false;
-    const d = new Date(a.time);
-    const now = new Date();
-    return d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-  }).length;
+  const fetchStats = async () => {
+    try {
+      const data = await adminService.getActivityStats();
+      setActivityStats(data);
+    } catch (error) {
+      console.error('Failed to fetch activity stats:', error);
+    }
+  };
 
   const stats = [
-    { label: 'Total Activities', value: activities.length.toString(),  icon: Clock, color: 'text-teal-700',    bg: 'bg-teal-50' },
-    { label: 'Today',            value: todayCount.toString(),          icon: Clock, color: 'text-green-600',   bg: 'bg-green-50' },
-    { label: 'This Week',        value: activities.length.toString(),   icon: Clock, color: 'text-emerald-700', bg: 'bg-emerald-50' },
-    { label: 'This Month',       value: activities.length.toString(),   icon: Clock, color: 'text-purple-600',  bg: 'bg-purple-50' },
+    { label: 'Total Activities', value: (activityStats.totalActivities || 0).toString(),  icon: Clock, color: 'text-teal-700',    bg: 'bg-teal-50' },
+    { label: 'Today',            value: (activityStats.todayActivities || 0).toString(),   icon: Clock, color: 'text-green-600',   bg: 'bg-green-50' },
+    { label: 'This Week',        value: (activityStats.thisWeek || 0).toString(),          icon: Clock, color: 'text-emerald-700', bg: 'bg-emerald-50' },
+    { label: 'This Month',       value: (activityStats.thisMonth || 0).toString(),         icon: Clock, color: 'text-purple-600',  bg: 'bg-purple-50' },
   ];
 
   const filteredActivities = useMemo(() => {
