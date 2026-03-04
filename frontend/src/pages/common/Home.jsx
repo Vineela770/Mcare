@@ -458,30 +458,19 @@ const Home = () => {
     navigate(`/jobs?${params.toString()}`);
   };
 
-  // ✅ Browse Jobs navigation (NEW)
-  const browseItems = [
-    { label: 'Cardiologist', value: 'Cardiologist' },
-    { label: 'Neurologist', value: 'Neurologist' },
-    { label: 'Gynecologist', value: 'Gynecologist' },
-    { label: 'Radiologist', value: 'Radiologist' },
-    { label: 'Pediatrician', value: 'Pediatrician' },
-    { label: 'Orthopedic', value: 'Orthopedic' },
-    { label: 'Pulmonologist', value: 'Pulmonologist' },
-    { label: 'Pharmacist', value: 'Pharmacist' },
+  // ✅ Industries navigation
+  const industryItems = [
+    { label: 'Hospital Jobs – Doctors', key: 'doctors' },
+    { label: 'Hospital Management', key: 'management' },
+    { label: 'Medical Colleges', key: 'colleges' },
+    { label: 'Allied Health', key: 'allied' },
+    { label: 'Nursing', key: 'nursing' },
+    { label: 'Alternative Medicine', key: 'alternative' },
+    { label: 'Dental', key: 'dental' },
   ];
 
-  const goToBrowse = (spec) => {
-    const params = new URLSearchParams();
-    // keep search box values if user typed
-    if (jobTitle) params.append('search', jobTitle);
-    if (city) params.append('location', city);
-
-    // specialization navigation
-    params.set('specialization', spec);
-    // (optional) also set search keyword so it works even if your Jobs page only reads "search"
-    params.set('search', spec);
-
-    navigate(`/jobs?${params.toString()}`);
+  const goToIndustry = (categoryKey) => {
+    navigate(`/jobs?category=${categoryKey}`);
   };
 
   const categories = [
@@ -1553,19 +1542,19 @@ const Home = () => {
             </button>
           </div>
 
-          {/* Browse Jobs */}
+          {/* Industries */}
           <div className="text-white/90 mt-4 text-xs md:text-sm">
-            <span className="font-semibold">Browse Jobs:</span>{' '}
-            {browseItems.map((item, idx) => (
-              <span key={item.value}>
+            <span className="font-semibold">Industries:</span>{' '}
+            {industryItems.map((item, idx) => (
+              <span key={item.key}>
                 <button
                   type="button"
-                  onClick={() => goToBrowse(item.value)}
+                  onClick={() => goToIndustry(item.key)}
                   className="underline underline-offset-2 hover:text-white font-medium"
                 >
                   {item.label}
                 </button>
-                {idx !== browseItems.length - 1 ? ', ' : ''}
+                {idx !== industryItems.length - 1 ? ', ' : ''}
               </span>
             ))}
           </div>

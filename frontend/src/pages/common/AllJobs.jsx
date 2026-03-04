@@ -511,19 +511,24 @@ const AllJobs = () => {
             Browse {jobs.length} open positions from top healthcare facilities
           </p>
 
-          {/* ✅ Browse Jobs specialization links */}
+          {/* ✅ Industries category links */}
           <div className="text-white/90 mt-4 text-xs md:text-sm">
-            <span className="font-semibold">Browse Jobs:</span>{' '}
+            <span className="font-semibold">Industries:</span>{' '}
             {[
-              'Cardiologist', 'Neurologist', 'Gynecologist', 'Radiologist',
-              'Pediatrician', 'Orthopedic', 'Pulmonologist', 'Pharmacist',
-            ].map((spec, idx, arr) => (
-              <span key={spec}>
+              { label: 'Hospital Jobs – Doctors', key: 'doctors' },
+              { label: 'Hospital Management', key: 'management' },
+              { label: 'Medical Colleges', key: 'colleges' },
+              { label: 'Allied Health', key: 'allied' },
+              { label: 'Nursing', key: 'nursing' },
+              { label: 'Alternative Medicine', key: 'alternative' },
+              { label: 'Dental', key: 'dental' },
+            ].map((item, idx, arr) => (
+              <span key={item.key}>
                 <button
                   type="button"
                   onClick={() => {
-                    setSearchTerm(spec);
-                    setActiveCategory('');
+                    setSearchTerm('');
+                    setActiveCategory(item.key);
                     setSelectedDegree('');
                     setFilterSpecialization('');
                     setFilterCity('');
@@ -532,7 +537,7 @@ const AllJobs = () => {
                   }}
                   className="underline underline-offset-2 hover:text-white font-medium"
                 >
-                  {spec}
+                  {item.label}
                 </button>
                 {idx !== arr.length - 1 ? ', ' : ''}
               </span>
