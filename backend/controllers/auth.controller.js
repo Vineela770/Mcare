@@ -90,9 +90,9 @@ exports.register = async (req, res) => {
     await client.query('BEGIN'); 
 
     const userResult = await client.query(
-      `INSERT INTO users (title, full_name, email, password, phone_number, location, role) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, role, full_name, email`,
-      [title, fullName, email.trim(), hashedPassword, phone, location, normalizedRole]
+      `INSERT INTO users (title, full_name, email, password, phone_number, location, role, is_verified) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, role, full_name, email`,
+      [title, fullName, email.trim(), hashedPassword, phone, location, normalizedRole, true]
     );
     const newUser = userResult.rows[0];
 
@@ -541,10 +541,10 @@ exports.googleLogin = async (req, res) => {
       console.log(`📝 Creating new user from Google OAuth: ${email}`);
       
       const insertResult = await pool.query(
-        `INSERT INTO users (email, full_name, role, google_id, profile_photo, email_verified) 
-         VALUES ($1, $2, $3, $4, $5, $6) 
+        `INSERT INTO users (email, full_name, role, google_id, profile_photo, email_verified, is_verified) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7) 
          RETURNING *`,
-        [email, name, 'candidate', googleId, picture, true]
+        [email, name, 'candidate', googleId, picture, true, true]
       );
       
       user = insertResult.rows[0];

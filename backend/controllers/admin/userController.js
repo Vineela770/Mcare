@@ -175,3 +175,29 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ error: "Failed to delete user" });
   }
 };
+
+// UPDATE USER STATUS ONLY
+exports.updateUserStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body; // Expected: "Active" or "Inactive"
+
+  try {
+    const isVerified = status === 'Active';
+    const result = await pool.query(
+      `UPDATE users SET is_verified=$1, updated_at=NOW()
+       WHERE id=$2
+       RETURNING id, full_name AS name, email, role, is_verified, created_at AS joined,
+       CASE WHEN is_verified THEN 'Active' ELSE 'Inactive' END AS status`,
+      [isVerified, id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Update User Status Error:", error);
+    res.status(500).json({ error: "Failed to update user status" });
+  }
+};

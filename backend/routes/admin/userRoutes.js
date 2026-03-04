@@ -7,6 +7,7 @@ router.get("/role/:role", userController.getUsersByRole);  // must be before /:i
 router.get("/:id", userController.getUserById);
 router.post("/", userController.createUser);
 router.put("/:id", userController.updateUser);
+router.patch("/:id/status", userController.updateUserStatus); // Toggle user status
 router.delete("/:id", userController.deleteUser);
 
 module.exports = router;

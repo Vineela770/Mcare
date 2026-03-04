@@ -48,6 +48,15 @@ const adminService = {
     }
   },
 
+  updateUserStatus: async (id, status) => {
+    try {
+      const response = await axios.patch(`/api/admin/users/${id}/status`, { status });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update user status' };
+    }
+  },
+
   deleteUser: async (id) => {
     try {
       const response = await axios.delete(`/api/admin/users/${id}`);

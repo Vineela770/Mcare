@@ -4,6 +4,8 @@ import {
   Edit2,
   Trash2,
   UserPlus,
+  UserCheck,
+  UserX,
   X,
   CheckCircle,
   AlertCircle,
@@ -192,6 +194,18 @@ const UsersManagement = () => {
     }
   };
 
+  const handleToggleStatus = async (user) => {
+    try {
+      const newStatus = user.status === 'Active' ? 'Inactive' : 'Active';
+      await adminService.updateUserStatus(user.id, newStatus);
+      await fetchUsers(); // Refresh the list
+      showNotification(`User ${user.name} status updated to ${newStatus}.`, 'info');
+    } catch (error) {
+      console.error('Failed to toggle user status:', error);
+      showNotification(error.message || 'Failed to update user status', 'error');
+    }
+  };
+
   const filteredUsers = roleFilter === 'all' ? users : users.filter(u => u.role === roleFilter);
 
   const RolePill = ({ role }) => (
@@ -358,6 +372,21 @@ const UsersManagement = () => {
                       <Edit2 className="w-5 h-5" />
                     </button>
                     <button
+                      onClick={() => handleToggleStatus(user)}
+                      className={`${
+                        user.status === 'Active' 
+                          ? 'text-orange-600 hover:text-orange-900' 
+                          : 'text-green-600 hover:text-green-900'
+                      }`}
+                      title={`${user.status === 'Active' ? 'Deactivate' : 'Activate'} User`}
+                    >
+                      {user.status === 'Active' ? (
+                        <UserX className="w-5 h-5" />
+                      ) : (
+                        <UserCheck className="w-5 h-5" />
+                      )}
+                    </button>
+                    <button
                       onClick={() => handleDeleteUser(user)}
                       className="text-red-600 hover:text-red-900"
                       title="Delete User"
@@ -407,6 +436,21 @@ const UsersManagement = () => {
                     title="Edit User"
                   >
                     <Edit2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleToggleStatus(user)}
+                    className={`p-2 rounded-lg border border-gray-200 active:scale-95 ${
+                      user.status === 'Active' 
+                        ? 'text-orange-600' 
+                        : 'text-green-600'
+                    }`}
+                    title={`${user.status === 'Active' ? 'Deactivate' : 'Activate'} User`}
+                  >
+                    {user.status === 'Active' ? (
+                      <UserX className="w-4 h-4" />
+                    ) : (
+                      <UserCheck className="w-4 h-4" />
+                    )}
                   </button>
                   <button
                     onClick={() => handleDeleteUser(user)}
