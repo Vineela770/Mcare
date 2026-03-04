@@ -219,7 +219,7 @@ const Register = () => {
             </div>
             <span className="text-3xl font-bold text-white">MCARE</span>
           </Link>
-          <h1 className="text-3xl font-bold text-white mt-6 mb-2">Register</h1>
+          <h1 className="text-3xl font-bold text-white mt-6 mb-2">Register/JobSeeker</h1>
           <p className="text-emerald-100">Start your healthcare career journey today</p>
         </div>
 
