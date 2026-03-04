@@ -1374,7 +1374,7 @@ const Home = () => {
   });
   console.log('✅ Filtered jobs count:', filteredJobs.length);
 
-  const JOBS_PER_SLIDE = 2;
+  const JOBS_PER_SLIDE = 4;
   const totalDots = Math.max(1, Math.ceil(filteredJobs.length / JOBS_PER_SLIDE));
 
   const handlePrev = () => {
@@ -1876,10 +1876,10 @@ const Home = () => {
         {Array.from({ length: totalDots }).map((_, slideIndex) => (
           <div
             key={slideIndex}
-            className="min-w-full grid grid-cols-2 gap-6 px-1"
+            className="min-w-full grid grid-cols-4 gap-6 px-1"
           >
             {filteredJobs
-              .slice(slideIndex * 2, slideIndex * 2 + 2)
+              .slice(slideIndex * JOBS_PER_SLIDE, slideIndex * JOBS_PER_SLIDE + JOBS_PER_SLIDE)
               .map((job) => (
                 <div
                   key={job.id}
