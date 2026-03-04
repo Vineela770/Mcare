@@ -10,7 +10,8 @@ const CustomDropdown = ({
   disabled = false,
   className = '',
   compact = false,
-  greenTheme = false
+  greenTheme = false,
+  borderClass = ''
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
@@ -48,8 +49,8 @@ const CustomDropdown = ({
         disabled={disabled}
         className={`w-full text-left focus:outline-none focus:ring-2 focus:ring-emerald-600 transition flex items-center justify-between ${
           compact 
-            ? 'px-3 py-3 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium cursor-pointer hover:border-emerald-400' 
-            : 'px-4 py-3 border border-gray-300 rounded-lg hover:border-emerald-400 bg-white'
+            ? `px-3 py-3 bg-white ${borderClass || 'border border-gray-300'} rounded-lg text-gray-700 font-medium cursor-pointer hover:border-emerald-400` 
+            : `px-4 py-3 ${borderClass || 'border border-gray-300'} rounded-lg hover:border-emerald-400 bg-white`
         } ${
           isOpen ? 'border-emerald-500 ring-2 ring-emerald-500' : ''
         } ${

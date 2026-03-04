@@ -260,6 +260,7 @@ const Register = () => {
                 { label: 'Employer', value: 'hr' }
               ]}
               placeholder="Select"
+              borderClass="border-2 border-gray-400"
               required
             />
 
@@ -280,6 +281,7 @@ const Register = () => {
                     { label: 'Others', value: 'Others' }
                   ]}
                   placeholder="Select"
+                  borderClass="border-2 border-gray-400"
                   required
                 />
               </div>
@@ -295,7 +297,7 @@ const Register = () => {
                     value={formData.fullName}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -307,8 +309,8 @@ const Register = () => {
                   Phone Number
                 </label>
 
-                <div className="flex items-stretch border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-emerald-600">
-                  <div className="relative flex items-center gap-2 px-3 py-3 bg-gray-50 border-r border-gray-300 min-w-[120px]">
+                <div className="flex items-stretch border-2 border-gray-400 rounded-lg focus-within:ring-2 focus-within:ring-emerald-600">
+                  <div className="relative flex items-center gap-2 px-3 py-3 bg-gray-50 border-r-2 border-r-gray-400 min-w-[120px]">
                     <Phone className="text-gray-400 w-5 h-5" />
                     <CustomDropdown
                       value={countryCode}
@@ -345,7 +347,7 @@ const Register = () => {
                     value={formData.location}
                     onChange={handleChange}
                     placeholder="City, State"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -373,6 +375,7 @@ const Register = () => {
                         { label: 'MCh', value: 'MCh' }
                       ]}
                       placeholder="Select Qualification"
+                      borderClass="border-2 border-gray-400"
                       required
                     />
                   </div>
@@ -384,7 +387,7 @@ const Register = () => {
                       name="resume"
                       onChange={handleChange}
                       accept=".pdf,.doc,.docx"
-                      className="w-full"
+                      className="w-full py-2.5 px-3 border-2 border-gray-400 rounded-lg text-gray-700 file:mr-4 file:py-1.5 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
                       required
                     />
                   </div>
@@ -402,7 +405,7 @@ const Register = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                     required
                   />
                 </div>
@@ -420,7 +423,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder={isEmailTyped ? 're-enter your email' : 'Enter email first'}
                     disabled={!isEmailTyped}
-                    className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent
+                    className={`w-full pl-10 pr-4 py-3 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent
                       ${!isEmailTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     required={isEmailTyped}
                   />
@@ -438,7 +441,7 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Enter your password"
-                    className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900"
+                    className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900"
                     style={showPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                     required
                   />
@@ -464,7 +467,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder={isPasswordTyped ? 'Re-enter password' : 'Enter password first'}
                     disabled={!isPasswordTyped}
-                    className={`w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900
+                    className={`w-full py-3 text-base min-h-[48px] pl-10 pr-12 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900
                       ${!isPasswordTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     style={showConfirmPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                     required={isPasswordTyped}
