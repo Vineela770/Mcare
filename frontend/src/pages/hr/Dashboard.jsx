@@ -168,16 +168,16 @@ const HRDashboard = () => {
             </div>
 
             {/* ✅ Mobile buttons stack, desktop stays row */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full md:w-auto">
+            <div className="flex flex-row gap-3 w-full md:w-auto">
               <Link
                 to="/hr/post-job"
-                className="w-full sm:w-auto text-center bg-white text-emerald-700 px-6 py-3 rounded-lg hover:bg-gray-100 font-medium"
+                className="w-full sm:w-auto text-center bg-white text-emerald-700 px-4 py-3 rounded-lg hover:bg-gray-100 font-medium text-sm"
               >
                 Post New Job
               </Link>
               <Link
                 to="/hr/applications"
-                className="w-full sm:w-auto text-center bg-emerald-700 text-white px-6 py-3 rounded-lg hover:bg-emerald-800 font-medium"
+                className="w-full sm:w-auto text-center bg-emerald-700 text-white px-4 py-3 rounded-lg hover:bg-emerald-800 font-medium text-sm"
               >
                 Review Applications
               </Link>

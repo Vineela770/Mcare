@@ -137,16 +137,16 @@ const CandidateDashboard = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-row gap-3">
                 <Link
                   to="/candidate/browse-jobs"
-                  className="bg-white text-emerald-700 px-6 py-3 rounded-lg font-medium text-center"
+                  className="bg-white text-emerald-700 px-4 py-3 rounded-lg font-medium text-center text-sm"
                 >
                   Browse Jobs
                 </Link>
                 <Link
                   to="/candidate/resume"
-                  className="bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium text-center"
+                  className="bg-emerald-700 text-white px-4 py-3 rounded-lg font-medium text-center text-sm"
                 >
                   Update Resume
                 </Link>

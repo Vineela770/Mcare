@@ -163,7 +163,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* ✅ Buttons Stack on Mobile */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-row gap-2 md:gap-3">
               <Link
                 to="/admin/users"
                 className="bg-white text-emerald-700 px-5 py-2.5 rounded-lg hover:bg-gray-100 font-medium text-center"

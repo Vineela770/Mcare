@@ -101,7 +101,7 @@ const Sidebar = () => {
   }, [mobileOpen]);
 
   const SidebarContent = ({ isMobile = false }) => (
-    <div className="w-full h-full bg-white flex flex-col overflow-y-auto">
+    <div className={`w-full h-full bg-white flex flex-col ${isMobile ? 'overflow-y-auto' : 'overflow-y-auto'}`}>
 
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
@@ -222,11 +222,11 @@ const Sidebar = () => {
             onClick={() => setMobileOpen(false)}
           />
 
-          {/* ✅ Scrollable Drawer */}
-          <div className="absolute left-0 top-0 h-screen w-[85%] max-w-[320px] bg-white shadow-2xl overflow-y-auto">
+          {/* ✅ Scrollable Drawer with proper height */}
+          <div className="absolute left-0 top-0 h-full w-[85%] max-w-[320px] bg-white shadow-2xl flex flex-col">
 
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 sticky top-0 bg-white z-10">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white">
               <p className="font-semibold text-gray-900">Menu</p>
               <button
                 type="button"
@@ -237,8 +237,10 @@ const Sidebar = () => {
               </button>
             </div>
 
-            {/* Sidebar Content */}
-            <SidebarContent isMobile />
+            {/* Scrollable Content Area */}
+            <div className="flex-1 overflow-y-auto">
+              <SidebarContent isMobile />
+            </div>
 
           </div>
         </div>
