@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Sidebar from "../../components/common/Sidebar";
+import { authService } from "../../api/authService";
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -13,9 +14,12 @@ const ChangePassword = () => {
 
   const [errors, setErrors] = useState({});
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setApiError("");
 
     const newErrors = {};
 
@@ -36,10 +40,18 @@ const ChangePassword = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      setShowSuccess(true);
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
+      try {
+        setLoading(true);
+        await authService.changePassword(oldPassword, newPassword);
+        setShowSuccess(true);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } catch (err) {
+        setApiError(err.message || "Failed to change password. Please try again.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -144,11 +156,18 @@ const ChangePassword = () => {
                   )}
                 </div>
 
+                {apiError && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-red-600 text-sm">{apiError}</p>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3 rounded-lg transition text-sm md:text-base"
+                  disabled={loading}
+                  className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3 rounded-lg transition text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Change Password
+                  {loading ? "Changing..." : "Change Password"}
                 </button>
               </form>
             </div>

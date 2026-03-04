@@ -223,6 +223,24 @@ exports.login = async (req, res) => {
 
     const user = userResult.rows[0];
 
+    // Check if account is soft-deleted (recovery period)
+    if (user.is_deleted) {
+      const deletedAt = new Date(user.deleted_at);
+      const daysSinceDeletion = (Date.now() - deletedAt.getTime()) / (1000 * 60 * 60 * 24);
+      if (daysSinceDeletion <= 30) {
+        return res.status(403).json({ 
+          success: false, 
+          message: "This account has been deleted. You have " + Math.ceil(30 - daysSinceDeletion) + " days to recover it.",
+          recoverable: true,
+          email: user.email
+        });
+      } else {
+        // Permanently delete after 30 days
+        await pool.query("DELETE FROM users WHERE id = $1", [user.id]);
+        return res.status(401).json({ success: false, message: "This account has been permanently deleted." });
+      }
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ success: false, message: "Invalid email or password" });
@@ -303,14 +321,18 @@ exports.changePassword = async (req, res) => {
 };
 
 /**
- * @desc    Delete user profile/account (Verified)
+ * @desc    Soft-delete user profile/account (30-day recovery window)
  */
 exports.deleteProfile = async (req, res) => {
   try {
     const { password } = req.body;
     const userId = req.user.id;
 
-    const userResult = await pool.query("SELECT password FROM users WHERE id = $1", [userId]);
+    if (!password) {
+      return res.status(400).json({ success: false, message: "Password is required to delete your account." });
+    }
+
+    const userResult = await pool.query("SELECT password, email, full_name FROM users WHERE id = $1", [userId]);
     const user = userResult.rows[0];
 
     if (!user) return res.status(404).json({ success: false, message: "User not found" });
@@ -320,14 +342,93 @@ exports.deleteProfile = async (req, res) => {
       return res.status(401).json({ success: false, message: "Incorrect password. Account deletion denied." });
     }
 
-    const result = await pool.query("DELETE FROM users WHERE id = $1 RETURNING id", [userId]);
+    // Soft-delete: mark as deleted with timestamp (30-day recovery window)
+    await pool.query(
+      "UPDATE users SET is_deleted = TRUE, deleted_at = NOW() WHERE id = $1",
+      [userId]
+    );
 
-    if (result.rows.length === 0) return res.status(404).json({ success: false, message: "User not found" });
+    // Log the deletion
+    try {
+      await pool.query(
+        `INSERT INTO activity_logs (user_id, action, description, user_role) VALUES ($1, $2, $3, $4)`,
+        [userId, 'account_deleted', `${user.full_name} deleted their account (soft-delete, 30-day recovery)`, req.user.role]
+      );
+    } catch (logErr) {
+      console.warn("Activity log (delete) failed:", logErr.message);
+    }
 
-    res.json({ success: true, message: "Account deleted successfully" });
+    res.json({ 
+      success: true, 
+      message: "Account deleted successfully. You have 30 days to recover your account by logging in and choosing to recover."
+    });
   } catch (err) {
     console.error("❌ Delete Profile Error:", err.message);
     res.status(500).json({ success: false, message: "Server error deleting account" });
+  }
+};
+
+/**
+ * @desc    Recover a soft-deleted account (within 30-day window)
+ * @route   POST /api/auth/recover-account
+ */
+exports.recoverAccount = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required." });
+    }
+
+    const userResult = await pool.query(
+      "SELECT id, password, full_name, is_deleted, deleted_at FROM users WHERE LOWER(email) = LOWER($1)",
+      [email.trim()]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "Account not found." });
+    }
+
+    const user = userResult.rows[0];
+
+    if (!user.is_deleted) {
+      return res.status(400).json({ success: false, message: "This account is already active." });
+    }
+
+    // Check if within 30-day recovery window
+    const deletedAt = new Date(user.deleted_at);
+    const daysSinceDeletion = (Date.now() - deletedAt.getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSinceDeletion > 30) {
+      await pool.query("DELETE FROM users WHERE id = $1", [user.id]);
+      return res.status(410).json({ success: false, message: "Recovery period has expired. Account permanently deleted." });
+    }
+
+    // Verify password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Incorrect password." });
+    }
+
+    // Reactivate account
+    await pool.query(
+      "UPDATE users SET is_deleted = FALSE, deleted_at = NULL WHERE id = $1",
+      [user.id]
+    );
+
+    // Log recovery
+    try {
+      await pool.query(
+        `INSERT INTO activity_logs (user_id, action, description, user_role) VALUES ($1, $2, $3, $4)`,
+        [user.id, 'account_recovered', `${user.full_name} recovered their deleted account`, 'user']
+      );
+    } catch (logErr) {
+      console.warn("Activity log (recover) failed:", logErr.message);
+    }
+
+    res.json({ success: true, message: "Account recovered successfully! You can now log in." });
+  } catch (err) {
+    console.error("❌ Account Recovery Error:", err.message);
+    res.status(500).json({ success: false, message: "Server error during account recovery" });
   }
 };
 

@@ -50,7 +50,9 @@ const Login = () => {
   // ✅ Recovery account toggle
   const [isRecoveryAccount, setIsRecoveryAccount] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState('');
+  const [recoveryPassword, setRecoveryPassword] = useState('');
   const [recoveryMessage, setRecoveryMessage] = useState('');
+  const [recoveryError, setRecoveryError] = useState('');
   const [recoveryLoading, setRecoveryLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -96,7 +98,16 @@ const Login = () => {
       login(user, token);
       redirectByRole(user.role);
     } catch (err) {
-      setError(err.message || 'Invalid credentials. Please try again.');
+      // Check if account is recoverable (soft-deleted)
+      if (err.recoverable && err.email) {
+        setRecoveryEmail(err.email);
+        setIsRecoveryAccount(true);
+        setError('');
+        setRecoveryError('');
+        setRecoveryMessage(err.message);
+      } else {
+        setError(err.message || 'Invalid credentials. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -136,14 +147,19 @@ const Login = () => {
   const handleRecoveryAccount = async (e) => {
     e.preventDefault();
     setRecoveryMessage('');
+    setRecoveryError('');
     setRecoveryLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setRecoveryMessage('Please check your email for further details.');
-      setRecoveryEmail('');
-    } catch {
-      setRecoveryMessage('Failed to send recovery email. Try again.');
+      const response = await authService.recoverAccount(recoveryEmail, recoveryPassword);
+      setRecoveryMessage(response.message || 'Account recovered successfully! You can now log in.');
+      setRecoveryPassword('');
+      // Go back to login after 2 seconds
+      setTimeout(() => {
+        goBackToLogin();
+      }, 2000);
+    } catch (err) {
+      setRecoveryError(err.message || 'Failed to recover account. Try again.');
     } finally {
       setRecoveryLoading(false);
     }
@@ -154,8 +170,10 @@ const Login = () => {
     setIsRecoveryAccount(false);
     setResetMessage('');
     setRecoveryMessage('');
+    setRecoveryError('');
     setResetEmail('');
     setRecoveryEmail('');
+    setRecoveryPassword('');
     setError('');
   };
 
@@ -256,14 +274,20 @@ const Login = () => {
             </form>
           ) : isRecoveryAccount ? (
             <form onSubmit={handleRecoveryAccount} className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-800 text-center">Recovery Account</h2>
+              <h2 className="text-xl font-semibold text-gray-800 text-center">Recover Account</h2>
               <p className="text-sm text-gray-600 text-center">
-                Add a recovery email to help you recover your account.
+                Your account was deleted but is still within the 30-day recovery window. Enter your password to reactivate it.
               </p>
 
               {recoveryMessage && (
                 <div className="bg-emerald-50 border border-emerald-300 text-emerald-700 px-4 py-3 rounded-lg text-sm">
                   {recoveryMessage}
+                </div>
+              )}
+
+              {recoveryError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                  {recoveryError}
                 </div>
               )}
 
@@ -274,7 +298,19 @@ const Login = () => {
                   required
                   value={recoveryEmail}
                   onChange={(e) => setRecoveryEmail(e.target.value)}
-                  placeholder="Enter recovery email"
+                  placeholder="Account email"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                />
+              </div>
+
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="password"
+                  required
+                  value={recoveryPassword}
+                  onChange={(e) => setRecoveryPassword(e.target.value)}
+                  placeholder="Enter your password"
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
@@ -284,7 +320,7 @@ const Login = () => {
                 disabled={recoveryLoading}
                 className="w-full bg-gradient-to-r from-teal-700 to-emerald-500 text-white py-3 rounded-lg font-medium hover:from-teal-800 hover:to-emerald-600 disabled:opacity-50"
               >
-                {recoveryLoading ? 'Sending...' : 'Next'}
+                {recoveryLoading ? 'Recovering...' : 'Recover My Account'}
               </button>
 
               <button

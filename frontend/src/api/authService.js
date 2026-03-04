@@ -77,16 +77,28 @@ export const authService = {
     }
   },
 
-  // DELETE PROFILE
-  deleteProfile: async () => {
+  // DELETE PROFILE (soft-delete with 30-day recovery)
+  deleteProfile: async (password) => {
     try {
-      const response = await axios.delete('/api/auth/delete-profile');
+      const response = await axios.delete('/api/auth/delete-profile', {
+        data: { password }
+      });
       // Clear local storage on successful deletion
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Profile deletion failed' };
+    }
+  },
+
+  // RECOVER DELETED ACCOUNT (within 30-day window)
+  recoverAccount: async (email, password) => {
+    try {
+      const response = await axios.post('/api/auth/recover-account', { email, password });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Account recovery failed' };
     }
   },
 

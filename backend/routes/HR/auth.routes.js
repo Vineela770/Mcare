@@ -38,6 +38,7 @@ router.post("/login", authController.login);
 router.post("/forgot-password", authController.forgotPassword);
 router.post("/reset-password", authController.resetPassword);
 router.post("/account-recovery", authController.accountRecovery);
+router.post("/recover-account", authController.recoverAccount);
 router.post("/google-login", authController.googleLogin);
 
 // Protected routes (require authentication)
