@@ -510,6 +510,34 @@ const AllJobs = () => {
           <p className="text-sm md:text-lg text-emerald-100">
             Browse {jobs.length} open positions from top healthcare facilities
           </p>
+
+          {/* ✅ Browse Jobs specialization links */}
+          <div className="text-white/90 mt-4 text-xs md:text-sm">
+            <span className="font-semibold">Browse Jobs:</span>{' '}
+            {[
+              'Cardiologist', 'Neurologist', 'Gynecologist', 'Radiologist',
+              'Pediatrician', 'Orthopedic', 'Pulmonologist', 'Pharmacist',
+            ].map((spec, idx, arr) => (
+              <span key={spec}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchTerm(spec);
+                    setActiveCategory('');
+                    setSelectedDegree('');
+                    setFilterSpecialization('');
+                    setFilterCity('');
+                    setFilterSalary('');
+                    setVisibleCount(JOBS_PER_PAGE);
+                  }}
+                  className="underline underline-offset-2 hover:text-white font-medium"
+                >
+                  {spec}
+                </button>
+                {idx !== arr.length - 1 ? ', ' : ''}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
