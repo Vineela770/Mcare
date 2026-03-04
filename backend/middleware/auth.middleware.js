@@ -17,7 +17,18 @@ const verifyToken = async (req, res, next) => {
       // 2. Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'mcare_secret_2026');
       
-      // 3. Fetch fresh user data from DB 
+      // 3. Handle hardcoded admin (id: 0, role: 'administrator') — no DB record
+      if (decoded.id === 0 && decoded.role === 'administrator') {
+        req.user = {
+          id: 0,
+          full_name: 'Admin User',
+          email: 'vicky23@gmail.com',
+          role: 'administrator',
+        };
+        return next();
+      }
+
+      // 4. Fetch fresh user data from DB 
       // This ensures req.user has the correct role ('candidate' or 'hr')
       const userResult = await pool.query(
         "SELECT id, full_name, email, role FROM users WHERE id = $1", 
@@ -28,7 +39,7 @@ const verifyToken = async (req, res, next) => {
         return res.status(401).json({ success: false, message: "User no longer exists" });
       }
 
-      // 4. Attach the DB user to the request object
+      // 5. Attach the DB user to the request object
       // This allows controllers to access req.user.id securely
       req.user = userResult.rows[0]; 
       return next();
