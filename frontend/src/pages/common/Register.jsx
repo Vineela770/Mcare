@@ -219,7 +219,7 @@ const Register = () => {
             </div>
             <span className="text-3xl font-bold text-white">MCARE</span>
           </Link>
-          <h1 className="text-3xl font-bold text-white mt-6 mb-2">Register/JobSeeker</h1>
+          <h1 className="text-3xl font-bold text-white mt-6 mb-2">Register</h1>
           <p className="text-emerald-100">Start your healthcare career journey today</p>
         </div>
 
@@ -244,7 +244,7 @@ const Register = () => {
             {formData.role && (
               <div className="col-span-full flex justify-center mt-2 mb-6">
                 <h2 className="text-2xl font-semibold text-gray-900 tracking-wide">
-                  {formData.role === 'candidate' ? 'Doctor Registration' : 'Employer Registration'}
+                  {formData.role === 'candidate' ? 'Doctor/JobSeeker Registration' : 'Employer Registration'}
                 </h2>
               </div>
             )}
@@ -256,7 +256,7 @@ const Register = () => {
               onChange={handleChange}
               options={[
                 { label: 'Select', value: '' },
-                { label: 'Doctor', value: 'candidate' },
+                { label: 'Doctor/JobSeeker', value: 'candidate' },
                 { label: 'Employer', value: 'hr' }
               ]}
               placeholder="Select"
