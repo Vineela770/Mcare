@@ -88,14 +88,14 @@ app.use("/api/stats", statsRoutes);
 app.use("/api/support", supportRoutes);
 
 // Admin routes (protected — require login + admin role)
-app.use("/api/admin/users", verifyToken, authorizeRole('admin'), adminUserRoutes);
-app.use("/api/admin/jobs", verifyToken, authorizeRole('admin'), adminJobRoutes);
-app.use("/api/admin/employers", verifyToken, authorizeRole('admin'), adminEmployerRoutes);
-app.use("/api/admin/dashboard", verifyToken, authorizeRole('admin'), adminDashboardRoutes);
-app.use("/api/admin/reports", verifyToken, authorizeRole('admin'), adminReportsRoutes);
-app.use("/api/admin/activity", verifyToken, authorizeRole('admin'), adminActivityRoutes);
-app.use("/api/admin/settings", verifyToken, authorizeRole('admin'), adminSettingsRoutes);
-app.use("/api/admin/applications", verifyToken, authorizeRole('admin'), adminApplicationsRoutes);
+app.use("/api/admin/users", verifyToken, authorizeRole('admin', 'administrator'), adminUserRoutes);
+app.use("/api/admin/jobs", verifyToken, authorizeRole('admin', 'administrator'), adminJobRoutes);
+app.use("/api/admin/employers", verifyToken, authorizeRole('admin', 'administrator'), adminEmployerRoutes);
+app.use("/api/admin/dashboard", verifyToken, authorizeRole('admin', 'administrator'), adminDashboardRoutes);
+app.use("/api/admin/reports", verifyToken, authorizeRole('admin', 'administrator'), adminReportsRoutes);
+app.use("/api/admin/activity", verifyToken, authorizeRole('admin', 'administrator'), adminActivityRoutes);
+app.use("/api/admin/settings", verifyToken, authorizeRole('admin', 'administrator'), adminSettingsRoutes);
+app.use("/api/admin/applications", verifyToken, authorizeRole('admin', 'administrator'), adminApplicationsRoutes);
 
 // HR/Employer routes
 app.use("/api/hr/dashboard", hrDashboardRoutes);
