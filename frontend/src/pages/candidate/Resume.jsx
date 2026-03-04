@@ -96,18 +96,23 @@ const Resume = () => {
     if (file) setSelectedFile(file);
   };
 
-  const handleUploadResume = () => {
+  const handleUploadResume = async () => {
     if (!selectedFile) return;
-
-    setResumeFile({
-      name: selectedFile.name,
-      size: `${(selectedFile.size / 1024).toFixed(0)} KB`,
-      uploadedDate: new Date().toISOString().split('T')[0],
-    });
-
-    setShowUploadModal(false);
-    setSelectedFile(null);
-    showSuccess('Resume uploaded successfully!');
+    try {
+      const data = await resumeService.uploadResume(selectedFile);
+      setResumeFile({
+        name: selectedFile.name,
+        size: `${(selectedFile.size / 1024).toFixed(0)} KB`,
+        uploadedDate: new Date().toISOString().split('T')[0],
+        url: data.resumeUrl || data.resume_url,
+      });
+      setShowUploadModal(false);
+      setSelectedFile(null);
+      showSuccess('Resume uploaded successfully!');
+    } catch (error) {
+      console.error('Upload failed:', error);
+      showSuccess('Failed to upload resume. Please try again.');
+    }
   };
 
   const handleSaveSummary = () => {
@@ -155,10 +160,31 @@ const Resume = () => {
   };
 
   const handleDownloadResume = () => {
+    if (!resumeFile?.url) {
+      showSuccess('No resume file available to download.');
+      return;
+    }
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const fullUrl = `${API_URL}${resumeFile.url}`;
+    // Create a hidden link and trigger download
+    const link = document.createElement('a');
+    link.href = fullUrl;
+    link.download = resumeFile.name || 'resume.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     showSuccess(`Downloading ${resumeFile.name}...`);
   };
 
-  const handleViewResume = () => setShowViewModal(true);
+  const handleViewResume = () => {
+    if (!resumeFile?.url) {
+      showSuccess('No resume file available to view.');
+      return;
+    }
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    window.open(`${API_URL}${resumeFile.url}`, '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">

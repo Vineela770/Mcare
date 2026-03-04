@@ -26,8 +26,23 @@ router.put("/resume", candidateController.updateResumeData);
 router.get("/profile", candidateController.getBasicProfile);
 router.put("/profile", candidateController.updateBasicProfile);
 
-router.post("/upload-resume", candidateController.uploadCV.single("resume"), (req, res) => {
-  res.json({ success: true, resumeUrl: `/uploads/resumes/${req.file.filename}` });
+router.post("/upload-resume", candidateController.uploadCV.single("resume"), async (req, res) => {
+  const resumeUrl = `/uploads/resumes/${req.file.filename}`;
+  try {
+    // Save to candidate_profiles so the URL persists
+    const pool = require("../../config/db");
+    await pool.query(
+      `INSERT INTO candidate_profiles (user_id, resume_url)
+       VALUES ($1, $2)
+       ON CONFLICT (user_id) DO UPDATE SET resume_url = $2, updated_at = NOW()`,
+      [req.user.id, resumeUrl]
+    );
+    res.json({ success: true, resumeUrl });
+  } catch (err) {
+    console.error("Save resume URL error:", err.message);
+    // Still return the URL even if DB update fails — file is uploaded
+    res.json({ success: true, resumeUrl });
+  }
 });
 
 router.post("/upload-photo", 
