@@ -1500,7 +1500,7 @@ const Home = () => {
       <CustomDropdown
         options={[{ label: 'City', value: '' }, ...cities.map(c => ({ label: c, value: c }))]}
         value={city}
-        onChange={(val) => setCity(val)}
+        onChange={(e) => setCity(e.target.value)}
         placeholder="City"
       />
     </div>
@@ -1519,7 +1519,7 @@ const Home = () => {
           { label: 'Medical Colleges', value: 'colleges' }
         ]}
         value={searchCategory}
-        onChange={(val) => setSearchCategory(val)}
+        onChange={(e) => setSearchCategory(e.target.value)}
         placeholder="All Categories"
       />
     </div>
@@ -2264,7 +2264,7 @@ const Home = () => {
                     <CustomDropdown
                       options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
                       value={quickApplyData.countryCode}
-                      onChange={(val) => setQuickApplyData({ ...quickApplyData, countryCode: val })}
+                      onChange={(e) => setQuickApplyData({ ...quickApplyData, countryCode: e.target.value })}
                       placeholder="Code"
                       compact={true}
                     />
@@ -2454,7 +2454,7 @@ const Home = () => {
                     <CustomDropdown
                       options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
                       value={quickPostData.countryCode}
-                      onChange={(val) => setQuickPostData({ ...quickPostData, countryCode: val })}
+                      onChange={(e) => setQuickPostData({ ...quickPostData, countryCode: e.target.value })}
                       placeholder="Code"
                       compact={true}
                     />
