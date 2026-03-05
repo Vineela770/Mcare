@@ -178,9 +178,9 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col">
       {/* ===== Top Navbar ===== */}
-      <nav className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between shadow-sm relative z-20">
+      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-3 flex items-center justify-between relative z-30">
         <Link to="/" className="flex items-center gap-2.5">
           <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
             <span className="text-white font-bold text-lg">M</span>
@@ -190,7 +190,6 @@ const Login = () => {
             <span className="block text-[10px] text-emerald-600 font-semibold -mt-0.5 tracking-widest uppercase">Healthcare Jobs</span>
           </div>
         </Link>
-
         <div className="hidden sm:flex items-center gap-4 text-sm text-gray-500">
           <div className="flex items-center gap-1.5">
             <Phone className="w-3.5 h-3.5 text-teal-600" />
@@ -204,107 +203,83 @@ const Login = () => {
         </div>
       </nav>
 
-      {/* ===== Main Content: Left Hero + Right Form ===== */}
-      <div className="flex-1 flex flex-col lg:flex-row">
-        {/* ───── LEFT SIDE: Hero Section ───── */}
-        <div className="relative lg:w-[58%] flex flex-col bg-gradient-to-br from-slate-50 via-blue-50/40 to-emerald-50/50 overflow-hidden">
-          {/* Decorative background shapes */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute -top-20 -left-20 w-80 h-80 bg-teal-100/40 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-100/30 rounded-full blur-3xl" />
-            {/* Diagonal stripes (like TimesJobs) */}
-            <div className="absolute bottom-0 left-0 w-full h-32 opacity-[0.04]" style={{
-              backgroundImage: 'repeating-linear-gradient(135deg, transparent, transparent 20px, #0d9488 20px, #0d9488 22px)',
-            }} />
-          </div>
+      {/* ===== Full-width unified background ===== */}
+      <div className="flex-1 relative overflow-hidden">
+        {/* Seamless gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-teal-50/60 to-emerald-50/40" />
+        <div className="absolute inset-0 bg-gradient-to-tl from-blue-50/30 via-transparent to-transparent" />
 
-          {/* Hero content area */}
-          <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-8 lg:px-16 py-12 lg:py-0">
-            {/* Healthcare illustration / icon cluster */}
-            <div className="relative mb-8">
-              <div className="w-48 h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-teal-500 to-emerald-400 rounded-full flex items-center justify-center shadow-2xl shadow-teal-200/50">
-                <Stethoscope className="w-24 h-24 lg:w-28 lg:h-28 text-white" />
-              </div>
-              {/* Floating satellite icons */}
-              <div className="absolute -top-3 -right-3 w-14 h-14 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-gray-100">
-                <Heart className="w-7 h-7 text-rose-500" />
-              </div>
-              <div className="absolute -bottom-2 -left-4 w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center border border-gray-100">
-                <Shield className="w-6 h-6 text-teal-600" />
-              </div>
-              <div className="absolute top-1/2 -right-6 w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center border border-gray-100">
-                <Activity className="w-5 h-5 text-emerald-500" />
-              </div>
-            </div>
-
-            {/* Hero text overlay (like TimesJobs "Let's Find YOUR IDEAL CANDIDATE") */}
-            <div className="text-center max-w-lg">
-              <p className="text-lg lg:text-xl text-teal-700 font-medium italic mb-2">Let's Find</p>
-              <h1 className="text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-tight mb-4">
-                <span className="bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-500 bg-clip-text text-transparent">
-                  YOUR DREAM
-                </span>
-                <br />
-                <span className="text-gray-800">HEALTHCARE CAREER</span>
-              </h1>
-              <p className="text-gray-500 text-base lg:text-lg">
-                Transform Your Hiring Experience Today
-              </p>
-            </div>
-          </div>
-
-          {/* ───── Bottom Feature Cards (like TimesJobs 3-column row) ───── */}
-          <div className="relative z-10 border-t border-gray-200/80 bg-white/80 backdrop-blur-sm">
-            <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-200/80">
-              <div className="flex items-start gap-3 px-6 py-5">
-                <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
-                  <Briefcase className="w-5 h-5 text-teal-600" />
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-800 text-sm">Job Board & Resumes</p>
-                  <p className="text-xs text-gray-500 mt-0.5">1000+ healthcare openings</p>
-                  <p className="text-xs text-gray-400">5 minutes to post a job</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 px-6 py-5">
-                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                  <ClipboardCheck className="w-5 h-5 text-emerald-600" />
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-800 text-sm">Verified Candidates</p>
-                  <p className="text-xs text-gray-500 mt-0.5">Pre-assessed profiles</p>
-                  <p className="text-xs text-gray-400">Benchmarked with your needs</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 px-6 py-5">
-                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                  <Users className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-800 text-sm">500+ Employers</p>
-                  <p className="text-xs text-gray-500 mt-0.5">Top hospitals & clinics</p>
-                  <p className="text-xs text-gray-400">All specialties covered</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-gradient-to-br from-teal-200/20 to-emerald-100/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-gradient-to-tl from-emerald-200/15 to-teal-100/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-teal-100/10 rounded-full blur-2xl" />
+          {/* Dot pattern */}
+          <div className="absolute inset-0 opacity-[0.025]" style={{
+            backgroundImage: 'radial-gradient(circle, #0d9488 1px, transparent 1px)',
+            backgroundSize: '32px 32px'
+          }} />
         </div>
 
-        {/* ───── RIGHT SIDE: Login Form ───── */}
-        <div className="lg:w-[42%] flex items-center justify-center px-6 py-10 lg:py-0 bg-white lg:shadow-[-4px_0_24px_rgba(0,0,0,0.06)]">
-          <div className="w-full max-w-sm">
-            {/* Form Header */}
-            <div className="mb-7">
-              <h2 className="text-2xl font-bold text-gray-900">Welcome Back</h2>
-              <p className="text-gray-500 text-sm mt-1">Sign in to access your healthcare dashboard</p>
+        {/* ===== Content: Hero + Form flowing together ===== */}
+        <div className="relative z-10 max-w-6xl mx-auto px-6 py-10 lg:py-16 flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+
+          {/* ───── Hero Content (left area, no partition) ───── */}
+          <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+            {/* Stethoscope icon cluster */}
+            <div className="relative mb-8">
+              <div className="w-44 h-44 lg:w-52 lg:h-52 bg-gradient-to-br from-teal-400 to-emerald-400 rounded-full flex items-center justify-center shadow-2xl shadow-teal-300/30">
+                <Stethoscope className="w-22 h-22 lg:w-26 lg:h-26 text-white" style={{ width: '5.5rem', height: '5.5rem' }} />
+              </div>
+              {/* Satellite icons */}
+              <div className="absolute -top-2 -right-2 w-12 h-12 bg-white rounded-2xl shadow-lg shadow-gray-200/50 flex items-center justify-center border border-gray-100/80">
+                <Heart className="w-6 h-6 text-rose-400" />
+              </div>
+              <div className="absolute -bottom-1 -left-3 w-11 h-11 bg-white rounded-xl shadow-lg shadow-gray-200/50 flex items-center justify-center border border-gray-100/80">
+                <Shield className="w-5 h-5 text-teal-500" />
+              </div>
+              <div className="absolute top-1/2 -translate-y-1/2 -right-5 w-9 h-9 bg-white rounded-lg shadow-md flex items-center justify-center border border-gray-100/80">
+                <Activity className="w-4 h-4 text-emerald-500" />
+              </div>
             </div>
 
-            {/* ===== Form Card ===== */}
-            <div className="space-y-0">
+            {/* Hero text */}
+            <p className="text-lg text-teal-600 font-medium italic mb-2">Let's Find</p>
+            <h1 className="text-3xl lg:text-4xl xl:text-[2.75rem] font-extrabold leading-tight mb-3">
+              <span className="bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">YOUR DREAM</span>
+              <br />
+              <span className="text-gray-800">HEALTHCARE CAREER</span>
+            </h1>
+            <p className="text-gray-500 text-base lg:text-lg max-w-md">
+              Transform Your Hiring Experience Today
+            </p>
+
+            {/* Trust stats row */}
+            <div className="flex items-center gap-6 mt-8">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-teal-600">1000+</p>
+                <p className="text-xs text-gray-500">Active Jobs</p>
+              </div>
+              <div className="w-px h-10 bg-gray-200" />
+              <div className="text-center">
+                <p className="text-2xl font-bold text-emerald-600">500+</p>
+                <p className="text-xs text-gray-500">Hospitals</p>
+              </div>
+              <div className="w-px h-10 bg-gray-200" />
+              <div className="text-center">
+                <p className="text-2xl font-bold text-teal-600">10K+</p>
+                <p className="text-xs text-gray-500">Professionals</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ───── Login Form Card (floating, no partition) ───── */}
+          <div className="w-full max-w-md">
+            <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/60 border border-gray-100/80 p-8">
               {isForgotPassword ? (
                 <form onSubmit={handleForgotPassword} className="space-y-5">
                   <div className="text-center mb-2">
-                    <div className="w-14 h-14 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
+                    <div className="w-14 h-14 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Mail className="w-7 h-7 text-blue-600" />
                     </div>
                     <h2 className="text-xl font-semibold text-gray-800">Reset Password</h2>
@@ -326,30 +301,26 @@ const Login = () => {
                       value={resetEmail}
                       onChange={(e) => setResetEmail(e.target.value)}
                       placeholder="Enter your email"
-                      className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition bg-gray-50/50"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={resetLoading}
-                    className="w-full bg-gradient-to-r from-teal-600 to-emerald-500 text-white py-3 rounded-lg font-medium hover:from-teal-700 hover:to-emerald-600 disabled:opacity-50 transition-all shadow-lg shadow-teal-500/20"
+                    className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 text-white py-3 rounded-lg font-semibold hover:from-teal-600 hover:to-emerald-600 disabled:opacity-50 transition-all shadow-lg shadow-teal-500/20"
                   >
                     {resetLoading ? 'Sending...' : 'Send Reset Link'}
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={goBackToLogin}
-                    className="w-full text-sm text-gray-500 hover:text-teal-600 transition"
-                  >
+                  <button type="button" onClick={goBackToLogin} className="w-full text-sm text-gray-500 hover:text-teal-600 transition">
                     ← Back to Login
                   </button>
                 </form>
               ) : isRecoveryAccount ? (
                 <form onSubmit={handleRecoveryAccount} className="space-y-5">
                   <div className="text-center mb-2">
-                    <div className="w-14 h-14 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
+                    <div className="w-14 h-14 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Shield className="w-7 h-7 text-emerald-600" />
                     </div>
                     <h2 className="text-xl font-semibold text-gray-800">Recover Account</h2>
@@ -362,59 +333,46 @@ const Login = () => {
                       <span>{recoveryMessage}</span>
                     </div>
                   )}
-
                   {recoveryError && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                      {recoveryError}
-                    </div>
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{recoveryError}</div>
                   )}
 
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="email"
-                      required
-                      value={recoveryEmail}
-                      onChange={(e) => setRecoveryEmail(e.target.value)}
+                    <input type="email" required value={recoveryEmail} onChange={(e) => setRecoveryEmail(e.target.value)}
                       placeholder="Account email"
-                      className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition bg-gray-50/50"
                     />
                   </div>
 
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="password"
-                      required
-                      value={recoveryPassword}
-                      onChange={(e) => setRecoveryPassword(e.target.value)}
+                    <input type="password" required value={recoveryPassword} onChange={(e) => setRecoveryPassword(e.target.value)}
                       placeholder="Enter your password"
-                      className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition bg-gray-50/50"
                     />
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={recoveryLoading}
-                    className="w-full bg-gradient-to-r from-teal-600 to-emerald-500 text-white py-3 rounded-lg font-medium hover:from-teal-700 hover:to-emerald-600 disabled:opacity-50 transition-all shadow-lg shadow-teal-500/20"
+                  <button type="submit" disabled={recoveryLoading}
+                    className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 text-white py-3 rounded-lg font-semibold hover:from-teal-600 hover:to-emerald-600 disabled:opacity-50 transition-all shadow-lg shadow-teal-500/20"
                   >
                     {recoveryLoading ? 'Recovering...' : 'Recover My Account'}
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={goBackToLogin}
-                    className="w-full text-sm text-gray-500 hover:text-teal-600 transition"
-                  >
+                  <button type="button" onClick={goBackToLogin} className="w-full text-sm text-gray-500 hover:text-teal-600 transition">
                     ← Back to Login
                   </button>
                 </form>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  {/* Header */}
+                  <div className="mb-1">
+                    <h2 className="text-2xl font-bold text-gray-900">Welcome Back</h2>
+                    <p className="text-gray-500 text-sm mt-1">Sign in to access your healthcare dashboard</p>
+                  </div>
+
                   {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                      {error}
-                    </div>
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{error}</div>
                   )}
 
                   {/* Email */}
@@ -423,12 +381,9 @@ const Login = () => {
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
+                        type="email" name="email" value={formData.email} onChange={handleChange}
                         placeholder="you@example.com"
-                        className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition bg-gray-50/50"
                         required
                       />
                     </div>
@@ -440,18 +395,14 @@ const Login = () => {
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
                       <input
-                        type={showPassword ? 'text' : 'password'}
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
+                        type={showPassword ? 'text' : 'password'} name="password"
+                        value={formData.password} onChange={handleChange}
                         placeholder="Enter your password"
-                        className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border-2 border-gray-200 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent text-gray-900 transition"
+                        className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent text-gray-900 transition bg-gray-50/50"
                         style={showPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                         required
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword((s) => !s)}
+                      <button type="button" onClick={() => setShowPassword((s) => !s)}
                         className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 flex items-center justify-center text-gray-400 hover:text-gray-600 transition"
                       >
                         {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -459,11 +410,9 @@ const Login = () => {
                     </div>
                   </div>
 
-                  {/* Sign In Button */}
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-gradient-to-r from-teal-600 to-emerald-500 text-white py-3.5 rounded-lg font-semibold disabled:opacity-50 hover:from-teal-700 hover:to-emerald-600 transition-all flex items-center justify-center gap-2 shadow-lg shadow-teal-500/25"
+                  {/* Secure Login Button */}
+                  <button type="submit" disabled={loading}
+                    className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 text-white py-3.5 rounded-lg font-semibold disabled:opacity-50 hover:from-teal-600 hover:to-emerald-600 transition-all flex items-center justify-center gap-2 shadow-lg shadow-teal-500/25"
                   >
                     {loading ? 'Signing in...' : (
                       <>
@@ -473,51 +422,27 @@ const Login = () => {
                     )}
                   </button>
 
-                  {/* Forgot & Recovery links */}
+                  {/* Forgot & Recovery */}
                   <div className="flex items-center justify-between">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsForgotPassword(true);
-                        setIsRecoveryAccount(false);
-                        setResetMessage('');
-                        setResetEmail('');
-                      }}
-                      className="text-sm text-teal-600 hover:text-teal-700 font-medium transition"
-                    >
+                    <button type="button" onClick={() => { setIsForgotPassword(true); setIsRecoveryAccount(false); setResetMessage(''); setResetEmail(''); }}
+                      className="text-sm text-teal-600 hover:text-teal-700 font-medium transition">
                       Forgot Password?
                     </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsRecoveryAccount(true);
-                        setIsForgotPassword(false);
-                        setRecoveryMessage('');
-                        setRecoveryEmail('');
-                      }}
-                      className="text-sm text-teal-600 hover:text-teal-700 font-medium transition"
-                    >
+                    <button type="button" onClick={() => { setIsRecoveryAccount(true); setIsForgotPassword(false); setRecoveryMessage(''); setRecoveryEmail(''); }}
+                      className="text-sm text-teal-600 hover:text-teal-700 font-medium transition">
                       Recovery Account?
                     </button>
                   </div>
 
                   {/* Divider */}
                   <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-gray-200"></div>
-                    </div>
-                    <div className="relative flex justify-center text-sm">
-                      <span className="px-3 bg-white text-gray-400">or</span>
-                    </div>
+                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200"></div></div>
+                    <div className="relative flex justify-center text-sm"><span className="px-3 bg-white text-gray-400">or</span></div>
                   </div>
 
                   {/* Google */}
-                  <button
-                    type="button"
-                    onClick={handleGoogleSignIn}
-                    disabled={googleLoading}
-                    className="w-full border-2 border-gray-200 bg-white py-3 rounded-lg font-medium flex justify-center items-center space-x-3 disabled:opacity-50 hover:bg-gray-50 hover:border-gray-300 transition"
+                  <button type="button" onClick={handleGoogleSignIn} disabled={googleLoading}
+                    className="w-full border border-gray-200 bg-white py-3 rounded-lg font-medium flex justify-center items-center space-x-3 disabled:opacity-50 hover:bg-gray-50 hover:border-gray-300 transition shadow-sm"
                   >
                     <GoogleIcon />
                     <span className="text-gray-700">{googleLoading ? 'Connecting...' : 'Continue with Google'}</span>
@@ -525,22 +450,50 @@ const Login = () => {
                 </form>
               )}
 
-              {/* Register link */}
+              {/* Register */}
               <div className="mt-6 pt-5 border-t border-gray-100 text-center">
                 <p className="text-sm text-gray-500">
                   New to MCARE?{' '}
-                  <Link to="/register" className="text-teal-600 hover:text-teal-700 font-semibold transition">
-                    Create an Account
-                  </Link>
+                  <Link to="/register" className="text-teal-600 hover:text-teal-700 font-semibold transition">Create an Account</Link>
                 </p>
               </div>
 
-              {/* Back to Home */}
-              <div className="text-center mt-4">
-                <Link to="/" className="text-xs text-gray-400 hover:text-gray-600 transition">
-                  ← Back to Home
-                </Link>
+              <div className="text-center mt-3">
+                <Link to="/" className="text-xs text-gray-400 hover:text-gray-600 transition">← Back to Home</Link>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ===== Bottom Feature Strip ===== */}
+      <div className="bg-white border-t border-gray-100 relative z-20">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+          <div className="flex items-center gap-3 px-6 py-4">
+            <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center flex-shrink-0">
+              <Briefcase className="w-5 h-5 text-teal-600" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-800 text-sm">Job Board & Resumes</p>
+              <p className="text-xs text-gray-500">1000+ healthcare openings · 5 min to post</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 px-6 py-4">
+            <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
+              <ClipboardCheck className="w-5 h-5 text-emerald-600" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-800 text-sm">Verified Candidates</p>
+              <p className="text-xs text-gray-500">Pre-assessed · Benchmarked profiles</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 px-6 py-4">
+            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+              <Users className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-800 text-sm">500+ Employers</p>
+              <p className="text-xs text-gray-500">Top hospitals · All specialties</p>
             </div>
           </div>
         </div>
