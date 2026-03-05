@@ -347,15 +347,15 @@ const Register = () => {
                   Phone Number
                 </label>
 
-                <div className="flex items-stretch border-2 border-blue-300 bg-blue-50 rounded-lg focus-within:ring-2 focus-within:ring-blue-400">
-                  <div className="relative flex items-center gap-2 px-3 py-3 bg-blue-50 border-r-2 border-r-blue-300 min-w-[120px]">
-                    <Phone className="text-gray-400 w-5 h-5" />
+                <div className="flex items-stretch border-2 border-blue-300 bg-blue-50 rounded-lg focus-within:ring-2 focus-within:ring-blue-400 h-[48px]">
+                  <div className="relative flex items-center gap-2 px-3 bg-blue-50 border-r-2 border-r-blue-300 min-w-[110px]">
+                    <Phone className="text-gray-400 w-5 h-5 flex-shrink-0" />
                     <CustomDropdown
                       value={countryCode}
                       onChange={(e) => setCountryCode(e.target.value)}
                       options={countryCodes.map(code => ({ label: code, value: code }))}
                       placeholder="+91"
-                      className="min-w-[70px]"
+                      className="min-w-[60px]"
                       compact={true}
                       greenTheme={true}
                     />
@@ -368,7 +368,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder="Enter phone number"
                     inputMode="numeric"
-                    className="w-full px-4 py-3 outline-none bg-blue-50"
+                    className="w-full px-4 outline-none bg-blue-50 rounded-r-lg"
                     required
                   />
                 </div>
