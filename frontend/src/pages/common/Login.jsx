@@ -226,21 +226,13 @@ const Login = () => {
 
           {/* ───── Hero Content (left area, no partition) ───── */}
           <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
-            {/* Stethoscope icon cluster */}
-            <div className="relative mb-8">
-              <div className="w-44 h-44 lg:w-52 lg:h-52 bg-gradient-to-br from-teal-400 to-emerald-400 rounded-full flex items-center justify-center shadow-2xl shadow-teal-300/30">
-                <Stethoscope className="w-22 h-22 lg:w-26 lg:h-26 text-white" style={{ width: '5.5rem', height: '5.5rem' }} />
-              </div>
-              {/* Satellite icons */}
-              <div className="absolute -top-2 -right-2 w-12 h-12 bg-white rounded-2xl shadow-lg shadow-gray-200/50 flex items-center justify-center border border-gray-100/80">
-                <Heart className="w-6 h-6 text-rose-400" />
-              </div>
-              <div className="absolute -bottom-1 -left-3 w-11 h-11 bg-white rounded-xl shadow-lg shadow-gray-200/50 flex items-center justify-center border border-gray-100/80">
-                <Shield className="w-5 h-5 text-teal-500" />
-              </div>
-              <div className="absolute top-1/2 -translate-y-1/2 -right-5 w-9 h-9 bg-white rounded-lg shadow-md flex items-center justify-center border border-gray-100/80">
-                <Activity className="w-4 h-4 text-emerald-500" />
-              </div>
+            {/* Hero image */}
+            <div className="mb-8 w-full max-w-md">
+              <img
+                src="https://thumbs.dreamstime.com/b/doctor-health-insurance-healthcare-graphic-concept-hospital-related-icon-interface-showing-people-money-planning-risk-173576660.jpg"
+                alt="Healthcare professional"
+                className="w-full h-auto rounded-2xl shadow-2xl shadow-teal-200/30 object-cover"
+              />
             </div>
 
             {/* Hero text */}
