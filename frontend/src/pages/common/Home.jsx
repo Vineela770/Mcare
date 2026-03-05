@@ -2293,14 +2293,15 @@ const Home = () => {
                   Contact Number <span className="text-red-500">*</span>
                 </label>
 
-                <div className="flex gap-2">
-                  <div className="w-24">
+                <div className="flex items-center border-2 border-blue-300 bg-blue-50 rounded-lg focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-transparent">
+                  <div className="w-28 flex-shrink-0 border-r-2 border-r-blue-300">
                     <CustomDropdown
                       options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
                       value={quickApplyData.countryCode}
                       onChange={(e) => setQuickApplyData({ ...quickApplyData, countryCode: e.target.value })}
                       placeholder="Code"
                       compact={true}
+                      noBorder={true}
                     />
                   </div>
 
@@ -2308,7 +2309,7 @@ const Home = () => {
                     type="tel"
                     value={quickApplyData.phone}
                     onChange={(e) => setQuickApplyData({ ...quickApplyData, phone: e.target.value })}
-                    className="flex-1 px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    className="flex-1 px-4 py-3 bg-transparent focus:outline-none"
                     placeholder="Enter phone number"
                   />
                 </div>
@@ -2483,14 +2484,15 @@ const Home = () => {
                   Contact Number <span className="text-red-500">*</span>
                 </label>
 
-                <div className="flex gap-2">
-                  <div className="w-24">
+                <div className="flex items-center border-2 border-blue-300 bg-blue-50 rounded-lg focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-transparent">
+                  <div className="w-28 flex-shrink-0 border-r-2 border-r-blue-300">
                     <CustomDropdown
                       options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
                       value={quickPostData.countryCode}
                       onChange={(e) => setQuickPostData({ ...quickPostData, countryCode: e.target.value })}
                       placeholder="Code"
                       compact={true}
+                      noBorder={true}
                     />
                   </div>
 
@@ -2498,7 +2500,7 @@ const Home = () => {
                     type="tel"
                     value={quickPostData.phone}
                     onChange={(e) => setQuickPostData({ ...quickPostData, phone: e.target.value })}
-                    className="flex-1 px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    className="flex-1 px-4 py-3 bg-transparent focus:outline-none"
                     placeholder="Enter phone number"
                   />
                 </div>

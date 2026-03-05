@@ -11,7 +11,8 @@ const CustomDropdown = ({
   className = '',
   compact = false,
   greenTheme = false,
-  borderClass = ''
+  borderClass = '',
+  noBorder = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
@@ -47,12 +48,12 @@ const CustomDropdown = ({
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`w-full text-left focus:outline-none focus:ring-2 focus:ring-blue-400 transition flex items-center justify-between ${
+        className={`w-full text-left focus:outline-none ${noBorder ? '' : 'focus:ring-2 focus:ring-blue-400'} transition flex items-center justify-between ${
           compact 
-            ? `px-3 py-3 ${borderClass ? '' : 'bg-white'} ${borderClass || 'border border-gray-300'} rounded-lg text-gray-700 font-medium cursor-pointer hover:border-blue-400` 
-            : `px-4 py-3 ${borderClass || 'border border-gray-300'} rounded-lg hover:border-blue-400 ${borderClass ? '' : 'bg-white'}`
+            ? `px-3 py-3 ${noBorder ? 'bg-transparent border-0' : `${borderClass ? '' : 'bg-white'} ${borderClass || 'border border-gray-300'}`} rounded-lg text-gray-700 font-medium cursor-pointer ${noBorder ? '' : 'hover:border-blue-400'}` 
+            : `px-4 py-3 ${noBorder ? 'bg-transparent border-0' : `${borderClass || 'border border-gray-300'} ${borderClass ? '' : 'bg-white'}`} rounded-lg ${noBorder ? '' : 'hover:border-blue-400'}`
         } ${
-          isOpen ? 'border-blue-500 ring-2 ring-blue-500' : ''
+          isOpen && !noBorder ? 'border-blue-500 ring-2 ring-blue-500' : ''
         } ${
           disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
         } ${showPlaceholder && !compact ? 'text-gray-400' : 'text-gray-900'}`}
