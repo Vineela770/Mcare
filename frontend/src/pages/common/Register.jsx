@@ -247,22 +247,18 @@ const Register = () => {
   const isPasswordTyped = formData.password.trim().length > 0; // ✅ for confirm password enable/disable
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 flex items-center justify-center px-4 py-12 relative overflow-hidden">
-      {/* Subtle decorative background shapes */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-100/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-teal-100/40 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
-      <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-green-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="max-w-2xl w-full relative z-10">
+    <div className="min-h-screen bg-gradient-to-br from-teal-800 via-emerald-700 to-emerald-500 flex items-center justify-center px-4 py-12">
+      <div className="max-w-2xl w-full">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-teal-500 rounded-xl flex items-center justify-center shadow-md">
+            <div className="w-12 h-12 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-xl flex items-center justify-center">
               <span className="text-white font-bold text-2xl">M</span>
             </div>
-            <span className="text-3xl font-bold text-gray-800">MCARE</span>
+            <span className="text-3xl font-bold text-white">MCARE</span>
           </Link>
-          <h1 className="text-3xl font-bold text-gray-800 mt-6 mb-2">Register</h1>
-          <p className="text-gray-500">Start your healthcare career journey today</p>
+          <h1 className="text-3xl font-bold text-white mt-6 mb-2">Register</h1>
+          <p className="text-blue-100">Start your healthcare career journey today</p>
         </div>
 
         {/* Info banner when redirected from Apply Now */}
@@ -274,7 +270,7 @@ const Register = () => {
         )}
 
         {/* Register Form */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/60 p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
@@ -793,7 +789,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white py-3 rounded-lg hover:from-emerald-700 hover:to-teal-600 font-medium flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-teal-700 to-emerald-500 text-white py-3 rounded-lg hover:from-teal-800 hover:to-emerald-600 font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span>Creating Account...</span>
@@ -827,7 +823,7 @@ const Register = () => {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-gray-500 hover:text-emerald-600 font-medium transition-colors">
+          <Link to="/" className="text-white/80 hover:text-white font-medium">
             ← Back to Home
           </Link>
         </div>
