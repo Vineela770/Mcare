@@ -247,15 +247,16 @@ const Register = () => {
   const isPasswordTyped = formData.password.trim().length > 0; // ✅ for confirm password enable/disable
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 flex items-center justify-center px-4 py-12 relative overflow-hidden">
       {/* Subtle decorative background shapes */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-100/40 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-100/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-teal-100/40 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
+      <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-green-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
       <div className="max-w-2xl w-full relative z-10">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center shadow-md">
+            <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-teal-500 rounded-xl flex items-center justify-center shadow-md">
               <span className="text-white font-bold text-2xl">M</span>
             </div>
             <span className="text-3xl font-bold text-gray-800">MCARE</span>
@@ -792,7 +793,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 rounded-lg hover:from-blue-700 hover:to-blue-600 font-medium flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white py-3 rounded-lg hover:from-emerald-700 hover:to-teal-600 font-medium flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span>Creating Account...</span>
@@ -826,7 +827,7 @@ const Register = () => {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-gray-500 hover:text-blue-600 font-medium transition-colors">
+          <Link to="/" className="text-gray-500 hover:text-emerald-600 font-medium transition-colors">
             ← Back to Home
           </Link>
         </div>
