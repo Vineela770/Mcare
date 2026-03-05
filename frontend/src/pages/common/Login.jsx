@@ -182,7 +182,7 @@ const Login = () => {
       <style>
         {`
           select {
-            accent-color: #10b981 !important;
+            accent-color: #3b82f6 !important;
           }
           select option {
             background-color: white;
@@ -190,13 +190,13 @@ const Login = () => {
             padding: 10px;
           }
           select option:checked {
-            background: #10b981 !important;
-            background-color: #10b981 !important;
+            background: #3b82f6 !important;
+            background-color: #3b82f6 !important;
             color: white !important;
           }
           select option:hover {
-            background: #059669 !important;
-            background-color: #059669 !important;
+            background: #2563eb !important;
+            background-color: #2563eb !important;
             color: white !important;
           }
           select option[value=""]:disabled {
@@ -205,13 +205,13 @@ const Login = () => {
           /* Firefox specific */
           @-moz-document url-prefix() {
             select option:checked {
-              background-color: #10b981 !important;
+              background-color: #3b82f6 !important;
               color: white !important;
             }
           }
           /* Webkit/Chrome specific */
           select option:checked {
-            background: linear-gradient(#10b981, #10b981);
+            background: linear-gradient(#3b82f6, #3b82f6);
             color: white;
           }
         `}
@@ -226,7 +226,7 @@ const Login = () => {
             <span className="text-3xl font-bold text-white">MCARE</span>
           </Link>
           <h1 className="text-3xl font-bold text-white mt-6 mb-2">Welcome Back</h1>
-          <p className="text-emerald-100">Sign in to access your account</p>
+          <p className="text-blue-100">Sign in to access your account</p>
         </div>
 
         {/* Single card */}
@@ -239,7 +239,7 @@ const Login = () => {
               </p>
 
               {resetMessage && (
-                <div className="bg-emerald-50 border border-emerald-300 text-emerald-700 px-4 py-3 rounded-lg text-sm">
+                <div className="bg-blue-50 border border-blue-300 text-blue-700 px-4 py-3 rounded-lg text-sm">
                   {resetMessage}
                 </div>
               )}
@@ -252,7 +252,7 @@ const Login = () => {
                   value={resetEmail}
                   onChange={(e) => setResetEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                 />
               </div>
 
@@ -267,7 +267,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={goBackToLogin}
-                className="w-full text-sm text-gray-600 hover:text-emerald-700"
+                className="w-full text-sm text-gray-600 hover:text-blue-600"
               >
                 ← Back to Login
               </button>
@@ -280,7 +280,7 @@ const Login = () => {
               </p>
 
               {recoveryMessage && (
-                <div className="bg-emerald-50 border border-emerald-300 text-emerald-700 px-4 py-3 rounded-lg text-sm">
+                <div className="bg-blue-50 border border-blue-300 text-blue-700 px-4 py-3 rounded-lg text-sm">
                   {recoveryMessage}
                 </div>
               )}
@@ -299,7 +299,7 @@ const Login = () => {
                   value={recoveryEmail}
                   onChange={(e) => setRecoveryEmail(e.target.value)}
                   placeholder="Account email"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                 />
               </div>
 
@@ -311,7 +311,7 @@ const Login = () => {
                   value={recoveryPassword}
                   onChange={(e) => setRecoveryPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                 />
               </div>
 
@@ -326,7 +326,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={goBackToLogin}
-                className="w-full text-sm text-gray-600 hover:text-emerald-700"
+                className="w-full text-sm text-gray-600 hover:text-blue-600"
               >
                 ← Back to Login
               </button>
@@ -350,7 +350,7 @@ const Login = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     required
                   />
                 </div>
@@ -367,7 +367,7 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Enter your password"
-                    className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 text-gray-900"
+                    className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent text-gray-900"
                     style={showPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                     required
                   />
@@ -385,7 +385,7 @@ const Login = () => {
               <div className="flex items-start justify-between">
                 {/* Left: Remember */}
                 <label className="flex items-center">
-                  <input type="checkbox" className="w-4 h-4 text-emerald-700 border-gray-300 rounded" />
+                  <input type="checkbox" className="w-4 h-4 text-blue-600 border-gray-300 rounded" />
                   <span className="ml-2 text-sm text-gray-600">Remember me</span>
                 </label>
 
@@ -399,7 +399,7 @@ const Login = () => {
                       setResetMessage('');
                       setResetEmail('');
                     }}
-                    className="text-sm text-emerald-700 hover:text-emerald-700 font-medium"
+                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
                   >
                     Forgot password?
                   </button>
@@ -412,7 +412,7 @@ const Login = () => {
                       setRecoveryMessage('');
                       setRecoveryEmail('');
                     }}
-                    className="mt-1 text-sm text-emerald-700 hover:text-emerald-700 font-medium"
+                    className="mt-1 text-sm text-blue-600 hover:text-blue-700 font-medium"
                   >
                     Recovery account?
                   </button>
@@ -454,7 +454,7 @@ const Login = () => {
           {/* Register Link */}
           <Link
             to="/register"
-            className="block w-full text-center border-2 border-emerald-600 text-emerald-700 py-3 rounded-lg hover:bg-emerald-50 font-medium"
+            className="block w-full text-center border-2 border-blue-500 text-blue-600 py-3 rounded-lg hover:bg-blue-50 font-medium"
           >
             Register
           </Link>

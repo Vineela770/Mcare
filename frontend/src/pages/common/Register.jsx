@@ -258,14 +258,14 @@ const Register = () => {
             <span className="text-3xl font-bold text-white">MCARE</span>
           </Link>
           <h1 className="text-3xl font-bold text-white mt-6 mb-2">Register</h1>
-          <p className="text-emerald-100">Start your healthcare career journey today</p>
+          <p className="text-blue-100">Start your healthcare career journey today</p>
         </div>
 
         {/* Info banner when redirected from Apply Now */}
         {fromState?.message && (
-          <div className="mb-4 bg-emerald-50 border border-emerald-300 text-emerald-800 px-4 py-3 rounded-lg flex items-start gap-2">
-            <span className="mt-0.5 text-emerald-600">ℹ️</span>
-            <p className="text-sm">{fromState.message} Already have an account? <Link to="/login" state={fromState} className="font-semibold underline hover:text-emerald-700">Log in here</Link>.</p>
+          <div className="mb-4 bg-blue-50 border border-blue-300 text-blue-800 px-4 py-3 rounded-lg flex items-start gap-2">
+            <span className="mt-0.5 text-blue-600">ℹ️</span>
+            <p className="text-sm">{fromState.message} Already have an account? <Link to="/login" state={fromState} className="font-semibold underline hover:text-blue-700">Log in here</Link>.</p>
           </div>
         )}
 
@@ -815,7 +815,7 @@ const Register = () => {
           {/* Login Link */}
           <Link
             to="/login"
-            className="block w-full text-center border-2 border-emerald-600 text-emerald-700 py-3 rounded-lg hover:bg-emerald-50 font-medium"
+            className="block w-full text-center border-2 border-blue-500 text-blue-600 py-3 rounded-lg hover:bg-blue-50 font-medium"
           >
             Sign In
           </Link>
@@ -839,7 +839,7 @@ const Register = () => {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Successful!</h2>
             <p className="text-gray-600 mb-4">{successMessage}</p>
-            <div className="animate-pulse text-emerald-700 text-sm">Redirecting to login...</div>
+            <div className="animate-pulse text-blue-600 text-sm">Redirecting to login...</div>
           </div>
         </div>
       )}
@@ -896,7 +896,7 @@ const Register = () => {
             <div className="mt-6 text-right">
               <button
                 onClick={() => setShowPolicy(false)}
-                className="px-6 py-2 bg-emerald-700 text-white rounded-lg hover:bg-emerald-700"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
                 Close
               </button>
