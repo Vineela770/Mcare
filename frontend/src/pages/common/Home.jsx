@@ -1457,18 +1457,6 @@ const Home = () => {
     navigate(`/jobs?category=${categoryKey}`);
   };
 
-  // Medical college sub-roles for the category card
-  const medicalCollegeRoles = [
-    'Professor',
-    'Assistant Professor',
-    'Associate Professor',
-    'Dean',
-    'Junior Resident',
-    'Senior Resident',
-    'Tutor',
-    'Demonstrator',
-  ];
-
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -1634,24 +1622,6 @@ const Home = () => {
                   </div>
                   <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" />
                 </div>
-
-                {/* Medical Colleges sub-role links */}
-                {category.key === 'colleges' && (
-                  <div className="mt-3 pt-3 border-t border-gray-100 flex flex-wrap gap-2">
-                    {medicalCollegeRoles.map((role) => (
-                      <button
-                        key={role}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/jobs?category=colleges&search=${encodeURIComponent(role)}`);
-                        }}
-                        className="text-xs px-3 py-1 bg-blue-50 text-blue-700 rounded-full hover:bg-blue-100 transition-colors"
-                      >
-                        {role}
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
             ))}
           </div>
