@@ -1807,8 +1807,10 @@ const Home = () => {
                     </svg>
                   </button>
                 )}
-                
-                {/* Clear All Filters Button */}
+              </div>
+
+              {/* Clear All Filters Button — full width on mobile, inline on desktop */}
+              <div className="col-span-2 md:col-span-1 flex justify-center md:justify-start">
                 <button
                   onClick={() => { 
                     setSelectedDegree(''); 
@@ -1817,7 +1819,7 @@ const Home = () => {
                     setFilterSalary(''); 
                     setActiveDot(0); 
                   }}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full transition text-sm font-medium border border-emerald-600 whitespace-nowrap"
+                  className="w-full md:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full transition text-sm font-medium border border-emerald-600 whitespace-nowrap"
                 >
                   Clear Filters
                 </button>
