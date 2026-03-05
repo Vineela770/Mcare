@@ -110,6 +110,7 @@ const DUMMY_JOBS = [
   { id: 85, title: 'Associate Professor – Community Medicine', company: 'Osmania Medical College', location: 'Hyderabad', city: 'Hyderabad', salary: '₹10,00,000 – ₹16,00,000', categoryKey: 'colleges', category: 'Medical Education', specialization: 'MD – Community Medicine', description: 'Public health teaching and field work', requirements: 'MD Community Medicine, 5+ years', is_active: true },
   { id: 86, title: 'Assistant Professor – Microbiology', company: 'Armed Forces Medical College', location: 'Pune', city: 'Pune', salary: '₹8,00,000 – ₹12,00,000', categoryKey: 'colleges', category: 'Medical Education', specialization: 'MD – Microbiology', description: 'Medical microbiology teaching and lab work', requirements: 'MD Microbiology, 2+ years teaching', is_active: true },
   { id: 87, title: 'Junior Resident – Obstetrics', company: 'Lady Hardinge Medical College', location: 'Delhi', city: 'Delhi', salary: '₹75,000 – ₹90,000', categoryKey: 'colleges', category: 'Medical Education', specialization: 'MBBS', description: 'OBG residency training program', requirements: 'MBBS, NEET-PG qualified', is_active: true },
+  { id: 88, title: 'Dean – Medical College', company: 'AIIMS New Delhi', location: 'Delhi', city: 'Delhi', salary: '₹25,00,000 – ₹40,00,000', categoryKey: 'colleges', category: 'Medical Education', specialization: 'PhD', description: 'Head of medical college administration and academics', requirements: 'PhD, 15+ years in medical education, leadership experience', is_active: true },
 ];
 
 const Home = () => {
@@ -227,6 +228,10 @@ const Home = () => {
     countryCode: '+91',
     phone: '',
     jobTitle: '',
+    qualification: '',
+    specialization: '',
+    postingLocation: '',
+    vacancyLocations: [],
     location: '',
     jobDescription: '',
   });
@@ -237,6 +242,17 @@ const Home = () => {
     { code: '+44', label: '🇬🇧 +44 (UK)' },
     { code: '+61', label: '🇦🇺 +61 (Australia)' },
     { code: '+971', label: '🇦🇪 +971 (UAE)' },
+  ];
+
+  const FREE_VACANCY_CITIES = 3;
+
+  const qualificationOptions = [
+    'MBBS', 'MD', 'MS', 'DM', 'MCh', 'BDS', 'MDS',
+    'B.Sc Nursing', 'M.Sc Nursing', 'GNM',
+    'BPT', 'MPT', 'B.Pharm', 'M.Pharm',
+    'MBA Healthcare', 'MHA', 'BBA', 'MBA',
+    'BAMS', 'BHMS', 'BUMS', 'BNYS',
+    'PhD', 'DNB', 'Diploma', 'Other',
   ];
 
   const hospitalLogos = [
@@ -418,6 +434,7 @@ const Home = () => {
     'Professor',
     'Associate Professor',
     'Assistant Professor',
+    'Dean',
     'Junior Resident',
     'Senior Resident',
     'Medical Faculty',
@@ -1319,7 +1336,10 @@ const Home = () => {
   }
 
   const getSalaryValue = (salaryString) => {
-    const numbers = salaryString?.match(/\d+/g);
+    if (!salaryString) return 0;
+    // Strip commas and currency symbols, then extract the first number
+    const cleaned = salaryString.replace(/,/g, '');
+    const numbers = cleaned.match(/\d+/g);
     if (!numbers) return 0;
     return parseInt(numbers[0], 10);
   };
@@ -1424,7 +1444,9 @@ const Home = () => {
     else if (!/^[0-9]{6,15}$/.test(quickPostData.phone)) errors.phone = 'Enter valid phone number';
 
     if (!quickPostData.jobTitle.trim()) errors.jobTitle = 'Job title is required';
-    if (!quickPostData.location.trim()) errors.location = 'Location is required';
+    if (!quickPostData.qualification) errors.qualification = 'Qualification is required';
+    if (!quickPostData.postingLocation) errors.postingLocation = 'Posting location is required';
+    if (quickPostData.vacancyLocations.length === 0) errors.vacancyLocations = 'At least one vacancy location is required';
     if (!quickPostData.jobDescription.trim()) errors.jobDescription = 'Job description is required';
 
     setQuickPostErrors(errors);
@@ -1434,6 +1456,18 @@ const Home = () => {
   const handleCategoryClick = (categoryKey) => {
     navigate(`/jobs?category=${categoryKey}`);
   };
+
+  // Medical college sub-roles for the category card
+  const medicalCollegeRoles = [
+    'Professor',
+    'Assistant Professor',
+    'Associate Professor',
+    'Dean',
+    'Junior Resident',
+    'Senior Resident',
+    'Tutor',
+    'Demonstrator',
+  ];
 
   return (
     <div className="min-h-screen bg-white">
@@ -1579,15 +1613,17 @@ const Home = () => {
             {categories.map((category) => (
               <div
                 key={category.id}
-                onClick={() => handleCategoryClick(category.key)}
-                className="bg-white rounded-2xl p-6 hover:shadow-xl hover:border-emerald-300 transition-all duration-300 cursor-pointer border border-gray-100 group hover:-translate-y-1"
+                className="bg-white rounded-2xl p-6 hover:shadow-xl hover:border-blue-300 transition-all duration-300 cursor-pointer border border-gray-100 group hover:-translate-y-1"
               >
-                <div className="flex items-center gap-4">
+                <div 
+                  onClick={() => handleCategoryClick(category.key)}
+                  className="flex items-center gap-4"
+                >
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${category.bg} group-hover:scale-110 transition-transform duration-300`}>
                     <category.Icon className="w-7 h-7 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-base font-bold text-gray-900 group-hover:text-emerald-700 transition-colors">
+                    <h3 className="text-base font-bold text-gray-900 group-hover:text-blue-700 transition-colors">
                       {category.title}
                     </h3>
                     <p className="text-sm text-gray-500 mt-0.5">
@@ -1596,8 +1632,26 @@ const Home = () => {
                         : 'Positions available'}
                     </p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" />
+                  <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" />
                 </div>
+
+                {/* Medical Colleges sub-role links */}
+                {category.key === 'colleges' && (
+                  <div className="mt-3 pt-3 border-t border-gray-100 flex flex-wrap gap-2">
+                    {medicalCollegeRoles.map((role) => (
+                      <button
+                        key={role}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/jobs?category=colleges&search=${encodeURIComponent(role)}`);
+                        }}
+                        className="text-xs px-3 py-1 bg-blue-50 text-blue-700 rounded-full hover:bg-blue-100 transition-colors"
+                      >
+                        {role}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -1719,7 +1773,8 @@ const Home = () => {
                 }}
                 options={[
                   { label: 'Select Degree', value: '' },
-                  ...degrees.map(degree => ({ label: degree, value: degree }))
+                  ...degrees.map(degree => ({ label: degree, value: degree })),
+                  { label: 'Other', value: 'Other' }
                 ]}
                 placeholder="Select Degree"
                 className="w-full md:w-auto"
@@ -1831,7 +1886,7 @@ const Home = () => {
           key={job.id}
           className="min-w-[85%] rounded-xl shadow-lg p-[2px] bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 flex-shrink-0"
         >
-          <div className="bg-white rounded-[10px] p-6 h-full">
+          <div className="bg-white rounded-[10px] p-6 h-full flex flex-col">
             <h3 className="font-bold text-lg text-gray-900 mb-2 leading-tight">
               {job.title}
             </h3>
@@ -1841,12 +1896,20 @@ const Home = () => {
             </p>
             <p className="font-semibold text-gray-900 mb-4">{job.salary}</p>
 
-            <button
-              onClick={() => handleApply(job)}
-              className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
-            >
-              Apply Now
-            </button>
+            <div className="mt-auto space-y-2">
+              <button
+                onClick={() => handleApply(job)}
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
+              >
+                Apply Now
+              </button>
+              <button
+                onClick={() => navigate(`/jobs?search=${encodeURIComponent(job.title)}&category=${job.categoryKey}`)}
+                className="w-full text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+              >
+                View Details →
+              </button>
+            </div>
           </div>
         </div>
       ))}
@@ -1887,7 +1950,7 @@ const Home = () => {
                   key={job.id}
                   className="rounded-xl shadow-lg p-[2px] bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400"
                 >
-                  <div className="bg-white rounded-[10px] p-6 h-full">
+                  <div className="bg-white rounded-[10px] p-6 h-full flex flex-col">
                     <h3 className="font-bold text-lg text-gray-900 mb-2 leading-tight">
                       {job.title}
                     </h3>
@@ -1897,12 +1960,20 @@ const Home = () => {
                     </p>
                     <p className="font-semibold text-gray-900 mb-4">{job.salary}</p>
 
-                    <button
-                      onClick={() => handleApply(job)}
-                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
-                    >
-                      Apply Now
-                    </button>
+                    <div className="mt-auto space-y-2">
+                      <button
+                        onClick={() => handleApply(job)}
+                        className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
+                      >
+                        Apply Now
+                      </button>
+                      <button
+                        onClick={() => navigate(`/jobs?search=${encodeURIComponent(job.title)}&category=${job.categoryKey}`)}
+                        className="w-full text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+                      >
+                        View Details →
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -2010,7 +2081,7 @@ const Home = () => {
               {hospitalLogos
                 .slice(slideIdx * LOGOS_PER_SLIDE, slideIdx * LOGOS_PER_SLIDE + LOGOS_PER_SLIDE)
                 .map((logo, i) => (
-                  <div key={i} className="bg-white rounded-2xl border border-gray-200 shadow-md p-6 flex items-center justify-center w-52 h-32 hover:shadow-lg hover:border-emerald-300 transition-all duration-300 group">
+                  <div key={i} className="bg-white rounded-2xl border border-gray-200 shadow-md p-6 flex items-center justify-center w-52 h-32 hover:shadow-lg hover:border-blue-300 transition-all duration-300 group">
                     <img src={logo} alt="Hospital Logo" className="h-16 max-w-full object-contain grayscale group-hover:grayscale-0 transition duration-300" />
                   </div>
                 ))}
@@ -2253,7 +2324,7 @@ const Home = () => {
                 </label>
 
                 <div className="flex gap-2">
-                  <div className="w-32">
+                  <div className="w-24">
                     <CustomDropdown
                       options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
                       value={quickApplyData.countryCode}
@@ -2443,7 +2514,7 @@ const Home = () => {
                 </label>
 
                 <div className="flex gap-2">
-                  <div className="w-32">
+                  <div className="w-24">
                     <CustomDropdown
                       options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
                       value={quickPostData.countryCode}
@@ -2473,24 +2544,86 @@ const Home = () => {
                   type="text"
                   value={quickPostData.jobTitle}
                   onChange={(e) => setQuickPostData({ ...quickPostData, jobTitle: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder="Enter job title"
                 />
                 {quickPostErrors.jobTitle && <p className="text-red-500 text-sm mt-1">{quickPostErrors.jobTitle}</p>}
               </div>
 
+              {/* Qualification */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Job Location <span className="text-red-500">*</span>
+                  Qualification <span className="text-red-500">*</span>
+                </label>
+                <CustomDropdown
+                  options={qualificationOptions.map(q => ({ label: q, value: q }))}
+                  value={quickPostData.qualification}
+                  onChange={(e) => setQuickPostData({ ...quickPostData, qualification: e.target.value })}
+                  placeholder="Select Qualification"
+                />
+                {quickPostErrors.qualification && <p className="text-red-500 text-sm mt-1">{quickPostErrors.qualification}</p>}
+              </div>
+
+              {/* Specialization */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Specialization
                 </label>
                 <input
                   type="text"
-                  value={quickPostData.location}
-                  onChange={(e) => setQuickPostData({ ...quickPostData, location: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
-                  placeholder="Enter job location"
+                  value={quickPostData.specialization}
+                  onChange={(e) => setQuickPostData({ ...quickPostData, specialization: e.target.value })}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  placeholder="e.g. DM – Cardiology, MD – Paediatrics"
                 />
-                {quickPostErrors.location && <p className="text-red-500 text-sm mt-1">{quickPostErrors.location}</p>}
+              </div>
+
+              {/* Posting Location */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Posting Location (Company Address) <span className="text-red-500">*</span>
+                </label>
+                <CustomDropdown
+                  options={cities.sort().map(c => ({ label: c, value: c }))}
+                  value={quickPostData.postingLocation}
+                  onChange={(e) => setQuickPostData({ ...quickPostData, postingLocation: e.target.value })}
+                  placeholder="Select Posting Location"
+                />
+                {quickPostErrors.postingLocation && <p className="text-red-500 text-sm mt-1">{quickPostErrors.postingLocation}</p>}
+              </div>
+
+              {/* Vacancy Locations */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Vacancy Location(s) <span className="text-red-500">*</span>
+                  <span className="text-xs text-gray-400 ml-1">(First {FREE_VACANCY_CITIES} cities free)</span>
+                </label>
+                <CustomDropdown
+                  options={cities.sort().filter(c => !quickPostData.vacancyLocations.includes(c)).map(c => ({ label: c, value: c }))}
+                  value=""
+                  onChange={(e) => {
+                    const selected = e.target.value;
+                    if (selected && !quickPostData.vacancyLocations.includes(selected)) {
+                      setQuickPostData({ ...quickPostData, vacancyLocations: [...quickPostData.vacancyLocations, selected] });
+                    }
+                  }}
+                  placeholder="Add vacancy city"
+                />
+                {quickPostData.vacancyLocations.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {quickPostData.vacancyLocations.map((city, idx) => (
+                      <span key={city} className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${idx < FREE_VACANCY_CITIES ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700'}`}>
+                        {city} {idx >= FREE_VACANCY_CITIES && <span className="text-amber-500">(paid)</span>}
+                        <button
+                          type="button"
+                          onClick={() => setQuickPostData({ ...quickPostData, vacancyLocations: quickPostData.vacancyLocations.filter(c => c !== city) })}
+                          className="ml-1 hover:text-red-500"
+                        >×</button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {quickPostErrors.vacancyLocations && <p className="text-red-500 text-sm mt-1">{quickPostErrors.vacancyLocations}</p>}
               </div>
 
               <div>
@@ -2554,10 +2687,27 @@ const Home = () => {
                   <span className="font-medium text-gray-700">Job Title:</span>
                   <span className="text-gray-900 font-semibold">{quickPostData.jobTitle}</span>
                 </div>
+
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Qualification:</span>
+                  <span className="text-gray-900">{quickPostData.qualification}</span>
+                </div>
+
+                {quickPostData.specialization && (
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-700">Specialization:</span>
+                    <span className="text-gray-900">{quickPostData.specialization}</span>
+                  </div>
+                )}
                 
                 <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Location:</span>
-                  <span className="text-gray-900">{quickPostData.location}</span>
+                  <span className="font-medium text-gray-700">Posting Location:</span>
+                  <span className="text-gray-900">{quickPostData.postingLocation}</span>
+                </div>
+                
+                <div className="flex justify-between items-start">
+                  <span className="font-medium text-gray-700">Vacancy Location(s):</span>
+                  <span className="text-gray-900 text-right">{quickPostData.vacancyLocations.join(', ')}</span>
                 </div>
               </div>
 
@@ -2590,6 +2740,10 @@ const Home = () => {
                       countryCode: '+91',
                       phone: '',
                       jobTitle: '',
+                      qualification: '',
+                      specialization: '',
+                      postingLocation: '',
+                      vacancyLocations: [],
                       location: '',
                       jobDescription: '',
                     });
