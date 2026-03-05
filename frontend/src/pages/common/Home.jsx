@@ -1548,17 +1548,17 @@ const Home = () => {
 </form>
 
           {/* Quick Buttons */}
-          <div className="flex flex-row justify-center gap-3 mt-6">
+          <div className="flex flex-row justify-center gap-2 sm:gap-3 mt-6">
             <button
               onClick={() => setShowQuickApplyModal(true)}
-              className="bg-white text-emerald-700 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition"
+              className="bg-white text-emerald-700 px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold hover:bg-gray-100 transition"
             >
               Quick Apply
             </button>
 
             <button
               onClick={() => setShowQuickPostModal(true)}
-              className="bg-white text-emerald-700 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition"
+              className="bg-white text-emerald-700 px-4 sm:px-6 py-2 rounded-full text-sm sm:text-base font-semibold hover:bg-gray-100 transition"
             >
               Quick Post Job
             </button>
@@ -1585,9 +1585,9 @@ const Home = () => {
       </div>
 
       {/* Popular Job Categories */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-6 sm:py-8 md:py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="text-center mb-6 sm:mb-8 md:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
               Popular Job Categories
             </h2>
@@ -1668,7 +1668,7 @@ const Home = () => {
               <div className="md:hidden overflow-hidden w-full">
                 <div 
                   className="flex gap-3 transition-transform duration-700 ease-in-out"
-                  style={{ transform: `translateX(-${mobileCategoryIndex * 120}px)` }} // 120px scroll distance per tab
+                  style={{ transform: `translateX(-${mobileCategoryIndex * 33}%)` }}
                 >
                   {tabs.map((tab) => (
                     <button
@@ -2032,10 +2032,10 @@ const Home = () => {
       <div className="md:hidden overflow-hidden px-2">
         <div 
           className="flex transition-transform duration-700 ease-in-out gap-4"
-          style={{ transform: `translateX(-${mobileLogoIndex * 160}px)` }} // 144px (w-36) + 16px (gap-4) = 160px
+          style={{ transform: `translateX(-${mobileLogoIndex * 50}%)` }}
         >
           {hospitalLogos.map((logo, i) => (
-            <div key={i} className="flex-shrink-0 bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center justify-center w-36 h-24 hover:shadow-md transition">
+            <div key={i} className="flex-shrink-0 bg-white rounded-xl border border-gray-200 shadow-sm p-3 sm:p-4 flex items-center justify-center w-28 sm:w-36 h-20 sm:h-24 hover:shadow-md transition">
               <img src={logo} alt="Hospital Logo" className="h-12 max-w-full object-contain grayscale hover:grayscale-0 transition" />
             </div>
           ))}
@@ -2125,7 +2125,7 @@ const Home = () => {
       {/* Categories Wrapper */}
       <div className="md:col-span-3">
 
-        <div className="grid grid-cols-3 md:grid-cols-3 gap-6 md:gap-8 text-center md:text-left">
+        <div className="grid grid-cols-1 xs:grid-cols-3 gap-4 xs:gap-3 md:gap-8 text-center xs:text-center md:text-left">
 
           {/* For Candidates */}
           <div>
@@ -2371,25 +2371,25 @@ const Home = () => {
                 <p className="text-sm text-gray-500">Make sure all information is correct before submitting</p>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Full Name:</span>
-                  <span className="text-gray-900">{quickApplyData.name}</span>
+              <div className="bg-gray-50 rounded-lg p-3 sm:p-4 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Full Name:</span>
+                  <span className="text-gray-900 text-sm break-all">{quickApplyData.name}</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Email:</span>
-                  <span className="text-gray-900">{quickApplyData.email}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Email:</span>
+                  <span className="text-gray-900 text-sm break-all">{quickApplyData.email}</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Contact:</span>
-                  <span className="text-gray-900">{quickApplyData.countryCode} {quickApplyData.phone}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Contact:</span>
+                  <span className="text-gray-900 text-sm">{quickApplyData.countryCode} {quickApplyData.phone}</span>
                 </div>
                 
-                <div className="flex justify-between items-start">
-                  <span className="font-medium text-gray-700">Resume:</span>
-                  <span className="text-gray-900 text-right">{quickApplyData.resume?.name}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Resume:</span>
+                  <span className="text-gray-900 text-sm sm:text-right break-all">{quickApplyData.resume?.name}</span>
                 </div>
               </div>
 
@@ -2645,47 +2645,47 @@ const Home = () => {
                 <p className="text-sm text-gray-500">Make sure all information is correct before posting</p>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Company Name:</span>
-                  <span className="text-gray-900">{quickPostData.companyName}</span>
+              <div className="bg-gray-50 rounded-lg p-3 sm:p-4 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Company Name:</span>
+                  <span className="text-gray-900 text-sm break-all">{quickPostData.companyName}</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Email:</span>
-                  <span className="text-gray-900">{quickPostData.email}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Email:</span>
+                  <span className="text-gray-900 text-sm break-all">{quickPostData.email}</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Contact:</span>
-                  <span className="text-gray-900">{quickPostData.countryCode} {quickPostData.phone}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Contact:</span>
+                  <span className="text-gray-900 text-sm">{quickPostData.countryCode} {quickPostData.phone}</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Job Title:</span>
-                  <span className="text-gray-900 font-semibold">{quickPostData.jobTitle}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Job Title:</span>
+                  <span className="text-gray-900 text-sm font-semibold">{quickPostData.jobTitle}</span>
                 </div>
 
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Qualification:</span>
-                  <span className="text-gray-900">{quickPostData.qualification}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Qualification:</span>
+                  <span className="text-gray-900 text-sm">{quickPostData.qualification}</span>
                 </div>
 
                 {quickPostData.specialization && (
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-700">Specialization:</span>
-                    <span className="text-gray-900">{quickPostData.specialization}</span>
+                  <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                    <span className="font-medium text-gray-700 text-sm">Specialization:</span>
+                    <span className="text-gray-900 text-sm">{quickPostData.specialization}</span>
                   </div>
                 )}
                 
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Posting Location:</span>
-                  <span className="text-gray-900">{quickPostData.postingLocation}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Posting Location:</span>
+                  <span className="text-gray-900 text-sm">{quickPostData.postingLocation}</span>
                 </div>
                 
-                <div className="flex justify-between items-start">
-                  <span className="font-medium text-gray-700">Vacancy Location(s):</span>
-                  <span className="text-gray-900 text-right">{quickPostData.vacancyLocations.join(', ')}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-0.5 sm:gap-2">
+                  <span className="font-medium text-gray-700 text-sm">Vacancy Location(s):</span>
+                  <span className="text-gray-900 text-sm sm:text-right break-all">{quickPostData.vacancyLocations.join(', ')}</span>
                 </div>
               </div>
 

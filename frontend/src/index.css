@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== Global Responsive Safeguards ===== */
+html, body {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+img, video, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Prevent touch delay on mobile */
+a, button, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Smooth font rendering on all screen sizes */
+@media (max-width: 640px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 374px) {
+  html {
+    font-size: 14px;
+  }
+}
+
 /* Force blue theme at root level */
 :root {
   --color-primary: #3b82f6;

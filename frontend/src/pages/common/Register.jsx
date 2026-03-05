@@ -247,18 +247,18 @@ const Register = () => {
   const isPasswordTyped = formData.password.trim().length > 0; // ✅ for confirm password enable/disable
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-800 via-emerald-700 to-emerald-500 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-teal-800 via-emerald-700 to-emerald-500 flex items-start sm:items-center justify-center px-3 sm:px-4 py-6 sm:py-12">
       <div className="max-w-2xl w-full">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-4 sm:mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">M</span>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-teal-700 to-emerald-500 rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-xl sm:text-2xl">M</span>
             </div>
-            <span className="text-3xl font-bold text-white">MCARE</span>
+            <span className="text-2xl sm:text-3xl font-bold text-white">MCARE</span>
           </Link>
-          <h1 className="text-3xl font-bold text-white mt-6 mb-2">Register</h1>
-          <p className="text-blue-100">Start your healthcare career journey today</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mt-4 sm:mt-6 mb-2">Register</h1>
+          <p className="text-sm sm:text-base text-blue-100">Start your healthcare career journey today</p>
         </div>
 
         {/* Info banner when redirected from Apply Now */}
@@ -270,7 +270,7 @@ const Register = () => {
         )}
 
         {/* Register Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
@@ -281,7 +281,7 @@ const Register = () => {
             {/* Dynamic Role Heading */}
             {formData.role && (
               <div className="col-span-full flex justify-center mt-2 mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900 tracking-wide">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 tracking-wide">
                   {formData.role === 'candidate' ? 'Doctor/Seeker Registration' : 'Employer Registration'}
                 </h2>
               </div>
@@ -526,7 +526,7 @@ const Register = () => {
                               setFormData(prev => ({ ...prev, interestedCities: [...prev.interestedCities, val] }));
                             }
                           }}
-                          className="bg-transparent border-none outline-none text-sm text-gray-500 cursor-pointer flex-1 min-w-[140px]"
+                          className="bg-transparent border-none outline-none text-sm text-gray-500 cursor-pointer flex-1 min-w-[100px] sm:min-w-[140px]"
                         >
                           <option value="">+ Add city...</option>
                           {INDIAN_CITIES.filter(c => !formData.interestedCities.includes(c)).map(c => (
@@ -838,15 +838,15 @@ const Register = () => {
               </svg>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Successful!</h2>
-            <p className="text-gray-600 mb-4">{successMessage}</p>
+            <p className="text-gray-600 mb-4 text-sm sm:text-base">{successMessage}</p>
             <div className="animate-pulse text-blue-600 text-sm">Redirecting to login...</div>
           </div>
         </div>
       )}
       {/* Policy Modal */}
       {showPolicy && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white max-w-3xl w-full rounded-xl shadow-xl p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white max-w-3xl w-full rounded-xl shadow-xl p-4 sm:p-6 relative">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
               {policyType === 'terms' ? 'Terms of Service' : 'Privacy Policy'}
             </h2>

@@ -180,7 +180,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* ===== Top Navbar ===== */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-3 flex items-center justify-between relative z-30">
+      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 px-3 sm:px-6 py-3 flex items-center justify-between relative z-30">
         <Link to="/" className="flex items-center gap-2.5">
           <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
             <span className="text-white font-bold text-lg">M</span>
@@ -222,12 +222,12 @@ const Login = () => {
         </div>
 
         {/* ===== Content: Hero + Form flowing together ===== */}
-        <div className="relative z-10 max-w-6xl mx-auto px-6 py-10 lg:py-16 flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 lg:py-16 flex flex-col lg:flex-row items-center gap-6 sm:gap-10 lg:gap-16">
 
           {/* ───── Hero Content (left area, no partition) ───── */}
           <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
             {/* Hero image */}
-            <div className="mb-8 w-full max-w-md">
+            <div className="mb-4 sm:mb-8 w-full max-w-md">
               <img
                 src="https://thumbs.dreamstime.com/b/doctor-health-insurance-healthcare-graphic-concept-hospital-related-icon-interface-showing-people-money-planning-risk-173576660.jpg"
                 alt="Healthcare professional"
@@ -237,7 +237,7 @@ const Login = () => {
 
             {/* Hero text */}
             <p className="text-lg text-teal-600 font-medium italic mb-2">Let's Find</p>
-            <h1 className="text-3xl lg:text-4xl xl:text-[2.75rem] font-extrabold leading-tight mb-3">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-[2.75rem] font-extrabold leading-tight mb-3">
               <span className="bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">YOUR DREAM</span>
               <br />
               <span className="text-gray-800">HEALTHCARE CAREER</span>
@@ -247,19 +247,19 @@ const Login = () => {
             </p>
 
             {/* Trust stats row */}
-            <div className="flex items-center gap-6 mt-8">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-6 mt-6 sm:mt-8">
               <div className="text-center">
-                <p className="text-2xl font-bold text-teal-600">1000+</p>
+                <p className="text-xl sm:text-2xl font-bold text-teal-600">1000+</p>
                 <p className="text-xs text-gray-500">Active Jobs</p>
               </div>
-              <div className="w-px h-10 bg-gray-200" />
+              <div className="w-px h-8 sm:h-10 bg-gray-200" />
               <div className="text-center">
-                <p className="text-2xl font-bold text-emerald-600">500+</p>
+                <p className="text-xl sm:text-2xl font-bold text-emerald-600">500+</p>
                 <p className="text-xs text-gray-500">Hospitals</p>
               </div>
-              <div className="w-px h-10 bg-gray-200" />
+              <div className="w-px h-8 sm:h-10 bg-gray-200" />
               <div className="text-center">
-                <p className="text-2xl font-bold text-teal-600">10K+</p>
+                <p className="text-xl sm:text-2xl font-bold text-teal-600">10K+</p>
                 <p className="text-xs text-gray-500">Professionals</p>
               </div>
             </div>
@@ -267,7 +267,7 @@ const Login = () => {
 
           {/* ───── Login Form Card (floating, no partition) ───── */}
           <div className="w-full max-w-md">
-            <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/60 border border-gray-100/80 p-8">
+            <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/60 border border-gray-100/80 p-5 sm:p-8">
               {isForgotPassword ? (
                 <form onSubmit={handleForgotPassword} className="space-y-5">
                   <div className="text-center mb-2">
@@ -461,7 +461,7 @@ const Login = () => {
       {/* ===== Bottom Feature Strip ===== */}
       <div className="bg-white border-t border-gray-100 relative z-20">
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
-          <div className="flex items-center gap-3 px-6 py-4">
+          <div className="flex items-center gap-3 px-4 sm:px-6 py-3 sm:py-4">
             <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center flex-shrink-0">
               <Briefcase className="w-5 h-5 text-teal-600" />
             </div>
@@ -470,7 +470,7 @@ const Login = () => {
               <p className="text-xs text-gray-500">1000+ healthcare openings · 5 min to post</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 px-6 py-4">
+          <div className="flex items-center gap-3 px-4 sm:px-6 py-3 sm:py-4">
             <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
               <ClipboardCheck className="w-5 h-5 text-emerald-600" />
             </div>
@@ -479,7 +479,7 @@ const Login = () => {
               <p className="text-xs text-gray-500">Pre-assessed · Benchmarked profiles</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 px-6 py-4">
+          <div className="flex items-center gap-3 px-4 sm:px-6 py-3 sm:py-4">
             <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
               <Users className="w-5 h-5 text-blue-600" />
             </div>
