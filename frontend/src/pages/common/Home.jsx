@@ -2294,15 +2294,17 @@ const Home = () => {
                 </label>
 
                 <div className="flex items-center border-2 border-blue-300 bg-blue-50 rounded-lg focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-transparent">
-                  <div className="w-28 flex-shrink-0 border-r-2 border-r-blue-300">
-                    <CustomDropdown
-                      options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
+                  <div className="flex items-center pl-3 pr-2 border-r-2 border-r-blue-300">
+                    <select
                       value={quickApplyData.countryCode}
                       onChange={(e) => setQuickApplyData({ ...quickApplyData, countryCode: e.target.value })}
-                      placeholder="Code"
-                      compact={true}
-                      noBorder={true}
-                    />
+                      className="bg-transparent outline-none text-gray-700 font-medium text-sm cursor-pointer py-3 pr-1 appearance-none"
+                      style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%236b7280\' stroke-width=\'2\'%3E%3Cpath d=\'M6 9l6 6 6-6\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right center', paddingRight: '16px' }}
+                    >
+                      {countryCodes.map(c => (
+                        <option key={c.code} value={c.code}>{c.code}</option>
+                      ))}
+                    </select>
                   </div>
 
                   <input
@@ -2485,15 +2487,17 @@ const Home = () => {
                 </label>
 
                 <div className="flex items-center border-2 border-blue-300 bg-blue-50 rounded-lg focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-transparent">
-                  <div className="w-28 flex-shrink-0 border-r-2 border-r-blue-300">
-                    <CustomDropdown
-                      options={countryCodes.map(c => ({ label: c.label, value: c.code }))}
+                  <div className="flex items-center pl-3 pr-2 border-r-2 border-r-blue-300">
+                    <select
                       value={quickPostData.countryCode}
                       onChange={(e) => setQuickPostData({ ...quickPostData, countryCode: e.target.value })}
-                      placeholder="Code"
-                      compact={true}
-                      noBorder={true}
-                    />
+                      className="bg-transparent outline-none text-gray-700 font-medium text-sm cursor-pointer py-3 pr-1 appearance-none"
+                      style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%236b7280\' stroke-width=\'2\'%3E%3Cpath d=\'M6 9l6 6 6-6\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right center', paddingRight: '16px' }}
+                    >
+                      {countryCodes.map(c => (
+                        <option key={c.code} value={c.code}>{c.code}</option>
+                      ))}
+                    </select>
                   </div>
 
                   <input
