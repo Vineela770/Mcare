@@ -347,18 +347,19 @@ const Register = () => {
                   Phone Number
                 </label>
 
-                <div className="flex items-stretch border-2 border-blue-300 bg-blue-50 rounded-lg focus-within:ring-2 focus-within:ring-blue-400 h-[48px]">
-                  <div className="relative flex items-center gap-2 px-3 bg-blue-50 border-r-2 border-r-blue-300 min-w-[110px]">
+                <div className="flex items-center border-2 border-blue-300 bg-blue-50 rounded-lg focus-within:ring-2 focus-within:ring-blue-400">
+                  <div className="flex items-center gap-1.5 pl-3 pr-2 border-r-2 border-r-blue-300 h-full">
                     <Phone className="text-gray-400 w-5 h-5 flex-shrink-0" />
-                    <CustomDropdown
+                    <select
                       value={countryCode}
                       onChange={(e) => setCountryCode(e.target.value)}
-                      options={countryCodes.map(code => ({ label: code, value: code }))}
-                      placeholder="+91"
-                      className="min-w-[60px]"
-                      compact={true}
-                      greenTheme={true}
-                    />
+                      className="bg-transparent outline-none text-gray-700 font-medium text-sm cursor-pointer py-3 pr-1 appearance-none"
+                      style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%236b7280\' stroke-width=\'2\'%3E%3Cpath d=\'M6 9l6 6 6-6\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right center', paddingRight: '16px' }}
+                    >
+                      {countryCodes.map(code => (
+                        <option key={code} value={code}>{code}</option>
+                      ))}
+                    </select>
                   </div>
 
                   <input
@@ -368,7 +369,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder="Enter phone number"
                     inputMode="numeric"
-                    className="w-full px-4 outline-none bg-blue-50 rounded-r-lg"
+                    className="w-full px-4 py-3 outline-none bg-transparent rounded-r-lg"
                     required
                   />
                 </div>
