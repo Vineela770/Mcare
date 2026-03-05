@@ -2183,7 +2183,7 @@ const Home = () => {
                 value={applicationData.coverLetter}
                 onChange={(e) => setApplicationData({ ...applicationData, coverLetter: e.target.value })}
                 placeholder="Tell us why you're a great fit for this role..."
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
               />
             </div>
 
@@ -2194,7 +2194,7 @@ const Home = () => {
                 value={applicationData.expectedSalary}
                 onChange={(e) => setApplicationData({ ...applicationData, expectedSalary: e.target.value })}
                 placeholder="Rs. 50,000"
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
               />
             </div>
 
@@ -2204,7 +2204,7 @@ const Home = () => {
                 type="date"
                 value={applicationData.availability}
                 onChange={(e) => setApplicationData({ ...applicationData, availability: e.target.value })}
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
               />
             </div>
 
@@ -2214,7 +2214,7 @@ const Home = () => {
               </button>
               <button
                 onClick={handleSubmitApplication}
-                className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg"
+                className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800"
               >
                 Submit Application
               </button>
@@ -2233,7 +2233,7 @@ const Home = () => {
             <p className="text-lg text-gray-900">{successMessage}</p>
             <button
               onClick={() => setShowSuccessModal(false)}
-              className="mt-6 px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
+              className="mt-6 px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800"
             >
               Close
             </button>
@@ -2268,7 +2268,7 @@ const Home = () => {
                   type="text"
                   value={quickApplyData.name}
                   onChange={(e) => setQuickApplyData({ ...quickApplyData, name: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                   placeholder="Enter your full name"
                 />
                 {quickApplyErrors.name && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.name}</p>}
@@ -2282,7 +2282,7 @@ const Home = () => {
                   type="email"
                   value={quickApplyData.email}
                   onChange={(e) => setQuickApplyData({ ...quickApplyData, email: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                   placeholder="Enter your email"
                 />
                 {quickApplyErrors.email && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.email}</p>}
@@ -2308,7 +2308,7 @@ const Home = () => {
                     type="tel"
                     value={quickApplyData.phone}
                     onChange={(e) => setQuickApplyData({ ...quickApplyData, phone: e.target.value })}
-                    className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    className="flex-1 px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     placeholder="Enter phone number"
                   />
                 </div>
@@ -2324,7 +2324,7 @@ const Home = () => {
                   rows="4"
                   value={quickApplyData.coverLetter}
                   onChange={(e) => setQuickApplyData({ ...quickApplyData, coverLetter: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                   placeholder="Write your cover letter here..."
                 />
                 {quickApplyErrors.coverLetter && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.coverLetter}</p>}
@@ -2336,13 +2336,13 @@ const Home = () => {
                   type="file"
                   accept=".pdf,.doc,.docx"
                   onChange={(e) => setQuickApplyData({ ...quickApplyData, resume: e.target.files?.[0] || null })}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-2 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
                 />
                 {quickApplyErrors.resume && <p className="text-red-500 text-sm mt-1">{quickApplyErrors.resume}</p>}
               </div>
 
               <div className="flex justify-between pt-4">
-                <button onClick={() => navigate('/register')} className="text-emerald-700 font-medium">
+                <button onClick={() => navigate('/register')} className="text-blue-700 font-medium">
                   Register Instead
                 </button>
 
@@ -2352,7 +2352,7 @@ const Home = () => {
                       setShowQuickApplyPreview(true);
                     }
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800"
                 >
                   Preview
                 </button>
@@ -2421,7 +2421,7 @@ const Home = () => {
 
                     setQuickApplyErrors({});
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800"
                 >
                   Submit
                 </button>
@@ -2458,7 +2458,7 @@ const Home = () => {
                   type="text"
                   value={quickPostData.companyName}
                   onChange={(e) => setQuickPostData({ ...quickPostData, companyName: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                   placeholder="Enter company name"
                 />
                 {quickPostErrors.companyName && <p className="text-red-500 text-sm mt-1">{quickPostErrors.companyName}</p>}
@@ -2472,7 +2472,7 @@ const Home = () => {
                   type="email"
                   value={quickPostData.email}
                   onChange={(e) => setQuickPostData({ ...quickPostData, email: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                   placeholder="Enter official email"
                 />
                 {quickPostErrors.email && <p className="text-red-500 text-sm mt-1">{quickPostErrors.email}</p>}
@@ -2498,7 +2498,7 @@ const Home = () => {
                     type="tel"
                     value={quickPostData.phone}
                     onChange={(e) => setQuickPostData({ ...quickPostData, phone: e.target.value })}
-                    className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    className="flex-1 px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     placeholder="Enter phone number"
                   />
                 </div>
@@ -2514,7 +2514,7 @@ const Home = () => {
                   type="text"
                   value={quickPostData.jobTitle}
                   onChange={(e) => setQuickPostData({ ...quickPostData, jobTitle: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                   placeholder="Enter job title"
                 />
                 {quickPostErrors.jobTitle && <p className="text-red-500 text-sm mt-1">{quickPostErrors.jobTitle}</p>}
@@ -2543,7 +2543,7 @@ const Home = () => {
                   type="text"
                   value={quickPostData.specialization}
                   onChange={(e) => setQuickPostData({ ...quickPostData, specialization: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                   placeholder="e.g. DM – Cardiology, MD – Paediatrics"
                 />
               </div>
@@ -2605,7 +2605,7 @@ const Home = () => {
                   rows="4"
                   value={quickPostData.jobDescription}
                   onChange={(e) => setQuickPostData({ ...quickPostData, jobDescription: e.target.value })}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                   placeholder="Enter job responsibilities, required skills, experience, etc."
                 />
 
@@ -2613,7 +2613,7 @@ const Home = () => {
               </div>
 
               <div className="flex justify-between pt-4">
-                <button onClick={() => navigate('/register')} className="text-emerald-700 font-medium">
+                <button onClick={() => navigate('/register')} className="text-blue-700 font-medium">
                   Register Instead
                 </button>
 
@@ -2623,7 +2623,7 @@ const Home = () => {
                       setShowQuickPostPreview(true);
                     }
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800"
                 >
                   Preview
                 </button>
@@ -2720,7 +2720,7 @@ const Home = () => {
 
                     setQuickPostErrors({});
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-teal-700 to-emerald-500 text-white rounded-lg hover:from-teal-800 hover:to-emerald-600"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800"
                 >
                   Submit Job
                 </button>
