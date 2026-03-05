@@ -293,7 +293,7 @@ const Login = () => {
                       value={resetEmail}
                       onChange={(e) => setResetEmail(e.target.value)}
                       placeholder="Enter your email"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition bg-gray-50/50"
+                      className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                     />
                   </div>
 
@@ -333,7 +333,7 @@ const Login = () => {
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <input type="email" required value={recoveryEmail} onChange={(e) => setRecoveryEmail(e.target.value)}
                       placeholder="Account email"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition bg-gray-50/50"
+                      className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                     />
                   </div>
 
@@ -341,7 +341,7 @@ const Login = () => {
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <input type="password" required value={recoveryPassword} onChange={(e) => setRecoveryPassword(e.target.value)}
                       placeholder="Enter your password"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition bg-gray-50/50"
+                      className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                     />
                   </div>
 
@@ -375,7 +375,7 @@ const Login = () => {
                       <input
                         type="email" name="email" value={formData.email} onChange={handleChange}
                         placeholder="you@example.com"
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition bg-gray-50/50"
+                        className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                         required
                       />
                     </div>
@@ -390,7 +390,7 @@ const Login = () => {
                         type={showPassword ? 'text' : 'password'} name="password"
                         value={formData.password} onChange={handleChange}
                         placeholder="Enter your password"
-                        className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent text-gray-900 transition bg-gray-50/50"
+                        className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent text-gray-900 transition"
                         style={showPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                         required
                       />
