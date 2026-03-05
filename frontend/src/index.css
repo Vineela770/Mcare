@@ -2,15 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Force green theme at root level */
+/* Force blue theme at root level */
 :root {
-  --color-primary: #10b981;
-  --color-secondary: #059669;
-  --color-accent: #10b981;
-  accent-color: #10b981 !important;
+  --color-primary: #3b82f6;
+  --color-secondary: #2563eb;
+  --color-accent: #3b82f6;
+  accent-color: #3b82f6 !important;
   color-scheme: light !important;
-  /* Force native controls to use green */
-  --native-control-accent: #10b981;
+  /* Force native controls to use blue */
+  --native-control-accent: #3b82f6;
 }
 
 /* Apply to all elements */
@@ -20,12 +20,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  accent-color: #10b981 !important;
+  accent-color: #3b82f6 !important;
 }
 
 html {
   scroll-behavior: smooth;
-  accent-color: #10b981;
+  accent-color: #3b82f6;
 }
 
 body {
@@ -36,7 +36,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;
   color: #0f172a;
-  accent-color: #10b981;
+  accent-color: #3b82f6;
 }
 
 a {
@@ -61,21 +61,21 @@ select:focus-visible {
   outline-offset: 0 !important;
 }
 
-/* Override any blue ring colors */
+/* Override ring colors to blue */
 input:focus,
 textarea:focus,
 select:focus {
-  --tw-ring-color: #10b981 !important;
+  --tw-ring-color: #3b82f6 !important;
 }
 
-/* Text Selection - Green Theme */
+/* Text Selection - Blue Theme */
 ::selection {
-  background-color: #10b981;
+  background-color: #3b82f6;
   color: white;
 }
 
 ::-moz-selection {
-  background-color: #10b981;
+  background-color: #3b82f6;
   color: white;
 }
 
@@ -113,9 +113,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   scrollbar-width: none;
 }
 
-/* Select and Option Elements - Force Green Theme */
+/* Select and Option Elements - Force Blue Theme */
 select {
-  accent-color: #10b981 !important;
+  accent-color: #3b82f6 !important;
   color-scheme: light;
 }
 
@@ -129,40 +129,40 @@ select option:checked,
 select option:hover,
 select option:focus,
 select option:active {
-  background-color: #10b981 !important;
-  background: #10b981 !important;
+  background-color: #3b82f6 !important;
+  background: #3b82f6 !important;
   background-image: none !important;
   color: white !important;
   font-weight: normal !important;
 }
 
 select option[selected] {
-  background-color: #10b981 !important;
-  background: linear-gradient(0deg, #10b981 0%, #10b981 100%) !important;
+  background-color: #3b82f6 !important;
+  background: linear-gradient(0deg, #3b82f6 0%, #3b82f6 100%) !important;
   color: white !important;
 }
 
 /* Webkit specific for select dropdowns */
 select option:checked {
-  background: linear-gradient(0deg, #10b981 0%, #10b981 100%) !important;
+  background: linear-gradient(0deg, #3b82f6 0%, #3b82f6 100%) !important;
   color: white !important;
-  box-shadow: 0 0 10px 100px #10b981 inset !important;
+  box-shadow: 0 0 10px 100px #3b82f6 inset !important;
 }
 
 select:focus option:checked,
 select:focus option:hover {
-  background: #10b981 !important;
+  background: #3b82f6 !important;
   color: white !important;
 }
 
 /* Firefox specific */
 @-moz-document url-prefix() {
   select option:checked {
-    background-color: #10b981 !important;
+    background-color: #3b82f6 !important;
     color: white !important;
   }
   select option:hover {
-    background-color: #10b981 !important;
+    background-color: #3b82f6 !important;
     color: white !important;
   }
 }
@@ -171,13 +171,13 @@ select:focus option:hover {
 @media not all and (min-resolution:.001dpcm) {
   @supports (-webkit-appearance:none) {
     select option:checked {
-      background: #10b981 !important;
+      background: #3b82f6 !important;
       color: white !important;
     }
   }
 }
 
-/* Input Autofill - Green Theme */
+/* Input Autofill - Blue Theme */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -189,23 +189,23 @@ input:-webkit-autofill:active {
 
 /* All form elements accent color */
 input, textarea, select, button {
-  accent-color: #10b981;
+  accent-color: #3b82f6;
 }
 
 input[type="checkbox"]:checked,
 input[type="radio"]:checked {
-  accent-color: #10b981;
-  background-color: #10b981;
-  border-color: #10b981;
+  accent-color: #3b82f6;
+  background-color: #3b82f6;
+  border-color: #3b82f6;
 }
 
-/* Date Picker - Green Theme - Aggressive Overrides */
+/* Date Picker - Blue Theme - Aggressive Overrides */
 input[type="date"],
 input[type="datetime-local"],
 input[type="time"],
 input[type="month"],
 input[type="week"] {
-  accent-color: #10b981 !important;
+  accent-color: #3b82f6 !important;
   color-scheme: light !important;
 }
 
@@ -221,9 +221,9 @@ input[type="time"]:focus {
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="datetime-local"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
-  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%) !important;
+  filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(213deg) brightness(100%) contrast(97%) !important;
   cursor: pointer;
-  color: #10b981 !important;
+  color: #3b82f6 !important;
   background-color: transparent !important;
 }
 
@@ -246,27 +246,27 @@ input[type="date"]::-webkit-datetime-edit-year-field {
 input[type="date"]::-moz-calendar-picker-indicator,
 input[type="datetime-local"]::-moz-calendar-picker-indicator,
 input[type="time"]::-moz-calendar-picker-indicator {
-  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%) !important;
+  filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(213deg) brightness(100%) contrast(97%) !important;
 }
 
-/* Calendar Dropdown - Override browser default blue colors */
+/* Calendar Dropdown - Blue theme */
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
-  background-color: rgba(16, 185, 129, 0.1) !important;
+  background-color: rgba(59, 130, 246, 0.1) !important;
   border-radius: 4px;
 }
 
-/* Date picker selected state - Override blue to green */
+/* Date picker selected state - Blue theme */
 input[type="date"]::-webkit-datetime-edit-month-field:focus,
 input[type="date"]::-webkit-datetime-edit-day-field:focus,
 input[type="date"]::-webkit-datetime-edit-year-field:focus {
-  background-color: rgba(16, 185, 129, 0.1) !important;
+  background-color: rgba(59, 130, 246, 0.1) !important;
   color: #0f172a !important;
   outline: none !important;
 }
 
 /* Override browser native calendar colors (best effort) */
 ::-webkit-calendar-picker-indicator {
-  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%) !important;
+  filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(213deg) brightness(100%) contrast(97%) !important;
 }
 
 /* Mobile-specific date picker styling */
@@ -277,24 +277,24 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    accent-color: #10b981 !important;
+    accent-color: #3b82f6 !important;
   }
   
   input[type="date"]::-webkit-calendar-picker-indicator,
   input[type="datetime-local"]::-webkit-calendar-picker-indicator,
   input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(121deg) brightness(95%) contrast(97%) !important;
+    filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(213deg) brightness(100%) contrast(97%) !important;
     width: 20px;
     height: 20px;
   }
 }
 
-/* Force green theme on all browser date pickers */
+/* Force blue theme on all browser date pickers */
 @supports (-webkit-appearance: none) {
   input[type="date"],
   input[type="datetime-local"],
   input[type="time"] {
-    accent-color: #10b981 !important;
+    accent-color: #3b82f6 !important;
   }
 }
 
@@ -302,6 +302,6 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
   input[type="date"],
   input[type="datetime-local"],
   input[type="time"] {
-    accent-color: #10b981 !important;
+    accent-color: #3b82f6 !important;
   }
 }

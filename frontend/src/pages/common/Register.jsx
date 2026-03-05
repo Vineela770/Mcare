@@ -757,7 +757,7 @@ const Register = () => {
                 name="agreeTerms"
                 checked={formData.agreeTerms}
                 onChange={handleChange}
-                className="w-4 h-4 mt-1 text-emerald-700 border-gray-300 rounded focus:outline-none focus:ring-emerald-600"
+                className="w-4 h-4 mt-1 text-blue-600 border-gray-300 rounded focus:outline-none focus:ring-blue-500"
               />
               <div className="ml-2 text-sm text-gray-600">
                 I agree to the{' '}
@@ -767,7 +767,7 @@ const Register = () => {
                     setPolicyType('terms');
                     setShowPolicy(true);
                   }}
-                  className="text-emerald-700 hover:text-emerald-700 font-medium underline"
+                  className="text-blue-600 hover:text-blue-700 font-medium underline"
                 >
                   Terms of Service
                 </button>{' '}
@@ -778,7 +778,7 @@ const Register = () => {
                     setPolicyType('privacy');
                     setShowPolicy(true);
                   }}
-                  className="text-emerald-700 hover:text-emerald-700 font-medium underline"
+                  className="text-blue-600 hover:text-blue-700 font-medium underline"
                 >
                   Privacy Policy
                 </button>
