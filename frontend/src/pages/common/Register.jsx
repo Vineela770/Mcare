@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, UserPlus } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, UserPlus, Calendar, Building2 } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
 import { authService } from '../../api/authService';
 import CustomDropdown from '../../components/common/CustomDropdown';
+
+// Indian cities for interested cities multi-select
+const INDIAN_CITIES = [
+  'Hyderabad', 'Bangalore', 'Chennai', 'Mumbai', 'Delhi', 'Kolkata', 'Pune', 'Ahmedabad',
+  'Jaipur', 'Lucknow', 'Chandigarh', 'Bhopal', 'Indore', 'Nagpur', 'Visakhapatnam',
+  'Coimbatore', 'Kochi', 'Gurgaon', 'Noida', 'Thiruvananthapuram', 'Mangalore',
+  'Mysore', 'Vijayawada', 'Tirupati', 'Warangal', 'Guntur', 'Nellore', 'Madurai',
+  'Patna', 'Ranchi', 'Guwahati', 'Dehradun', 'Surat', 'Vadodara', 'Rajkot'
+];
 
 const Register = () => {
   const navigate = useNavigate();
@@ -20,7 +29,8 @@ const Register = () => {
     email: '',
     confirmEmail: '',
     phone: '',
-    location: '',
+    city: '',
+    state: '',
     qualification: '',
     designation: '',
     resume: null,
@@ -29,12 +39,19 @@ const Register = () => {
     role: '',
     agreeTerms: false,
 
+    // Doctor/Seeker specific
+    joinType: '',        // 'immediate' or 'specific'
+    joinDate: '',
+    interestedCities: [], // up to 3
+
     // Employer – Organization Info
     organizationName: '',
     organizationCategory: '',
     numberOfBeds: '',
     organizationCity: '',
     organizationAddress: '',
+    hiringType: '',      // 'immediate' or 'specific'
+    hiringDate: '',
   });
 
   const [error, setError] = useState('');
@@ -44,9 +61,9 @@ const Register = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // ✅ Country code dropdown (ONLY codes)
+  // ✅ Country code dropdown (sorted by common usage)
   const [countryCode, setCountryCode] = useState('+91');
-  const countryCodes = ['+91', '+1', '+44'];
+  const countryCodes = ['+91', '+1', '+44', '+61', '+65', '+971', '+966', '+974', '+968', '+973', '+86', '+81', '+82', '+49', '+33', '+39', '+7', '+55', '+27', '+234', '+254', '+880', '+92', '+94', '+977'];
 
   // ✅ FIX: handles text/select, checkbox, file, phone digits
   // ✅ FIX: confirmPassword disable + auto-clear when password changes/clears
@@ -94,7 +111,7 @@ const Register = () => {
       return {
         ...prev,
         [name]: cleanedValue,
-        ...(name === 'role' && { qualification: '', designation: '' }),
+        ...(name === 'role' && { qualification: '', designation: '', joinType: '', joinDate: '', interestedCities: [], hiringType: '', hiringDate: '' }),
       };
     });
 
@@ -146,6 +163,16 @@ const Register = () => {
       return;
     }
 
+    // ✅ City & State mandatory
+    if (!formData.city.trim()) {
+      setError('City is required');
+      return;
+    }
+    if (!formData.state.trim()) {
+      setError('State is required');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -158,13 +185,20 @@ const Register = () => {
       submitData.append('email', formData.email);
       submitData.append('password', formData.password);
       submitData.append('phone', `${countryCode}${formData.phone}`);
-      submitData.append('location', formData.location);
+      submitData.append('location', `${formData.city}, ${formData.state}`);
       submitData.append('role', formData.role);
       
       // Role-specific fields
       if (formData.role === 'candidate') {
         submitData.append('qualification', formData.qualification);
         submitData.append('designation', formData.designation);
+        submitData.append('joinType', formData.joinType);
+        if (formData.joinType === 'specific') {
+          submitData.append('joinDate', formData.joinDate);
+        }
+        if (formData.interestedCities.length > 0) {
+          submitData.append('interestedCities', JSON.stringify(formData.interestedCities));
+        }
         if (formData.resume) {
           submitData.append('resume', formData.resume);
         }
@@ -174,6 +208,10 @@ const Register = () => {
         submitData.append('numberOfBeds', formData.numberOfBeds);
         submitData.append('organizationCity', formData.organizationCity);
         submitData.append('organizationAddress', formData.organizationAddress);
+        submitData.append('hiringType', formData.hiringType);
+        if (formData.hiringType === 'specific') {
+          submitData.append('hiringDate', formData.hiringDate);
+        }
       }
 
       // ✅ Call backend registration API
@@ -244,7 +282,7 @@ const Register = () => {
             {formData.role && (
               <div className="col-span-full flex justify-center mt-2 mb-6">
                 <h2 className="text-2xl font-semibold text-gray-900 tracking-wide">
-                  {formData.role === 'candidate' ? 'Doctor/JobSeeker Registration' : 'Employer Registration'}
+                  {formData.role === 'candidate' ? 'Doctor/Seeker Registration' : 'Employer Registration'}
                 </h2>
               </div>
             )}
@@ -256,11 +294,11 @@ const Register = () => {
               onChange={handleChange}
               options={[
                 { label: 'Select', value: '' },
-                { label: 'Doctor/JobSeeker', value: 'candidate' },
+                { label: 'Doctor/Seeker', value: 'candidate' },
                 { label: 'Employer', value: 'hr' }
               ]}
               placeholder="Select"
-              borderClass="border-2 border-gray-400"
+              borderClass="border-2 border-blue-300 bg-blue-50"
               required
             />
 
@@ -281,7 +319,7 @@ const Register = () => {
                     { label: 'Others', value: 'Others' }
                   ]}
                   placeholder="Select"
-                  borderClass="border-2 border-gray-400"
+                  borderClass="border-2 border-blue-300 bg-blue-50"
                   required
                 />
               </div>
@@ -297,7 +335,7 @@ const Register = () => {
                     value={formData.fullName}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     required
                   />
                 </div>
@@ -309,8 +347,8 @@ const Register = () => {
                   Phone Number
                 </label>
 
-                <div className="flex items-stretch border-2 border-gray-400 rounded-lg focus-within:ring-2 focus-within:ring-emerald-600">
-                  <div className="relative flex items-center gap-2 px-3 py-3 bg-gray-50 border-r-2 border-r-gray-400 min-w-[120px]">
+                <div className="flex items-stretch border-2 border-blue-300 bg-blue-50 rounded-lg focus-within:ring-2 focus-within:ring-blue-400">
+                  <div className="relative flex items-center gap-2 px-3 py-3 bg-blue-50 border-r-2 border-r-blue-300 min-w-[120px]">
                     <Phone className="text-gray-400 w-5 h-5" />
                     <CustomDropdown
                       value={countryCode}
@@ -330,30 +368,47 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder="Enter phone number"
                     inputMode="numeric"
-                    className="w-full px-4 py-3 outline-none"
+                    className="w-full px-4 py-3 outline-none bg-blue-50"
                     required
                   />
                 </div>
               </div>
 
-              {/* Location */}
+              {/* City */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">City <span className="text-red-500">*</span></label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     type="text"
-                    name="location"
-                    value={formData.location}
+                    name="city"
+                    value={formData.city}
                     onChange={handleChange}
-                    placeholder="City, State"
-                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    placeholder="Enter your city"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     required
                   />
                 </div>
               </div>
 
-              {/* Doctor Only */}
+              {/* State */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">State <span className="text-red-500">*</span></label>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                    placeholder="Enter your state"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Doctor/Seeker Only */}
               {formData.role === 'candidate' && (
                 <>
                   <div>
@@ -371,11 +426,29 @@ const Register = () => {
                         { label: 'MDS', value: 'MDS' },
                         { label: 'BHMS', value: 'BHMS' },
                         { label: 'BAMS', value: 'BAMS' },
+                        { label: 'BUMS', value: 'BUMS' },
+                        { label: 'BPT', value: 'BPT' },
+                        { label: 'MPT', value: 'MPT' },
+                        { label: 'B.Sc Nursing', value: 'B.Sc Nursing' },
+                        { label: 'M.Sc Nursing', value: 'M.Sc Nursing' },
+                        { label: 'GNM', value: 'GNM' },
+                        { label: 'ANM', value: 'ANM' },
+                        { label: 'B.Pharm', value: 'B.Pharm' },
+                        { label: 'M.Pharm', value: 'M.Pharm' },
+                        { label: 'Pharm.D', value: 'Pharm.D' },
+                        { label: 'BMLT', value: 'BMLT' },
+                        { label: 'DMLT', value: 'DMLT' },
                         { label: 'DM', value: 'DM' },
-                        { label: 'MCh', value: 'MCh' }
+                        { label: 'MCh', value: 'MCh' },
+                        { label: 'DNB', value: 'DNB' },
+                        { label: 'PhD', value: 'PhD' },
+                        { label: 'MPH', value: 'MPH' },
+                        { label: 'MHA', value: 'MHA' },
+                        { label: 'MBA (Healthcare)', value: 'MBA (Healthcare)' },
+                        { label: 'Other', value: 'Other' }
                       ]}
                       placeholder="Select Qualification"
-                      borderClass="border-2 border-gray-400"
+                      borderClass="border-2 border-blue-300 bg-blue-50"
                       required
                     />
                   </div>
@@ -387,10 +460,197 @@ const Register = () => {
                       name="resume"
                       onChange={handleChange}
                       accept=".pdf,.doc,.docx"
-                      className="w-full py-2.5 px-3 border-2 border-gray-400 rounded-lg text-gray-700 file:mr-4 file:py-1.5 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+                      className="w-full py-2.5 px-3 border-2 border-blue-300 bg-blue-50 rounded-lg text-gray-700 file:mr-4 file:py-1.5 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
                       required
                     />
                   </div>
+
+                  {/* Immediate Join / Join Date */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Availability</label>
+                    <CustomDropdown
+                      name="joinType"
+                      value={formData.joinType}
+                      onChange={handleChange}
+                      options={[
+                        { label: 'Select Availability', value: '' },
+                        { label: 'Immediate Join', value: 'immediate' },
+                        { label: 'Specific Join Date', value: 'specific' }
+                      ]}
+                      placeholder="Select Availability"
+                      borderClass="border-2 border-blue-300 bg-blue-50"
+                    />
+                  </div>
+
+                  {formData.joinType === 'specific' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Join Date</label>
+                      <div className="relative">
+                        <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        <input
+                          type="date"
+                          name="joinDate"
+                          value={formData.joinDate}
+                          onChange={handleChange}
+                          min={new Date().toISOString().split('T')[0]}
+                          className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Interested Cities (multi-select, max 3) */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Interested Cities <span className="text-gray-400 text-xs">(Select up to 3)</span>
+                    </label>
+                    <div className="flex flex-wrap gap-2 p-3 border-2 border-blue-300 bg-blue-50 rounded-lg min-h-[48px]">
+                      {formData.interestedCities.map((c) => (
+                        <span key={c} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-200 text-blue-800 rounded-full text-sm font-medium">
+                          {c}
+                          <button
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, interestedCities: prev.interestedCities.filter(x => x !== c) }))}
+                            className="ml-1 text-blue-600 hover:text-blue-900 font-bold"
+                          >×</button>
+                        </span>
+                      ))}
+                      {formData.interestedCities.length < 3 && (
+                        <select
+                          value=""
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val && !formData.interestedCities.includes(val)) {
+                              setFormData(prev => ({ ...prev, interestedCities: [...prev.interestedCities, val] }));
+                            }
+                          }}
+                          className="bg-transparent border-none outline-none text-sm text-gray-500 cursor-pointer flex-1 min-w-[140px]"
+                        >
+                          <option value="">+ Add city...</option>
+                          {INDIAN_CITIES.filter(c => !formData.interestedCities.includes(c)).map(c => (
+                            <option key={c} value={c}>{c}</option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Employer Only */}
+              {formData.role === 'hr' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Organization Name</label>
+                    <div className="relative">
+                      <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input
+                        type="text"
+                        name="organizationName"
+                        value={formData.organizationName}
+                        onChange={handleChange}
+                        placeholder="Hospital / Clinic name"
+                        className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Organization Category</label>
+                    <CustomDropdown
+                      name="organizationCategory"
+                      value={formData.organizationCategory}
+                      onChange={handleChange}
+                      options={[
+                        { label: 'Select Category', value: '' },
+                        { label: 'Hospital', value: 'Hospital' },
+                        { label: 'Medical College', value: 'Medical College' },
+                        { label: 'Clinic', value: 'Clinic' },
+                        { label: 'Nursing Home', value: 'Nursing Home' },
+                        { label: 'Diagnostic Center', value: 'Diagnostic Center' },
+                        { label: 'Pharmacy', value: 'Pharmacy' },
+                        { label: 'Other', value: 'Other' }
+                      ]}
+                      placeholder="Select Category"
+                      borderClass="border-2 border-blue-300 bg-blue-50"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Number of Beds</label>
+                    <input
+                      type="number"
+                      name="numberOfBeds"
+                      value={formData.numberOfBeds}
+                      onChange={handleChange}
+                      placeholder="e.g. 100"
+                      className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Organization City</label>
+                    <input
+                      type="text"
+                      name="organizationCity"
+                      value={formData.organizationCity}
+                      onChange={handleChange}
+                      placeholder="Organization city"
+                      className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                      required
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Organization Address</label>
+                    <textarea
+                      name="organizationAddress"
+                      value={formData.organizationAddress}
+                      onChange={handleChange}
+                      placeholder="Full address"
+                      rows={2}
+                      className="w-full px-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none"
+                      required
+                    />
+                  </div>
+
+                  {/* Immediate Hiring / Specific Hiring Date */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Hiring Timeline</label>
+                    <CustomDropdown
+                      name="hiringType"
+                      value={formData.hiringType}
+                      onChange={handleChange}
+                      options={[
+                        { label: 'Select Hiring Timeline', value: '' },
+                        { label: 'Immediate Hiring', value: 'immediate' },
+                        { label: 'Specific Hiring Date', value: 'specific' }
+                      ]}
+                      placeholder="Select Hiring Timeline"
+                      borderClass="border-2 border-blue-300 bg-blue-50"
+                    />
+                  </div>
+
+                  {formData.hiringType === 'specific' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Hiring Date</label>
+                      <div className="relative">
+                        <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        <input
+                          type="date"
+                          name="hiringDate"
+                          value={formData.hiringDate}
+                          onChange={handleChange}
+                          min={new Date().toISOString().split('T')[0]}
+                          className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
 
@@ -405,7 +665,7 @@ const Register = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     required
                   />
                 </div>
@@ -423,7 +683,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder={isEmailTyped ? 're-enter your email' : 'Enter email first'}
                     disabled={!isEmailTyped}
-                    className={`w-full pl-10 pr-4 py-3 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent
+                    className={`w-full pl-10 pr-4 py-3 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent
                       ${!isEmailTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     required={isEmailTyped}
                   />
@@ -441,7 +701,7 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Enter your password"
-                    className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900"
+                    className="w-full py-3 text-base min-h-[48px] pl-10 pr-12 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent text-gray-900"
                     style={showPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                     required
                   />
@@ -467,7 +727,7 @@ const Register = () => {
                     onChange={handleChange}
                     placeholder={isPasswordTyped ? 'Re-enter password' : 'Enter password first'}
                     disabled={!isPasswordTyped}
-                    className={`w-full py-3 text-base min-h-[48px] pl-10 pr-12 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent text-gray-900
+                    className={`w-full py-3 text-base min-h-[48px] pl-10 pr-12 border-2 border-blue-300 bg-blue-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent text-gray-900
                       ${!isPasswordTyped ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                     style={showConfirmPassword ? { WebkitTextFillColor: '#111827', color: '#111827' } : undefined}
                     required={isPasswordTyped}

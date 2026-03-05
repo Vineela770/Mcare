@@ -47,10 +47,10 @@ const CustomDropdown = ({
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`w-full text-left focus:outline-none focus:ring-2 focus:ring-emerald-600 transition flex items-center justify-between ${
+        className={`w-full text-left focus:outline-none focus:ring-2 focus:ring-blue-400 transition flex items-center justify-between ${
           compact 
-            ? `px-3 py-3 bg-white ${borderClass || 'border border-gray-300'} rounded-lg text-gray-700 font-medium cursor-pointer hover:border-emerald-400` 
-            : `px-4 py-3 ${borderClass || 'border border-gray-300'} rounded-lg hover:border-emerald-400 bg-white`
+            ? `px-3 py-3 ${borderClass ? '' : 'bg-white'} ${borderClass || 'border border-gray-300'} rounded-lg text-gray-700 font-medium cursor-pointer hover:border-blue-400` 
+            : `px-4 py-3 ${borderClass || 'border border-gray-300'} rounded-lg hover:border-blue-400 ${borderClass ? '' : 'bg-white'}`
         } ${
           isOpen ? 'border-emerald-500 ring-2 ring-emerald-500' : ''
         } ${
