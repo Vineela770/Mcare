@@ -485,6 +485,7 @@ const Home = () => {
     { label: 'Orthopedic', key: 'Orthopedic' },
     { label: 'Pulmonologist', key: 'Pulmonologist' },
     { label: 'Pharmacist', key: 'Pharmacist' },
+    { label: 'Other', key: 'Other' },
   ];
 
   const goToSpecialisation = (specKey) => {
@@ -2091,7 +2092,31 @@ const Home = () => {
   </div>
 </section>
 
-      {/* CTA Section */}
+        </div>{/* End Main Content Area */}
+
+        {/* ===== Most Popular Categories Sidebar (Desktop only) ===== */}
+        <aside className="hidden lg:block w-56 xl:w-64 flex-shrink-0 bg-white border-l border-gray-200 sticky top-0 self-start h-screen overflow-y-auto z-20">
+          <div className="p-5 pt-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 tracking-tight">Most Popular Categories</h3>
+            <ul className="space-y-1">
+              {categories.map((cat) => (
+                <li key={cat.key}>
+                  <button
+                    onClick={() => handleCategoryClick(cat.key)}
+                    className="w-full text-left px-3 py-2.5 text-sm text-gray-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg transition-colors font-medium flex items-center gap-2"
+                  >
+                    <cat.Icon className="w-4 h-4" />
+                    {cat.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+
+      </div>{/* End flex sidebar layout */}
+
+      {/* CTA Section - Full Width */}
 <section className="py-12 md:py-16 bg-gradient-to-r from-teal-700 to-emerald-500">
   <div className="max-w-4xl mx-auto text-center px-4">
 
@@ -2127,7 +2152,7 @@ const Home = () => {
   </div>
 </section>
 
-      {/* Footer */}
+      {/* Footer - Full Width */}
 <footer className="bg-gray-900 text-gray-300 py-8 md:py-12 px-4">
   <div className="max-w-7xl mx-auto">
 
@@ -2198,9 +2223,6 @@ const Home = () => {
 
   </div>
 </footer>
-
-        </div>{/* End Main Content Area */}
-      </div>{/* End flex sidebar layout */}
 
       {/* Apply Modal */}
       {showApplyModal && selectedJob && (
