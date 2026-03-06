@@ -475,19 +475,20 @@ const Home = () => {
     navigate(`/jobs?${params.toString()}`);
   };
 
-  // ✅ Industries navigation
-  const industryItems = [
-    { label: 'Hospital Jobs – Doctors', key: 'doctors' },
-    { label: 'Hospital Management', key: 'management' },
-    { label: 'Medical Colleges', key: 'colleges' },
-    { label: 'Allied Health', key: 'allied' },
-    { label: 'Nursing', key: 'nursing' },
-    { label: 'Alternative Medicine', key: 'alternative' },
-    { label: 'Dental', key: 'dental' },
+  // ✅ Specialisation sidebar items (Browse Jobs)
+  const specialisationItems = [
+    { label: 'Cardiologist', key: 'Cardiologist' },
+    { label: 'Neurologist', key: 'Neurologist' },
+    { label: 'Gynecologist', key: 'Gynecologist' },
+    { label: 'Radiologist', key: 'Radiologist' },
+    { label: 'Pediatrician', key: 'Pediatrician' },
+    { label: 'Orthopedic', key: 'Orthopedic' },
+    { label: 'Pulmonologist', key: 'Pulmonologist' },
+    { label: 'Pharmacist', key: 'Pharmacist' },
   ];
 
-  const goToIndustry = (categoryKey) => {
-    navigate(`/jobs?category=${categoryKey}`);
+  const goToSpecialisation = (specKey) => {
+    navigate(`/jobs?specialization=${specKey}`);
   };
 
   const categories = [
@@ -1461,6 +1462,30 @@ const Home = () => {
     <div className="min-h-screen bg-white">
       <Navbar />
 
+      {/* Main layout with sidebar */}
+      <div className="flex">
+        {/* ===== Specialisation Sidebar (Desktop only) ===== */}
+        <aside className="hidden lg:block w-56 xl:w-64 flex-shrink-0 bg-white border-r border-gray-200 sticky top-0 self-start h-screen overflow-y-auto z-20">
+          <div className="p-5 pt-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 tracking-tight">Specialisation</h3>
+            <ul className="space-y-1">
+              {specialisationItems.map((item) => (
+                <li key={item.key}>
+                  <button
+                    onClick={() => goToSpecialisation(item.key)}
+                    className="w-full text-left px-3 py-2.5 text-sm text-gray-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg transition-colors font-medium"
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+
+        {/* ===== Main Content Area ===== */}
+        <div className="flex-1 min-w-0">
+
       {/* Hero Section */}
       <div className="relative min-h-[70vh] md:min-h-[75vh] lg:min-h-[50vh] w-full flex items-center justify-center overflow-x-hidden">
 
@@ -1564,19 +1589,19 @@ const Home = () => {
             </button>
           </div>
 
-          {/* Industries */}
+          {/* Browse Jobs */}
           <div className="text-white/90 mt-4 text-xs md:text-sm">
-            <span className="font-semibold">Industries:</span>{' '}
-            {industryItems.map((item, idx) => (
+            <span className="font-semibold">Browse Jobs:</span>{' '}
+            {specialisationItems.map((item, idx) => (
               <span key={item.key}>
                 <button
                   type="button"
-                  onClick={() => goToIndustry(item.key)}
+                  onClick={() => goToSpecialisation(item.key)}
                   className="underline underline-offset-2 hover:text-white font-medium"
                 >
                   {item.label}
                 </button>
-                {idx !== industryItems.length - 1 ? ', ' : ''}
+                {idx !== specialisationItems.length - 1 ? ', ' : ''}
               </span>
             ))}
           </div>
@@ -2173,6 +2198,9 @@ const Home = () => {
 
   </div>
 </footer>
+
+        </div>{/* End Main Content Area */}
+      </div>{/* End flex sidebar layout */}
 
       {/* Apply Modal */}
       {showApplyModal && selectedJob && (
