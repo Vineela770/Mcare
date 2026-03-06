@@ -2,7 +2,6 @@ import { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Modal from '../../components/common/Modal';
-import FilterDropdown from '../../components/common/FilterDropdown';
 import CustomDropdown from '../../components/common/CustomDropdown';
 import { CheckCircle, Stethoscope, Building2, GraduationCap, Activity, Heart, Leaf, Smile, UserPlus, Search, FileCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 // eslint-disable-next-line no-unused-vars
@@ -526,15 +525,6 @@ const Home = () => {
       setCategoryIndex(categoryIndex - 1);
     }
   };
-
-  const salaryRanges = [
-    { label: 'Salary Range', value: '' },
-    { label: 'Below ₹50,000', value: '0-50000' },
-    { label: '₹50,000 - ₹1,00,000', value: '50000-100000' },
-    { label: '₹1,00,000 - ₹5,00,000', value: '100000-500000' },
-    { label: 'Above ₹5,00,000', value: '500000-99999999' },
-  ];
-
 
   // ✅ Category → Degree → Specializations hierarchy
   const categorySpecializations = {
@@ -1753,104 +1743,6 @@ const Home = () => {
                 ❯
               </button>
             )}
-          </div>
-
-          {/* Filters */}
-          <div className="mb-8 px-2">
-            {/* 2-col grid on mobile, single row on desktop */}
-            <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-center md:gap-3">
-              {/* Degree Filter */}
-              <FilterDropdown
-                value={selectedDegree}
-                onChange={(value) => { 
-                  setSelectedDegree(value); 
-                  setFilterSpecialization(''); 
-                  setActiveDot(0); 
-                }}
-                options={[
-                  { label: 'Select Degree', value: '' },
-                  ...degrees.map(degree => ({ label: degree, value: degree })),
-                  { label: 'Other', value: 'Other' }
-                ]}
-                placeholder="Select Degree"
-                className="w-full md:w-auto"
-              />
-
-              {/* Specialization Filter */}
-              <FilterDropdown
-                value={filterSpecialization}
-                onChange={(value) => { 
-                  setFilterSpecialization(value); 
-                  setActiveDot(0); 
-                }}
-                options={[
-                  { label: 'Select Specialization', value: '' },
-                  ...specializations.map(spec => ({ label: spec, value: spec }))
-                ]}
-                placeholder="Select Specialization"
-                disabled={!selectedDegree}
-                className="w-full md:w-auto"
-              />
-
-              {/* City Filter */}
-              <FilterDropdown
-                value={filterCity}
-                onChange={(value) => { 
-                  setFilterCity(value); 
-                  setActiveDot(0); 
-                }}
-                options={[
-                  { label: 'All Cities', value: '' },
-                  ...cities.sort().map(city => ({ label: city, value: city }))
-                ]}
-                placeholder="All Cities"
-                className="w-full md:w-auto"
-              />
-
-              {/* Salary Range Filter with Clear Button */}
-              <div className="w-full md:w-auto flex items-center gap-2">
-                <FilterDropdown
-                  value={filterSalary}
-                  onChange={(value) => { 
-                    setFilterSalary(value); 
-                    setActiveDot(0); 
-                  }}
-                  options={salaryRanges.map(range => ({ label: range.label, value: range.value }))}
-                  placeholder="Salary Range"
-                  className="flex-1"
-                />
-                {filterSalary && (
-                  <button
-                    onClick={() => {
-                      setFilterSalary('');
-                      setActiveDot(0);
-                    }}
-                    className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                    title="Clear salary filter"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-
-              {/* Clear All Filters Button — full width on mobile, inline on desktop */}
-              <div className="col-span-2 md:col-span-1 flex justify-center md:justify-start">
-                <button
-                  onClick={() => { 
-                    setSelectedDegree(''); 
-                    setFilterSpecialization(''); 
-                    setFilterCity(''); 
-                    setFilterSalary(''); 
-                    setActiveDot(0); 
-                  }}
-                  className="w-full md:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full transition text-sm font-medium border border-emerald-600 whitespace-nowrap"
-                >
-                  Clear Filters
-                </button>
-              </div>
-            </div>
           </div>
 
           {/* Jobs Section */}
